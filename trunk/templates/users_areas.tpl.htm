@@ -1,0 +1,44 @@
+
+					<div class="column">
+						<form id="areaForm" class="users" method="post" action="#">
+							<h3><span id="userProgress"></span>{SUBTITLE}</h3>
+							<div class="required">
+								<label for="area_define_name">{NAME_LABEL}</label>
+								<input type="text" id="area_define_name" name="area_define_name" class="input-textsmall" />
+							</div>
+							<div class="required">
+								<label for="application_id">{APPLICATION_LABEL}</label>
+								<select id="application_id" name="application_id" class="select-singlesmall">
+									<!-- BEGIN area-application -->
+									<option value="{VALUE}">{TEXT}</option>
+									<!-- END area-application -->
+								</select>
+							</div>
+							<h4>{AREA_ADMINS_LABEL}</h4>
+							<fieldset>
+								<h5>{SELECTED_ADMINS_LABEL}</h5>
+								<ul class="sortable strong" id="users"></ul>
+								<h5 class="secondary">{AVAILABLE_ADMINS_LABEL}</h5>
+								<ul class="sortable" id="allusers">
+									<!-- BEGIN area-allusers -->
+									<li id="user_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<!-- END area-allusers -->
+								</ul>
+							</fieldset>
+							<h4>{RIGHTS_LABEL}</h4>
+							<fieldset>
+								<h5>{SELECTED_RIGHTS_LABEL}</h5>
+								<ul class="sortable strong" id="rights"></ul>
+							</fieldset>
+							 <script type="text/javascript">
+							 // <![CDATA[
+									Sortable.create("users", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allusers", "users"],constraint:false});
+									Sortable.create("allusers", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allusers", "users"],constraint:false});
+							 // ]]>
+							 </script>
+							<div>
+								<input type="hidden" id="area_id" name="area_id" />
+							</div>
+							<div class="subnav"><a href="javascript:void(0);" onclick="Area.load($F('itemList'), 'areaForm');" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" onclick="Area.write('areaForm');" class="input-button" value="{BUTTON_SAVE}" /></div>
+						</form>
+					</div>

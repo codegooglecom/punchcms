@@ -1,0 +1,70 @@
+
+					<div class="column">
+						<form id="userForm" class="users" method="post" action="#">
+							<h3><span id="userProgress"></span>{SUBTITLE}</h3>
+							<div class="optional">
+								<label for="is_active" class="label-checkbox"><input type="checkbox" id="is_active" name="is_active" class="input-checkbox" /> {ACTIVE_LABEL}</label>
+							</div>
+							<div class="required">
+								<label for="perm_type">{USER_TYPE_LABEL}</label>
+								<select id="perm_type" name="perm_type" class="select-singlesmall">
+									<option value="0">{USER_ANONYMOUS_LABEL}</option>
+									<option value="1">{USER_USER_LABEL}</option>
+									<option value="2">{USER_ADMIN_LABEL}</option>
+									<option value="3">{USER_AREA_ADMIN_LABEL}</option>
+									<option value="4">{USER_SUPER_ADMIN_LABEL}</option>
+									<option value="5">{USER_MASTER_ADMIN_LABEL}</option>
+								</select>
+							</div>
+							<div class="required">
+								<label for="handle">{USER_USERNAME_LABEL}</label>
+								<input type="text" id="handle" name="handle" class="input-textsmall" />
+							</div>
+							<div class="required"><label for="name">{NAME_LABEL}</label>
+								<input type="text" id="name" name="name" class="input-textsmall" />
+							</div>
+							<div class="optional">
+								<label for="email">{USER_EMAIL_LABEL}</label>
+								<input type="text" id="email" name="email" class="input-textsmall" />
+							</div>
+							<div class="optional">
+								<label for="passwd">{USER_PASSWORD_LABEL}</label>
+								<input type="password" id="passwd" name="passwd" class="input-textsmall" />
+							</div>
+							<h4>{RIGHTS_LABEL}</h4>
+							<fieldset>
+								<h5>{SELECTED_RIGHTS_LABEL}</h5>
+								<ul class="sortable strong" id="rights"></ul>
+								<h5 class="secondary">{AVAILABLE_RIGHTS_LABEL}</h5>
+								<ul class="sortable" id="allrights">
+									<!-- BEGIN user-allrights -->
+									<li id="right_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<!-- END user-allrights -->
+								</ul>
+							</fieldset>
+							<h4>{GROUPS_LABEL}</h4>
+							<fieldset>
+								<h5>{SELECTED_GROUPS_LABEL}</h5>
+								<ul class="sortable strong" id="groups"></ul>
+								<h5 class="secondary">{AVAILABLE_GROUPS_LABEL}</h5>
+								<ul class="sortable" id="allgroups">
+									<!-- BEGIN user-allgroups -->
+									<li id="group_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<!-- END user-allgroups -->
+								</ul>
+							</fieldset>
+							<div>
+								<input type="hidden" id="perm_user_id" name="perm_user_id" />
+							</div>
+							<div class="subnav"><a href="javascript:void(0);" onclick="User.load($F('itemList'), 'userForm');" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" onclick="User.write('userForm');" class="input-button" value="{BUTTON_SAVE}" /></div>
+							<script type="text/javascript">
+							// <![CDATA[
+								Position.includeScrollOffsets = true;
+								Sortable.create("rights", {dropOnEmpty:true,hoverclass:"sorthover",containment:["rights", "allrights"],constraint:false});
+								Sortable.create("allrights", {dropOnEmpty:true,hoverclass:"sorthover",containment:["rights", "allrights"],constraint:false});
+								Sortable.create("groups", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allgroups", "groups"],constraint:false});
+								Sortable.create("allgroups", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allgroups", "groups"],constraint:false});
+							// ]]>
+							</script>
+						</form>
+					</div>

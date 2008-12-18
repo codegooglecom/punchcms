@@ -1,0 +1,23 @@
+
+								<div class="required">
+									<label for="{FIELD_ID}">
+										<a href="javascript:;" rel="internal" class="fieldButton"><img id="{FIELD_ID}_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+										{FIELD_NAME} 
+									</label>
+									<input type="checkbox" id="{FIELD_ID}" class="input-check" onchange="objContentLanguage.toTemp(this.id);" />
+									<div id="{FIELD_ID}_alt" class="input-textlarge disabled" style="display:none;"></div>									
+									<!-- BEGIN field.checkbox.descr -->
+									<small>{FIELD_DESCRIPTION}</small>
+									<!-- END field.checkbox.descr -->
+									<input type="hidden" name="{FIELD_ID}" value="true" />
+									<!-- BEGIN field.checkbox.value -->
+									<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
+									<!-- END field.checkbox.value -->
+									<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
+									<script type="text/javascript">
+									// <![CDATA[
+										objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.CHECKBOX);
+									// ]]>
+									</script>
+									<div class="clear"></div>
+								</div>

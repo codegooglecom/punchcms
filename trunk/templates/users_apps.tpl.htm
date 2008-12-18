@@ -1,0 +1,19 @@
+
+					<div class="column">
+						<form id="applicationForm" class="users" method="post" action="#">
+							<h3><span id="userProgress"></span>{SUBTITLE}</h3>
+							<div class="required">
+								<label for="application_define_name">{NAME_LABEL}</label>
+								<input type="text" id="application_define_name" name="application_define_name" class="input-textsmall" />
+							</div>
+							<h4>{AREAS_LABEL}</h4>
+							<fieldset>
+								<h5>{SELECTED_AREAS_LABEL}</h5>
+								<ul class="sortable strong" id="areas"></ul>
+							</fieldset>
+							<div>
+								<input type="hidden" id="application_id" name="application_id" />
+							</div>
+							<div class="subnav"><a href="javascript:void(0);" onclick="Application.load($F('itemList'), 'applicationForm');" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" onclick="Application.write('applicationForm');" class="input-button" value="{BUTTON_SAVE}" /></div>
+						</form>
+					</div>

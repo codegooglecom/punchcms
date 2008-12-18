@@ -1,0 +1,36 @@
+
+								<div class="required">
+									<label for="{FIELD_ID}" class="widget">
+										<a href="javascript:;" rel="internal" class="fieldButton"><img id="{FIELD_ID}_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+										{FIELD_REQUIRED}{FIELD_NAME}
+									</label>
+									<div id="{FIELD_ID}_alt" class="input-textbig disabled" style="display:none;margin-left:146px;"></div>
+									<div id="{FIELD_ID}_widget" class="widget">
+										<div class="required">
+											<label for="{FIELD_ID}">{FIELD_BROWSE_NAME}</label>
+											<input type="file" id="{FIELD_ID}" name="{FIELD_ID}_new" class="input-file" />
+											<input type="hidden" name="{FIELD_ID}[]" value="" />
+											<!-- BEGIN field.file.descr -->
+											<small>{FIELD_DESCRIPTION}</small>
+											<!-- END field.file.descr -->
+										</div>
+										<div id="filelist_current_{FIELD_ID}"><h3>{FIELD_HEADER_CURRENT}</h3></div>
+										<div id="filelist_new_{FIELD_ID}"><h3>{FIELD_HEADER_NEW}</h3></div>
+										<!-- BEGIN field.file.value -->
+										<input type="hidden" id="{FIELD_LANGUAGE_ID}_alttext" name="{FIELD_LANGUAGE_ID}_alttext" value="{FIELD_LANGUAGE_ALTTEXT_VALUE}" />
+										<input type="hidden" id="{FIELD_LANGUAGE_ID}_current" name="{FIELD_LANGUAGE_ID}_current" value="{FIELD_LANGUAGE_CURRENT_FILES}" />
+											<!-- BEGIN field.file.edit -->
+										<input type="hidden" id="{FIELD_LANGUAGE_ID_COUNT}" name="{FIELD_LANGUAGE_ID}[]" value="{FIELD_LANGUAGE_VALUE}" />
+											<!-- END field.file.edit -->
+										<!-- END field.file.value -->
+										<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
+										<script type="text/javascript">
+										// <![CDATA[
+											objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.FILE, {maxFiles:{FIELD_MAX_FILES}, maxChar:{FIELD_MAX_CHAR}, removeLabel:'{FIELD_LABEL_REMOVE}'});
+											Sortable.create("filelist_current_{FIELD_ID}", {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort('{FIELD_ID}')}});
+											Sortable.create("filelist_new_{FIELD_ID}", {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort('{FIELD_ID}')}});
+										// ]]>
+										</script>
+									</div>
+									<div class="clear"></div>
+								</div>

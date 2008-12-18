@@ -1,0 +1,119 @@
+
+		<div id="left-wrap" class="center-wrap">
+			<!-- BEGIN aliases -->
+			<h2>
+				<span class="menu"><a href="javascript:;" onclick="{BUTTON_ADD_HREF}" rel="internal">{BUTTON_ADD}</a></span>
+				{ALIASES}
+			</h2>
+			<div class="wrap">
+				<form id="aliasForm" method="post" action="?"{FRM_STYLE} class="fullpage">
+					<!-- BEGIN error-main -->
+					<div class="error-main">
+						<p>{ERROR_ALIAS_MAIN}</p>
+					</div>
+					<script type="text/javascript">
+					// <![CDATA[
+							Nifty("div.error-main");
+					// ]]>
+					</script>
+					<!-- END error-main -->
+					<fieldset>
+						<h3>{FRM_HEADER}</h3>
+						<div class="required">
+							<label for="frm_active" class="label-check"><input type="checkbox" id="frm_active" name="frm_active" class="input-checkbox" {FORM_ACTIVE_VALUE} /> {FRM_LABEL_ACTIVE}</label>							
+						</div>
+						<div class="required">
+							<label for="frm_alias">* {FRM_LABEL_ALIAS}</label>
+							<input type="text" id="frm_alias" name="frm_alias" class="input-textlarge" value="{FORM_ALIAS_VALUE}" />
+							<small>{FRM_DESCR_ALIAS}</small>
+						</div>					
+					</fieldset>
+					<fieldset class="traverse">
+						<div class="required traverse">
+							<label for="frm_element">&nbsp;</label>
+							<a href="javascript:;" onclick="Alias.loadElements()" rel="internal">One level deeper</a>
+						</div>
+					</fieldset>
+					<div class="form-navigation">
+						<input type="hidden" name="cid" value="{CID}" />
+						<input type="hidden" name="cmd" value="{CMD}" />
+						<input type="hidden" name="eid" value="{EID}" />
+						<input type="hidden" name="dispatch" value="editAlias" />
+						<input type="hidden" id="frm_element" name="frm_element" value="{FORM_URL_VALUE}" />
+						<input type="submit" class="input-button" value="{FRM_LABEL_SAVE}" />
+					</div>
+				</form>
+				<div class="fullpage" style="margin:18px 10px;">
+					<!-- BEGIN multiview -->
+					<div class="itemheader">
+						<div class="itemcount">
+							{LIST_ITEMS_PER_PAGE} <a {LIST_LENGTH_HREF_10} rel="internal">10</a> <a {LIST_LENGTH_HREF_25} rel="internal">25</a> <a {LIST_LENGTH_HREF_100} rel="internal">100</a>
+						</div>
+						<a href="{BUTTON_LIST_SELECT_HREF}" rel="internal">{BUTTON_LIST_SELECT}</a> <span>{LIST_WITH_SELECTED} <select id="frm_list_action" name="frm_list_action" onchange="{LIST_ACTION_ONCHANGE}">
+							<!-- BEGIN multiview-listactionitem -->
+							<option value="{LIST_ACTION_VALUE}">{LIST_ACTION_TEXT}</option>
+							<!-- END multiview-listactionitem -->
+						</select></span>
+					</div>
+					<!-- END multiview -->
+					<!-- BEGIN multiview-pagenav-top -->
+					<div class="page-nav">
+						<p>
+							<a href="{PAGENAV_PREVIOUS_HREF}" rel="internal"><strong>{PAGENAV_PREVIOUS}</strong></a>
+							<!-- BEGIN multiview-pagenavitem-top -->
+							<a {PAGENAV_HREF} rel="internal">{PAGENAV_VALUE}</a>
+							<!-- END multiview-pagenavitem-top -->
+							<a href="{PAGENAV_NEXT_HREF}" rel="internal"><strong>{PAGENAV_NEXT}</strong></a>
+						</p>
+						<h4>{PAGENAV_PAGE}</h4>
+					</div>
+					<!-- END multiview-pagenav-top -->
+					<br />
+					<div id="itemlist">
+						<!-- BEGIN multiview-item -->
+						<div class="itembox" id="box_{MULTIITEM_VALUE}">
+							<div class="off" onmouseover="if (Element.addClassName) Element.addClassName(this, 'offhover');" onmouseout="if (Element.removeClassName) Element.removeClassName(this, 'offhover');" style="cursor:pointer">
+								<div class="inactive">
+									<div class="menu">
+										<!-- BEGIN multiview-preview --><a href="{BUTTON_PREVIEW_HREF}" rel="internal">{BUTTON_PREVIEW}</a> | <!-- END multiview-preview --><!-- BEGIN multiview-duplicate --><a href="{BUTTON_DUPLICATE_HREF}" rel="internal">{BUTTON_DUPLICATE}</a> | <!-- END multiview-duplicate --><a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
+									</div>
+									<input type="checkbox" id="item_{MULTIITEM_VALUE}" name="item_{MULTIITEM_VALUE}" style="margin-top:2px" class="multiitem" />
+									<div class="{MULTIITEM_TYPE_CLASS}">
+										<p class="title"><a href="{MULTIITEM_HREF}"{MULTIITEM_ACTIVE} rel="internal">{MULTIITEM_ALIAS}</a> {MULTIITEM_POINTS_TO} <a href="{MULTIITEM_URL_HREF}" rel="internal" class="meta">{MULTIITEM_URL}</a></p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- END multiview-item -->
+					</div>
+					<br />
+					<!-- BEGIN multiview-pagenav-bottom -->
+					<div class="page-nav">
+						<p>
+							<a href="{PAGENAV_PREVIOUS_HREF}" rel="internal"><strong>{PAGENAV_PREVIOUS}</strong></a>
+							<!-- BEGIN multiview-pagenavitem-bottom -->
+							<a {PAGENAV_HREF}>{PAGENAV_VALUE}</a>
+							<!-- END multiview-pagenavitem-bottom -->
+							<a href="{PAGENAV_NEXT_HREF}" rel="internal"><strong>{PAGENAV_NEXT}</strong></a>
+						</p>
+						<h4>{PAGENAV_PAGE}</h4>
+					</div>
+					<!-- END multiview-pagenav-bottom -->
+				</div>
+			</div>			 
+			<script type="text/javascript">
+			 // <![CDATA[
+			 		<!-- BEGIN alias.add -->
+					Alias.loadElements();
+			 		<!-- END alias.add -->
+			 		<!-- BEGIN alias.edit -->
+					Alias.loadElements(true);
+			 		<!-- END alias.edit -->					
+			 // ]]>
+			 </script>
+			<!-- END aliases -->
+		</div>
+
+	</div>
+</div>
+

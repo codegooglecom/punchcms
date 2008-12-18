@@ -1,0 +1,22 @@
+
+								<div class="required">
+									<label for="{FIELD_ID}">
+										<a href="javascript:;" rel="internal" class="fieldButton"><img id="{FIELD_ID}_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+										{FIELD_REQUIRED}{FIELD_NAME}
+									</label>
+									<div id="{FIELD_ID}_alt" class="input-textbig disabled" style="display:none"></div>
+									<textarea id="{FIELD_ID}" name="{FIELD_ID}" class="input-textbig" onblur="objContentLanguage.toTemp(this.id);" rows="8" cols="40" style="height:{FIELD_HEIGHT}"></textarea>
+									<!-- BEGIN field.simpletext.descr -->
+										<small>{FIELD_DESCRIPTION}</small>
+									<!-- END field.simpletext.descr -->
+									<!-- BEGIN field.simpletext.value -->
+									<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
+									<!-- END field.simpletext.value -->
+									<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
+									<script type="text/javascript">
+									// <![CDATA[
+										objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.SIMPLETEXT);
+									// ]]>
+									</script>
+									<div class="clear"></div>
+								</div>

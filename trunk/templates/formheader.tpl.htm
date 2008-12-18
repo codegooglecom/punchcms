@@ -1,0 +1,74 @@
+
+<script type="text/javascript">
+// <![CDATA[
+
+function DragDropLink(){
+	//*** Action occures on drag.
+	this._drag = function(sourceHtmlObject, dhtmlObject, targetHtmlObject) {
+		targetHtmlObject.style.backgroundColor = "";
+		targetHtmlObject.value = sourceHtmlObject.parentObject.id;
+		
+		//*** Trigger the language module.
+		objContentLanguage.toTemp(targetHtmlObject.id);
+	}
+
+	//*** Action occures on drag moved in landing zone.
+	this._dragIn = function(htmlObject, shtmlObject) {
+		htmlObject.style.backgroundColor = "#fffacd";
+		return htmlObject;
+	}
+
+	//*** Action occures on drag moved out landing zone.
+	this._dragOut = function(htmlObject) {
+		htmlObject.style.backgroundColor = "";
+		return this;
+	}
+}
+
+//*** Resize tree container.
+function resizeTree() {
+	var objTree = $("treeContainer");		
+	var windowHeight = window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight);
+	var offsetY = Position.cumulativeOffset(objTree)[1];
+	var treeHeight = windowHeight - offsetY - 60;
+	objTree.setStyle({height: treeHeight + 'px'});
+	objTree.getElementsByClassName('containerTableStyle').each(function(s){
+		s.setStyle({height: treeHeight + 'px'});
+	});
+}
+
+//*** Tab logic.
+Event.observe(window, 'load', function(event) {
+	$$('ul.anchors a').invoke('observe', 'click', function(event){
+		$$('ul.anchors a').each(function(n){
+			$(n).removeClassName('on');
+			var strId = $(n).readAttribute('href').split("#").pop();
+			$(strId).hide();
+		});
+		Event.element(event).addClassName('on').blur();
+		var strId = Event.element(event).readAttribute('href').split("#").pop();
+		$(strId).setStyle({display:'block'});
+		if (typeof FCKeditorAPI == "object") {
+			for (var obj in FCKeditorAPI.__Instances) {
+				var objEdit = FCKeditorAPI.GetInstance(obj);
+				if (objEdit.Status == 2 && typeof objEdit.MakeEditable == "function") {
+					objEdit.MakeEditable();
+				}
+			}
+		}
+		Event.stop(event);
+	});
+	
+	if ($("treeContainer")) {
+		Event.observe(window, 'resize', function(event) {	
+			resizeTree();
+		});
+		resizeTree();
+	}
+});
+
+{SCRIPT}
+
+// ]]>
+</script>
+</head>

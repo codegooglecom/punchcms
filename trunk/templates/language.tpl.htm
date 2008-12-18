@@ -1,0 +1,73 @@
+
+		<div id="left-wrap" class="center-wrap">
+			<!-- BEGIN settings -->
+			<h2>
+				<span class="menu"><a href="javascript:;" onclick="{BUTTON_ADD_HREF}" rel="internal">{BUTTON_ADD}</a></span>
+				{LANGUAGES}
+			</h2>
+			<div class="wrap">
+				<form id="languageForm" method="post" action="?"{FRM_STYLE}>
+					<!-- BEGIN error-main -->
+					<div class="error-main">
+						<p>{FRM_ERROR_MAIN}</p>
+					</div>
+					<script type="text/javascript">
+					// <![CDATA[
+							Nifty("div.error-main");
+					// ]]>
+					</script>
+					<!-- END error-main -->
+					<fieldset>
+						<h3>{FRM_HEADER}</h3>
+						<div class="required">
+							<label for="frm_active" class="label-check"><input type="checkbox" id="frm_active" name="frm_active" class="input-checkbox" {FORM_ACTIVE_VALUE} /> {FRM_LABEL_ACTIVE}</label>							
+						</div>
+						<div class="required">
+							<label for="frm_name">* {FRM_LABEL_NAME}</label>
+							<input type="text" id="frm_name" name="frm_name" class="input-textlarge" value="{FORM_NAME_VALUE}" />
+						</div>						
+						<div class="required">
+							<label for="frm_apiname">* {FRM_LABEL_ABBR}</label>
+							<input type="text" id="frm_apiname" name="frm_apiname" class="input-textsmall" value="{FORM_APINAME_VALUE}" />
+							<small>{FRM_DESCR_ABBR}</small>
+						</div>
+						<input type="hidden" name="dispatch" value="editLanguage" />
+					</fieldset>
+					<div class="form-navigation">
+						<input type="hidden" name="cid" value="{CID}" />
+						<input type="hidden" name="cmd" value="{CMD}" />
+						<input type="hidden" name="eid" value="{EID}" />
+						<input type="submit" class="input-button" value="{FRM_LABEL_SAVE}" />
+					</div>
+				</form>
+				<div id="itemlist" style="margin:18px 10px;">
+					<!-- BEGIN multiview-item -->
+					<div class="itembox" id="box_{MULTIITEM_VALUE}">
+						<div class="off" onmouseover="if (Element.addClassName) Element.addClassName(this, 'offhover');" onmouseout="if (Element.removeClassName) Element.removeClassName(this, 'offhover');">
+							<div class="inactive">
+								<div class="menu">
+									<a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
+								</div>
+								<div class="language">
+									<p class="title"><a href="{MULTIITEM_HREF}"{MULTIITEM_ACTIVE} rel="internal">{MULTIITEM_NAME}</a>, {MULTIITEM_ABBR}</p>
+									<p class="meta">{MULTIITEM_META}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- END multiview-item -->
+				</div>
+			</div>			 
+			<script type="text/javascript">
+			 // <![CDATA[
+					var objContentLanguage = new ContentLanguage();
+					Position.includeScrollOffsets = true;
+					Sortable.create("itemlist", {tag:"div",only:"itembox",onUpdate:initUpdateSort});
+			 // ]]>
+			 </script>
+			<!-- END settings -->
+		</div>
+
+	</div>
+</div>
+

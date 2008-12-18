@@ -1,0 +1,80 @@
+<?php
+
+/* ElementFieldBigText Class v0.1.0
+ * Handles ElementFieldBigText properties and methods.
+ *
+ * CHANGELOG
+ * version 0.1.0, 04 Apr 2006
+ *   NEW: Created class.
+ */
+
+class ElementFieldBigText extends DBA_ElementFieldBigText {
+
+	public static function getByFieldId($intFieldId, $intLanguageId = 0) {
+		self::$__object = "ElementFieldBigText";
+		self::$__table = "pcms_element_field_bigtext";
+
+		$objReturn = new ElementFieldBigText();
+
+		if ($intFieldId > 0) {
+			$strSql = sprintf("SELECT * FROM " . self::$__table . " WHERE fieldId = '%s' AND languageId = '%s'",
+						quote_smart($intFieldId), quote_smart($intLanguageId));
+			$objElementValues = ElementFieldBigText::select($strSql);
+
+			if (is_object($objElementValues) && $objElementValues->count() > 0) {
+				$objReturn = $objElementValues->current();
+			}
+		}
+
+		return $objReturn;
+	}
+
+	public function delete($blnRemovePhysical = FALSE) {
+		self::$__object = "ElementFieldBigText";
+		self::$__table = "pcms_element_field_bigtext";
+
+		if ($blnRemovePhysical) {
+			//*** Get TemplateField.
+			$objElementField = ElementField::selectByPk($this->fieldId);
+			if (is_object($objElementField)) {
+				$objTemplateField = TemplateField::selectByPk($objElementField->getTemplateFieldId());
+
+				switch ($objTemplateField->getTypeId()) {
+					case FIELD_TYPE_FILE:
+					case FIELD_TYPE_IMAGE:
+						//*** Get remote settings.
+						$strServer = Setting::getValueByName('ftp_server');
+						$strUsername = Setting::getValueByName('ftp_username');
+						$strPassword = Setting::getValueByName('ftp_password');
+						$strRemoteFolder = Setting::getValueByName('ftp_remote_folder');
+
+						//*** Remove deleted files.
+						$objFtp = new FTP($strServer);
+						$objFtp->login($strUsername, $strPassword);
+						$objFtp->pasv(TRUE);
+						$arrValues = explode("\n", $this->value);
+						foreach ($arrValues as $value) {
+							if (!empty($value)) {
+								//*** Find file name.
+								$arrFile = explode(":", $value);
+								if (count($arrFile) > 1) {
+									//*** Check if the file is used by other elements.
+									if (!ElementField::fileHasDuplicates($value, 1)) {
+										//*** Remove file.
+										$strFile = $strRemoteFolder . $arrFile[1];
+										$objFtp->delete($strFile);
+									}										
+								}
+							}
+						}
+						break;
+				}
+			}
+		}
+
+		return parent::delete();
+	}
+
+}
+
+?>

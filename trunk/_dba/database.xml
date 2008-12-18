@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="_proto_classes">
+	<table name="pcms_alias" phpName="Alias">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="alias" type="varchar" />
+		<column name="url" type="varchar" />
+		<column name="active" type="integer" default="1" />
+	</table>
+	<table name="pcms_announce_message" phpName="AnnounceMessage">
+		<column name="id" primaryKey="true" />
+		<column name="header" type="varchar" />
+		<column name="message" type="varchar" />
+	</table>
+	<table name="pcms_announce_user" phpName="AnnounceUser">
+		<column name="id" primaryKey="true" />
+		<column name="messageId" type="integer" />
+		<column name="permUserId" type="integer" />
+	</table>
+	<table name="pcms_audit_log" phpName="AuditLog">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="type" type="integer" />
+		<column name="typeId" type="integer" />
+		<column name="typeName" type="varchar" />
+		<column name="userId" type="integer" />
+		<column name="userName" type="varchar" />
+		<column name="action" type="varchar" />
+		<column name="description" type="varchar" />
+	</table>
+	<table name="pcms_element" phpName="Element">
+		<column name="id" type="integer" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="nameCount" type="integer" />
+		<column name="apiName" type="varchar" />
+		<column name="description" type="varchar" />
+		<column name="typeId" type="integer" />
+		<column name="templateId" type="integer" />
+		<column name="isPage" type="integer" />
+		<column name="parentId" type="integer" />
+		<column name="userId" type="integer" />
+		<column name="groupId" type="integer" />
+		<column name="active" type="integer" default="1" />
+		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_element_field" phpName="ElementField">
+		<column name="id" primaryKey="true" />
+		<column name="elementId" type="integer" />
+		<column name="templateFieldId" type="integer" />
+		<column name="fieldTypeId" type="integer" />
+		<column name="originalName" type="varchar" />
+		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_element_field_bigtext" phpName="ElementFieldBigText">
+		<column name="id" primaryKey="true" />
+		<column name="value" type="varchar" />
+		<column name="fieldId" type="integer" />
+		<column name="languageId" type="integer" />
+		<column name="cascade" type="integer" />
+	</table>
+	<table name="pcms_element_field_date" phpName="ElementFieldDate">
+		<column name="id" primaryKey="true" />
+		<column name="value" type="datetime" />
+		<column name="fieldId" type="integer" />
+		<column name="languageId" type="integer" />
+		<column name="cascade" type="integer" />
+	</table>
+	<table name="pcms_element_field_number" phpName="ElementFieldNumber">
+		<column name="id" primaryKey="true" />
+		<column name="value" type="integer" />
+		<column name="fieldId" type="integer" />
+		<column name="languageId" type="integer" />
+		<column name="cascade" type="integer" />
+	</table>
+	<table name="pcms_element_field_text" phpName="ElementFieldText">
+		<column name="id" primaryKey="true" />
+		<column name="value" type="varchar" />
+		<column name="fieldId" type="integer" />
+		<column name="languageId" type="integer" />
+		<column name="cascade" type="integer" />
+	</table>
+	<table name="pcms_element_language" phpName="ElementLanguage">
+		<column name="id" primaryKey="true" />
+		<column name="elementId" type="integer" />
+		<column name="languageId" type="integer" />
+		<column name="cascade" type="integer" />
+		<column name="active" type="integer" default="1" />
+	</table>
+	<table name="pcms_element_meta" phpName="ElementMeta">
+		<column name="id" primaryKey="true" />
+		<column name="elementId" type="integer" />
+		<column name="title" type="varchar" />
+		<column name="keywords" type="varchar" />
+		<column name="description" type="varchar" />
+		<column name="languageId" type="integer" />
+		<column name="cascade" type="integer" />
+	</table>
+	<table name="pcms_element_permission" phpName="ElementPermission">
+		<column name="id" primaryKey="true" />
+		<column name="elementId" type="integer" />
+		<column name="userId" type="integer" />
+		<column name="groupId" type="integer" />
+	</table>
+	<table name="pcms_element_schedule" phpName="ElementSchedule">
+		<column name="id" primaryKey="true" />
+		<column name="elementId" type="integer" />
+		<column name="startDate" type="datetime" />
+		<column name="endDate" type="datetime" />
+		<column name="startActive" type="integer" />
+		<column name="endActive" type="integer" />
+		<column name="monday" type="integer" />
+		<column name="tuesday" type="integer" />
+		<column name="wednesday" type="integer" />
+		<column name="thursday" type="integer" />
+		<column name="friday" type="integer" />
+		<column name="saturday" type="integer" />
+		<column name="sunday" type="integer" />
+		<column name="startTime" type="datetime" />
+		<column name="endTime" type="datetime" />
+	</table>
+	<table name="pcms_element_type" phpName="ElementType">
+		<column name="id" primaryKey="true" />
+		<column name="name" type="varchar" />
+	</table>
+	<table name="pcms_storage_item" phpName="StorageItem">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="parentId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="description" type="varchar" />
+		<column name="typeId" type="integer" />
+		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_storage_data" phpName="StorageData">
+		<column name="id" primaryKey="true" />
+		<column name="itemId" type="integer" />
+		<column name="originalName" type="varchar" />
+		<column name="localName" type="varchar" />
+	</table>
+	<table name="pcms_form" phpName="Form">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="apiName" type="varchar" />
+		<column name="description" type="varchar" />
+		<column name="active" type="integer" />
+		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_language" phpName="ContentLanguage">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="abbr" type="varchar" />
+		<column name="active" type="integer" />
+		<column name="default" type="integer" />
+		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_search_index" phpName="SearchIndex">
+		<column name="id" primaryKey="true" />
+		<column name="elementId" type="integer" />
+		<column name="word" type="integer" />
+		<column name="count" type="varchar" />
+	</table>
+	<table name="pcms_setting" phpName="Setting">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="settingId" type="integer" />
+		<column name="value" type="varchar" />
+		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_setting_tpl" phpName="SettingTemplate">
+		<column name="id" primaryKey="true" />
+		<column name="name" type="varchar" />
+		<column name="value" type="varchar" />
+		<column name="section" type="varchar" />
+		<column name="type" type="varchar" />
+	</table>
+	<table name="pcms_structure" phpName="Structure">
+		<column name="id" primaryKey="true" />
+		<column name="fileName" type="varchar" />
+		<column name="section" type="varchar" />
+	</table>
+	<table name="pcms_structure_meta" phpName="StructureDetails">
+		<column name="id" primaryKey="true" />
+		<column name="structureId" type="integer" />
+		<column name="language" type="varchar" />
+		<column name="name" type="varchar" />
+		<column name="description" type="varchar" />
+	</table>
+	<table name="pcms_template" phpName="Template">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="apiName" type="varchar" />
+		<column name="description" type="varchar" />
+		<column name="parentId" type="integer" />
+		<column name="isPage" type="integer" />
+		<column name="isContainer" type="integer" />
+		<column name="forceCreation" type="integer" default="0" />
+		<column name="active" type="integer" />
+		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_template_field" phpName="TemplateField">
+		<column name="id" primaryKey="true" />
+		<column name="templateId" type="integer" />
+		<column name="formId" type="integer" />
+		<column name="typeId" type="integer" />
+		<column name="required" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="apiName" type="varchar" />
+		<column name="description" type="varchar" />
+		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_template_field_type" phpName="TemplateFieldType">
+		<column name="id" primaryKey="true" />
+		<column name="name" type="varchar" />
+		<column name="input" type="varchar" />
+		<column name="element" type="varchar" />
+	</table>
+	<table name="pcms_template_field_value" phpName="TemplateFieldValue">
+		<column name="id" primaryKey="true" />
+		<column name="fieldId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="value" type="varchar" />
+	</table>
+	<table name="punch_account" phpName="Account">
+		<column name="id" primaryKey="true" />
+		<column name="punchId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="uri" type="varchar" />
+		<column name="timeZoneId" type="integer" />
+		<column name="active" type="integer" />
+	</table>
+	<table name="punch_account_product" phpName="AccountProduct">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="productId" type="integer" />
+		<column name="expires" type="datetime" />
+	</table>
+	<table name="punch_product" phpName="Product">
+		<column name="id" primaryKey="true" />
+		<column name="parentId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="active" type="integer" />
+	</table>
+	<table name="punch_timezone" phpName="Timezone">
+		<column name="id" primaryKey="true" />
+		<column name="shortName" type="varchar" />
+		<column name="longName" type="varchar" />
+	</table>
+</database>

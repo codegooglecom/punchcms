@@ -1,0 +1,36 @@
+
+		<div id="left-wrap">
+			<h2>{MAINTITLE}</h2>
+			<div id="treeContainer"></div>
+			<div id="content" class="hollyhacked">
+				<div class="wrap" style="float:left;">
+					<div id="folder">
+						<h3>
+							<!-- BEGIN main-buttons --><span class="menu"><a href="javascript:void(0);" onclick="{OBJECT}.clearForm('{FORM}');" rel="internal">{BUTTON_NEW}</a> | <a href="javascript:void(0);" onclick="{OBJECT}.remove($F('itemList'));" rel="internal">{BUTTON_REMOVE}</a></span><!-- END main-buttons -->
+							{LISTTITLE}
+						</h3>
+						<!-- BEGIN main-itemlist -->
+						<form id="usersForm" class="users" method="post" action="#">
+							<select id="itemList" name="itemList" class="select-multismall" multiple="multiple" size="21" onchange="{OBJECT}.load($F('itemList'));">
+								<!-- BEGIN main-items -->
+								<option value="{VALUE}">{TEXT}</option>
+								<!-- END main-items -->
+							</select>
+						</form>
+						<!-- END main-itemlist -->
+						<!-- BEGIN main-return -->
+						<p>{RETURN}</p>
+						<!-- END main-return -->
+					</div>
+
+					{USER_EDIT}
+
+				</div>
+			</div>
+			<div id="footer">
+				&nbsp;<!-- The footer -->
+			</div>
+		</div>
+
+	</div>
+</div>

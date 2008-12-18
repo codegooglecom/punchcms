@@ -1,0 +1,239 @@
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #fff;
+	font: normal 10px Verdana;
+	color: #000;
+}
+
+a:link, 
+a:visited 
+{
+	color: #333;
+	font: bold 10px Verdana;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a img {
+	border: none;
+}
+
+h1 {
+	font: bold 18px "Trebuchet MS", Helvetica, sans-serif;
+	color: #36c;
+	padding: 15px 15px;
+}
+
+h1.center {
+	text-align: center;
+}
+
+h2 {
+	font: bold 16px "Trebuchet MS", Helvetica, sans-serif;
+	color: #666;
+	padding-left: 150px;
+}
+
+p {
+	margin-bottom: 15px;
+}
+
+#topbar {
+	padding: 6px 15px;
+	font: normal 10px Arial;
+	color: #ccc;
+	background: #666;
+	text-align: right;
+}
+
+#topbar span {
+	color: #fff;
+}
+
+#topbar a:link,
+#topbar a:visited
+{
+	color: #fff;
+}
+
+#menu-main {
+	padding: 0 15px;
+	background: #ccc;
+	height: 38px;
+}
+
+#menu-main li {
+	float: left;
+	list-style: none;
+}
+
+#menu-main a:link, 
+#menu-main a:visited 
+{
+	float: left;
+	font: normal 11px Arial;
+	color: #333;
+	padding: 12px;
+}
+
+#menu-main a:hover {
+	background: #999;
+	text-decoration: none;
+}
+
+#menu-main a.active:link, 
+#menu-main a.active:visited 
+{
+	color: #fff;
+	background: #666;
+}
+
+#menu-sub {
+	padding: 0 15px;
+}
+
+#menu-sub li {
+	float: left;
+	list-style: none;
+	padding: 6px 0;
+}
+
+#menu-sub a:link, 
+#menu-sub a:visited 
+{
+	padding: 0 12px;
+	font: normal 11px Arial;
+	color: #232323;
+	border-right: 1px solid #232323;
+}
+
+#menu-sub a:hover {
+	text-decoration: underline;
+}
+
+#menu-sub a.active:link, 
+#menu-sub a.active:visited 
+{
+	font-weight: bold;
+}
+
+#menu-sub a.last:link, 
+#menu-sub a.last:visited 
+{
+	border-right: none;
+}
+
+#login {
+	margin: 30px auto 40px auto;
+	width: 280px;
+	padding: 20px;
+	background-color: #f2e5e9;
+	color: #666;
+	font: normal 13px Arial;
+}
+
+#login h1 {
+	font: bold 26px Arial;
+	color: #666;
+	padding: 0;
+}
+
+#login p.error {
+	background: #ccc;
+	margin-bottom: 10px;
+	padding: 5px 8px;
+	font-weight: bold;
+}
+
+#login fieldset {
+	margin-top: 10px;
+	border: none;
+}
+
+#login fieldset div {
+	margin: 5px 0;
+}
+
+#login fieldset div.navigation {
+	float: right;
+	margin: 10px 0 5 0;
+}
+
+#login label {
+	float: left;
+	font-weight: bold;
+	width: 80px;
+}
+
+#login .text-medium {
+	width: 183px;
+}
+
+#content {
+	display: inline;
+	float: left;
+	margin: 25px 27px 35px 27px;
+	clear: both;
+	width: 475px;
+}
+
+#content .list span {
+	font: bold 11px Verdana;
+	color: #336;
+}
+
+#content .list li {
+	list-style: none;
+}
+
+#content .list .listitem {
+	background: #edf3f8;
+	padding: 3px 5px;
+	margin-bottom: 3px;
+}
+
+#content .list .menu a:link,
+#content .list .menu a:visited
+{
+	font: bold 11px Arial;
+	color: #869fb6;
+	margin-left: 10px;
+}
+
+#content .list .menu a:hover {
+	color: #369;
+	text-decoration: none;
+}
+
+#content .list .menu {
+	float: right;
+	background: none;
+	padding: 0;
+	margin: 0;
+}
+
+#content .sublist {
+	margin-left: 15px;
+}
+
+#content .sublist .listitem {
+	background: #dfe9f1;
+}
+
+#footer {
+	clear: both;
+	background: #f3f3f3;
+	padding: 6px 15px;
+	text-align: right;
+	font-size: 9px;
+	line-height: 9px;
+	color: #777;
+}
