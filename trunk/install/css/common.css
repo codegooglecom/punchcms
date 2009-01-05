@@ -48,6 +48,14 @@ li {
 	margin-bottom: 5px;
 }
 
+p.error {
+	color: #900;
+}
+
+p.success {
+	color: #0d0;
+}
+
 form {
 	width: 470px;
 }

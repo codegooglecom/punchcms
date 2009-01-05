@@ -6,16 +6,22 @@ class PCMS_Installer {
 	private $__db_username;
 	private $__db_passwd;
 
-	public function __construct() {
-	
-	}
+	public function __construct() {}
 
 	public function checkRequirements() {
-		$strOutput = "";
-	
+		$strReturn = "";
 		
+		//*** PHP version.
+		if (version_compare(PHP_VERSION, '5.0.0') < 1) {
+			$strReturn .= "<li>Your version of PHP is too old. Minimum required version is <b>5.0.0</b>. Please upgrade.</li>";
+		}
+		
+		//*** Folder permissions.
+		if (!$this->__hasWrite("../install")) $strReturn .= "<li>The &quot;<b>install</b>&quot; folder needs write permissions. Please adjust the settings.</li>";
+		if (!$this->__hasWrite("../backups")) $strReturn .= "<li>The &quot;<b>backups</b>&quot; folder needs write permissions. Please adjust the settings.</li>";
+		if (!$this->__hasWrite("../files")) $strReturn .= "<li>The &quot;<b>files</b>&quot; folder needs write permissions. Please adjust the settings.</li>";
 	
-		return $strOutput;
+		return $strReturn;
 	}
 	
 	public function getForm() {
@@ -274,6 +280,14 @@ class PCMS_Installer {
 		}
 		
 		return $strReturn;
+	}
+	
+	private function __hasWrite($folder) {
+		$blnReturn = FALSE;
+		
+		$blnReturn = is_writable($folder);
+		
+		return $blnReturn;
 	}
 		
 }

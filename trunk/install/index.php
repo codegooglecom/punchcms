@@ -10,7 +10,8 @@ $objInstaller = new PCMS_Installer();
 $strRequirements = $objInstaller->checkRequirements();
 
 if (!empty($strRequirements)) {
-	$strOutput = $strRequirements;
+	$strOutput = "<p class=\"error\">Some requirement checks came back negative.<br />Fix all items in the list below and refresh this screen to continue the installation.</p>";
+	$strOutput .= "<ul>" . $strRequirements . "</ul>";
 } else {
 	$objForm = $objInstaller->getForm();
 	
