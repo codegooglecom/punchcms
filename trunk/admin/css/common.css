@@ -220,6 +220,15 @@ p {
 	margin: 0;
 }
 
+#content .list a.linkitem {
+	font: bold 11px Verdana;
+	color: #336;
+}
+
+#content .list a.linkitem:hover {
+	color: #369;
+}
+
 #content .sublist {
 	margin-left: 15px;
 }

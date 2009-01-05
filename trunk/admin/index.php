@@ -27,7 +27,9 @@ switch ($cmd) {
 			case NAV_ACCOUNT:
 				//*** Delete account.
 				$objAccount = Account::selectByPk($eId);
-				$objAccount->delete();
+				if (is_object($objAccount)) {
+					$objAccount->delete();
+				}
 
 				$cmd = CMD_BROWSE;
 				break;

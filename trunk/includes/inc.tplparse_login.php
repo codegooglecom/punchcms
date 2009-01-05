@@ -75,10 +75,13 @@ function parseLogin($intElmntId, $strCommand) {
 				$objTpl->parseCurrentBlock();
 			}
 	}
-
-	$objTpl->setVariable("CLIENT_LINK", $_CONF['cust']['link']);
-	$objTpl->setVariable("CLIENT_LOGO", "images/splash_login_{$objLang->language}.jpg");
-	$objTpl->setVariable("CLIENT_NAME", $_CONF['cust']['alttext']);
+	
+	if (is_object($_CONF['app']['account'])) {
+		$objTpl->setVariable("CLIENT_NAME", $_CONF['app']['account']->getName());
+	} else {
+		$objTpl->setVariable("CLIENT_NAME", $objLang->get("invalidAccount", "login"));
+	}
+	$objTpl->setVariable("POWERED_BY", $objLang->get("poweredBy", "label"));
 	$objTpl->setVariable("CID", NAV_MYPUNCH_LOGIN);
 	$objTpl->setVariable("CMD", $strCommand);
 

@@ -75,7 +75,7 @@ function parseHeader($intCatId, $strCommand, $intElmntId) {
 			break;
 	}
 	
-	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYSPIN_ANNOUNCEMENTS_VIEW)) {
+	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
 		$objTpl->touchBlock("lightbox");
 	}
 
@@ -340,7 +340,7 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 
 	//*** Announcement script.
 	$strScript .= "function loadAnnouncement() {";
-	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYSPIN_ANNOUNCEMENTS_VIEW)) {
+	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
 		$strScript .= "objLightbox = new lightbox('index.php?cid=24');";
 		$strScript .= "objLightbox.activate();";
 	}
@@ -366,7 +366,7 @@ function parseMenu($intCatId, $strCommand) {
 	$objTpl->setVariable("COMPANY_NAME", htmlentities($_CONF['app']['account']->getName()));
 	$objTpl->setVariable("USER_NAME", $objLiveUser->getProperty('name'));
 
-	if ($objLiveUser->checkRight(MYSPIN_PROFILE_VIEW)) {
+	if ($objLiveUser->checkRight(MYPUNCH_PROFILE_VIEW)) {
 		$objTpl->setVariable("PROFILE_LINK", "href=\"?cid=" . NAV_MYPUNCH_PROFILE . "\"");
 	}
 

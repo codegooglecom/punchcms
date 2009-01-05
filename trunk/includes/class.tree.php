@@ -174,7 +174,7 @@ class Tree {
 			case "elements":
 				$objElements = Elements::getFromParent($intElmntId);
 				foreach ($objElements as $objElement) {
-					if ($objLiveUser->checkRightLevel(SPINCMS_ELEMENTS_VIEW, $objElement->getPermissions()->getUserId(), $objElement->getPermissions()->getGroupId())) {
+					if ($objLiveUser->checkRightLevel(PUNCHCMS_ELEMENTS_VIEW, $objElement->getPermissions()->getUserId(), $objElement->getPermissions()->getGroupId())) {
 						$objChildren = $objElement->getElements();
 
 						if (is_object($objChildren) && $objChildren->count() > 0 && $objElement->getTypeId() != ELM_TYPE_FOLDER) {

@@ -1,7 +1,7 @@
 <?php
 
-define("APP_NAME", "SpinCMS");
-define("APP_VERSION", "2.3.0 beta");
+define("APP_NAME", "PunchCMS");
+define("APP_VERSION", "2.2.3 beta");
 define("APP_DEFAULT_STARTDATE", "0000-00-00 00:00:00");
 define("APP_DEFAULT_ENDDATE", "2100-01-01 01:00:00");
 
@@ -78,9 +78,6 @@ define('FIELD_TYPE_CHECK_LIST_SINGLE', 13);
 define('FIELD_TYPE_SIMPLETEXT', 14);
 
 define('PRODUCT_PCMS', 1);
-define('PRODUCT_PPROJECTS', 2);
-define('PRODUCT_MOVIESELECTOR', 3);
-define('PRODUCT_SPINMAPS', 8);
 
 define('AUDIT_TYPE_ELEMENT', 1);
 define('AUDIT_TYPE_TEMPLATE', 2);

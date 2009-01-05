@@ -1,11 +1,6 @@
 <?php
 
 /******************************
-* Start session.
-***/
-session_start();
-
-/******************************
 * Load constantes.
 ***/
 require_once(dirname(__FILE__) . '/../../includes/inc.constantes.php');
@@ -14,15 +9,28 @@ require_once('inc.constantes.php');
 /******************************
 * Load configuration.
 ***/
-require_once(dirname(__FILE__) . '/../../config.php');
+if (!@include_once(dirname(__FILE__) . '/../../config.php')) {
+	//*** Configuration not yet written.
+	if (is_file('../install/index.php')) {
+		//*** Redirect to installer.
+		header("Location: ../install/index.php");
+		exit();
+	} else {
+		//*** Installer not found. Exit with error.
+		echo "Configuration file not found and installer could not be located. Please re-install PunchCMS.";
+		exit;
+	}
+}
 require_once(dirname(__FILE__) . '/../config.php');
+
+/******************************
+* Start session.
+***/
+session_start();
 
 /******************************
 * Set include paths.
 ***/
-$_PATHS['global_includes'] 	= $_CONF['app']['basePath'] . '../../../spin-maps/__resources/includes/';
-$_PATHS['global_libraries'] = $_CONF['app']['basePath'] . '../../../spin-maps/__resources/libraries/';
-$_PATHS['global_pear'] 		= $_CONF['app']['basePath'] . '../../../spin-maps/__resources/pear/';
 $_PATHS['includes'] 		= $_CONF['app']['basePath'] . 'includes/';
 $_PATHS['libraries'] 		= $_CONF['app']['basePath'] . 'libraries/';
 $_PATHS['pear']				= $_CONF['app']['basePath'] . 'pear/';
@@ -30,10 +38,7 @@ $_PATHS['backup']			= $_CONF['app']['basePath'] . 'backups/';
 $_PATHS['templates']		= dirname(__FILE__) . '/../templates/';
 $_PATHS['upload']			= $_CONF['app']['basePath'] . 'files/';
 
-ini_set("include_path", $_PATHS['global_includes'] . 
-	PATH_SEPARATOR . $_PATHS['global_libraries'] .
-	PATH_SEPARATOR . $_PATHS['global_pear'] . 
-	PATH_SEPARATOR . $_PATHS['includes'] .
+ini_set("include_path", $_PATHS['includes'] .
 	PATH_SEPARATOR . $_PATHS['libraries'] .
 	PATH_SEPARATOR . $_PATHS['pear']);
 
@@ -105,7 +110,7 @@ $liveuserConfig = array(
  			'secret' => 'Spice up your life with a little salt.',
             'storage' => array(
                 'dsn' => $_CONF['db']['dsn'],
-                'prefix' => 'liveuser_',
+                'prefix' => 'punch_liveuser_',
                 'tables' => array(
                     'users' => array(
                         'fields' => array(
@@ -149,7 +154,7 @@ $liveuserConfig = array(
         'storage' => array(
             'MDB2' => array(
                 'dsn' => $_CONF['db']['dsn'],
-                'prefix' => 'liveuser_',
+                'prefix' => 'punch_liveuser_',
  				'force_seq' => 'false',
 				'tables' => array(
 					'groups' => array(

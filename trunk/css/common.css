@@ -35,20 +35,55 @@ img {
 }
 
 #login #canvas {
-	width: 394px;
+	width: 448px;
 	margin: 80px auto 0 auto;
-	background: #F6F8FC;
-	border: 8px solid #D5DCEE;
-	padding: 20px;
+	background: #F6F8FC url(../images/login-bg.gif) left top repeat-y;
+	padding: 0;
 	text-align: center;
 }
 
+#login #canvas-top {
+	background: url(../images/login-top.gif) left top no-repeat;
+	padding-top: 27px;
+}
+
+#login #canvas-bottom {
+	background: url(../images/login-bottom.gif) left bottom no-repeat;
+	padding: 0 27px 22px 27px;
+}
+
+#login #canvas div.client {
+	background: #294379 url(../images/login-inner-top.gif) left top no-repeat;
+	text-align: left;
+	overflow: auto;
+	margin-bottom: 24px;
+	position: relative;
+	height: 93px;
+}
+
+#login #canvas span.systemlink {
+	position: absolute;
+	right: 6px;
+	bottom: 4px;
+	color: #718bc4;
+	font: normal 9px Arial, Helvetica, sans-serif;
+}
+
+#login #canvas span.systemlink a {
+	color: #9effff;
+	font: normal 9px Arial, Helvetica, sans-serif;
+	padding: 0;
+}
+
+#login #canvas span.systemlink a:hover {
+	background: none;
+}
+
 #login #canvas h1 {
-	font-size: 22px;
-	font-family: "MS Trebuchet", Verdana, sans-serif;
-	font-weight: bold;
-	color:  #2c457c;
-	margin-bottom: 15px;
+	font: bold 30px Arial, Helvetica, sans-serif;
+	color:  #f6f8fc;
+	line-height: 32px;
+	padding: 10px 14px 4px 14px;
 }
 
 #login #canvas img {

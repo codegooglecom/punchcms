@@ -529,18 +529,8 @@ class Element extends DBA_Element {
 			$objFtp->delete(Setting::getValueByName('caching_ftp_folder') . "/*_{$this->id}_*");
 			
 			$objParent = Element::selectByPk($this->getParentId());
-			if (is_object($objParent)) {
-				$objParent->clearCache($objFtp);
-			} else {
-				$objFtp->delete(Setting::getValueByName('caching_ftp_folder') . "/*_0_*");
-			}
+			if (is_object($objParent)) $objParent->clearCache($objFtp);
 		}
-	}
-	
-	public function getMeta() {
-		$objReturn = new ElementMeta($this->getId());
-		
-		return $objReturn;
 	}
 	
 	private function createForcedElements() {

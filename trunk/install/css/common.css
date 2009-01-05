@@ -1,0 +1,68 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 0;
+	padding: 10px 20px;
+	background: #fff;
+	color: #666;
+	font: normal 14px Arial,Helvetica,sans-serif;
+}
+
+h1 {
+	color:#3366CC;
+	font: bold 20px "Trebuchet MS", Helvetica, sans-serif;
+	padding: 15px 0;
+}
+
+p {
+	margin-bottom: 15px;
+}
+
+a img {
+	border: none;
+	display: block;
+}
+
+a:link, 
+a:visited 
+{
+	font: normal 14px Arial,Helvetica,sans-serif;
+	text-decoration: underline;
+	color: #339;
+}
+
+a:hover {
+	color: #fff;
+	background-color: #339;
+	text-decoration: none;
+}
+
+ul, ol {
+	margin-left: 21px;
+}
+
+li {
+	margin-bottom: 5px;
+}
+
+form {
+	width: 470px;
+}
+
+form label {
+	width: 150px;
+}
+
+form .vf__tip {
+	margin-left: 164px;
+	width: 145px;
+	font-size: 11px;
+}
+
+form p.vf__error {
+	margin-left: 162px;
+	font-size: 12px;
+}

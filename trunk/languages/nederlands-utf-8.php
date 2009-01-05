@@ -35,6 +35,7 @@ $_LANG['login']['labelRememberMe'] = "Wachtwoord op deze computer onthouden.";
 $_LANG['login']['labelButtonLogin'] = "Inloggen";
 $_LANG['login']['labelButtonCancel'] = "Annuleer";
 $_LANG['login']['labelButtonReminder'] = "Email wachtwoord";
+$_LANG['login']['invalidAccount'] = "Ongeldig Account";
 $_LANG['login']['errorMain'] = "De gebruikersnaam en/of het wachtwoord zijn onjuist. Controleer uw gegevens en probeer het opnieuw.";
 $_LANG['login']['subjectReminder'] = "Nieuw wachtwoord voor Mijn Punch";
 $_LANG['login']['textReminder'] = "Beste %s,\n\nUw nieuwe wachtwoord voor Mijn Punch is:\n\n%s\n\nLogin via de volgende link: %s.";
@@ -49,7 +50,7 @@ $_LANG['head']['logout'] = "Uitloggen";
 $_LANG['menu']['mypunchAccount'] = "Pakket";
 $_LANG['menu']['mypunchUsers'] = "Gebruikers";
 $_LANG['menu']['mypunchProfile'] = "Profiel";
-$_LANG['menu']['pcms'] = "SpinCMS";
+$_LANG['menu']['pcms'] = "PunchCMS";
 $_LANG['menu']['pcmsElements'] = "Elementen";
 $_LANG['menu']['pcmsTemplates'] = "Sjablonen";
 $_LANG['menu']['pcmsForms'] = "Formulieren";
@@ -158,10 +159,7 @@ $_LANG['label']['aliasUnavailable'] = "Element niet beschikbaar";
 $_LANG['label']['structureAdd'] = "Structuur toevoegen";
 $_LANG['label']['structureDetails'] = "Structuur details";
 $_LANG['label']['mediaIn'] = "Media in";
-$_LANG['label']['meta'] = "Meta-informatie";
-$_LANG['label']['metaTitle'] = "Paginatitel";
-$_LANG['label']['metaKeywords'] = "Sleutelwoorden";
-$_LANG['label']['metaDescription'] = "Omschrijving";
+$_LANG['label']['poweredBy'] = "Ondersteund door";
 
 //*** Settings label definitions.
 $_LANG['settingsLabel']['section_ftp'] = "FTP";
@@ -262,7 +260,7 @@ $_LANG['form']['requiredFields'] = "Verplichte velden zijn met een * gemarkeerd.
 $_LANG['form']['requiredField'] = "Verplicht veld.";
 $_LANG['form']['username'] = "Gebruikersnaam";
 $_LANG['form']['emailaddress'] = "E-mail adres";
-$_LANG['form']['language'] = "Websitetaal";
+$_LANG['form']['language'] = "Voorkeurstaal";
 $_LANG['form']['timezone'] = "Tijdzone";
 $_LANG['form']['currentpassword'] = "Huidig wachtwoord";
 $_LANG['form']['newpassword'] = "Nieuw wachtwoord";
@@ -281,7 +279,6 @@ $_LANG['form']['loading'] = "Wordt geladen...";
 $_LANG['form']['structureName'] = "Structuur";
 $_LANG['form']['sSelectLanguage'] = "* Taal";
 $_LANG['form']['sSelectElement'] = "* Element";
-$_LANG['form']['metaInfo'] = "Vul een pagina specifieke titel, sleutelwoorden en omschrijving in. Dit wordt door de meeste zoekmachines gebruikt.";
 
 //*** Form error definitions.
 $_LANG['formerror']['main'] = "Er zijn fouten opgetreden bij het bewaren van uw gegevens. Controleer alle gemarkeerde velden en probeer het opnieuw.";
@@ -323,8 +320,6 @@ $_LANG['tip']['langDisable'] = "Deze taal deactiveren";
 $_LANG['tip']['alias'] = "Geef de naam van de snelkopping voor het navigeren naar het element vanuit de website.";
 $_LANG['tip']['structureAdd'] = "Kies de gewenste structuur uit de onderstaande lijst en druk op {$_LANG['button']['insert']}.";
 $_LANG['tip']['structureSelects'] = "Deze structuur heeft een of meer velden die ingevuld moeten worden.";
-$_LANG['tip']['metaKeywords'] = "Maximaal 20 sleutelwoorden voor de pagina.";
-$_LANG['tip']['metaDescription'] = "Omschrijving van de pagina met maximaal 200 letters.";
 
 //*** Alert definitions.
 $_LANG['alert']['templateRemoveAlert'] = "Weet u zeker dat u deze sjabloon wilt verwijderen?\\nAlle onderliggende sjablonen en elementen gebaseerd op deze sjabloon worden ook verwijderd!";
@@ -346,6 +341,6 @@ $_LANG['alert']['moveToFTP'] = "Uploaden naar de webserver is mislukt. Controlee
 $_LANG['alert']['elementBeforeLanguage'] = "U moet eerst een standaardtaal aanmaken voordat u een element kunt aanmaken!";
 
 $_LANG['help']['docHeader'] = "Documentatie";
-$_LANG['help']['docBody'] = "<p><a href=\"images/SpinCMS_handleiding.pdf\" rel=\"external\">Download</a> de documentatie van het CMS voor een inleiding en algemene uitleg van de functionaliteit.</p><p>Voor het bekijken van de documentatie heeft u de <a href=\"http://www.adobe.com/products/acrobat/readstep2.html\" rel=\"external\">Adobe Reader</a> nodig.</p>";
+$_LANG['help']['docBody'] = "<p><a href=\"images/PunchCMS_handleiding.pdf\" rel=\"external\">Download</a> de documentatie van het CMS voor een inleiding en algemene uitleg van de functionaliteit.</p><p>Voor het bekijken van de documentatie heeft u de <a href=\"http://www.adobe.com/products/acrobat/readstep2.html\" rel=\"external\">Adobe Reader</a> nodig.</p>";
 
 ?>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="_proto_classes">
+<database name="punchcms">
 	<table name="pcms_alias" phpName="Alias">
 		<column name="id" primaryKey="true" />
 		<column name="accountId" type="integer" />

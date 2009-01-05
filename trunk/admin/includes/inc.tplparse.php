@@ -98,10 +98,13 @@ function parseBrowse($cId, $eId, $cmd) {
 	switch ($cId) {
 		case NAV_ACCOUNT:
 			$objAccounts = Account::select("SELECT * FROM punch_account ORDER BY name");
+			$arrDomain = explode('.', $_SERVER['HTTP_HOST']);
+			$strRootDomain = (count($arrDomain) > 2) ? str_replace(array_shift($arrDomain) . ".", "", $_SERVER['HTTP_HOST']) : $_SERVER['HTTP_HOST'];
 
 			//*** Render list.
 			foreach ($objAccounts as $objTempAccount) {
 				$objTpl->setCurrentBlock("list-item");
+				$objTpl->setVariable('ITEM_LINK', "http://" . $objTempAccount->getUri() . "." . $strRootDomain);
 				$objTpl->setVariable('ITEM_LABEL', htmlentities($objTempAccount->getName()));
 				$objTpl->setVariable('ITEM_EXPORT', "export.php?eid=" . $objTempAccount->getId());
 				$objTpl->setVariable('ITEM_RESTORE', "?cid=" . NAV_ACCOUNT . "&amp;cmd=" . CMD_RESTORE . "&amp;eid=" . $objTempAccount->getId());
@@ -140,7 +143,7 @@ function parseAccount($eId, $cmd) {
 			$strUserName 	= Request::get('frm_account_name');
 			$strUserPass 	= Request::get('frm_account_pass');
 			$strUserEmail 	= Request::get('frm_account_email');
-			$arrProducts 	= Request::get('frm_account_product', array());
+			//$arrProducts 	= Request::get('frm_account_product', array());
 		
 			$objAccount = Account::selectByPk($eId);
 			
@@ -152,9 +155,12 @@ function parseAccount($eId, $cmd) {
 
 					//*** Set products.
 					$objAccount->clearProducts();
+					/*
 					foreach ($arrProducts as $intProduct) {
 						$objAccount->addProduct($intProduct);
 					}
+					*/
+					$objAccount->addProduct(1);
 
 					//*** Edit Admin user.
 					$data = array(
@@ -191,6 +197,7 @@ function parseAccount($eId, $cmd) {
 					$objTpl->setVariable('PUNCH_ID_VALUE', $objAccount->getPunchId());
 					$objTpl->parseCurrentBlock();
 
+					/*
 					$objProducts = Product::getProducts();
 					$objAccountProducts = AccountProduct::getByAccountId($objAccount->getId());
 					foreach ($objProducts as $objProduct) {
@@ -207,6 +214,7 @@ function parseAccount($eId, $cmd) {
 						
 						$objTpl->parseCurrentBlock();
 					}
+					*/
 
 					$objTpl->setCurrentBlock("form.edit");
 					$objTpl->setVariable('NAME_VALUE', $objAccount->getName());
@@ -230,7 +238,7 @@ function parseAccount($eId, $cmd) {
 			$strUserName 	= Request::get('frm_account_name');
 			$strUserPass 	= Request::get('frm_account_pass');
 			$strUserEmail 	= Request::get('frm_account_email');
-			$arrProducts 	= Request::get('frm_account_product');
+			//$arrProducts 	= Request::get('frm_account_product');
 			
 			if ($strDispatch == "editAccount") {
 				//*** Generate new punchId.
@@ -245,9 +253,12 @@ function parseAccount($eId, $cmd) {
 				
 				//*** Set products.
 				$objAccount->clearProducts();
+				/*
 				foreach ($arrProducts as $intProduct) {
 					$objAccount->addProduct($intProduct);
 				}
+				*/
+				$objAccount->addProduct(1);
 
 				//*** Add Admin user to the account.
 				$data = array(
@@ -268,6 +279,7 @@ function parseAccount($eId, $cmd) {
 				$objTpl->setVariable('BODY', $strOutput);
 				$objTpl->parseCurrentBlock();
 			} else {
+				/*
 				$objProducts = Product::getProducts();
 				foreach ($objProducts as $objProduct) {
 					$objTpl->setCurrentBlock("form.field.product");
@@ -276,6 +288,7 @@ function parseAccount($eId, $cmd) {
 					$objTpl->setVariable('VALUE', $objProduct->getId());
 					$objTpl->parseCurrentBlock();
 				}
+				*/
 
 				$objTpl->setCurrentBlock("form.edit");
 				$objTpl->setVariable('CID', NAV_ACCOUNT);

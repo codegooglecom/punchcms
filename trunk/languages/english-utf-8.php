@@ -35,6 +35,7 @@ $_LANG['login']['labelRememberMe'] = "Remember me on this computer.";
 $_LANG['login']['labelButtonLogin'] = "Login";
 $_LANG['login']['labelButtonCancel'] = "Cancel";
 $_LANG['login']['labelButtonReminder'] = "Send password	";
+$_LANG['login']['invalidAccount'] = "Invalid Account";
 $_LANG['login']['errorMain'] = "Incorrect username and/or password. Please check your data and try again.";
 $_LANG['login']['subjectReminder'] = "New password for Mijn Punch";
 $_LANG['login']['textReminder'] = "Dear %s,\n\nYour new password for Mijn Punch is:\n\n%s\n\nUse the following link to log-in: %s.";
@@ -49,7 +50,7 @@ $_LANG['head']['logout'] = "Log-out";
 $_LANG['menu']['mypunchAccount'] = "Account";
 $_LANG['menu']['mypunchUsers'] = "Users";
 $_LANG['menu']['mypunchProfile'] = "Profile";
-$_LANG['menu']['pcms'] = "SpinCMS";
+$_LANG['menu']['pcms'] = "PunchCMS";
 $_LANG['menu']['pcmsElements'] = "Elements";
 $_LANG['menu']['pcmsTemplates'] = "Templates";
 $_LANG['menu']['pcmsForms'] = "Forms";
@@ -158,10 +159,7 @@ $_LANG['label']['aliasUnavailable'] = "Target not available";
 $_LANG['label']['structureAdd'] = "Add Structure";
 $_LANG['label']['structureDetails'] = "Structure details";
 $_LANG['label']['mediaIn'] = "Media in";
-$_LANG['label']['meta'] = "Meta-information";
-$_LANG['label']['metaTitle'] = "Page title";
-$_LANG['label']['metaKeywords'] = "Keywords";
-$_LANG['label']['metaDescription'] = "Page description";
+$_LANG['label']['poweredBy'] = "Powered by";
 
 //*** Settings label definitions.
 $_LANG['settingsLabel']['section_ftp'] = "FTP";
@@ -281,7 +279,6 @@ $_LANG['form']['loading'] = "Loading...";
 $_LANG['form']['structureName'] = "Structure";
 $_LANG['form']['sSelectLanguage'] = "* Language";
 $_LANG['form']['sSelectElement'] = "* Element";
-$_LANG['form']['metaInfo'] = "Set page specific title, keywords and description. Used by most search engines.";
 
 //*** Form error definitions.
 $_LANG['formerror']['main'] = "Errors occured while saving your data. Check all marked fields and try again.";
@@ -323,8 +320,6 @@ $_LANG['tip']['langDisable'] = "Disable this language";
 $_LANG['tip']['alias'] = "Enter the desired alias for the element navigation in the website.";
 $_LANG['tip']['structureAdd'] = "Choose the desired structure from the list below and press {$_LANG['button']['insert']}.";
 $_LANG['tip']['structureSelects'] = "This structure has one or more fields that need to be set.";
-$_LANG['tip']['metaKeywords'] = "A maximum of 20 keywords describing the page.";
-$_LANG['tip']['metaDescription'] = "Description of the page using a maximum of 200 characters.";
 
 //*** Alert definitions.
 $_LANG['alert']['templateRemoveAlert'] = "Are you sure you want to remove this template?\\nAll nested templates and elements based on this template will also be removed!";
@@ -344,6 +339,6 @@ $_LANG['alert']['moveToFTP'] = "Upload to the webserver failed. Check the FTP se
 $_LANG['alert']['elementBeforeLanguage'] = "You need to create a default language before you can create an element!";
 
 $_LANG['help']['docHeader'] = "Documentation";
-$_LANG['help']['docBody'] = "<p><a href=\"images/SpinCMS_handleiding.pdf\" rel=\"external\">Download</a> the CMS documentation to get an overall overview of the functionality.</p><p>You need <a href=\"http://www.adobe.com/products/acrobat/readstep2.html\" rel=\"external\">Adobe Reader</a> to view the documentation.</p>";
+$_LANG['help']['docBody'] = "<p><a href=\"images/PunchCMS_manual.pdf\" rel=\"external\">Download</a> the CMS documentation to get an overall overview of the functionality.</p><p>You need <a href=\"http://www.adobe.com/products/acrobat/readstep2.html\" rel=\"external\">Adobe Reader</a> to view the documentation.</p>";
 
 ?>

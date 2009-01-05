@@ -2,10 +2,17 @@
 <body id="login">
 
 <div id="canvas">
-	<!-- BEGIN logo -->
-	<a href="{CLIENT_LINK}" rel="external" class="logolink"><img src="{CLIENT_LOGO}" alt="{CLIENT_NAME}" /></a>
-	<!-- END logo -->
-	<!-- BEGIN error -->
-	<p class="event-error">{MESSAGE}</p>
-	<!-- END error -->
+	<div id="canvas-top">
+		<div id="canvas-bottom">
+			<!-- BEGIN logo -->
+			<div class="client">
+				<h1>{CLIENT_NAME}</h1>
+				<span class="systemlink">{POWERED_BY} <a href="http://punchcms.org" rel="external">PunchCMS</a></span>
+			</div>
+			<!-- END logo -->
+			<!-- BEGIN error -->
+			<p class="event-error">{MESSAGE}</p>
+			<!-- END error -->
+		</div>
+	</div>
 </div>
