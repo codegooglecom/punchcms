@@ -160,7 +160,7 @@ class Structure extends DBA_Structure {
 							ExImport::adjustDeeplinks($arrElementFieldIds["link"], $arrElementIds, $arrLanguageIds);
 							
 							//*** Adjust the links in large text fields.
-							ExImport::adjustTextlinks($arrElementFieldIds["largeText"], $arrElementIds, $arrLanguageIds);
+							ExImport::adjustTextlinks($arrElementFieldIds["largeText"], $arrElementIds, $arrLanguageIds, array(0));
 							
 						}
 					}
