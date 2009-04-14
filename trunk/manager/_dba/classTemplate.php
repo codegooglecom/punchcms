@@ -15,11 +15,11 @@ class DBA_{className} extends DBA__Object {
 	}
 
 	//*** Static inherited functions.
-	public static function selectByPK($varValue, $arrFields = array()) {
+	public static function selectByPK($varValue, $arrFields = array(), $accountId = NULL) {
 		self::$__object = "{className}";
 		self::$__table = "{classTable}";
 
-		return parent::selectByPK($varValue, $arrFields);
+		return parent::selectByPK($varValue, $arrFields, $accountId);
 	}
 
 	public static function select($strSql = "") {
@@ -43,11 +43,11 @@ class DBA_{className} extends DBA__Object {
 		return parent::save($blnSaveModifiedDate);
 	}
 
-	public function delete() {
+	public function delete($accountId = NULL) {
 		self::$__object = "{className}";
 		self::$__table = "{classTable}";
 
-		return parent::delete();
+		return parent::delete($accountId);
 	}
 
 	public function duplicate() {

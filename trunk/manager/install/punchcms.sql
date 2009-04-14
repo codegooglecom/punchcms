@@ -938,7 +938,8 @@ INSERT INTO `pcms_setting_tpl` (`id`, `name`, `value`, `section`, `type`, `sort`
 (13, 'audit_rotation', '7', 'audit', 'number', 401, '2007-11-14 18:00:53', '2007-11-14 18:00:53'),
 (14, 'file_download', '/download.php?eid=', 'files', 'text', 203, '2007-11-16 11:20:06', '2007-11-16 11:20:06'),
 (15, 'caching_ftp_folder', 'cache', 'caching', 'text', 202, '2007-11-28 16:33:51', '2007-11-28 16:33:51'),
-(16, 'elmnt_active_state', '0', 'elements', 'checkbox', 51, '2008-06-09 08:55:08', '2008-06-09 08:55:08');
+(16, 'elmnt_active_state', '0', 'elements', 'checkbox', 51, '2008-06-09 08:55:08', '2008-06-09 08:55:08'),
+(17, 'web_server', '', 'files', 'text', 99, '2008-06-09 08:55:08', '2008-06-09 08:55:08');
 
 -- --------------------------------------------------------
 
@@ -1035,7 +1036,8 @@ CREATE TABLE `pcms_structure` (
 INSERT INTO `pcms_structure` (`id`, `fileName`, `section`, `sort`, `created`, `modified`) VALUES 
 (1, 'complete_layout_nl', 'template', 1, '2007-11-16 15:13:25', '2007-11-16 15:13:25'),
 (2, 'contactform_nl', 'template', 3, '2007-11-28 10:56:36', '2007-11-28 10:56:36'),
-(3, 'complete_layout_en', 'template', 2, '2008-01-08 11:24:03', '2008-01-08 11:24:03');
+(3, 'complete_layout_en', 'template', 2, '2008-01-08 11:24:03', '2008-01-08 11:24:03'),
+(4, 'validform_nl', 'template', 4, '2008-01-08 11:24:03', '2008-01-08 11:24:03');
 
 -- --------------------------------------------------------
 
@@ -1065,7 +1067,8 @@ INSERT INTO `pcms_structure_meta` (`id`, `structureId`, `language`, `name`, `des
 (3, 2, 'english', 'Contact form Dutch', 'Structure for a standard contact form, with Dutch template and element names. Including Dutch and English languages.', 0, '2007-11-28 10:59:57', '2007-11-28 10:59:57'),
 (4, 2, 'nederlands', 'Contactformulier Nederlands', 'Structuur voor een standaard contactformulier met Nederlandse sjablonen en elementen, in de talen Engels en Nederlands.', 0, '2007-11-28 10:59:57', '2007-11-28 10:59:57'),
 (5, 3, 'english', 'Complete website English', 'Structure for a complete website, with English template and element names. Including Dutch and English languages.', 0, '2008-01-08 11:30:58', '2008-01-08 11:30:58'),
-(6, 3, 'nederlands', 'Complete website Engels', 'Structuur voor een complete website met Engelse sjablonen en elementen, in de talen Engels en Nederlands.', 0, '2008-01-08 11:31:33', '2008-01-08 11:31:33');
+(6, 3, 'nederlands', 'Complete website Engels', 'Structuur voor een complete website met Engelse sjablonen en elementen, in de talen Engels en Nederlands.', 0, '2008-01-08 11:31:33', '2008-01-08 11:31:33'),
+(7, 4, 'nederlands', 'ValidForm sjabloon', 'Sjabloon voor ValidForm elementen', 0, '2008-01-08 11:31:33', '2008-01-08 11:31:33');
 
 -- --------------------------------------------------------
 

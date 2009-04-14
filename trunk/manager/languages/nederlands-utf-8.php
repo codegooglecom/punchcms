@@ -160,6 +160,11 @@ $_LANG['label']['structureAdd'] = "Structuur toevoegen";
 $_LANG['label']['structureDetails'] = "Structuur details";
 $_LANG['label']['mediaIn'] = "Media in";
 $_LANG['label']['poweredBy'] = "Ondersteund door";
+$_LANG['label']['meta'] = "Meta-informatie";
+$_LANG['label']['metaTitle'] = "Paginatitel";
+$_LANG['label']['metaKeywords'] = "Sleutelwoorden";
+$_LANG['label']['metaDescription'] = "Omschrijving";
+$_LANG['label']['chooseFolder'] = "Kies een map";
 
 //*** Settings label definitions.
 $_LANG['settingsLabel']['section_ftp'] = "FTP";
@@ -184,6 +189,7 @@ $_LANG['settingsLabel']['aliases_enable'] = "Snelkoppelingen activeren";
 $_LANG['settingsLabel']['audit_enable'] = "Audit log activeren";
 $_LANG['settingsLabel']['audit_rotation'] = "Verwijder logs ouder dan (dagen)";
 $_LANG['settingsLabel']['elmnt_active_state'] = "Nieuwe elementen zijn standaard geactiveerd";
+$_LANG['settingsLabel']['web_server'] = "Website URL";
 
 //*** Users and groups label definitions.
 $_LANG['usersLabel']['users'] = "Gebruikers";
@@ -226,6 +232,10 @@ $_LANG['usersLabel']['typeSuperAdmin'] = "Super Beheerder";
 $_LANG['usersLabel']['typeMasterAdmin'] = "Master Beheerder";
 $_LANG['usersLabel']['application'] = "Applicatie";
 $_LANG['usersLabel']['active'] = "Actief";
+$_LANG['usersLabel']['groupLevel'] = "Element Ownership";
+$_LANG['usersLabel']['levelUser'] = "Gebruiker";
+$_LANG['usersLabel']['levelGroup'] = "Groep";
+$_LANG['usersLabel']['levelAll'] = "Alle gebruikers";
 
 //*** Field type label definitions.
 $_LANG['typeLabel']['values'] = "Waardes";
@@ -260,7 +270,7 @@ $_LANG['form']['requiredFields'] = "Verplichte velden zijn met een * gemarkeerd.
 $_LANG['form']['requiredField'] = "Verplicht veld.";
 $_LANG['form']['username'] = "Gebruikersnaam";
 $_LANG['form']['emailaddress'] = "E-mail adres";
-$_LANG['form']['language'] = "Voorkeurstaal";
+$_LANG['form']['language'] = "Websitetaal";
 $_LANG['form']['timezone'] = "Tijdzone";
 $_LANG['form']['currentpassword'] = "Huidig wachtwoord";
 $_LANG['form']['newpassword'] = "Nieuw wachtwoord";
@@ -279,6 +289,8 @@ $_LANG['form']['loading'] = "Wordt geladen...";
 $_LANG['form']['structureName'] = "Structuur";
 $_LANG['form']['sSelectLanguage'] = "* Taal";
 $_LANG['form']['sSelectElement'] = "* Element";
+$_LANG['form']['metaInfo'] = "Vul een pagina specifieke titel, sleutelwoorden en omschrijving in. Dit wordt door de meeste zoekmachines gebruikt.";
+$_LANG['form']['loadingFiles'] = "Bestanden worden geladen...";
 
 //*** Form error definitions.
 $_LANG['formerror']['main'] = "Er zijn fouten opgetreden bij het bewaren van uw gegevens. Controleer alle gemarkeerde velden en probeer het opnieuw.";
@@ -320,6 +332,9 @@ $_LANG['tip']['langDisable'] = "Deze taal deactiveren";
 $_LANG['tip']['alias'] = "Geef de naam van de snelkopping voor het navigeren naar het element vanuit de website.";
 $_LANG['tip']['structureAdd'] = "Kies de gewenste structuur uit de onderstaande lijst en druk op {$_LANG['button']['insert']}.";
 $_LANG['tip']['structureSelects'] = "Deze structuur heeft een of meer velden die ingevuld moeten worden.";
+$_LANG['tip']['metaKeywords'] = "Maximaal 20 sleutelwoorden voor de pagina.";
+$_LANG['tip']['metaDescription'] = "Omschrijving van de pagina met maximaal 200 letters.";
+$_LANG['tip']['storageName'] = "Als u het veld leeg laat wordt de naam van het bestand gebruikt.";
 
 //*** Alert definitions.
 $_LANG['alert']['templateRemoveAlert'] = "Weet u zeker dat u deze sjabloon wilt verwijderen?\\nAlle onderliggende sjablonen en elementen gebaseerd op deze sjabloon worden ook verwijderd!";

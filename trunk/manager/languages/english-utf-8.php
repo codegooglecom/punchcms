@@ -160,6 +160,11 @@ $_LANG['label']['structureAdd'] = "Add Structure";
 $_LANG['label']['structureDetails'] = "Structure details";
 $_LANG['label']['mediaIn'] = "Media in";
 $_LANG['label']['poweredBy'] = "Powered by";
+$_LANG['label']['meta'] = "Meta-information";
+$_LANG['label']['metaTitle'] = "Page title";
+$_LANG['label']['metaKeywords'] = "Keywords";
+$_LANG['label']['metaDescription'] = "Page description";
+$_LANG['label']['chooseFolder'] = "Choose a folder";
 
 //*** Settings label definitions.
 $_LANG['settingsLabel']['section_ftp'] = "FTP";
@@ -184,6 +189,7 @@ $_LANG['settingsLabel']['aliases_enable'] = "Enable aliases";
 $_LANG['settingsLabel']['audit_enable'] = "Enable audit log";
 $_LANG['settingsLabel']['audit_rotation'] = "Remove logs older than (days)";
 $_LANG['settingsLabel']['elmnt_active_state'] = "Activate new elements by default";
+$_LANG['settingsLabel']['web_server'] = "Website URL";
 
 //*** Users and groups label definitions.
 $_LANG['usersLabel']['users'] = "Users";
@@ -226,6 +232,10 @@ $_LANG['usersLabel']['typeSuperAdmin'] = "Super Administrator";
 $_LANG['usersLabel']['typeMasterAdmin'] = "Master Administrator";
 $_LANG['usersLabel']['application'] = "Application";
 $_LANG['usersLabel']['active'] = "Active";
+$_LANG['usersLabel']['groupLevel'] = "Element Ownership";
+$_LANG['usersLabel']['levelUser'] = "User";
+$_LANG['usersLabel']['levelGroup'] = "Group";
+$_LANG['usersLabel']['levelAll'] = "Everybody";
 
 //*** Field type label definitions.
 $_LANG['typeLabel']['values'] = "Values";
@@ -279,6 +289,8 @@ $_LANG['form']['loading'] = "Loading...";
 $_LANG['form']['structureName'] = "Structure";
 $_LANG['form']['sSelectLanguage'] = "* Language";
 $_LANG['form']['sSelectElement'] = "* Element";
+$_LANG['form']['metaInfo'] = "Set page specific title, keywords and description. Used by most search engines.";
+$_LANG['form']['loadingFiles'] = "Loading files...";
 
 //*** Form error definitions.
 $_LANG['formerror']['main'] = "Errors occured while saving your data. Check all marked fields and try again.";
@@ -320,6 +332,9 @@ $_LANG['tip']['langDisable'] = "Disable this language";
 $_LANG['tip']['alias'] = "Enter the desired alias for the element navigation in the website.";
 $_LANG['tip']['structureAdd'] = "Choose the desired structure from the list below and press {$_LANG['button']['insert']}.";
 $_LANG['tip']['structureSelects'] = "This structure has one or more fields that need to be set.";
+$_LANG['tip']['metaKeywords'] = "A maximum of 20 keywords describing the page.";
+$_LANG['tip']['metaDescription'] = "Description of the page using a maximum of 200 characters.";
+$_LANG['tip']['storageName'] = "Leave this field empty to use the name of the uploaded file.";
 
 //*** Alert definitions.
 $_LANG['alert']['templateRemoveAlert'] = "Are you sure you want to remove this template?\\nAll nested templates and elements based on this template will also be removed!";
@@ -327,6 +342,8 @@ $_LANG['alert']['templateFieldRemoveAlert'] = "Are you sure you want to remove t
 $_LANG['alert']['templateFieldsRemoveAlert'] = "Are you sure you want to remove these fields?\\nThis could badly invluence the operation of elements based on this template!";
 $_LANG['alert']['elementRemoveAlert'] = "Are you sure you want to remove this element?\\nAll nested elements will also be removed!";
 $_LANG['alert']['elementsRemoveAlert'] = "Are you sure you want to remove these elements?\\nAll nested elements will also be removed!";
+$_LANG['alert']['storageItemRemoveAlert'] = "Are you sure you want to remove this media element?";
+$_LANG['alert']['storageItemsRemoveAlert'] = "Are you sure you want to remove these media elements?";
 $_LANG['alert']['languageRemoveAlert'] = "Are you sure you want to remove this language?\\nAll field values for this language will also be removed!";
 $_LANG['alert']['multiItemEmpty'] = "There are no item(s) selected.";
 $_LANG['alert']['newsWindowClose'] = "<b>Do not close this window</b><br />until the newsletter has been <b>fully send</b>.<br />	If you do close it you can resume at a later time.";
