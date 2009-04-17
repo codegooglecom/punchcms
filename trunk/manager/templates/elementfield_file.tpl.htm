@@ -7,12 +7,27 @@
 									<div id="{FIELD_ID}_alt" class="input-textbig disabled" style="display:none;margin-left:146px;"></div>
 									<div id="{FIELD_ID}_widget" class="widget">
 										<div class="required">
+											<!-- BEGIN field.file.select-type.library -->
+											<a href="" id="browseStorage_{FIELD_ID}" class="browseStorage" style="outline:none;float:right;margin-top:2px;">{LABEL_LIBRARY}</a>
+											<!-- END field.file.select-type.library -->
 											<label for="{FIELD_ID}">{FIELD_BROWSE_NAME}</label>
+											<!-- BEGIN field.file.select-type.upload -->
 											<input type="file" id="{FIELD_ID}" name="{FIELD_ID}_new" class="input-file" />
+											<!-- END field.file.select-type.upload -->
 											<input type="hidden" name="{FIELD_ID}[]" value="" />
 											<!-- BEGIN field.file.descr -->
 											<small>{FIELD_DESCRIPTION}</small>
 											<!-- END field.file.descr -->
+										</div>
+										<div id="storageBrowser_{FIELD_ID}" class="storageBrowser" style="display:none;">
+											<div class="storageChooser">
+												<label for="frm_storage_{FIELD_ID}">
+														<select id="frm_storage_{FIELD_ID}" name="frm_sorage" class="select-one storageSelect">
+															{STORAGE_ITEMS}
+														</select>{LABEL_CHOOSE_FOLDER}
+												</label>
+											</div>
+											<div class="storageList"></div>
 										</div>
 										<div id="filelist_current_{FIELD_ID}"><h3>{FIELD_HEADER_CURRENT}</h3></div>
 										<div id="filelist_new_{FIELD_ID}"><h3>{FIELD_HEADER_NEW}</h3></div>
@@ -26,7 +41,7 @@
 										<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
 										<script type="text/javascript">
 										// <![CDATA[
-											objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.FILE, {maxFiles:{FIELD_MAX_FILES}, maxChar:{FIELD_MAX_CHAR}, removeLabel:'{FIELD_LABEL_REMOVE}'});
+											objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.FILE, {maxFiles:{FIELD_MAX_FILES}, maxChar:{FIELD_MAX_CHAR}, removeLabel:'{FIELD_LABEL_REMOVE}', thumbPath:'{FIELD_THUMB_PATH}', selectType:['upload', 'library']});
 											Sortable.create("filelist_current_{FIELD_ID}", {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort('{FIELD_ID}')}});
 											Sortable.create("filelist_new_{FIELD_ID}", {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort('{FIELD_ID}')}});
 										// ]]>

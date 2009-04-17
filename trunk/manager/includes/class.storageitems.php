@@ -91,6 +91,51 @@ class StorageItems extends DBA__Collection {
 		
 		return $strReturn;
 	}
+	
+	public static function getFolderListHTML($intParentId = 0, $intDepth = 1) {
+		global $_CONF;
+		$strReturn = "";
+		
+		$intAccountId = $_CONF['app']['account']->getId();
+
+		if ($intParentId == 0) {
+			$strReturn .= "<option value=\"eid_0\">WEBROOT</option>\n";
+		}
+
+		$strSql = sprintf("SELECT * FROM pcms_storage_item WHERE parentId = '%s' AND typeId IN (%s) AND accountId = '%s' ORDER BY sort", $intParentId, STORAGE_TYPE_FOLDER, $intAccountId);
+		$objElements = StorageItem::select($strSql);
+		foreach ($objElements as $objElement) {
+			$strReturn .= "<option value=\"eid_{$objElement->getId()}\">" . str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;", $intDepth) . str_replace("&", "&amp;", $objElement->getName()) . "</option>\n";
+			$strReturn .= StorageItems::getFolderListHTML($objElement->getId(), $intDepth + 1);
+		}
+		
+		return $strReturn;
+	}
+	
+	public static function getFileListHTML() {
+		global $_CONF;
+		$strReturn = "";
+		
+		$intParentId = request("parentId", 0);
+		$intAccountId = $_CONF['app']['account']->getId();
+		$arrImages = array('jpg', 'jpeg', 'gif', 'png');
+		
+		$strSql = sprintf("SELECT * FROM pcms_storage_item WHERE parentId = '%s' AND typeId IN (%s) AND accountId = '%s' ORDER BY sort", $intParentId, STORAGE_TYPE_FILE, $intAccountId);
+		$objElements = StorageItem::select($strSql);
+		
+		$strReturn .= "<field id=\"{$intParentId}\"><![CDATA[";
+		$strReturn .= "<ul>";
+		foreach ($objElements as $objElement) {
+			$objData = $objElement->getData();
+			$strExtension = substr(strrchr($objData->getLocalName(), '.'), 1);
+			$strImageSrc = (in_array($strExtension, $arrImages)) ? Setting::getValueByName("web_server") . Setting::getValueByName("file_folder") . $objData->getLocalName() : "/images/ico_document_big.gif";
+			$strReturn .= "<li><a href=\"\" id=\"eid_{$objElement->getId()}\"><img src=\"{$strImageSrc}\" alt=\"{$objData->getLocalName()}\" /></a><span>" . str_replace("&", "&amp;", $objElement->getName()) . "</span></li>";
+		}
+		$strReturn .= "</ul>";
+		$strReturn .= "]]></field>";
+		
+		return $strReturn;
+	}
 
 }
 

@@ -418,6 +418,58 @@ ContentLanguage.prototype.setFieldValue = function(fieldId, strValue) {
 	$(fieldId + "_" + this.currentLanguage).value = strValue;
 }
 
+ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
+	var strUrl = "ajax.php";
+	var strPost = "cmd=StorageItems::getFileListHTML&parentId=" + $('frm_storage_' + objTrigger.id).options[$('frm_storage_' + objTrigger.id).selectedIndex].value.split("_").pop();
+	
+	var objFiles = $('storageBrowser_' + objTrigger.id).getElementsBySelector('ul');
+	if (objFiles.length > 0) Element.remove(objFiles[0]);
+	
+	var objList = $('storageBrowser_' + objTrigger.id).getElementsBySelector('div.storageList')[0];
+	var objLoader = document.createElement("div");
+	objLoader.className = "storageLoader";
+	objLoader.innerHTML = "<?php echo $objLang->get("loadingFiles", "form") ?>";
+	objLoader.style.display = "block";
+	objList.appendChild(objLoader);
+	
+	var myAjax = new Ajax.Request(
+			strUrl, 
+			{
+				method: 'get', 
+				parameters: strPost, 
+				onComplete: function(objXHR){objTrigger.parent.showStoragePage(objXHR, objTrigger);}
+			});
+}
+
+ContentLanguage.prototype.showStoragePage = function(objXHR, objTrigger) {
+	var objResponse = objXHR.responseXML;
+	var objField = objResponse.getElementsByTagName("field")[0];
+	
+	var objLoader = $('storageBrowser_' + objTrigger.id).getElementsBySelector('div.storageLoader')[0];
+	objLoader.style.display = "none";
+	
+	var objList = $('storageBrowser_' + objTrigger.id).getElementsBySelector('div.storageList')[0];
+	objList.innerHTML = objField.firstChild.nodeValue;
+	
+	//*** Attach events to the thumbs.
+	var objThumbs = $('storageBrowser_' + objTrigger.id).getElementsBySelector('li');
+	for (var intCount = 0; intCount < objThumbs.length; intCount++) {
+		var objLink = $(objThumbs[intCount]).getElementsBySelector("a")[0];
+		objLink.onmouseover = function(){
+			var objLabel = $(this).up("li").getElementsBySelector("span")[0];
+			return overlib(objLabel.innerHTML);
+		};
+		objLink.onmouseout = function(){
+			return nd();
+		};
+		objLink.onclick = function(){
+			var objLabel = $(this).up("li").getElementsBySelector("span")[0];
+			objTrigger.transferStorage(this, objLabel.innerHTML);
+			return false;
+		};
+	}
+}
+
 /*** 
  * ContentField object.
  */
@@ -587,6 +639,7 @@ TextAreaField.prototype.toTemp = function() {
  * FileField object.
  */
 function FileField(strId, objParent, strCascades, objOptions) {
+	var __this = this;
 	this.base = ContentField;
 	this.base(strId, objParent, strCascades);
 	
@@ -596,6 +649,8 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	this.maxFiles = 1;
 	this.maxChar = 50;
 	this.fileCount = 1;
+	this.thumbPath = "";
+	this.selectType = [];
 	
 	//*** Parse the options.
 	for (var intCount in objOptions) {
@@ -612,6 +667,18 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		//*** This can only be applied to file input elements!
 		alert('Error: ' + strId + ' is not a file input element!');
 	}
+	
+	//*** Attach event to the library button.
+	$('browseStorage_' + strId).onclick = function(){
+		__this.openStorageBrowser();
+		return false;
+	};
+	
+	//*** Attach event to the library folder select.
+	$('frm_storage_' + strId).onchange = function(){
+		__this.parent.loadStoragePage(__this);
+		return false;
+	};
 	
 	//*** Create containers.
 	var langArray = [this.parent.currentLanguage, this.parent.defaultLanguage];
@@ -693,13 +760,40 @@ FileField.prototype.toScreen = function() {
 		});
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount];
-			this.addCurrentRow(filledElement);
+			var blnStorage = (filledElement.value.split(":").length > 2) ? true : false;
+			this.addCurrentRow(filledElement, blnStorage);
 			$("filelist_current_" + this.id).show();
 		}
 		
 		var strId = this.id;
 		Sortable.create("filelist_current_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
 	}
+}
+
+FileField.prototype.openStorageBrowser = function() {
+	var __this = this;
+
+	//*** Slide open.
+	Effect.DefaultOptions.duration = 0.5;
+	Effect.SlideDown('storageBrowser_' + this.id);
+	
+	//*** Fill file list.
+	this.parent.loadStoragePage(this);
+	
+	//*** Switch button.
+	var storageButton = $('browseStorage_' + this.id);
+	var labelCache = storageButton.innerHTML;
+	storageButton.innerHTML = "Sluit Media Bibliotheek";
+	storageButton.onclick = function(){
+		Effect.SlideUp('storageBrowser_' + __this.id);
+		storageButton.innerHTML = labelCache;
+		
+		storageButton.onclick = function(){
+			__this.openStorageBrowser();
+			return false;
+		}
+		return false;
+	};
 }
 
 FileField.prototype.transferField = function() {
@@ -767,37 +861,73 @@ FileField.prototype.addUploadRow = function(element) {
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
 		$$("#" + this.id + "_widget div.required").invoke("hide");
+		$$("#storageBrowser_" + this.id).invoke("hide");
 	}
 		
 	Sortable.create("filelist_new_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
 }
 
-FileField.prototype.addCurrentRow = function(element) {
+FileField.prototype.addCurrentRow = function(element, blnStorage) {
 	var objParent = this.parent;
 	var strId = this.id;
 	
 	var objRow = document.createElement('div');
 	objRow.id = 'file_' + element.id;
-	objRow.className = 'multifile';
+	objRow.className = (blnStorage) ? 'multifile storage' : 'multifile';
 	objRow.style.position = 'relative';
 	objRow.element = element;
 
+	//*** Delete button.
 	var objButton = document.createElement('a');
 	objButton.className = 'button';
 	objButton.innerHTML = this.removeLabel;
 	objButton.href = '';
-
-	//*** Delete function.
 	objButton.onclick = function() {
 		objParent.removeCurrentField(strId, this);
 		return false;
 	};
-	
 	objRow.appendChild(objButton);
 	
 	var arrValue = element.value.split(":");
+	var labelValue = arrValue.shift();
+	var fileValue = arrValue.shift();
+	
+	//*** Image thumbnail.
+	if (this.thumbPath != "") {
+		var __this = this;
+		if (this.isImage(fileValue)) {
+			var objThumb = document.createElement('a');
+			objThumb.className = 'thumbnail';
+			objThumb.innerHTML = '<img src="thumb.php?src=' + this.thumbPath + fileValue + '" alt="" />';
+			objThumb.href = '';
+			objThumb.onmouseover = function() {
+				return overlib('<img src="' + __this.thumbPath + fileValue + '" alt="" />', FULLHTML);
+			};
+			objThumb.onmouseout = function() {
+				return nd();
+			};
+		} else {
+			var objThumb = document.createElement('a');
+			objThumb.className = 'document';
+			objThumb.innerHTML = '<img src="/images/ico_document.gif" alt="" />';
+			objThumb.href = '';
+			objThumb.onclick = function(){
+				window.open(__this.thumbPath + fileValue);
+				return false;
+			};
+			objThumb.onmouseover = function() {
+				return overlib('This file will open in a new window.');
+			};
+			objThumb.onmouseout = function() {
+				return nd();
+			};
+		}
+		objRow.appendChild(objThumb);
+	}
+	
+	//*** Label.
 	var objRowValue = document.createElement('p');
-	objRowValue.innerHTML = arrValue[0];
+	objRowValue.innerHTML = labelValue;
 	objRow.appendChild(objRowValue);
 
 	$("filelist_current_" + this.id).appendChild(objRow);
@@ -805,6 +935,7 @@ FileField.prototype.addCurrentRow = function(element) {
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
 		$$("#" + this.id + "_widget div.required").invoke("hide");
+		$$("#storageBrowser_" + this.id).invoke("hide");
 	}
 }
 
@@ -860,6 +991,39 @@ FileField.prototype.shortName = function(strInput, maxLength) {
 	}
 	
 	return strInput;
+}
+
+FileField.prototype.transferStorage = function(objLink, strLabel) {
+	Effect.SwitchOff(objLink);
+	setTimeout(function(){Effect.Appear(objLink)}, 1200);
+
+	//*** Create input element.
+	var objElement = document.createElement('input');
+	objElement.type = 'hidden';
+	objElement.id = this.id + "_" + this.parent.currentLanguage + "_" + this.fileCount++;
+	objElement.name = this.id + "_" + this.parent.currentLanguage + "[]";
+	objElement.value = strLabel + ":" + $(objLink).getElementsBySelector("img")[0].alt.split("/").pop() + ":" + $(objLink).id.split("_").pop();
+	$("filelist_new_" + this.id).appendChild(objElement);
+	
+	this.subFiles[this.parent.currentLanguage].currentFiles++;
+	this.subFiles[this.parent.currentLanguage].uploaded.push(objElement);
+	
+	$("filelist_current_" + this.id).show();
+	this.addCurrentRow(objElement, true);
+}
+
+FileField.prototype.isImage = function(fileName) {
+	var blnReturn = false;
+	var extension = fileName.split(".").pop();
+	var arrImages = ['jpg', 'jpeg', 'gif', 'png'];
+	for (var count = 0; count < arrImages.length; count++) {
+		if (arrImages[count] == extension) {
+			blnReturn = true;
+			break;
+		}
+	}
+	
+	return blnReturn;
 }
 
 FileField.prototype.toTemp = function() {};

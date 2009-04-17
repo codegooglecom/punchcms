@@ -12,6 +12,9 @@
 						<!-- BEGIN field-title -->
 						<li><a href="#section-fields">{HEADER}</a></li>
 						<!-- END field-title -->
+						<!-- BEGIN meta-title -->
+						<li><a href="#section-meta">{HEADER}</a></li>
+						<!-- END meta-title -->
 						<!-- BEGIN publish-title -->
 						<li><a href="#section-publish">{HEADER}</a></li>
 						<!-- END publish-title -->
@@ -246,6 +249,91 @@
 									</div>
 								</div>
 							</fieldset>
+							<div class="form-navigation">
+								<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
+							</div>
+						</div>
+						<div id="section-meta" class="anchor">
+							<!-- BEGIN description-meta -->
+							<div class="description">
+								<p>{LABEL}</p>
+							</div>
+							<!-- END description-meta -->
+							<fieldset>
+								<!-- BEGIN meta-language -->
+								<div class="optional{ERROR_META_LANGUAGE_ON}">
+									<!-- BEGIN error-meta-language -->
+									<p class="error">{ERROR_META_LANGUAGE}</p>
+									<!-- END error-meta-language -->
+									<label for="frm_meta_language">
+										<a href="javascript:;" rel="internal" class="fieldButton"><img id="meta_language_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+										{LABEL_META_LANGUAGE}
+									</label>
+									<select id="frm_meta_language" name="frm_meta_language" class="select-one" onchange="objMetaLanguage.swap(this.options[this.selectedIndex].value);">
+										<!-- BEGIN list_meta-language -->
+										<option value="{LANGUAGELIST_VALUE}" {LANGUAGELIST_SELECTED}>{LANGUAGELIST_TEXT}</option>
+										<!-- END list_meta-language -->
+									</select>
+									<input type="hidden" id="meta_language_actives" name="meta_language_actives" value="{ACTIVES_META_LANGUAGE}" />
+								</div>
+								<script type="text/javascript">
+								// <![CDATA[
+									var objMetaLanguage = new MetaLanguage();
+									objMetaLanguage.currentLanguage = {ACTIVE_META_LANGUAGE};
+									objMetaLanguage.defaultLanguage = {DEFAULT_META_LANGUAGE};
+									objMetaLanguage.setActives('{ACTIVES_META_LANGUAGE}');
+									objMetaLanguage.init();
+								// ]]>
+								</script>
+								<!-- END meta-language -->
+							</fieldset>
+
+							<div class="divider"></div>
+							<fieldset>
+								<div class="optional{ERROR_META_TITLE_ON}">
+									<!-- BEGIN error-meta-title -->
+									<p class="error">{ERROR_META_TITLE}</p>
+									<!-- END error-meta-title -->
+									<label for="frm_meta_title"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_title_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_TITLE}</label>
+									<input type="text" id="frm_meta_title" name="frm_meta_title" class="input-textlarge" value="{FORM_META_TITLE_VALUE}" onblur="objMetaLanguage.toTemp(this.id);" />
+									<!-- BEGIN field.meta_title.value -->
+									<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
+									<!-- END field.meta_title.value -->
+									<input type="hidden" id="frm_meta_title_cascades" name="frm_meta_title_cascades" value="" />
+								</div>
+								<div class="optional{ERROR_META_KEYWORDS_ON}">
+									<!-- BEGIN error-meta-keywords -->
+									<p class="error">{ERROR_META_KEYWORDS}</p>
+									<!-- END error-meta-keywords -->
+									<label for="frm_meta_keywords"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_keywords_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_KEYWORDS}</label>
+									<textarea id="frm_meta_keywords" name="frm_meta_keywords" class="input-textmedium" cols="32" rows="6" onblur="objMetaLanguage.toTemp(this.id);">{FORM_META_KEYWORDS_VALUE}</textarea>
+									<!-- BEGIN field.meta_keywords.value -->
+									<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
+									<!-- END field.meta_keywords.value -->
+									<input type="hidden" id="frm_meta_keywords_cascades" name="frm_meta_keywords_cascades" value="" />
+									<small>{META_KEYWORDS_NOTE}</small>
+								</div>
+								<div class="optional{ERROR_META_DESCRIPTION_ON}">
+									<!-- BEGIN error-meta-description -->
+									<p class="error">{ERROR_META_DESCRIPTION}</p>
+									<!-- END error-meta-description -->
+									<label for="frm_meta_description"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_description_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_DESCRIPTION}</label>
+									<textarea id="frm_meta_description" name="frm_meta_description" class="input-textmedium" cols="32" rows="6" onblur="objMetaLanguage.toTemp(this.id);">{FORM_META_DESCRIPTION_VALUE}</textarea>
+									<!-- BEGIN field.meta_description.value -->
+									<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
+									<!-- END field.meta_description.value -->
+									<input type="hidden" id="frm_meta_description_cascades" name="frm_meta_description_cascades" value="" />
+									<small>{META_DESCRIPTION_NOTE}</small>
+								</div>
+								<script type="text/javascript">
+								// <![CDATA[
+									//objMetaLanguage.addField('frm_meta_title', '{META_TITLE_CASCADES}');
+									//objMetaLanguage.addField('frm_meta_keywords', '{META_KEYWORDS_CASCADES}');
+									//objMetaLanguage.addField('frm_meta_description', '{META_DESCRIPTION_CASCADES}');
+								// ]]>
+								</script>
+							</fieldset>
+
 							<div class="form-navigation">
 								<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
 							</div>
