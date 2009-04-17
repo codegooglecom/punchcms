@@ -47,42 +47,48 @@ function parsePages($intElmntId, $strCommand) {
 
 					//*** Loop through the elements.
 					foreach ($objElements as $objSubElement) {
-						$objTemplate = Template::selectByPK($objSubElement->getTemplateId(), array('name'));
-						$strMeta = $objLang->get("editedBy", "label") . " " . $objSubElement->getUsername() . ", " . Date::fromMysql($objLang->get("datefmt"), $objSubElement->getModified());
+						//if (Permissions::hasElementPermission(SPINCMS_ELEMENTS_READ, $objSubElement)) {
+							$objTemplate = Template::selectByPK($objSubElement->getTemplateId(), array('name'));
+							$strMeta = $objLang->get("editedBy", "label") . " " . $objSubElement->getUsername() . ", " . Date::fromMysql($objLang->get("datefmt"), $objSubElement->getModified());
 
-						$objTpl->setCurrentBlock("multiview-item");
-						$objTpl->setVariable("BUTTON_DUPLICATE", $objLang->get("duplicate", "button"));
-						$objTpl->setVariable("BUTTON_DUPLICATE_HREF", "javascript:PElement.duplicate({$objSubElement->getId()});");
-						$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("delete", "button"));
-						$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:PElement.remove({$objSubElement->getId()});");
+							$objTpl->setCurrentBlock("multiview-item");
+							$objTpl->setVariable("BUTTON_DUPLICATE", $objLang->get("duplicate", "button"));
+							$objTpl->setVariable("BUTTON_DUPLICATE_HREF", "javascript:PElement.duplicate({$objSubElement->getId()});");
+							$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("delete", "button"));
+							$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:PElement.remove({$objSubElement->getId()});");
 
-						$objTpl->setVariable("MULTIITEM_VALUE", $objSubElement->getId());
-						$objTpl->setVariable("MULTIITEM_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$objSubElement->getId()}&amp;cmd=" . CMD_EDIT);
-						if ($objSubElement->getActive() < 1) $objTpl->setVariable("MULTIITEM_ACTIVE", " class=\"inactive\"");
-						$objTpl->setVariable("MULTIITEM_NAME", htmlspecialchars($objSubElement->getName()));
+							$objTpl->setVariable("MULTIITEM_VALUE", $objSubElement->getId());
+							//if (Permissions::hasElementPermission(SPINCMS_ELEMENTS_WRITE, $objSubElement)) {
+								$objTpl->setVariable("MULTIITEM_HREF", "href=\"?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$objSubElement->getId()}&amp;cmd=" . CMD_EDIT . "\"");
+							//} else {
+							//	$objTpl->setVariable("MULTIITEM_HREF", "");
+							//}
+							if ($objSubElement->getActive() < 1) $objTpl->setVariable("MULTIITEM_ACTIVE", " class=\"inactive\"");
+							$objTpl->setVariable("MULTIITEM_NAME", htmlspecialchars($objSubElement->getName()));
 
-						$strTypeClass = "";
-						if ($objSubElement->getTypeId() == ELM_TYPE_FOLDER) {
-							$strTypeClass = "folder";
-						} else {
-							$objChildElements = $objSubElement->getElements();
-							if (is_object($objChildElements) && $objChildElements->count() > 0) {
-								$strTypeClass = "widget";
+							$strTypeClass = "";
+							if ($objSubElement->getTypeId() == ELM_TYPE_FOLDER) {
+								$strTypeClass = "folder";
 							} else {
-								$strTypeClass = "element";
+								$objChildElements = $objSubElement->getElements();
+								if (is_object($objChildElements) && $objChildElements->count() > 0) {
+									$strTypeClass = "widget";
+								} else {
+									$strTypeClass = "element";
+								}
 							}
-						}
-						$objTpl->setVariable("MULTIITEM_TYPE_CLASS", $strTypeClass);
+							$objTpl->setVariable("MULTIITEM_TYPE_CLASS", $strTypeClass);
 
-						if (is_object($objTemplate)) {
-							$objTpl->setVariable("MULTIITEM_TYPE", ", " . $objTemplate->getName());
-						}
+							if (is_object($objTemplate)) {
+								$objTpl->setVariable("MULTIITEM_TYPE", ", " . $objTemplate->getName());
+							}
 
-						$objTpl->setVariable("MULTIITEM_META", $strMeta);
-						$objTpl->parseCurrentBlock();
+							$objTpl->setVariable("MULTIITEM_META", $strMeta);
+							$objTpl->parseCurrentBlock();
 
-						$listCount++;
-						if ($listCount >= $_SESSION["listCount"]) break;
+							$listCount++;
+							if ($listCount >= $_SESSION["listCount"]) break;
+						//}
 					}
 
 					//*** Render page navigation.
@@ -666,7 +672,7 @@ function parsePages($intElmntId, $strCommand) {
 									if (!empty($value)) {
 										//*** Find file name.
 										$arrFile = explode(":", $value);
-										if (count($arrFile) > 1) {
+										if (count($arrFile) > 1 && count($arrFile) < 3) {
 											//*** Check if the file is used by other elements.
 											if (!ElementField::fileHasDuplicates($value)) {
 												//*** Remove file.
@@ -1068,6 +1074,7 @@ function parsePages($intElmntId, $strCommand) {
 								$intMaxFileCount = (is_object($objValue)) ? $objValue->getValue() : 10000;
 								$strCurrentTitle = $objLang->get("imagesCurrent", "label");
 								$strNewTitle = $objLang->get("imagesNew", "label");
+								$strThumbPath = Setting::getValueByName("web_server") . Setting::getValueByName("file_folder");
 								
 							case FIELD_TYPE_FILE:
 								if (!isset($intMaxFileCount)) {
@@ -1075,6 +1082,7 @@ function parsePages($intElmntId, $strCommand) {
 									$intMaxFileCount = (is_object($objValue)) ? $objValue->getValue() : 10000;
 									$strCurrentTitle = $objLang->get("filesCurrent", "label");
 									$strNewTitle = $objLang->get("filesNew", "label");
+									$strThumbPath = "";
 								}
 								
 								if (is_object($objElement)) {
@@ -1099,6 +1107,11 @@ function parsePages($intElmntId, $strCommand) {
 												if (count($arrValue) > 1) {
 													$strValue = $arrValue[1];
 													$strLabel = $arrValue[0];
+
+													//*** Media library item?
+													if (count($arrValue) > 2) {
+														$strValue = $arrValue[1] . ":" . $arrValue[2];
+													}
 												} else {
 													$strValue = $arrValue[0];
 													$strLabel = $arrValue[0];
@@ -1157,6 +1170,15 @@ function parsePages($intElmntId, $strCommand) {
 								}								
 
 								//*** Parse the rest of the block.
+								$objFieldTpl->setCurrentBlock("field.file.select-type.library");
+								$objFieldTpl->setVariable("LABEL_LIBRARY", $objLang->get("pcmsStorage", "menu"));
+								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+								$objFieldTpl->parseCurrentBlock();
+								
+								$objFieldTpl->setCurrentBlock("field.file.select-type.upload");
+								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+								$objFieldTpl->parseCurrentBlock();
+								
 								$objFieldTpl->setCurrentBlock("field.file");
 								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
 								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
@@ -1165,7 +1187,10 @@ function parsePages($intElmntId, $strCommand) {
 								//$objFieldTpl->setVariable("FIELD_ALT_NAME", $objLang->get("altImage", "label"));
 								$objFieldTpl->setVariable("FIELD_CURRENT_FILES", $intFileCount);
 								$objFieldTpl->setVariable("FIELD_MAX_FILES", $intMaxFileCount);
+								$objFieldTpl->setVariable("FIELD_THUMB_PATH", $strThumbPath);
 								$objFieldTpl->setVariable("FIELD_MAX_CHAR", 60);
+								$objFieldTpl->setVariable("STORAGE_ITEMS", StorageItems::getFolderListHTML());
+								$objFieldTpl->setVariable("LABEL_CHOOSE_FOLDER", $objLang->get("chooseFolder", "label"));
 								$objFieldTpl->setVariable("FIELD_HEADER_CURRENT", $strCurrentTitle);
 								$objFieldTpl->setVariable("FIELD_HEADER_NEW", $strNewTitle);
 								$objFieldTpl->setVariable("FIELD_LABEL_REMOVE", $objLang->get("delete", "button"));
@@ -1365,6 +1390,70 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setVariable("ACTIVE_LANGUAGE", $intSelectLanguage);
 					$objTpl->setVariable("DEFAULT_LANGUAGE", $intDefaultLanguage);
 					$objTpl->setVariable("ACTIVES_LANGUAGE", $intDefaultLanguage);
+					
+					/*
+					//*** Meta tab.
+					$objTpl->setCurrentBlock("meta-title");
+					$objTpl->setVariable("HEADER", $objLang->get("meta", "label"));
+					$objTpl->parseCurrentBlock();
+					$objTpl->setCurrentBlock("description-meta");
+					$objTpl->setVariable("LABEL", $objLang->get("metaInfo", "form"));
+					$objTpl->parseCurrentBlock();
+
+					//*** Meta specific labels
+					$objTpl->setVariable("LABEL_META_TITLE", $objLang->get("metaTitle", "label"));
+					$objTpl->setVariable("LABEL_META_KEYWORDS", $objLang->get("metaKeywords", "label"));
+					$objTpl->setVariable("LABEL_META_DESCRIPTION", $objLang->get("metaDescription", "label"));
+					$objTpl->setVariable("META_KEYWORDS_NOTE", $objLang->get("metaKeywords", "tip"));
+					$objTpl->setVariable("META_DESCRIPTION_NOTE", $objLang->get("metaDescription", "tip"));		
+					$objTpl->setVariable("ACTIVE_META_LANGUAGE", $intSelectLanguage);
+					$objTpl->setVariable("DEFAULT_META_LANGUAGE", $intDefaultLanguage);			
+					$objTpl->setVariable("LABEL_META_LANGUAGE", $objLang->get("language", "form"));
+					$objTpl->setVariable("ACTIVES_META_LANGUAGE", $intDefaultLanguage);
+
+					//*** Meta languages					
+					$objContentLangs = ContentLanguage::select();
+					foreach ($objContentLangs as $objContentLanguage) {
+						$objTpl->setCurrentBlock("list_meta-language");
+						$objTpl->setVariable("LANGUAGELIST_VALUE", $objContentLanguage->getId());
+						if ($intDefaultLanguage == $objContentLanguage->getId()) {
+							$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName() . " (" . $objLang->get("default", "label") . ")");
+						} else {
+							$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName());
+						}
+						if ($intSelectLanguage == $objContentLanguage->getId()) $objTpl->setVariable("LANGUAGELIST_SELECTED", " selected=\"selected\"");
+						$objTpl->parseCurrentBlock();
+					}
+					
+					//*** Meta language values.
+					foreach ($objContentLangs as $objContentLanguage) {
+						$objMeta = (is_object($objElement)) ? $objElement->getMeta() : NULL;
+						
+						$objTpl->setCurrentBlock("field.meta_title.value");
+						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_title_{$objContentLanguage->getId()}");
+						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getTitle($objContentLanguage->getId()) : "");
+						$objTpl->parseCurrentBlock();
+						
+						$objTpl->setCurrentBlock("field.meta_keywords.value");
+						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_keywords_{$objContentLanguage->getId()}");
+						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getKeywords($objContentLanguage->getId()) : "");
+						$objTpl->parseCurrentBlock();
+						
+						$objTpl->setCurrentBlock("field.meta_description.value");
+						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_description_{$objContentLanguage->getId()}");
+						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getDescription($objContentLanguage->getId()) : "");
+						$objTpl->parseCurrentBlock();
+					}
+					
+					//*** Meta language cascades.
+					if (is_object($objElement)) {
+						$objMeta = $objElement->getMeta();
+					
+						$objTpl->setVariable("META_TITLE_CASCADES", implode(",", $objMeta->getCascades("title")));
+						$objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", $objMeta->getCascades("keywords")));
+						$objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", $objMeta->getCascades("description")));
+					}
+					*/
 				}
 			}
 

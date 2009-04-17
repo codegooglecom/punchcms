@@ -38,6 +38,7 @@
 									<!-- END error-element-name -->
 									<label for="frm_name">* {LABEL_ELEMENTNAME}</label>
 									<input type="text" id="frm_name" name="frm_name" class="input-textlarge" value="{FORM_NAME_VALUE}" />
+									<small>{LABEL_ELEMENTNAME_TIP}</small>
 								</div>
 								<!-- END field.name -->
 								<!-- BEGIN field.file -->
@@ -57,7 +58,7 @@
 										<input type="hidden" id="frm_file_1" name="frm_file[]" value="{FORM_CHOOSER_VALUE}" />
 										<script type="text/javascript">
 										// <![CDATA[
-											Storage.initField('frm_file', {maxFiles:{FIELD_MAX_FILES}, maxChar:60, removeLabel:'{FIELD_LABEL_REMOVE}'});
+											Storage.initField('frm_file', {maxFiles:{FIELD_MAX_FILES}, maxChar:60, removeLabel:'{FIELD_LABEL_REMOVE}', thumbPath:'{FIELD_THUMB_PATH}'});
 											Sortable.create("filelist_frm_file", {tag:"div",only:"multifile",hoverclass:"sorthover"});
 										// ]]>
 										</script>

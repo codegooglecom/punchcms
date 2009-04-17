@@ -1,9 +1,11 @@
 <?php
 
-/* General DBA Object Class v0.1.8
+/* General DBA Object Class v0.1.9
  * Holds the properties and methods of a DBA objects.
  *
  * CHANGELOG
+ * version 0.1.9, 23 March 2009
+ *   FIX: Fixed the quote method. Supports "0" as value now.
  * version 0.1.8, 13 June 2008
  *   FIX: Fixed the save method.
  *   UPD: Updated to the same codebase as the client object.

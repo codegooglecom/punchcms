@@ -32,9 +32,12 @@ function resizeTree() {
 	var offsetY = Position.cumulativeOffset(objTree)[1];
 	var treeHeight = windowHeight - offsetY - 60;
 	objTree.setStyle({height: treeHeight + 'px'});
+	
+	/*
 	objTree.getElementsByClassName('containerTableStyle').each(function(s){
 		s.setStyle({height: treeHeight + 'px'});
 	});
+	*/
 }
 
 //*** Tab logic.

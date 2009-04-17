@@ -55,7 +55,7 @@ function parseFiles($intElmntId, $strCommand) {
 						$objTpl->setVariable("BUTTON_DUPLICATE_HREF", "javascript:StorageItem.duplicate({$objItem->getId()});");
 
 						$objTpl->setVariable("MULTIITEM_VALUE", $objItem->getId());
-						$objTpl->setVariable("MULTIITEM_HREF", "?cid=" . NAV_PCMS_STORAGE . "&amp;eid={$objItem->getId()}&amp;cmd=" . CMD_EDIT);
+						$objTpl->setVariable("MULTIITEM_HREF", "href=\"?cid=" . NAV_PCMS_STORAGE . "&amp;eid={$objItem->getId()}&amp;cmd=" . CMD_EDIT . "\"");
 						$objTpl->setVariable("MULTIITEM_NAME", $objItem->getName());
 						$objTpl->setVariable("MULTIITEM_META", $strMeta);
 						
@@ -362,7 +362,7 @@ function parseFiles($intElmntId, $strCommand) {
 											$objElement = new StorageItem();
 											$objElement->setParentId($_POST["eid"]);
 											$objElement->setAccountId($_CONF['app']['account']->getId());
-											$objElement->setName($subvalue);
+											$objElement->setName((empty($_CLEAN_POST["frm_name"])) ? $subvalue : $_CLEAN_POST["frm_name"]);
 											$objElement->setDescription($_CLEAN_POST["frm_description"]);
 											$objElement->setUsername($objLiveUser->getProperty("name"));
 											$objElement->setTypeId(STORAGE_TYPE_FILE);	
@@ -382,6 +382,9 @@ function parseFiles($intElmntId, $strCommand) {
 								if (!$objMultiUpload->moveToFTP($strServer, $strUsername, $strPassword, $strRemoteFolder)) {
 									$strMessage = $objMultiUpload->errorMessage();
 								}
+								
+								//*** Fix file linkage.
+								$objElement->fixLinkedElements();
 							} else {
 								$strMessage = $objMultiUpload->errorMessage() . "<br />";
 								$strMessage .= "Files: " . $objMultiUpload->getTotalFiles() . " and Success: " . $objMultiUpload->getSuccessFiles();
@@ -428,9 +431,12 @@ function parseFiles($intElmntId, $strCommand) {
 				$objTpl->setVariable("LABEL_ELEMENTNAME", $objLang->get("folderName", "form"));
 				$objTpl->setVariable("LABEL_NOTES", $objLang->get("notes", "form"));
 			} else {
+				$objTpl->setVariable("LABEL_ELEMENTNAME", $objLang->get("fileName", "form"));
+				$objTpl->setVariable("LABEL_ELEMENTNAME_TIP", $objLang->get("storageName", "tip"));
 				$objTpl->setVariable("LABEL_CHOOSER", $objLang->get("browseImage", "label"));
 				$objTpl->setVariable("LABEL_NOTES", $objLang->get("description", "form"));
 				$objTpl->setVariable("FIELD_LABEL_REMOVE", $objLang->get("delete", "button"));
+				$objTpl->setVariable("FIELD_THUMB_PATH", Setting::getValueByName("web_server") . Setting::getValueByName("file_folder"));
 			}
 
 			//*** Insert values if action is edit.
@@ -442,11 +448,10 @@ function parseFiles($intElmntId, $strCommand) {
 					if (!$blnIsFolder) {
 						$objData = $objElement->getData();
 						if (is_object($objData)) {
-							$objTpl->setVariable("FORM_CHOOSER_VALUE", $objData->getOriginalName());
+							$objTpl->setVariable("FORM_CHOOSER_VALUE", $objData->getOriginalName() . ":" . $objData->getLocalName());
 						}
 						$objTpl->setVariable("FIELD_CURRENT_FILES", 1);
 						$objTpl->setVariable("FIELD_MAX_FILES", 1);
-						$objTpl->setVariable("LABEL_ELEMENTNAME", $objLang->get("fileName", "form"));
 					}
 				}
 				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_STORAGE . "&amp;eid={$objElement->getParentId()}&amp;cmd=" . CMD_LIST);

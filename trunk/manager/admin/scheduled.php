@@ -1,4 +1,3 @@
-#!/usr/bin/php-cgi -q
 <?php
 
 require_once('includes/init.php');

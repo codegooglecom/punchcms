@@ -26,6 +26,7 @@ function FileField(strId, objOptions) {
 	this.maxFiles = 1;
 	this.maxChar = 50;
 	this.fileCount = 1;
+	this.thumbPath = "";
 	var __this = this;
 	
 	//*** Parse the options.
@@ -190,12 +191,43 @@ FileField.prototype.addCurrentRow = function(element) {
 	objButton.onclick = function() {
 		__this.removeCurrentField(this);
 		return false;
-	};
-	
+	};	
 	objRow.appendChild(objButton);
+
+	var arrValue = element.value.split(":");
+	var labelValue = arrValue.shift();
+	var fileValue = arrValue.shift();
+	//*** Image thumbnail.
+	if (this.thumbPath != "") {
+		if (this.isImage(fileValue)) {
+			var objThumb = document.createElement('a');
+			objThumb.className = 'thumbnail';
+			objThumb.innerHTML = '<img src="thumb.php?src=' + this.thumbPath + fileValue + '" alt="" />';
+			objThumb.href = '';
+			objThumb.onmouseover = function() {
+				return overlib('<img src="' + __this.thumbPath + fileValue + '" alt="" />', FULLHTML);
+			};
+			objThumb.onmouseout = function() {
+				return nd();
+			};
+		} else {
+			var objThumb = document.createElement('a');
+			objThumb.className = 'document';
+			objThumb.innerHTML = '<img src="/images/ico_document.gif" alt="" />';
+			objThumb.rel = 'external';
+			objThumb.href = __this.thumbPath + fileValue;
+			objThumb.onmouseover = function() {
+				return overlib('This file will open in a new window.');
+			};
+			objThumb.onmouseout = function() {
+				return nd();
+			};
+		}
+		objRow.appendChild(objThumb);
+	}
 	
 	var objRowValue = document.createElement('p');
-	objRowValue.innerHTML = element.value;
+	objRowValue.innerHTML = labelValue;
 	objRow.appendChild(objRowValue);
 
 	$("filelist_" + this.id).appendChild(objRow);
@@ -261,6 +293,20 @@ FileField.prototype.shortName = function(strInput, maxLength) {
 }
 
 FileField.prototype.toTemp = function() {};
+
+FileField.prototype.isImage = function(fileName) {
+	var blnReturn = false;
+	var extension = fileName.split(".").pop();
+	var arrImages = ['jpg', 'jpeg', 'gif', 'png'];
+	for (var count = 0; count < arrImages.length; count++) {
+		if (arrImages[count] == extension) {
+			blnReturn = true;
+			break;
+		}
+	}
+	
+	return blnReturn;
+}
 
 FileField.prototype.sort = function() {
 	var arrFields = Sortable.serialize('filelist_' + this.id).split("&");

@@ -198,8 +198,14 @@ form div label.label-radio-widget
 	color: #000;
 }
 
+.input-browse {
+	padding: 0 4px;
+	font: normal 11px Arial, Helvetica, sans-serif;
+	color: #000;
+}
+
 .input-file {
-	width: 336px;
+	width: 195px;
 }
 
 form div.form-navigation {
@@ -422,6 +428,7 @@ form div.widget {
 	background-color: #d9e0ef;
 	border: 1px solid #c0c9de;
 	padding: 3px 0 10px 7px;
+	margin-bottom: 8px;
 }
 
 form div.widget div {
@@ -448,7 +455,7 @@ form div.widget div.multifile {
 	border: 1px solid #999999;
 	width: 472px;
 	margin: 0;
-	padding: 2px 5px 3px 3px;
+	padding: 2px 5px 4px 3px;
 	margin-bottom: 3px;
 }
 
@@ -464,8 +471,26 @@ form div.widget div.multifile img {
 	float: left;
 	width: 15px;
 	height: 11px;
-	margin: 1px 5px 1px 0;
 	border: 1px solid #ccc;
+}
+
+form div.widget div.multifile a.thumbnail {
+	float: left;
+	padding: 0;
+	margin: 1px 5px 1px 0;
+}
+
+form div.widget div.multifile a.document {
+	float: left;
+	padding: 0;
+	margin: 1px 5px 1px 0;
+}
+
+form div.widget div.multifile a.document img {
+	border: none;
+	width: 14px;
+	height: 14px;
+	margin-top: -1px;
 }
 
 form div.widget div.multifile div.file {
@@ -478,6 +503,10 @@ form div.widget div.multifile a.button {
 	font-size: 10px;
 }
 
+form div.widget div.storage {
+	background-color: #D1DAEF;
+}
+
 .disabled {
 	float: left;
 	background-color: #dee4f0;
@@ -487,3 +516,89 @@ form div.widget div.multifile a.button {
 	height: auto;
 	border: 1px solid #dee4f0;
 }
+
+form div.storageBrowser {
+	border: 1px solid #666;
+	width: 478px;
+	margin: 15px 0 0 4px;
+	padding: 0;
+}
+
+form div.storageBrowser div.storageChooser {
+	padding: 0 5px 5px 5px;
+	width: auto;
+	height: 25px;
+}
+
+form div.storageBrowser div.storageChooser label {
+	float: none;
+	width: auto;
+	display: block;
+	text-align: left;
+	margin-bottom: 0;
+	margin-top: 8px;
+}
+
+form div.storageBrowser div.storageList {
+	width: auto;
+	padding: 5px;
+	height: 300px;
+	border-top: 1px solid #666;
+	overflow: auto;
+}
+
+form div.storageBrowser div.storageList ul {
+	list-style: none;
+}
+
+form div.storageBrowser div.storageList li {
+	float: left;
+	height: 114px;
+	margin: 5px;
+	font-size: 10px;
+	width: 102px;
+	overflow: hidden;
+	position: relative;
+}
+
+form div.storageBrowser div.storageList li span {
+	bottom: 0;
+	position: absolute;
+}
+
+form div.storageBrowser div.storageList a {
+	display: block;
+	width: 92px;
+	height: 92px;
+	border: 5px solid #444;
+	font-size: 0;
+	line-height: 0;
+	padding: 0;
+}
+
+form div.storageBrowser div.storageList a:hover {
+	border: 5px solid #000;
+	background: none;
+}
+
+form div.storageBrowser div.storageList img {
+	display: block;
+	width: 90px;
+	height: 90px;
+	border: 1px solid #fff;
+	font-size: 0;
+	line-height: 0;
+}
+
+form div.storageBrowser select.storageSelect {
+	width: 340px;
+	float: right;
+	margin-top: -4px;
+}
+
+form div.storageBrowser div.storageLoader {
+	padding-left: 25px;
+	background: url('/images/progress.gif') 2px 6px no-repeat;
+	width: auto;
+}
+

@@ -148,6 +148,10 @@ function parseUsers($intElmntId, $strCommand) {
 			//*** Specific parsing.
 			$objTpl->setVariable("ACTIVE_LABEL", $objLang->get("active", "usersLabel"));
 			$objTpl->setVariable("NAME_LABEL", $objLang->get("name", "usersLabel"));
+			$objTpl->setVariable("GROUP_LEVEL_LABEL", $objLang->get("groupLevel", "usersLabel"));
+			$objTpl->setVariable("LEVEL_USER_LABEL", $objLang->get("levelUser", "usersLabel"));
+			$objTpl->setVariable("LEVEL_GROUP_LABEL", $objLang->get("levelGroup", "usersLabel"));
+			$objTpl->setVariable("LEVEL_ALL_LABEL", $objLang->get("levelAll", "usersLabel"));
 			$objTpl->setVariable("RIGHTS_LABEL", $objLang->get("rights", "usersLabel"));
 			$objTpl->setVariable("SELECTED_RIGHTS_LABEL", $objLang->get("selectedRights", "usersLabel"));
 			$objTpl->setVariable("AVAILABLE_RIGHTS_LABEL", $objLang->get("availableRights", "usersLabel"));

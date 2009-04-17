@@ -49,7 +49,7 @@ function parseTemplates($intElmntId, $strCommand) {
 						$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:PTemplateField.remove({$objField->getId()});");
 
 						$objTpl->setVariable("MULTIITEM_VALUE", $objField->getId());
-						$objTpl->setVariable("MULTIITEM_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objField->getId()}&amp;cmd=" . CMD_EDIT_FIELD);
+						$objTpl->setVariable("MULTIITEM_HREF", "href=\"?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objField->getId()}&amp;cmd=" . CMD_EDIT_FIELD . "\"");
 						$objTpl->setVariable("MULTIITEM_NAME", htmlspecialchars($objField->getName()));
 						$objTpl->setVariable("MULTIITEM_TYPE", ", " . $objFieldType->getName());
 						$objTpl->setVariable("MULTIITEM_TYPE_CLASS", "field");
