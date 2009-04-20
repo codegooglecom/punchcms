@@ -44,6 +44,8 @@ define('RESIZE_FIT_CROP', 2);
 define('RESIZE_DISTORT', 3);
 define('RESIZE_EXACT', 4);
 
+set_time_limit(60*60);
+
 class ImageResizer {
 
 	//*** Public Methods.
