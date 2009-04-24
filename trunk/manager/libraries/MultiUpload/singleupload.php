@@ -7,6 +7,8 @@
  * Copyright (c)2006, Phixel.org
  *
  * CHANGELOG
+ * version 1.2.4, 20 Apr 2009
+ *   BUG: Fixed an error regarding files with multiple dots in the name.
  * version 1.2.3, 18 Jun 2008
  *   BUG: Fixed an error retrival bug in getErrorMessage.
  * version 1.2.2, 05 May 2008
@@ -253,7 +255,7 @@ class SingleUpload {
 				return false;
 			} else {
 				if ($this->blnCheckFilename == TRUE) {
-					if (preg_match("/^[a-z0-9_]*\.(.){1,5}$/i", strtolower($strName))) {
+					if (preg_match("/^[a-z0-9_\.]*\.(.){1,5}$/i", strtolower($strName))) {
 						return true;
 					} else {
 						$this->arrMessages[] = $this->getErrorMessage(12);
