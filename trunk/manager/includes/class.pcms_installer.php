@@ -32,6 +32,9 @@ class PCMS_Installer {
 		$objForm = new ValidForm("installForm");
 		$objForm->setMainAlert("One or more errors occured. Check the marked fields and try again.");
 
+		$objForm->addFieldset("CMS type", NULL, "PunchCMS can be installed for a single website or multiple websites at once.");
+		$objForm->addField("single_instance", "Single website", VFORM_BOOLEAN);
+
 		$objForm->addFieldset("Administrator settings", NULL, "This is the account for the admin area. Later you can create an admin per website.");
 		$objForm->addField("username", "Username", VFORM_STRING, array("maxLength" => 255, "required" => TRUE), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter only letters and spaces."));
 		$objForm->addField("passwd", "Password", VFORM_PASSWORD, array("maxLength" => 255, "required" => TRUE), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter only letters and numbers."));
@@ -64,7 +67,7 @@ class PCMS_Installer {
 		return $strReturn;
 	}
 
-	public function writeConfig($username, $passwd, $email) {
+	public function writeConfig($username, $passwd, $email, $single) {
 		$strReturn = "";
 
 		if (is_file("configTemplate.php")) {
@@ -74,6 +77,7 @@ class PCMS_Installer {
 			$strConfig = str_replace("!!DB_USERNAME!!", $this->__db_username, $strConfig);
 			$strConfig = str_replace("!!DB_PASSWORD!!", $this->__db_passwd, $strConfig);
 			$strConfig = str_replace("!!MAIL_ADMIN!!", $email, $strConfig);
+			$strConfig = str_replace("!!CMS_TYPE!!", ($single) ? "TRUE" : "FALSE", $strConfig);
 			
 			//*** Write config file.
 			if (@file_put_contents("config.php", $strConfig) === FALSE) {

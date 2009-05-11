@@ -26,7 +26,8 @@ if (!empty($strRequirements)) {
 			//*** Write config file.
 			$strReturn = $objInstaller->writeConfig($objForm->getValidField("username")->getValue(),
 				$objForm->getValidField("passwd")->getValue(),
-				$objForm->getValidField("email")->getValue());
+				$objForm->getValidField("email")->getValue(),
+				$objForm->getValidField("single_instance")->getValue());
 			
 			if (empty($strReturn)) {
 				$strOutput = "<p class=\"success\"><b>Congratulations</b>, PunchCMS is almost ready!<br /></p>";
