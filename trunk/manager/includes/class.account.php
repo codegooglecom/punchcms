@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Account Class v0.1.1
+ * Account Class v0.1.2
  * Retrieves account data from the database.
  */
 
@@ -282,7 +282,7 @@ class Account extends DBA_Account {
 		global $_PATHS;
 		
 		$strZipFile = ExImport::export($this->id);
-		rename($strZipFile, $_PATHS['backup'] . $this->punchId . "_" . strftime("%Y%m%d%H%M%S") . ".zip");
+		copy($strZipFile, $_PATHS['backup'] . $this->punchId . "_" . strftime("%Y%m%d%H%M%S") . ".zip");
 		
 		//*** Remove old backups.
 		$arrFiles = scandir($_PATHS['backup'], 1);
@@ -295,6 +295,8 @@ class Account extends DBA_Account {
 				$intCount++;
 			}
 		}
+		
+		@unlink($strZipFile);
 	}
 	
 	public function restoreBackup($strFile = NULL) {

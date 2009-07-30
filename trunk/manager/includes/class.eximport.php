@@ -45,7 +45,7 @@
 */
 
 /*
- * ExImport Class v0.2.16
+ * ExImport Class v0.2.17
  * Exports and imports account data from the database.
  */
  
@@ -474,6 +474,7 @@ class ExImport {
 							$objField->setDescription($fieldNode->getAttribute("description"));
 							$objField->setTypeId($fieldNode->getAttribute("typeId"));
 							$objField->setUsername($fieldNode->getAttribute("username"));
+							$objField->setSort($fieldNode->getAttribute("sort"));
 							$objField->save();
 
 							$arrTemplateFieldIds[$fieldNode->getAttribute("id")] = $objField->getId();
@@ -804,12 +805,13 @@ class ExImport {
 				foreach ($objDbTemplate->getFields() as $objDbField) {
 					$objField = $objDoc->createElement('field');
 					$objField->setAttribute("id", $objDbField->getId());
+					$objField->setAttribute("required", $objDbField->getRequired());
 					$objField->setAttribute("typeId", $objDbField->getTypeId());
 					$objField->setAttribute("name", $objDbField->getName());
 					$objField->setAttribute("apiName", $objDbField->getApiName());
 					$objField->setAttribute("description", $objDbField->getDescription());
 					$objField->setAttribute("username", $objDbField->getUsername());
-					$objField->setAttribute("sort", $objDbField->getSort());
+					$objField->setAttribute("sort", $objDbField->getSort());		
 
 					$objValues = $objDoc->createElement('values');
 					foreach ($objDbField->getValues() as $objDbValue) {

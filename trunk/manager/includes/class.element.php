@@ -1,9 +1,11 @@
 <?php
 
-/* Element Class v0.1.0
+/* Element Class v0.1.2
  * Handles Element properties and methods.
  *
  * CHANGELOG
+ * version 0.1.2, 14 Jul 2009
+ *   ADD: Added clearZeroCache method.
  * version 0.1.1, 23 Apr 2008
  *   FIX: getFields fixed.
  * version 0.1.0, 04 Apr 2006
@@ -530,6 +532,17 @@ class Element extends DBA_Element {
 			
 			$objParent = Element::selectByPk($this->getParentId());
 			if (is_object($objParent)) $objParent->clearCache($objFtp);
+		}
+	}
+	
+	public function clearZeroCache($objFtp = NULL) {
+		if (Setting::getValueByName('caching_enable')) {
+			if (!is_object($objFtp)) {
+				$objFtp = new FTP(Setting::getValueByName('ftp_server'));
+				$objFtp->login(Setting::getValueByName('ftp_username'), Setting::getValueByName('ftp_password'));
+				$objFtp->pasv(TRUE);
+			}
+			$objFtp->delete(Setting::getValueByName('caching_ftp_folder') . "/*_0_*");
 		}
 	}
 	

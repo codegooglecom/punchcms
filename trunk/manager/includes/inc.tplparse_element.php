@@ -691,6 +691,7 @@ function parsePages($intElmntId, $strCommand) {
 						
 						//*** Clear cache if caching enabled.
 						$objElement->clearCache($objFtp);
+						$objElement->clearZeroCache($objFtp);
 					} else {
 						//*** Activate all languages for the folder type.
 						$objContentLangs = ContentLanguage::select();
