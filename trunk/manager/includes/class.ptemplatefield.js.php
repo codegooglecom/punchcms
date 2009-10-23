@@ -86,3 +86,35 @@ PTemplateField.multiSelect = function() {
 		arrCheckbox[i].checked = this.checked;
 	}
 }
+
+PTemplateField.addSetting = function(type, trigger) {
+	switch (type) {
+		case "image":
+			$("tfv_image_setting_name").up("div").show();
+			$("subImage").insert(trigger.up("fieldset").clone(true));
+			$$("a.removeButton").each(function(obj, index) {
+				if (index > 0) {
+					obj.show();
+				}
+			});
+			$("tfv_image_settings_count").value = ($("tfv_image_settings_count").value - 1) + 2;
+			break;
+	}
+	
+	return false;
+}
+
+PTemplateField.removeSetting = function(type, trigger) {
+	switch (type) {
+		case "image":
+			trigger.up("fieldset").remove();
+			$("tfv_image_settings_count").value = $("tfv_image_settings_count").value - 1;
+			
+			if ($("tfv_image_settings_count").value == 0) {
+				$("tfv_image_setting_name").up("div").hide();
+			}
+			break;
+	}
+	
+	return false;
+}

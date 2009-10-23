@@ -1,10 +1,10 @@
 <?php
 
-/* ElementField Class v0.1.0
+/* ElementField Class v0.3.0
  * Handles ElementField properties and methods.
  *
  * CHANGELOG
- * version 0.1.0, 04 Apr 2006
+ * version 0.3.0, 04 Apr 2006
  *   NEW: Created class.
  */
 
@@ -82,11 +82,9 @@ class ElementField extends DBA_ElementField {
 							$arrTemp = explode(":", $fileValue);
 							$objTemp = array();
 							$objTemp["original"] = $arrTemp[0];
-							if (count($arrTemp) > 1) {
-								$objTemp["src"] = $arrTemp[1];
-							} else {
-								$objTemp["src"] = $arrTemp[0];
-							}		
+							$objTemp["src"] = (count($arrTemp) > 1) ? $arrTemp[1] : $arrTemp[0];	
+							$objTemp["media_id"] = (count($arrTemp) > 2) ? $arrTemp[2] : 0;
+							$objTemp["alt"] = (count($arrTemp) > 3) ? $arrTemp[3] : "";
 							array_push($arrReturn, $objTemp);				
 						}
 					}

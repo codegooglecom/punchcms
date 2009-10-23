@@ -650,7 +650,10 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	this.maxChar = 50;
 	this.fileCount = 1;
 	this.thumbPath = "";
+	this.uploadPath = "";
 	this.selectType = [];
+	this.fileType = "*.*";
+	this.swfUpload = null;
 	
 	//*** Parse the options.
 	for (var intCount in objOptions) {
@@ -693,6 +696,52 @@ function FileField(strId, objParent, strCascades, objOptions) {
 			}
 		}
 	}
+	
+	//*** Initiate SWFUpload code.
+	var settings = {
+		jsParent : __this,
+		flash_url : "libraries/swfupload.swf",
+		upload_url: "upload.php",
+		post_params: {
+			"PHPSESSID" : "<?php echo session_id(); ?>",
+			"fileId" : __this.id,
+		},
+		file_size_limit : "100 MB",
+		file_types : __this.fileType,
+		file_types_description : "Files",
+		file_upload_limit : __this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles),
+		file_queue_limit : __this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles),
+		custom_settings : {
+			progressTarget : __this.id + "_uploadProgress",
+			cancelButtonId : __this.id + "_cancel"
+		},
+		debug: false,
+
+		// Button Settings
+		button_image_url : "images/XPButtonUploadText_61x22.png",
+		button_placeholder_id : __this.id + "_browse",
+		button_width: 61,
+		button_height: 22,
+
+		// The event handler functions are defined in handlers.js
+		swfupload_loaded_handler : __this.swfUploadLoaded,
+		file_queued_handler : __this.fileQueued,
+		file_queue_error_handler : __this.fileQueueError,
+		file_dialog_complete_handler : __this.fileDialogComplete,
+		upload_start_handler : __this.uploadStart,
+		upload_progress_handler : __this.uploadProgress,
+		upload_error_handler : __this.uploadError,
+		upload_success_handler : __this.uploadSuccess,
+		upload_complete_handler : __this.uploadComplete,
+		queue_complete_handler : __this.queueComplete,	// Queue plugin event
+		
+		// SWFObject settings
+		minimum_flash_version : "9.0.28",
+		swfupload_pre_load_handler : __this.swfUploadPreLoad,
+		swfupload_load_failed_handler : __this.swfUploadLoadFailed
+	};
+
+	this.swfUpload = new SWFUpload(settings);
 };
 
 FileField.prototype = new ContentField();
@@ -748,7 +797,11 @@ FileField.prototype.toScreen = function() {
 		
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].toUpload.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].toUpload[intCount];
-			this.addUploadRow(filledElement);
+			if (this.swfUpload.movieCount > 0) {
+				this.addSwfUploadRow(filledElement);
+			} else {
+				this.addUploadRow(filledElement);
+			}
 			$("filelist_new_" + this.id).show();
 		}
 		
@@ -763,6 +816,17 @@ FileField.prototype.toScreen = function() {
 			var blnStorage = (filledElement.value.split(":").length > 2) ? true : false;
 			this.addCurrentRow(filledElement, blnStorage);
 			$("filelist_current_" + this.id).show();
+		}
+		
+		//*** SWFUpload fields.
+		try {
+			this.swfUpload.setFileUploadLimit(this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles));
+			this.swfUpload.setFileQueueLimit(this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles));
+			var objStats = this.swfUpload.getStats();
+			objStats.successful_uploads = this.subFiles[this.parent.currentLanguage].toUpload.length;
+			this.swfUpload.setStats(objStats);
+		} catch (e) {
+			//*** Nothing.	
 		}
 		
 		var strId = this.id;
@@ -891,6 +955,8 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) {
 	var arrValue = element.value.split(":");
 	var labelValue = arrValue.shift();
 	var fileValue = arrValue.shift();
+	var libraryValue = arrValue.shift();
+	var alttextValue = arrValue.shift();
 	
 	//*** Image thumbnail.
 	if (this.thumbPath != "") {
@@ -929,6 +995,15 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) {
 	var objRowValue = document.createElement('p');
 	objRowValue.innerHTML = labelValue;
 	objRow.appendChild(objRowValue);
+	
+	//*** Description.
+	var objAltText = document.createElement('p');
+	objAltText.className = 'alt-text';
+	objAltText.innerHTML = (alttextValue == "" || alttextValue == undefined) ? this.altLabel : alttextValue;
+	objAltText.observe("click", function(event) {
+		__this.startAltEdit(event);
+	});
+	objRow.appendChild(objAltText);
 
 	$("filelist_current_" + this.id).appendChild(objRow);
 	
@@ -938,6 +1013,165 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) {
 		$$("#storageBrowser_" + this.id).invoke("hide");
 	}
 }
+
+FileField.prototype.addSwfUploadRow = function(element, file) {	
+	var __this = this;
+	
+	var objRow = document.createElement('div');
+	objRow.id = 'file_' + element.id;
+	
+	if (file !== undefined) {
+		objRow.className = 'multifile storage ' + file.id;
+	} else {
+		objRow.className = 'multifile storage ' + element.retrieve("file").id;
+	}
+	
+	objRow.style.position = 'relative';
+	objRow.element = element;
+	
+	if (file !== undefined) {
+		objRow.observe("mouseover", function() {
+			$(objRow.id).select("a img")[0].src = "/images/ico_loading_mo.gif";
+		})
+		.observe("mouseout", function() {
+				$(objRow.id).select("a img")[0].src = "/images/ico_loading.gif";
+		});
+	}
+
+	//*** Delete button.
+	var objButton = document.createElement('a');
+	objButton.className = 'button';
+	
+	if (file !== undefined) {
+		objButton.innerHTML = this.cancelLabel;
+		objButton.observe("click", function(event) {
+			__this.cancelCurrentSwfUpload(element.id, file);
+			event.stop();
+			return false;
+		});
+	} else {
+		objButton.innerHTML = this.removeLabel;
+		objButton.observe("click", function(event) {
+			__this.cancelCurrentSwfUpload(element.id, element.retrieve("file"));
+			event.stop();
+			return false;
+		});
+	}
+	objButton.href = '';
+	objRow.appendChild(objButton);
+	
+	var arrValue = element.value.split(":");
+	var labelValue = arrValue.shift();
+	var fileValue = arrValue.shift();
+	var libraryValue = arrValue.shift();
+	var alttextValue = arrValue.shift();
+		
+	//*** Image thumbnail.
+	var objThumb = document.createElement('a');
+	objThumb.href = '';
+	if (file !== undefined) {
+		objThumb.className = 'document';
+		objThumb.innerHTML = '<img src="/images/ico_loading.gif" alt="" />';
+		objThumb.observe("mouseover", function() {
+			return overlib('This file is being uploaded.');
+		})
+		.observe("mouseout", function() {
+			return nd();
+		});
+	} else {
+		var tempFile = element.retrieve("file");
+		if (__this.thumbPath != "") {
+			if (__this.isImage(tempFile.name)) {
+				objThumb.className = 'thumbnail';
+				objThumb.innerHTML = "<img src=\"thumb.php?src=" + __this.uploadPath + tempFile.name + "\" alt=\"\" />";
+				objThumb.observe("mouseover", function() {
+					return overlib("<img src=\"" + __this.uploadPath + tempFile.name + "\" alt=\"\" />", FULLHTML);
+				})
+				.observe("mouseout", function() {
+					return nd();
+				});
+			} else {
+				objThumb.className = 'document';
+				objThumb.innerHTML = '<img src="/images/ico_document.gif" alt="" />';
+				objThumb.observe("click", function(event) {
+					window.open(__this.thumbPath + "upload/" + tempFile.name);
+					event.stop();
+					return false;
+				})
+				.observe("mouseover", function() {
+					return overlib("This file will open in a new window.");
+				})
+				.observe("mouseout", function() {
+					return nd();
+				});
+			}
+		}	
+	}
+	objRow.appendChild(objThumb);
+	
+	//*** Label.
+	var objRowValue = document.createElement('p');
+	objRowValue.innerHTML = labelValue;
+	objRow.appendChild(objRowValue);
+	
+	if (file !== undefined) {
+		//*** Progress.
+		var objProgressBar = document.createElement('div');
+		objProgressBar.className = 'progressBar';
+		
+		var objProgressWrapper = document.createElement('div');
+		objProgressWrapper.className = 'progressWrapper';
+		objProgressWrapper.appendChild(objProgressBar);
+		objRow.appendChild(objProgressWrapper);
+	} else {
+		//*** Description.
+		var objAltText = document.createElement('p');
+		objAltText.className = 'alt-text';
+		objAltText.innerHTML = this.altLabel;
+		objAltText.observe("click", function(event) {
+			__this.startAltEdit(event);
+		});
+		objRow.appendChild(objAltText);
+	}
+
+	$("filelist_new_" + this.id).appendChild(objRow);
+	
+	//*** Check max files.
+	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
+		$$("#storageBrowser_" + this.id).invoke("hide");
+	}
+	
+	var strId = this.id;
+	Sortable.create("filelist_new_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
+}
+
+FileField.prototype.removeSwfUploadRow = function(inputId, file) {
+	$(inputId).remove();
+	$("file_" + inputId).remove();
+	
+	//*** Remove remotely.
+	new Ajax.Request("upload.php", {
+		method: 'post',
+		parameters: {
+			do: 'remove', 
+			file: file.name,
+			PHPSESSID: "<?php echo session_id(); ?>"
+		}
+	});
+	
+	var arrTemp = new Array();
+	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].toUpload.length; intCount++) {
+		if (this.subFiles[this.parent.currentLanguage].toUpload[intCount].value != file.name) {
+			arrTemp.push(this.subFiles[this.parent.currentLanguage].toUpload[intCount]);
+		}
+	}
+	this.subFiles[this.parent.currentLanguage].toUpload = arrTemp;
+	
+	$$("#" + this.id + "_widget div.required").invoke("show");
+	if (this.subFiles[this.parent.currentLanguage].toUpload.length == 0) {
+		$("filelist_new_" + this.id).hide();
+	}
+}	
 
 FileField.prototype.removeUploadField = function(objTrigger) {	
 	objTrigger.parentNode.element.parentNode.removeChild(objTrigger.parentNode.element);
@@ -958,6 +1192,8 @@ FileField.prototype.removeUploadField = function(objTrigger) {
 }
 
 FileField.prototype.removeCurrentField = function(objTrigger) {	
+	$$("#" + this.id + "_widget div.required").invoke("show");
+	
 	var arrTemp = new Array();
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 		if (this.subFiles[this.parent.currentLanguage].uploaded[intCount].value != objTrigger.parentNode.element.value) {
@@ -973,7 +1209,8 @@ FileField.prototype.removeCurrentField = function(objTrigger) {
 	if (this.subFiles[this.parent.currentLanguage].uploaded.length == 0) {
 		$("filelist_current_" + this.id).hide();
 	}
-	$$("#" + this.id + "_widget div.required").invoke("show");
+	
+	this.toScreen();
 }
 
 FileField.prototype.shortName = function(strInput, maxLength) {
@@ -1014,7 +1251,7 @@ FileField.prototype.transferStorage = function(objLink, strLabel) {
 
 FileField.prototype.isImage = function(fileName) {
 	var blnReturn = false;
-	var extension = fileName.split(".").pop();
+	var extension = fileName.toLowerCase().split(".").pop();
 	var arrImages = ['jpg', 'jpeg', 'gif', 'png'];
 	for (var count = 0; count < arrImages.length; count++) {
 		if (arrImages[count] == extension) {
@@ -1041,6 +1278,194 @@ FileField.prototype.sort = function() {
 	}
 }
 
+FileField.prototype.swfUploadPreLoad = function() {
+	//alert("swfUploadPreLoad");
+}
+
+FileField.prototype.swfUploadLoaded = function() {
+	$$("#" + this.settings.jsParent.id).invoke("hide");
+}
+
+FileField.prototype.swfUploadLoadFailed = function() {
+	//alert("swfUploadLoadFailed");
+}
+
+FileField.prototype.fileQueued = function(file) {
+	//alert("FileField.prototype.fileQueued: " + file.name);
+}
+
+FileField.prototype.fileQueueError = function(file, errorCode, message) {
+	try {
+		if (errorCode === SWFUpload.QUEUE_ERROR.QUEUE_LIMIT_EXCEEDED) {
+			alert("You have attempted to queue too many files.\n" + (message === 0 ? "You have reached the upload limit." : "You may select " + (message > 1 ? "up to " + message + " files." : "one file.")));
+			return;
+		}
+
+		switch (errorCode) {
+			case SWFUpload.QUEUE_ERROR.FILE_EXCEEDS_SIZE_LIMIT:
+				alert("File " + file.name + " is too big.");
+				break;
+			case SWFUpload.QUEUE_ERROR.ZERO_BYTE_FILE:
+				alert("File " + file.name + " is a zero size file.");
+				break;
+			case SWFUpload.QUEUE_ERROR.INVALID_FILETYPE:
+				alert("File " + file.name + " is an invalid file type.");
+				break;
+			default:
+				alert("Upload encountered a problem.");
+				break;
+		}
+	} catch (ex) {
+		alert("Upload encountered a problem.");
+    }
+}
+
+FileField.prototype.fileDialogComplete = function(numFilesSelected, numFilesQueued) {
+	try {
+		if (numFilesSelected > 0) {
+			//document.getElementById("btnCancel").style.display = "inline";
+		}
+		this.startUpload();
+	} catch (ex)  {
+        //this.debug(ex);
+	}
+}
+
+FileField.prototype.uploadStart = function(file) {
+	$("filelist_new_" + this.settings.jsParent.id).show();
+	
+	//*** Create input element.
+	var objElement = document.createElement('input');
+	objElement.type = 'hidden';
+	objElement.id = this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "_" + this.settings.jsParent.fileCount++;
+	objElement.name = this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "[]";
+	objElement.value = file.name + ":::";
+	objElement.store("file", file);
+	$("filelist_new_" + this.settings.jsParent.id).appendChild(objElement);
+		
+	this.settings.jsParent.subFiles[this.settings.jsParent.parent.currentLanguage].toUpload.push(objElement);
+	
+	this.settings.jsParent.addSwfUploadRow(objElement, file);
+}
+
+FileField.prototype.uploadProgress = function(file, bytesLoaded, bytesTotal) {
+	var percent = Math.ceil((bytesLoaded / bytesTotal) * 100);
+	$$("div." + file.id + " div.progressBar")[0].setStyle({width:percent + "%"});
+}
+
+FileField.prototype.uploadSuccess = function(file, serverData) {
+	var __this = this.settings.jsParent;
+	$$("div." + file.id + " div.progressWrapper")[0].remove();
+	$$("div." + file.id)[0].stopObserving("mouseover").stopObserving("mouseout");
+	$$("div." + file.id + " a.button")[0].innerHTML = __this.removeLabel;
+
+	if (__this.thumbPath != "") {
+		if (__this.isImage(file.name)) {
+			$$("div." + file.id + " a img")[0].src = "thumb.php?src=" + __this.uploadPath + file.name;
+			$$("div." + file.id + " a.document")[0]
+				.removeClassName("document")
+				.addClassName("thumbnail")
+				.stopObserving("mouseover")
+				.observe("mouseover", function() {
+					return overlib("<img src=\"" + __this.uploadPath + file.name + "\" alt=\"\" />", FULLHTML);
+				});
+		} else {
+			$$("div." + file.id + " a img")[0].src = "/images/ico_document.gif";
+			$$("div." + file.id + " a.document")[0]
+				.observe("click", function(event) {
+					window.open(__this.thumbPath + "upload/" + file.name);
+					event.stop();
+					return false;
+				})
+				.stopObserving("mouseover")
+				.observe("mouseover", function() {
+					return overlib("This file will open in a new window.");
+				});
+		}
+	}	
+	
+	//*** Description.
+	var objAltText = document.createElement('p');
+	objAltText.className = 'alt-text';
+	objAltText.innerHTML = __this.altLabel;
+	objAltText.observe("click", function(event) {
+		__this.startAltEdit(event);
+	});
+	$$("div." + file.id)[0].appendChild(objAltText);
+}
+
+FileField.prototype.startAltEdit = function(event) {
+	var __this = this;
+	
+	var strId = event.findElement("div").id;
+	var strText = event.findElement().innerHTML;
+	event.findElement().stopObserving("click").innerHTML = "<input type=\"text\" id=\"" + strId + "_altedit" + "\" name=\"" + strId + "_altedit" + "\" value=\"" + strText + "\" class=\"alt-input\"></input>";
+	event.findElement().select("input")[0].observe("blur", function(event){
+		__this.stopAltEdit(event);
+	}).select();
+}
+
+FileField.prototype.stopAltEdit = function(event) {
+	var __this = this;
+	
+	var arrId = event.findElement("div").id.split("_");
+	arrId.shift();
+	var strId = arrId.join("_");
+	var arrValue = $(strId).value.split(":");
+	var labelValue = arrValue.shift();
+	var fileValue = arrValue.shift();
+	fileValue = (fileValue == undefined) ? "" : fileValue;
+	var libraryValue = arrValue.shift();
+	libraryValue = (libraryValue == "" || libraryValue == undefined) ? 0 : libraryValue;	
+	var strText = event.findElement().value;
+	event.findElement().stopObserving("blur");
+	
+	$(strId).value = labelValue + ":" + fileValue + ":" + libraryValue + ":" + strText;
+	
+	event.findElement("p").observe("click", function(event) {
+		__this.startAltEdit(event);
+	}).innerHTML = strText;
+}
+
+FileField.prototype.uploadError = function(file, errorCode, message) {
+	//*** Nothing.
+	try {
+		switch (errorCode) {
+			case SWFUpload.QUEUE_ERROR.FILE_EXCEEDS_SIZE_LIMIT:
+				alert("File " + file.name + " is too big.");
+				break;
+			case SWFUpload.QUEUE_ERROR.ZERO_BYTE_FILE:
+				alert("File " + file.name + " is a zero size file.");
+				break;
+			case SWFUpload.QUEUE_ERROR.INVALID_FILETYPE:
+				alert("File " + file.name + " is an invalid file type.");
+				break;
+			default:
+				alert("Upload encountered a problem." + errorCode);
+				break;
+		}
+	} catch (ex) {
+		//alert("Upload encountered a problem.");
+    }
+}
+
+FileField.prototype.uploadComplete = function(file) {
+	//alert("FileField.prototype.uploadComplete: " + file.name);
+}
+
+FileField.prototype.queueComplete = function(numFilesUploaded) {
+	//alert("FileField.prototype.queueComplete: " + numFilesUploaded);
+}
+
+FileField.prototype.cancelCurrentSwfUpload = function(inputId, file) {
+	this.swfUpload.cancelUpload(file.id, false);
+	var objStats = this.swfUpload.getStats();
+	objStats.upload_cancelled++;
+	objStats.successful_uploads--;
+	this.swfUpload.setStats(objStats);
+	this.removeSwfUploadRow(inputId, file);
+}
+
 /*** 
  * DateField object.
  */
@@ -1065,7 +1490,7 @@ DateField.prototype.toScreen = function() {
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
 		var strValue = $(this.id + "_" + this.parent.defaultLanguage).value;
-		var objDate = Date.parseDate(strValue, "%d %B %Y %k:%M:%S");
+		var objDate = Date.parseDate(strValue, "%d %B %Y %H:%M:%S");
 		
 		$(this.id + "_alt").innerHTML = (strValue == "") ? "&nbsp;" : objDate.print($(this.id + "_format").value);
 		Element.hide(this.id + "_canvas");
@@ -1074,7 +1499,7 @@ DateField.prototype.toScreen = function() {
 	} else {
 		//*** The field needs no special treatment.
 		var strValue = $(this.id + "_" + this.parent.currentLanguage).value;
-		var objDate = Date.parseDate(strValue, "%d %B %Y %k:%M:%S");
+		var objDate = Date.parseDate(strValue, "%d %B %Y %H:%M:%S");
 		
 		$(this.id + "_canvas").innerHTML = (strValue == "") ? "&nbsp;" : objDate.print($(this.id + "_format").value);
 		$(this.id).value = strValue;

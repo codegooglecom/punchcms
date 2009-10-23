@@ -12,6 +12,7 @@
 											<!-- END field.file.select-type.library -->
 											<label for="{FIELD_ID}">{FIELD_BROWSE_NAME}</label>
 											<!-- BEGIN field.file.select-type.upload -->
+											<span id="{FIELD_ID}_browse"></span>
 											<input type="file" id="{FIELD_ID}" name="{FIELD_ID}_new" class="input-file" />
 											<!-- END field.file.select-type.upload -->
 											<input type="hidden" name="{FIELD_ID}[]" value="" />
@@ -32,7 +33,6 @@
 										<div id="filelist_current_{FIELD_ID}"><h3>{FIELD_HEADER_CURRENT}</h3></div>
 										<div id="filelist_new_{FIELD_ID}"><h3>{FIELD_HEADER_NEW}</h3></div>
 										<!-- BEGIN field.file.value -->
-										<input type="hidden" id="{FIELD_LANGUAGE_ID}_alttext" name="{FIELD_LANGUAGE_ID}_alttext" value="{FIELD_LANGUAGE_ALTTEXT_VALUE}" />
 										<input type="hidden" id="{FIELD_LANGUAGE_ID}_current" name="{FIELD_LANGUAGE_ID}_current" value="{FIELD_LANGUAGE_CURRENT_FILES}" />
 											<!-- BEGIN field.file.edit -->
 										<input type="hidden" id="{FIELD_LANGUAGE_ID_COUNT}" name="{FIELD_LANGUAGE_ID}[]" value="{FIELD_LANGUAGE_VALUE}" />
@@ -41,7 +41,7 @@
 										<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
 										<script type="text/javascript">
 										// <![CDATA[
-											objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.FILE, {maxFiles:{FIELD_MAX_FILES}, maxChar:{FIELD_MAX_CHAR}, removeLabel:'{FIELD_LABEL_REMOVE}', thumbPath:'{FIELD_THUMB_PATH}', selectType:['upload', 'library']});
+											objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.FILE, {maxFiles:{FIELD_MAX_FILES}, maxChar:{FIELD_MAX_CHAR}, removeLabel:'{FIELD_LABEL_REMOVE}', cancelLabel:'{FIELD_LABEL_CANCEL}', altLabel:'{FIELD_LABEL_ALT}', thumbPath:'{FIELD_THUMB_PATH}', uploadPath:'{FIELD_UPLOAD_PATH}', selectType:['upload', 'library'], fileType:'{FIELD_FILE_TYPE}'});
 											Sortable.create("filelist_current_{FIELD_ID}", {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort('{FIELD_ID}')}});
 											Sortable.create("filelist_new_{FIELD_ID}", {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort('{FIELD_ID}')}});
 										// ]]>

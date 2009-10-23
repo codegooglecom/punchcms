@@ -8,7 +8,7 @@
 -- PHP Version: 5.2.1
 -- 
 -- Database: `punchcms`
--- Version: `2.2.9`
+-- Version: `2.3.0
 -- 
 
 -- --------------------------------------------------------
@@ -414,7 +414,7 @@ CREATE TABLE `punch_liveuser_users` (
   `passwd` char(42) default NULL,
   `name` char(250) default NULL,
   `email` char(250) default NULL,
-  `time_zone_id` int(11) NOT NULL,
+  `time_zone_id` int(11) NOT NULL default '1',
   `owner_user_id` int(11) default NULL,
   `owner_group_id` int(11) default NULL,
   `account_id` int(11) NOT NULL default '0',

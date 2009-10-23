@@ -1,12 +1,14 @@
 <?php
 
 /**
- * Single File Upload - version 1.2.3
+ * Single File Upload - version 1.2.5
  * Easy and reliable upload class for single file upload.
  *
  * Copyright (c)2006, Phixel.org
  *
  * CHANGELOG
+ * version 1.2.5, 11 Oct 2009
+ *   CHG: Changed access of getFileName from protected to public.
  * version 1.2.4, 20 Apr 2009
  *   BUG: Fixed an error regarding files with multiple dots in the name.
  * version 1.2.3, 18 Jun 2008
@@ -54,6 +56,10 @@ class SingleUpload {
 
 	public function getOriginalName() {
 		return $this->strOriginalName;
+	}
+
+	public function setOriginalName($value) {
+		$this->strOriginalName = $value;
 	}
 
 	public function getTempName() {
@@ -148,7 +154,11 @@ class SingleUpload {
 		if (!empty($strLocalName)) {
 			//*** Connect to the server.
 			$objFtp = new FTP($strServer);
-			$objFtp->login($strUsername, $strPassword);
+			$objRet = $objFtp->login($strUsername, $strPassword);
+			if (!$objRet) {
+				$this->arrMessages[] = "Login failed. Check credentials.";
+				$blnReturn = false;
+			}
 			
 			//*** Passive mode.
 			$objFtp->pasv(TRUE);
@@ -231,7 +241,7 @@ class SingleUpload {
 		}
 	}
 
-	protected function getFileName($strName = "") {
+	public function getFileName($strName = "") {
 		//*** This "conversion" is used for unique/new filenames.
 		$strReturn = "";
 

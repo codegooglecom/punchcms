@@ -493,8 +493,29 @@ form div.widget div.multifile a.document img {
 	margin-top: -1px;
 }
 
-form div.widget div.multifile div.file {
-	color: #666;
+form div.widget div.multifile div.progressWrapper {
+	border: 1px solid #666;
+	margin: 5px 80px 3px 20px;
+	padding: 0;
+	width: auto;
+}
+
+form div.widget div.multifile div.progressBar {
+	height: 4px;
+	background-color: #999;
+	width: 0;
+	padding: 0;
+	margin: 0;
+}
+
+form div.widget div.multifile p.alt-text {
+	color: #555;
+	margin: 3px 0 0 0;
+	cursor: pointer;
+}
+
+form div.widget div.multifile input.alt-input {
+	width: 466px;
 }
 
 form div.widget div.multifile a.button {

@@ -124,26 +124,37 @@
 									<div class="optional">
 										<label for="tfv_image_count">Maximum images</label>
 										<input type="text" id="tfv_image_count" name="tfv_image_count" class="input-textsmall" value="{TFV_IMAGE_COUNT}" />
+										<input type="hidden" id="tfv_image_settings_count" name="tfv_image_settings_count" value="{TFV_IMAGE_SETTINGS_COUNT}" />
+									</div>
+								</fieldset>
+								<!-- BEGIN image.settings -->
+								<fieldset>
+									<h5>Image Size settings <a href="javascript:void(0);" class="removeButton" onclick="PTemplateField.removeSetting('image', this)" style="{REMOVE_STYLE};" rel="internal">[-]</a><a href="javascript:void(0);" class="addButton" rel="internal" onclick="PTemplateField.addSetting('image', this);">[+] Add another template</a></h5>
+									<div class="required" style="{API_STYLE};">
+										<label for="tfv_image_setting_name">* API Name</label>
+										<input type="text" id="tfv_image_setting_name" name="tfv_image_setting_name[]" class="input-textlarge" value="{TFV_IMAGE_SETTING_NAME}" />
+										<small>Used by the developer to select the image based on these settings.</small>
 									</div>
 									<div class="optional">
 										<label for="tfv_field_width">Image size (W x H)</label>
-										<input type="text" id="tfv_field_width" name="tfv_field_width" class="input-textsmall" value="{TFV_FIELD_WIDTH}" /> x
-										<input type="text" id="tfv_field_height" name="tfv_field_height" class="input-textsmall" value="{TFV_FIELD_HEIGHT}" />
+										<input type="text" id="tfv_field_width" name="tfv_field_width[]" class="input-textsmall" value="{TFV_FIELD_WIDTH}" /> x
+										<input type="text" id="tfv_field_height" name="tfv_field_height[]" class="input-textsmall" value="{TFV_FIELD_HEIGHT}" />
 									</div>
 									<div class="optional">
 										<label for="tfv_image_scale">Scale method</label>								
-										<select id="tfv_image_scale" name="tfv_image_scale" class="select-one">
+										<select id="tfv_image_scale" name="tfv_image_scale[]" class="select-one">
 											{TFV_IMAGE_SCALE}
 										</select>	
 									</div>
 									<div class="optional">
 										<label for="tfv_image_quality">Image quality</label>
-										<input type="text" id="tfv_image_quality" name="tfv_image_quality" class="input-textsmall" value="{TFV_IMAGE_QUALITY}" />
+										<input type="text" id="tfv_image_quality" name="tfv_image_quality[]" class="input-textsmall" value="{TFV_IMAGE_QUALITY}" />
 									</div>
 									<div class="optional">
-										<label for="tfv_image_grayscale" class="label-check"><input type="checkbox" id="tfv_image_grayscale" name="tfv_image_grayscale" class="input-check" {TFV_IMAGE_GRAYSCALE} /> Convert to grayscale</label>
+										<label for="tfv_image_grayscale" class="label-check"><input type="checkbox" id="tfv_image_grayscale" name="tfv_image_grayscale[]" class="input-check" {TFV_IMAGE_GRAYSCALE} /> Convert to grayscale</label>
 									</div>
 								</fieldset>
+								<!-- END image.settings -->
 							</div>
 
 							<div id="subFile" class="field-types" style="display:none">

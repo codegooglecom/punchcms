@@ -456,12 +456,24 @@ function parseTemplates($intElmntId, $strCommand) {
 					$objField->clearValues();
 					//*** Add type values to the field.
 					foreach ($_REQUEST as $key => $value) {
-						if ($value != "" && substr($key, 0, 4) == "tfv_") {
-							$objValue = new TemplateFieldValue();
-							$objValue->setName($key);
-							$objValue->setValue($value);
-							$objValue->setFieldId($objField->getId());
-							$objValue->save();
+						if (is_array($value)) {
+							$intCount = 0;
+							foreach ($value as $subKey => $subValue) {
+								$objValue = new TemplateFieldValue();
+								$objValue->setName($key . "_" . $intCount);
+								$objValue->setValue($subValue);
+								$objValue->setFieldId($objField->getId());
+								$objValue->save();
+								$intCount++;
+							}
+						} else {
+							if ($value != "" && substr($key, 0, 4) == "tfv_") {
+								$objValue = new TemplateFieldValue();
+								$objValue->setName($key);
+								$objValue->setValue($value);
+								$objValue->setFieldId($objField->getId());
+								$objValue->save();
+							}
 						}
 					}
 
@@ -502,7 +514,81 @@ function parseTemplates($intElmntId, $strCommand) {
 			} else {
 				$objTpl->setVariable("MAINTITLE", $objLang->get("templateFieldDetails", "label"));
 			}
+			
+			//*** Image crop settings.
+			$arrValues = array(1,2,3,4);
+			$arrLabels = array("Resize cropped","Resize fit cropped","Resize distorted","Resize to fit");
 
+			$arrSettings = array();
+			$arrImageSettings = array();
+					
+			if ($strCommand == CMD_EDIT_FIELD) {			
+				$objFieldValues = $objField->getValues();
+				if (is_object($objFieldValues)) {					
+					foreach ($objFieldValues as $objFieldValue) {
+						switch (strtoupper($objFieldValue->getName())) {
+							case "TFV_BOOLEAN_DEFAULT":
+								if ($objFieldValue->getValue()) {
+									$arrSettings[$objFieldValue->getName()] = "checked=\"checked\"";
+								}
+								
+								break;
+							default:
+								$arrKey = explode("_", $objFieldValue->getName());
+								$intIndex = array_pop($arrKey);
+								if (is_numeric($intIndex)) {
+									$strValue = $objFieldValue->getValue();
+									$arrImageSettings[$intIndex][implode("_", $arrKey)] = xhtmlsave($strValue);
+								} else {
+									$strValue = $objFieldValue->getValue();
+									$arrSettings[$objFieldValue->getName()] = xhtmlsave($strValue);
+								}
+						}
+					}
+					
+					if (count($arrImageSettings) > 0) {
+						//*** Image settings.
+						$arrImageSettings = array_reverse($arrImageSettings);
+						foreach ($arrImageSettings as $key => $objValue) {
+							$objTpl->setCurrentBlock("image.settings");
+							foreach ($objValue as $setting => $value) {
+								switch (strtoupper($setting)) {
+									case "TFV_IMAGE_SCALE":								
+										if ($objField->getTypeId() == FIELD_TYPE_IMAGE) {
+											$strValue = "";
+											foreach ($arrValues as $settingKey => $settingValue) {
+												$selected = ($settingValue == $value) ? " selected=\"selected\"" : "";
+												$strValue .= "<option value=\"$arrValues[$settingKey]\"{$selected}>{$arrLabels[$settingKey]}</option>\n";
+											}
+											$objTpl->setVariable(strtoupper($setting), $strValue);
+										}
+										
+										break;
+									case "TFV_IMAGE_GRAYSCALE":
+										if ($value) {
+											$objTpl->setVariable(strtoupper($setting), "checked=\"checked\"");
+										}
+										
+										break;
+									default:
+										$objTpl->setVariable(strtoupper($setting), xhtmlsave($value));
+								}
+							}
+							
+							if (count($arrImageSettings) == 1) {
+								$objTpl->setVariable("API_STYLE", "display:none");
+							}
+							
+							if ($key == 0) {
+								$objTpl->setVariable("REMOVE_STYLE", "display:none");
+							}
+							
+							$objTpl->parseCurrentBlock();
+						}
+					}
+				}
+			}
+			
 			$objTpl->setCurrentBlock("templatefieldadd");
 			$objTpl->setVariable("LABEL_REQUIRED", $objLang->get("requiredFields", "form"));
 			$objTpl->setVariable("LABEL_REQUIREDFIELD", $objLang->get("requiredField", "form"));
@@ -519,13 +605,15 @@ function parseTemplates($intElmntId, $strCommand) {
 			$objTpl->setVariable("TFV_EXTENSION_NOTES", $objLang->get("templateFileType", "tip"));
 			
 			//*** Render image scale pulldown.
-			$arrValues = array(1,2,3,4);
-			$arrLabels = array("Resize cropped","Resize fit cropped","Resize distorted","Resize to fit");
-			$strValue = "";
-			foreach ($arrValues as $key => $value) {
-				$strValue .= "<option value=\"$arrValues[$key]\">{$arrLabels[$key]}</option>\n";
+			if (count($arrImageSettings) == 0) {
+				$strValue = "";
+				foreach ($arrValues as $key => $value) {
+					$strValue .= "<option value=\"$arrValues[$key]\">{$arrLabels[$key]}</option>\n";
+				}
+				$objTpl->setVariable("TFV_IMAGE_SCALE", $strValue);
+				$objTpl->setVariable("API_STYLE", "display:none");
+				$objTpl->setVariable("REMOVE_STYLE", "display:none");
 			}
-			$objTpl->setVariable("TFV_IMAGE_SCALE", $strValue);
 
 			//*** Insert values if action is edit.
 			if ($strCommand == CMD_EDIT_FIELD) {
@@ -535,34 +623,24 @@ function parseTemplates($intElmntId, $strCommand) {
 				$objTpl->setVariable("FORM_NOTES_VALUE", $objField->getDescription());
 
 				//*** Insert values for the field type.
-				$objFieldValues = $objField->getValues();
-				if (is_object($objFieldValues)) {
-					foreach ($objFieldValues as $objFieldValue) {
-						switch (strtoupper($objFieldValue->getName())) {
-							case "TFV_IMAGE_SCALE":
-								if ($objField->getTypeId() == FIELD_TYPE_IMAGE) {
-									$strValue = "";
-									foreach ($arrValues as $key => $value) {
-										$selected = ($value == $objFieldValue->getValue()) ? " selected=\"selected\"" : "";
-										$strValue .= "<option value=\"$arrValues[$key]\"{$selected}>{$arrLabels[$key]}</option>\n";
-									}
-									$objTpl->setVariable(strtoupper($objFieldValue->getName()), $strValue);
+				if (count($arrSettings) > 0) {
+					foreach ($arrSettings as $name => $value) {
+						switch (strtoupper($name)) {
+							case "TFV_BOOLEAN_DEFAULT":
+								if ($value) {
+									$objTpl->setVariable(strtoupper($name), "checked=\"checked\"");
 								}
 								
 								break;
-							case "TFV_BOOLEAN_DEFAULT":
-							case "TFV_IMAGE_GRAYSCALE":
-								if ($objFieldValue->getValue()) {
-									$objTpl->setVariable(strtoupper($objFieldValue->getName()), "checked=\"checked\"");
-								}
+							case "TFV_IMAGE_SCALE":
+								//*** Skip. Already set.
 								
 								break;
 							default:
-								$strValue = $objFieldValue->getValue();
-								$objTpl->setVariable(strtoupper($objFieldValue->getName()), xhtmlsave($strValue));
+								$objTpl->setVariable(strtoupper($name), xhtmlsave($value));						
 						}
 					}
-				}
+				}				
 			}
 			
 			$objTpl->parseCurrentBlock();

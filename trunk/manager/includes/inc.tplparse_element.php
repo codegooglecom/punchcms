@@ -185,8 +185,6 @@ function parsePages($intElmntId, $strCommand) {
 				$objElement = Element::selectByPK($intElmntId);
 				$objTpl->setVariable("BUTTON_EDIT", $objLang->get("edit", "button"));
 				$objTpl->setVariable("BUTTON_EDIT_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_EDIT);
-				$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("removeElement", "button"));
-				$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:PElement.remove({$intElmntId});");
 			}
 
 			$objTpl->setVariable("LABEL_SUBJECT", $objLang->get("elementsIn", "label") . " ");
@@ -559,15 +557,114 @@ function parsePages($intElmntId, $strCommand) {
 												$arrCurrent = (is_array($strValue)) ? $strValue : array();
 												foreach ($arrCurrent as $value) {
 													if (!empty($value)) {
-														$cacheFileValue .= $value . "\n";
-
-														//*** Remove file from cache.
-														if (isset($arrFieldCache[$intTemplateFieldId]) && isset($arrFieldCache[$intTemplateFieldId][$objContentLanguage->getId()])) {
-															$arrFieldCache[$intTemplateFieldId][$objContentLanguage->getId()] = str_replace($value, "", $arrFieldCache[$intTemplateFieldId][$objContentLanguage->getId()]);
+														$arrFile = explode(":", $value);
+														if (count($arrFile) > 1 && !empty($arrFile[1])) {
+															$cacheFileValue .= $value . "\n";
+	
+															//*** Remove file from cache.
+															if (isset($arrFieldCache[$intTemplateFieldId]) && isset($arrFieldCache[$intTemplateFieldId][$objContentLanguage->getId()])) {
+																$arrFieldCache[$intTemplateFieldId][$objContentLanguage->getId()] = str_replace($value, "", $arrFieldCache[$intTemplateFieldId][$objContentLanguage->getId()]);
+															}
 														}
 													}
 												}
 
+												//*** Multifile SWFUpload
+												foreach ($arrCurrent as $value) {
+													if (!empty($value)) {
+														$arrFile = explode(":", $value);
+														if (count($arrFile) > 1 && empty($arrFile[1])) {
+															//*** Any image manipulation?
+															$strLocalValue = ImageField::filename2LocalName($arrFile[0]);
+															
+															$objImageField = new ImageField($intTemplateFieldId);
+															$arrSettings = $objImageField->getSettings();
+															if (count($arrSettings) > 1) {
+																foreach ($arrSettings as $key => $arrSetting) {																	
+																	$strFileName = FileIO::add2Base($strLocalValue, $arrSetting['key']);
+																	if (copy($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strFileName)) {							
+																		if ($objTemplateField->getTypeId() == FIELD_TYPE_IMAGE && (
+																				!empty($arrSetting['width']) ||
+																				!empty($arrSetting['height']))) {										
+																			
+																			//*** Resize the image.
+																			ImageResizer::resize(
+																				$_PATHS['upload'] . $strFileName, 
+																				$arrSetting['width'],
+																				$arrSetting['height'],
+																				$arrSetting['scale'],
+																				$arrSetting['quality'],
+																				TRUE,
+																				NULL,
+																				FALSE,
+																				$arrSetting['grayscale']);		
+																		}
+																	
+																		//*** Move file to remote server.
+																		$objUpload = new SingleUpload();																		
+																		if (!$objUpload->moveToFTP($strFileName, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
+																			HandleError("File could not be moved to remote server. " . $objUpload->errorMessage());
+																		}
+																	}						
+																}			
+											
+																//*** Move original file.
+																if (rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strLocalValue)) {	
+																	$objUpload = new SingleUpload();																	
+																	if (!$objUpload->moveToFTP($strLocalValue, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
+																		HandleError("File could not be moved to remote server. " . $objUpload->errorMessage());
+																	}
+																}
+																
+																//*** Unlink original file.
+																@unlink($_PATHS['upload'] . $arrFile[0]);
+															} else {																
+																if ($objTemplateField->getTypeId() == FIELD_TYPE_IMAGE && (
+																		!empty($arrSettings[0]['width']) ||
+																		!empty($arrSettings[0]['height']))) {
+																							
+																	$strFileName = FileIO::add2Base($strLocalValue, $arrSettings[0]['key']);
+																	
+																	//*** Resize the image.
+																	if (rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strFileName)) {	
+																		ImageResizer::resize(
+																			$_PATHS['upload'] . $strFileName, 
+																			$arrSettings[0]['width'],
+																			$arrSettings[0]['height'],
+																			$arrSettings[0]['scale'],
+																			$arrSettings[0]['quality'],
+																			TRUE,
+																			NULL,
+																			FALSE,
+																			$arrSettings[0]['grayscale']);				
+																
+																		//*** Move file to remote server.
+																		$objUpload = new SingleUpload();
+																		if (!$objUpload->moveToFTP($strFileName, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
+																			HandleError("File could not be moved to remote server.");
+																		}
+																	}																
+																}
+																
+																//*** Move original file.
+																if (rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strLocalValue)) {	
+																	//*** Move file to remote server.
+																	$objUpload = new SingleUpload();
+																	if (!$objUpload->moveToFTP($strLocalValue, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
+																		HandleError("File could not be moved to remote server.");
+																	}
+																}
+																
+																//*** Unlink original file.
+																@unlink($_PATHS['upload'] . $arrFile[0]);																
+															}
+																
+															//*** Set file value.
+															$cacheFileValue .= $arrFile[0] . ":" . $strLocalValue . "\n";
+														}
+													}
+												}
+																								
 												//*** Check newly uploaded files.
 												$strFiles = "efv_{$intTemplateFieldId}_{$objContentLanguage->getId()}_new";
 												$fileValue = $cacheFileValue;
@@ -595,20 +692,12 @@ function parsePages($intElmntId, $strCommand) {
 
 														//*** Any image manipulation?
 														$blnResize = FALSE;
-														$objValue = $objTemplateField->getValueByName("tfv_field_width");
-														$intWidth = (is_object($objValue)) ? $objValue->getValue() : "";
-														$objValue = $objTemplateField->getValueByName("tfv_field_height");
-														$intHeight = (is_object($objValue)) ? $objValue->getValue() : "";
-														$objValue = $objTemplateField->getValueByName("tfv_image_scale");
-														$intScale = (is_object($objValue)) ? $objValue->getValue() : "";
-														$objValue = $objTemplateField->getValueByName("tfv_image_quality");
-														$intQuality = (is_object($objValue)) ? $objValue->getValue() : 75;
-														$objValue = $objTemplateField->getValueByName("tfv_image_grayscale");
-														$blnGrayscale = (is_object($objValue) && $objValue->getValue() == "on") ? TRUE : FALSE;
-														
+														$objImageField = new ImageField($intTemplateFieldId);
+														$arrSettings = $objImageField->getSettings();
+																												
 														if ($objTemplateField->getTypeId() == FIELD_TYPE_IMAGE && (
-																!empty($intWidth) ||
-																!empty($intHeight))) {
+																!empty($arrSettings[0]['width']) ||
+																!empty($arrSettings[0]['height']))) {
 																
 															$blnResize = TRUE;
 														}
@@ -620,14 +709,14 @@ function parsePages($intElmntId, $strCommand) {
 																//*** Resize the image.
 																if ($blnResize) ImageResizer::resize(
 																		$_PATHS['upload'] . $localValues[$subkey], 
-																		$intWidth,
-																		$intHeight,
-																		$intScale,
-																		$intQuality,
+																		$arrSettings[0]['width'],
+																		$arrSettings[0]['height'],
+																		$arrSettings[0]['scale'],
+																		$arrSettings[0]['quality'],
 																		TRUE,
 																		NULL,
 																		FALSE,
-																		$blnGrayscale);
+																		$arrSettings[0]['grayscale']);
 															}
 														}
 
@@ -653,13 +742,14 @@ function parsePages($intElmntId, $strCommand) {
 										$objValue = $objField->getNewValueObject();
 										$objValue->setValue($strValue);
 										$objValue->setLanguageId($objContentLanguage->getId());
-										$objValue->setCascade($blnCascade);
+										$objValue->setCascade(($blnCascade) ? 1 : 0);
 
 										$objField->setValueObject($objValue);
 									}
 								}
 							}
 						}
+															//exit;
 												
 						//*** Remove deleted files.
 						$objFtp = new FTP($strServer);
@@ -678,6 +768,17 @@ function parsePages($intElmntId, $strCommand) {
 												//*** Remove file.
 												$strFile = $strRemoteFolder . $arrFile[1];
 												$objFtp->delete($strFile);
+												
+												//*** Resized variations?
+												$objImageField = new ImageField($intTemplateFieldId);
+												$arrSettings = $objImageField->getSettings();
+												foreach ($arrSettings as $key => $arrSetting) {
+													if (!empty($arrSetting['width']) ||	!empty($arrSetting['height'])) {
+														//*** Remove file.
+														$strFile = $strRemoteFolder . FileIO::add2Base($arrFile[1], $arrSetting['key']);
+														$objFtp->delete($strFile);
+													}		
+												}		
 											}										
 										}
 									}
@@ -929,7 +1030,7 @@ function parsePages($intElmntId, $strCommand) {
 									} elseif (!empty($strTemplValue)) {
 										$strValue = $strTemplValue;
 									}
-									$arrDefaultValue = split("\n", $strValue);
+									$arrDefaultValue = explode("\n", $strValue);
 									$arrValue = array();
 									foreach ($arrDefaultValue as $value) {
 										$value = trim($value);
@@ -942,12 +1043,12 @@ function parsePages($intElmntId, $strCommand) {
 
 								//*** Render options for the list.
 								$strListValue = (is_object($objValue)) ? $objValue->getValue() : "";
-								$arrValues = split("\n", $strListValue);
+								$arrValues = explode("\n", $strListValue);
 
 								foreach ($arrValues as $value) {
 									if (!empty($value)) {
 										//*** Determine if we have a label.
-										$arrValue = split(":", $value);
+										$arrValue = explode(":", $value);
 										if (count($arrValue) > 1) {
 											$optionLabel = trim($arrValue[0]);
 											$optionValue = trim($arrValue[1]);
@@ -1014,7 +1115,7 @@ function parsePages($intElmntId, $strCommand) {
 									} elseif (!empty($strTemplValue)) {
 										$strValue = $strTemplValue;
 									}
-									$arrDefaultValue = split("\n", $strValue);
+									$arrDefaultValue = explode("\n", $strValue);
 									$arrValue = array();
 									foreach ($arrDefaultValue as $value) {
 										$value = trim($value);
@@ -1027,13 +1128,13 @@ function parsePages($intElmntId, $strCommand) {
 
 								//*** Render options for the list.
 								$strListValue = (is_object($objValue)) ? $objValue->getValue() : "";
-								$arrValues = split("\n", $strListValue);
+								$arrValues = explode("\n", $strListValue);
 								$intCount = 0;
 
 								foreach ($arrValues as $value) {
 									if (!empty($value)) {
 										//*** Determine if we have a label.
-										$arrValue = split(":", $value);
+										$arrValue = explode(":", $value);
 										if (count($arrValue) > 1) {
 											$optionLabel = trim($arrValue[0]);
 											$optionValue = trim($arrValue[1]);
@@ -1076,6 +1177,7 @@ function parsePages($intElmntId, $strCommand) {
 								$strCurrentTitle = $objLang->get("imagesCurrent", "label");
 								$strNewTitle = $objLang->get("imagesNew", "label");
 								$strThumbPath = Setting::getValueByName("web_server") . Setting::getValueByName("file_folder");
+								$strUploadPath = Request::getURI() . $_CONF['app']['baseUri'] . "files/";
 								
 							case FIELD_TYPE_FILE:
 								if (!isset($intMaxFileCount)) {
@@ -1084,6 +1186,7 @@ function parsePages($intElmntId, $strCommand) {
 									$strCurrentTitle = $objLang->get("filesCurrent", "label");
 									$strNewTitle = $objLang->get("filesNew", "label");
 									$strThumbPath = "";
+									$strUploadPath = Request::getURI() . $_CONF['app']['baseUri'] . "files/";
 								}
 								
 								if (is_object($objElement)) {
@@ -1189,16 +1292,33 @@ function parsePages($intElmntId, $strCommand) {
 								$objFieldTpl->setVariable("FIELD_CURRENT_FILES", $intFileCount);
 								$objFieldTpl->setVariable("FIELD_MAX_FILES", $intMaxFileCount);
 								$objFieldTpl->setVariable("FIELD_THUMB_PATH", $strThumbPath);
+								$objFieldTpl->setVariable("FIELD_UPLOAD_PATH", $strUploadPath);
 								$objFieldTpl->setVariable("FIELD_MAX_CHAR", 60);
 								$objFieldTpl->setVariable("STORAGE_ITEMS", StorageItems::getFolderListHTML());
 								$objFieldTpl->setVariable("LABEL_CHOOSE_FOLDER", $objLang->get("chooseFolder", "label"));
 								$objFieldTpl->setVariable("FIELD_HEADER_CURRENT", $strCurrentTitle);
 								$objFieldTpl->setVariable("FIELD_HEADER_NEW", $strNewTitle);
 								$objFieldTpl->setVariable("FIELD_LABEL_REMOVE", $objLang->get("delete", "button"));
+								$objFieldTpl->setVariable("FIELD_LABEL_CANCEL", strtolower($objLang->get("cancel", "button")));
+								$objFieldTpl->setVariable("FIELD_LABEL_ALT", $objLang->get("alttag", "button"));
 								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
 								if (is_object($objElementField)) {
 									$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
 								}
+								
+								if ($objField->getTypeId() == FIELD_TYPE_FILE) {
+									$objValue = $objField->getValueByName("tfv_file_extension");
+									$strExtensions = (is_object($objValue)) ? $objValue->getValue() : "";
+									if (!empty($strExtensions)) {
+										$strExtensions = str_replace("%s", Setting::getValueByName('file_upload_extensions'), $strExtensions);
+									} else {
+										$strExtensions = strtolower(Setting::getValueByName('file_upload_extensions'));
+									}
+								} else {
+									$strExtensions = strtolower(Setting::getValueByName('image_upload_extensions'));
+								}
+								$objFieldTpl->setVariable("FIELD_FILE_TYPE", "*" . implode("; *", explode(" ", $strExtensions)));
+								
 								$objFieldTpl->parseCurrentBlock();
 								break;
 
@@ -1513,7 +1633,7 @@ function parsePages($intElmntId, $strCommand) {
 
 					$objTpl->setVariable("START_DATE_VALUE", Date::fromMysql($_CONF['app']['universalDate'], $objSchedule->getStartDate()));
 					
-					$strValue = Date::fromMysql("%k", $objSchedule->getStartDate());
+					$strValue = Date::fromMysql("%H", $objSchedule->getStartDate());
 					if (!empty($strValue)) $intStartHour = $strValue;
 
 					$strValue = Date::fromMysql("%M", $objSchedule->getStartDate());
@@ -1530,7 +1650,7 @@ function parsePages($intElmntId, $strCommand) {
 					
 					$objTpl->setVariable("END_DATE_VALUE", Date::fromMysql($_CONF['app']['universalDate'], $objSchedule->getEndDate()));
 
-					$strValue = Date::fromMysql("%k", $objSchedule->getEndDate());
+					$strValue = Date::fromMysql("%H", $objSchedule->getEndDate());
 					if (!empty($strValue)) $intEndHour = $strValue;
 
 					$strValue = Date::fromMysql("%M", $objSchedule->getEndDate());
@@ -1595,7 +1715,7 @@ function parsePages($intElmntId, $strCommand) {
 				$objTpl->setCurrentBlock("date.start.hour");
 				$objTpl->setVariable("VALUE", $hour);
 				$objTpl->setVariable("LABEL", str_pad($hour, 2, 0, STR_PAD_LEFT));
-				if ($intStartHour == $hour) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
+				if (trim($intStartHour) == $hour) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
 				$objTpl->parseCurrentBlock();
 			}
 			
@@ -1603,7 +1723,7 @@ function parsePages($intElmntId, $strCommand) {
 				$objTpl->setCurrentBlock("date.start.minute");
 				$objTpl->setVariable("VALUE", $minute);
 				$objTpl->setVariable("LABEL", str_pad($minute, 2, 0, STR_PAD_LEFT));
-				if ($intStartMinute == $minute) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
+				if (trim($intStartMinute) == $minute) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
 				$objTpl->parseCurrentBlock();
 			}
 			
@@ -1611,7 +1731,7 @@ function parsePages($intElmntId, $strCommand) {
 				$objTpl->setCurrentBlock("date.end.hour");
 				$objTpl->setVariable("VALUE", $hour);
 				$objTpl->setVariable("LABEL", str_pad($hour, 2, 0, STR_PAD_LEFT));
-				if ($intEndHour == $hour) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
+				if (trim($intEndHour) == $hour) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
 				$objTpl->parseCurrentBlock();
 			}
 			
@@ -1619,7 +1739,7 @@ function parsePages($intElmntId, $strCommand) {
 				$objTpl->setCurrentBlock("date.end.minute");
 				$objTpl->setVariable("VALUE", $minute);
 				$objTpl->setVariable("LABEL", str_pad($minute, 2, 0, STR_PAD_LEFT));
-				if ($intEndMinute == $minute) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
+				if (trim($intEndMinute) == $minute) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
 				$objTpl->parseCurrentBlock();
 			}
 

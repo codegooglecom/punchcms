@@ -1,15 +1,18 @@
 <?php
 
-/* Search Class v0.1.0
+/* Search Class v0.2.0
  * Searches for strings in the elements.
  *
  * CHANGELOG
+ * version 0.2.0, 03 Aug 2009
+ *   BUG: Fixed multibyte (UTF-8) bug in the word_count method.
  * version 0.1.0, 04 Apr 2006
  *   NEW: Created class.
  */
 
 class Search {
 	const SEARCH_WEIGHT = 1;
+    const WORD_COUNT_MASK = "/\p{L}[\p{L}\p{Mn}\p{Pd}'\x{2019}]*/u";
 
 	//*** Public Methods.
 	public function updateIndex($intId = 0) {
@@ -154,7 +157,7 @@ class Search {
 
 	private function stemPhrase($strPhrase) {
 		//*** Split into words.
-		$arrWords = str_word_count(str_replace('-', ' ', strtolower($strPhrase)), 1);
+		$arrWords = $this->mb_str_word_count(str_replace('-', ' ', mb_strtolower($strPhrase)), 1);
 
 		//*** Ignore stop words.
 		$arrWords = $this->removeStopWordsFromArray($arrWords);
@@ -164,7 +167,7 @@ class Search {
 
 		foreach ($arrWords as $strWord) {
 		  	//*** Ignore 1 and 2 letter words.
-		  	if (strlen($strWord) <= 2) {
+		  	if (mb_strlen($strWord) <= 2) {
 				continue;
 		  	}
 
@@ -185,6 +188,23 @@ class Search {
 
 		return $arrWords;
 	}
+
+    private function mb_str_word_count($string, $format = 0) {
+        switch ($format) {
+        	case 1:
+         		preg_match_all(self::WORD_COUNT_MASK, $string, $matches);
+         		return $matches[0];
+       	 	case 2:
+       			preg_match_all(self::WORD_COUNT_MASK, $string, $matches, PREG_OFFSET_CAPTURE);
+            	$result = array();
+            	foreach ($matches[0] as $match) {
+            	    $result[$match[1]] = $match[0];
+            	}
+            	return $result;
+        }
+
+        return preg_match_all(self::WORD_COUNT_MASK, $string, $matches);
+    }
 }
 
 ?>

@@ -101,6 +101,7 @@ $_LANG['button']['standardLanguage'] = "Set as default language";
 $_LANG['button']['languageAdd'] = "New language";
 $_LANG['button']['aliasAdd'] = "New alias";
 $_LANG['button']['insert'] = "Insert";
+$_LANG['button']['alttag'] = "Add description...";
 
 //*** Label definitions.
 $_LANG['label']['in'] = "in";
@@ -318,7 +319,7 @@ $_LANG['tip']['newpasswordNote'] = "The password must be at least %s characters 
 $_LANG['tip']['editElement'] = "Edit element";
 $_LANG['tip']['editTemplate'] = "Edit template";
 $_LANG['tip']['editFolder'] = "Edit folder";
-$_LANG['tip']['templateDateType'] = "%a&nbsp;&nbsp;abbreviated weekday name<br />%A&nbsp;&nbsp;full weekday name<br />%b&nbsp;&nbsp;abbreviated month name <br />%B&nbsp;&nbsp;full month name<br />%C&nbsp;&nbsp;century number<br />%d&nbsp;&nbsp;the day of the month (00 .. 31)<br />%e&nbsp;&nbsp;the day of the month (0 .. 31)<br />%H&nbsp;&nbsp;hour (00 .. 23)<br />%I&nbsp;&nbsp;hour (01 .. 12)<br />%j&nbsp;&nbsp;day of the year (000 .. 366)<br />%k&nbsp;&nbsp;hour (0 .. 23)<br />%l&nbsp;&nbsp;hour (1 .. 12)<br />%m&nbsp;&nbsp;month (01 .. 12)<br />%M&nbsp;&nbsp;minute (00 .. 59)<br />%n&nbsp;&nbsp;a newline character&nbsp;&nbsp;<br />%p&nbsp;&nbsp;&quot;PM&quot; or &quot;AM&quot;<br />%P&nbsp;&nbsp;&quot;pm&quot; or &quot;am&quot;<br />%S&nbsp;&nbsp;second (00 .. 59)<br />%s&nbsp;&nbsp;number of seconds since Epoch<br />%t&nbsp;&nbsp;a tab character<br />%U&nbsp;&nbsp;the week number<br />%u&nbsp;&nbsp;the day of the week (1 .. 7, 1 = MON)<br />%w&nbsp;&nbsp;the day of the week (0 .. 6, 0 = SUN)<br />%y&nbsp;&nbsp;year without the century (00 .. 99)<br />%Y&nbsp;&nbsp;year including the century<br />%%&nbsp;&nbsp;a literal % character";
+$_LANG['tip']['templateDateType'] = "%a&nbsp;&nbsp;abbreviated weekday name<br />%A&nbsp;&nbsp;full weekday name<br />%b&nbsp;&nbsp;abbreviated month name <br />%B&nbsp;&nbsp;full month name<br />%C&nbsp;&nbsp;century number<br />%d&nbsp;&nbsp;the day of the month (00 .. 31)<br />%e&nbsp;&nbsp;the day of the month (0 .. 31)<br />%H&nbsp;&nbsp;hour (00 .. 23)<br />%I&nbsp;&nbsp;hour (01 .. 12)<br />%j&nbsp;&nbsp;day of the year (000 .. 366)<br />%H&nbsp;&nbsp;hour (0 .. 23)<br />%l&nbsp;&nbsp;hour (1 .. 12)<br />%m&nbsp;&nbsp;month (01 .. 12)<br />%M&nbsp;&nbsp;minute (00 .. 59)<br />%n&nbsp;&nbsp;a newline character&nbsp;&nbsp;<br />%p&nbsp;&nbsp;&quot;PM&quot; or &quot;AM&quot;<br />%P&nbsp;&nbsp;&quot;pm&quot; or &quot;am&quot;<br />%S&nbsp;&nbsp;second (00 .. 59)<br />%s&nbsp;&nbsp;number of seconds since Epoch<br />%t&nbsp;&nbsp;a tab character<br />%U&nbsp;&nbsp;the week number<br />%u&nbsp;&nbsp;the day of the week (1 .. 7, 1 = MON)<br />%w&nbsp;&nbsp;the day of the week (0 .. 6, 0 = SUN)<br />%y&nbsp;&nbsp;year without the century (00 .. 99)<br />%Y&nbsp;&nbsp;year including the century<br />%%&nbsp;&nbsp;a literal % character";
 $_LANG['tip']['templateListType'] = "Use one list value per line. Labels and values can be separated using a &quot;:&quot; character.";
 $_LANG['tip']['templateImageType'] = "Should be a number between 10 and 100. Default is 75.";
 $_LANG['tip']['templateFileType'] = "Example: .zip .xls .rar<br />Use %s to append the file extensions from the general settings.<br />Default are the extensions from the general settings.";

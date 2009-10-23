@@ -1,9 +1,9 @@
 <?php
 
-$arrDomain = split('\.', $_SERVER['HTTP_HOST']);
+$arrDomain = explode('.', $_SERVER['HTTP_HOST']);
 $intCatId = Request::get("cid");
 
-if ($_CONF['app']['singleInstance']) {
+if (isset($_CONF['app']['singleInstance']) && $_CONF['app']['singleInstance']) {
 	//*** Check if the account exists.
 	$objAccounts = Account::select();
 

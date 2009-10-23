@@ -14,7 +14,7 @@ if (is_object($objAccount) && $strZipFile !== FALSE) {
 	header("Cache-Control: private", false);
 	header('Content-Type: application/octetstream; charset=utf-8');
 	header("Content-Length: " . (string)(filesize($strZipFile)));
-	header('Content-Disposition: attachment; filename="' . $objAccount->getUri() . "__" . date("Y_M_d") . '.zip"');
+	header('Content-Disposition: attachment; filename="' . $objAccount->getUri() . '.zip"');
 	header("Content-Transfer-Encoding: binary\n");
 
 	readfile($strZipFile);

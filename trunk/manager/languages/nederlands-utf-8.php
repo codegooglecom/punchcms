@@ -101,6 +101,7 @@ $_LANG['button']['standardLanguage'] = "Zet als standaardtaal";
 $_LANG['button']['languageAdd'] = "Nieuwe Taal";
 $_LANG['button']['aliasAdd'] = "Nieuwe Snelkoppeling";
 $_LANG['button']['insert'] = "Invoegen";
+$_LANG['button']['alttag'] = "Omschrijving toevoegen...";
 
 //*** Label definitions.
 $_LANG['label']['in'] = "in";
@@ -318,7 +319,7 @@ $_LANG['tip']['newpasswordNote'] = "Het wachtwoord moet uit minimaal %s karakter
 $_LANG['tip']['editElement'] = "Element aanpassen";
 $_LANG['tip']['editTemplate'] = "Sjabloon aanpassen";
 $_LANG['tip']['editFolder'] = "Map aanpassen";
-$_LANG['tip']['templateDateType'] = "%a&nbsp;&nbsp;abbreviated weekday name<br />%A&nbsp;&nbsp;full weekday name<br />%b&nbsp;&nbsp;abbreviated month name <br />%B&nbsp;&nbsp;full month name<br />%C&nbsp;&nbsp;century number<br />%d&nbsp;&nbsp;the day of the month (00 .. 31)<br />%e&nbsp;&nbsp;the day of the month (0 .. 31)<br />%H&nbsp;&nbsp;hour (00 .. 23)<br />%I&nbsp;&nbsp;hour (01 .. 12)<br />%j&nbsp;&nbsp;day of the year (000 .. 366)<br />%k&nbsp;&nbsp;hour (0 .. 23)<br />%l&nbsp;&nbsp;hour (1 .. 12)<br />%m&nbsp;&nbsp;month (01 .. 12)<br />%M&nbsp;&nbsp;minute (00 .. 59)<br />%n&nbsp;&nbsp;a newline character&nbsp;&nbsp;<br />%p&nbsp;&nbsp;&quot;PM&quot; or &quot;AM&quot;<br />%P&nbsp;&nbsp;&quot;pm&quot; or &quot;am&quot;<br />%S&nbsp;&nbsp;second (00 .. 59)<br />%s&nbsp;&nbsp;number of seconds since Epoch<br />%t&nbsp;&nbsp;a tab character<br />%U&nbsp;&nbsp;the week number<br />%u&nbsp;&nbsp;the day of the week (1 .. 7, 1 = MON)<br />%w&nbsp;&nbsp;the day of the week (0 .. 6, 0 = SUN)<br />%y&nbsp;&nbsp;year without the century (00 .. 99)<br />%Y&nbsp;&nbsp;year including the century<br />%%&nbsp;&nbsp;a literal % character";
+$_LANG['tip']['templateDateType'] = "%a&nbsp;&nbsp;abbreviated weekday name<br />%A&nbsp;&nbsp;full weekday name<br />%b&nbsp;&nbsp;abbreviated month name <br />%B&nbsp;&nbsp;full month name<br />%C&nbsp;&nbsp;century number<br />%d&nbsp;&nbsp;the day of the month (00 .. 31)<br />%e&nbsp;&nbsp;the day of the month (0 .. 31)<br />%H&nbsp;&nbsp;hour (00 .. 23)<br />%I&nbsp;&nbsp;hour (01 .. 12)<br />%j&nbsp;&nbsp;day of the year (000 .. 366)<br />%H&nbsp;&nbsp;hour (0 .. 23)<br />%l&nbsp;&nbsp;hour (1 .. 12)<br />%m&nbsp;&nbsp;month (01 .. 12)<br />%M&nbsp;&nbsp;minute (00 .. 59)<br />%n&nbsp;&nbsp;a newline character&nbsp;&nbsp;<br />%p&nbsp;&nbsp;&quot;PM&quot; or &quot;AM&quot;<br />%P&nbsp;&nbsp;&quot;pm&quot; or &quot;am&quot;<br />%S&nbsp;&nbsp;second (00 .. 59)<br />%s&nbsp;&nbsp;number of seconds since Epoch<br />%t&nbsp;&nbsp;a tab character<br />%U&nbsp;&nbsp;the week number<br />%u&nbsp;&nbsp;the day of the week (1 .. 7, 1 = MON)<br />%w&nbsp;&nbsp;the day of the week (0 .. 6, 0 = SUN)<br />%y&nbsp;&nbsp;year without the century (00 .. 99)<br />%Y&nbsp;&nbsp;year including the century<br />%%&nbsp;&nbsp;a literal % character";
 $_LANG['tip']['templateListType'] = "Gebruik een waarde per regel. Labels en waarden kunnen door een &quot;:&quot; teken gescheiden worden.";
 $_LANG['tip']['templateImageType'] = "Vul een getal tussen 10 en 100 in. Standaardwaarde is 75.";
 $_LANG['tip']['templateFileType'] = "Voorbeeld: .zip .xls .rar<br />Gebruike %s om te bestands extensies van de algemene instellingen mee te nemen.<br />Standaardwaarde zijn de extensies van de algemene instellingen.";

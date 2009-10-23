@@ -31,10 +31,9 @@ if (!empty($strRequirements)) {
 			
 			if (empty($strReturn)) {
 				$strOutput = "<p class=\"success\"><b>Congratulations</b>, PunchCMS is almost ready!<br /></p>";
-				$strOutput .= "<p>Four more steps to go:</p>";
+				$strOutput .= "<p>Three more steps to go:</p>";
 				$strOutput .= "<ol><li>Copy or move the &quot;<b>config.php</b>&quot; file from the <b>install</b> folder to the root folder of PunchCMS.</li>";
 				$strOutput .= "<li>Delete the <b>install</b> folder for security reasons.</li>";
-				$strOutput .= "<li>Rename the htaccess.txt file in de root to .htaccess. </li>";
 				$strOutput .= "<li>Login to the <a href=\"../admin\">admin area</a> to create a website and start building it.</li>";
 			} else {
 				$strOutput = "<p class=\"error\">Error while writing to the configuration file. Check the folder permissions and try again.</p>";

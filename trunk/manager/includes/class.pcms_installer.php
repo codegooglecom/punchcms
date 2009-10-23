@@ -235,6 +235,7 @@ class PCMS_Installer {
 			'passwd' => $passwd,
 			'is_active' => true,
 			'email' => $email,
+			'time_zone_id' => 1,
 			'account_id' => 0,
 			'perm_type' => 5
 		);

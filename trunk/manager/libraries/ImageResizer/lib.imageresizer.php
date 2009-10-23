@@ -23,6 +23,8 @@
  *   height parameters. This does not change the aspect ratio.
  *
  * CHANGELOG
+ * version 2.0.1, 23 October 2009
+ *   CHG: Don't blow images up that are smaller than the destination.
  * version 2.0.0, 12 June 2008
  *   CHG: Completely rewritten.
  * version 1.1.5, 10 July 2007
@@ -65,22 +67,14 @@ class ImageResizer {
 				
 		switch ($intTemplate) {
 			case RESIZE_CROP:
-				//*** Blow the image up if it is smaller then the destination.
-				if ($intWidth > $objEditor->getWidth() || $intHeight > $objEditor->getHeight()) {
-					//*** Portrait source.
-					$destWidth = $intWidth;
-					$destHeight = ($destWidth / $objEditor->getWidth()) * $objEditor->getHeight();
-					if ($destHeight < $intHeight) {
-						//*** Landscape source.
-						$destHeight = $intHeight;
-						$destWidth = ($destHeight / $objEditor->getHeight()) * $objEditor->getWidth();
-					}
-					$objEditor->resize(round($destWidth), round($destHeight));
+				//*** Don't blow the image up if it is smaller then the destination.
+				if ($intWidth > $objEditor->getWidth() && $intHeight > $objEditor->getHeight()) {
+					//*** Skip the resize.
+				} else {
+					$destX = ($objEditor->getWidth() - $intWidth) / 2;
+					$destY = ($objEditor->getHeight() - $intHeight) / 2;
+					$objEditor->crop(round($destX), round($destY), $intWidth, $intHeight);
 				}
-				
-				$destX = ($objEditor->getWidth() - $intWidth) / 2;
-				$destY = ($objEditor->getHeight() - $intHeight) / 2;
-				$objEditor->crop(round($destX), round($destY), $intWidth, $intHeight);
 				break;
 			case RESIZE_FIT_CROP:
 				//*** Resize the image to fit into the boundary box.
@@ -92,15 +86,25 @@ class ImageResizer {
 					$destHeight = $intHeight;
 					$destWidth = ($destHeight / $objEditor->getHeight()) * $objEditor->getWidth();
 				}
-				$objEditor->resize(round($destWidth), round($destHeight));
-				
-				$destX = ($objEditor->getWidth() - $intWidth) / 2;
-				$destY = ($objEditor->getHeight() - $intHeight) / 2;
-				$objEditor->crop(round($destX), round($destY), $intWidth, $intHeight);
+				//*** Don't blow the image up if it is smaller then the destination.
+				if (round($destWidth) > $objEditor->getWidth() && round($destHeight) > $objEditor->getHeight()) {
+					//*** Skipt the resize.
+				} else {
+					$objEditor->resize(round($destWidth), round($destHeight));
+					
+					$destX = ($objEditor->getWidth() - $intWidth) / 2;
+					$destY = ($objEditor->getHeight() - $intHeight) / 2;
+					$objEditor->crop(round($destX), round($destY), $intWidth, $intHeight);
+				}
 				break;
 
 			case RESIZE_DISTORT:
-				$objEditor->resize($intWidth, $intHeight);
+				//*** Don't blow the image up if it is smaller then the destination.
+				if ($intWidth > $objEditor->getWidth() && $intHeight > $objEditor->getHeight()) {
+					//*** Skipt the resize.
+				} else {
+					$objEditor->resize($intWidth, $intHeight);
+				}
 				break;
 
 			case RESIZE_EXACT:
@@ -111,7 +115,12 @@ class ImageResizer {
 					$destHeight = $intHeight;
 					$destWidth = ($destHeight / $objEditor->getHeight()) * $objEditor->getWidth();
 				}
-				$objEditor->resize(round($destWidth), round($destHeight));
+				//*** Don't blow the image up if it is smaller then the destination.
+				if (round($destWidth) > $objEditor->getWidth() && round($destHeight) > $objEditor->getHeight()) {
+					//*** Skipt the resize.
+				} else {
+					$objEditor->resize(round($destWidth), round($destHeight));
+				}
 
 				break;
 		}

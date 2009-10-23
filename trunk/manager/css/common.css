@@ -673,6 +673,14 @@ div.tabwrapper div.wrap,
 	margin: 0 0 0 0;
 }
 
+#left-wrap h5 a.addButton {
+	float: right;
+}
+
+#left-wrap h5 a.removeButton {
+	text-decoration: none;
+}
+
 #left-wrap h5.secondary {
 	font-weight: normal;
 	color: #444;

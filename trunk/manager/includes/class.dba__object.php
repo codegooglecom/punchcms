@@ -1,9 +1,11 @@
 <?php
 
-/* General DBA Object Class v0.1.9
+/* General DBA Object Class v0.2.0
  * Holds the properties and methods of a DBA objects.
  *
  * CHANGELOG
+ * version 0.2.0, 03 August 2009
+ *   FIX: Fixed the __set method. Booleans get converted to 0 or 1.
  * version 0.1.9, 23 March 2009
  *   FIX: Fixed the quote method. Supports "0" as value now.
  * version 0.1.8, 13 June 2008
@@ -48,6 +50,9 @@ class DBA__Object {
 		$property = strtolower($property);
 
 		if (property_exists($this, $property)) {
+			if (is_bool($value)) {
+				$value = ($value) ? 1 : 0;
+			}
 			$this->$property = $value;
 		} else {
 			if (self::$__debug === TRUE) echo "Property Error in " . get_class($this) . "::set({$property}) on line " . __LINE__ . ".\n";

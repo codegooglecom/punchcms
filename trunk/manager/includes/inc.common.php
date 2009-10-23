@@ -29,7 +29,7 @@ function include_exists($file) {
    // set include_dirs
    if (is_null($include_dirs) || get_include_path() !== $include_path) {
 	   $include_path    = get_include_path();
-	   foreach (split(PATH_SEPARATOR, $include_path) as $include_dir) {
+	   foreach (explode(PATH_SEPARATOR, $include_path) as $include_dir) {
 		   if (substr($include_dir, -1) != '/') {
 			   $include_dir .= '/';
 		   }

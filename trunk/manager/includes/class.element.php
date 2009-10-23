@@ -465,7 +465,7 @@ class Element extends DBA_Element {
 
 			$objElementLanguage->setElementId($this->id);
 			$objElementLanguage->setLanguageId($intLanguageId);
-			$objElementLanguage->setActive($blnActive);
+			$objElementLanguage->setActive(($blnActive) ? 1 : 0);
 			$objElementLanguage->save();
 		}
 	}
