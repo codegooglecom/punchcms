@@ -356,25 +356,81 @@ function parseFiles($intElmntId, $strCommand) {
 							if ($objMultiUpload->getTotalFiles() == $objMultiUpload->getSuccessFiles()) {
 								//*** Everything is cool.
 								$localValues = $objMultiUpload->getLocalNames();
+								$arrCleanup = array();
 								foreach ($objMultiUpload->getOriginalNames() as $subkey => $subvalue) {
+									$blnSkipData = FALSE;
+									
 									if (!empty($subvalue)) {										
 										if ($strCommand == CMD_ADD) {
-											$objElement = new StorageItem();
-											$objElement->setParentId($_POST["eid"]);
-											$objElement->setAccountId($_CONF['app']['account']->getId());
-											$objElement->setName((empty($_CLEAN_POST["frm_name"])) ? $subvalue : $_CLEAN_POST["frm_name"]);
-											$objElement->setDescription($_CLEAN_POST["frm_description"]);
-											$objElement->setUsername($objLiveUser->getProperty("name"));
-											$objElement->setTypeId(STORAGE_TYPE_FILE);	
-											$objElement->save();
-											
-											$objData = $objElement->getData();
+											if (FileIO::extension($subvalue) == "zip") {
+												//*** Zip file. Extract and add.
+												require_once('dzip/dUnzip2.inc.php');
+												
+												$blnSkipData = TRUE;
+												
+												$strZip = $_PATHS['upload'] .  $localValues[$subkey];
+												$strTempDir = Account::generateId();
+												$strTempPath = $_PATHS['upload'] . $strTempDir . "/";
+												if (is_file($strZip)) {
+													$objZip = new dUnzip2($strZip);
+													if (is_object($objZip)) {
+														array_push($arrCleanup, $localValues[$subkey]);
+														
+														mkdir($strTempPath);
+														$objZip->unzipAll($strTempPath);
+														
+														if ($handle = opendir($strTempPath)) {
+														    while (false !== ($file = readdir($handle))) {
+														        if (is_file($strTempPath . $file)) {
+																	$objElement = new StorageItem();
+																	$objElement->setParentId($_POST["eid"]);
+																	$objElement->setAccountId($_CONF['app']['account']->getId());
+																	$objElement->setName($file);
+																	$objElement->setDescription($_CLEAN_POST["frm_description"]);
+																	$objElement->setUsername($objLiveUser->getProperty("name"));
+																	$objElement->setTypeId(STORAGE_TYPE_FILE);	
+																	$objElement->save();
+																	
+																	$objData = $objElement->getData();										
+																	$objData->setItemId($objElement->getId());
+																	$objData->setOriginalName($file);
+																	$objData->setLocalName($file);
+																	$objData->save();
+																	
+																	//*** Move file to remote server.
+																	$objUpload = new SingleUpload();																		
+																	if (!$objUpload->moveToFTP($file, $strTempPath, $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
+																		Log::handleError("File could not be moved to remote server. " . $objUpload->errorMessage());
+																	}
+														        }
+														    }
+														
+														    closedir($handle);
+														}
+														
+														FileIO::unlinkDir($strTempPath);
+													}
+												}
+											} else {
+												$objElement = new StorageItem();
+												$objElement->setParentId($_POST["eid"]);
+												$objElement->setAccountId($_CONF['app']['account']->getId());
+												$objElement->setName((empty($_CLEAN_POST["frm_name"])) ? $subvalue : $_CLEAN_POST["frm_name"]);
+												$objElement->setDescription($_CLEAN_POST["frm_description"]);
+												$objElement->setUsername($objLiveUser->getProperty("name"));
+												$objElement->setTypeId(STORAGE_TYPE_FILE);	
+												$objElement->save();
+												
+												$objData = $objElement->getData();
+											}
 										}
 										
-										$objData->setItemId($objElement->getId());
-										$objData->setOriginalName($subvalue);
-										$objData->setLocalName($localValues[$subkey]);
-										$objData->save();
+										if (!$blnSkipData) {
+											$objData->setItemId($objElement->getId());
+											$objData->setOriginalName($subvalue);
+											$objData->setLocalName($localValues[$subkey]);
+											$objData->save();
+										}
 									}
 								}
 
@@ -384,7 +440,16 @@ function parseFiles($intElmntId, $strCommand) {
 								}
 								
 								//*** Fix file linkage.
-								$objElement->fixLinkedElements();
+								if (is_object($objElement)) $objElement->fixLinkedElements();
+								
+								//*** Cleanup zip files.
+								foreach ($arrCleanup as $value) {
+									$objFtp = new FTP($strServer);
+									$objFtp->login($strUsername, $strPassword);
+									$strFile = $strRemoteFolder . $value;
+									echo "Delete file " . $strFile;
+									$objFtp->delete($strFile);
+								}
 							} else {
 								$strMessage = $objMultiUpload->errorMessage() . "<br />";
 								$strMessage .= "Files: " . $objMultiUpload->getTotalFiles() . " and Success: " . $objMultiUpload->getSuccessFiles();

@@ -12,4 +12,16 @@ class FileIO {
 		return substr($strBase, 0, -1) . $addition . "." . self::extension($filename);
 	}
 	
+	public static function unlinkDir($dir) {
+	    $files = glob( $dir . '*', GLOB_MARK );
+	    foreach( $files as $file ){
+	        if( substr( $file, -1 ) == '/' )
+	            self::unlinkDir( $file );
+	        else
+	            unlink( $file );
+	    }
+	   
+	    if (is_dir($dir)) rmdir( $dir );
+	} 
+	
 }

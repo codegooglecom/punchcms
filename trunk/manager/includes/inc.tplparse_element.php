@@ -603,7 +603,7 @@ function parsePages($intElmntId, $strCommand) {
 																		//*** Move file to remote server.
 																		$objUpload = new SingleUpload();																		
 																		if (!$objUpload->moveToFTP($strFileName, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
-																			HandleError("File could not be moved to remote server. " . $objUpload->errorMessage());
+																			Log::handleError("File could not be moved to remote server. " . $objUpload->errorMessage());
 																		}
 																	}						
 																}			
@@ -612,7 +612,7 @@ function parsePages($intElmntId, $strCommand) {
 																if (rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strLocalValue)) {	
 																	$objUpload = new SingleUpload();																	
 																	if (!$objUpload->moveToFTP($strLocalValue, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
-																		HandleError("File could not be moved to remote server. " . $objUpload->errorMessage());
+																		Log::handleError("File could not be moved to remote server. " . $objUpload->errorMessage());
 																	}
 																}
 																
@@ -641,7 +641,7 @@ function parsePages($intElmntId, $strCommand) {
 																		//*** Move file to remote server.
 																		$objUpload = new SingleUpload();
 																		if (!$objUpload->moveToFTP($strFileName, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
-																			HandleError("File could not be moved to remote server.");
+																			Log::handleError("File could not be moved to remote server.");
 																		}
 																	}																
 																}
@@ -651,7 +651,7 @@ function parsePages($intElmntId, $strCommand) {
 																	//*** Move file to remote server.
 																	$objUpload = new SingleUpload();
 																	if (!$objUpload->moveToFTP($strLocalValue, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
-																		HandleError("File could not be moved to remote server.");
+																		Log::handleError("File could not be moved to remote server.");
 																	}
 																}
 																

@@ -704,7 +704,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		upload_url: "upload.php",
 		post_params: {
 			"PHPSESSID" : "<?php echo session_id(); ?>",
-			"fileId" : __this.id,
+			"fileId" : __this.id
 		},
 		file_size_limit : "100 MB",
 		file_types : __this.fileType,
@@ -998,6 +998,7 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) {
 	
 	//*** Description.
 	var objAltText = document.createElement('p');
+	objAltText = Element.extend(objAltText);
 	objAltText.className = 'alt-text';
 	objAltText.innerHTML = (alttextValue == "" || alttextValue == undefined) ? this.altLabel : alttextValue;
 	objAltText.observe("click", function(event) {
@@ -1018,6 +1019,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	var __this = this;
 	
 	var objRow = document.createElement('div');
+	objRow = Element.extend(objRow);
 	objRow.id = 'file_' + element.id;
 	
 	if (file !== undefined) {
@@ -1040,6 +1042,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 
 	//*** Delete button.
 	var objButton = document.createElement('a');
+	objButton = Element.extend(objButton);
 	objButton.className = 'button';
 	
 	if (file !== undefined) {
@@ -1068,6 +1071,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		
 	//*** Image thumbnail.
 	var objThumb = document.createElement('a');
+	objThumb = Element.extend(objThumb);
 	objThumb.href = '';
 	if (file !== undefined) {
 		objThumb.className = 'document';
@@ -1126,6 +1130,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	} else {
 		//*** Description.
 		var objAltText = document.createElement('p');
+		objAltText = Element.extend(objAltText);
 		objAltText.className = 'alt-text';
 		objAltText.innerHTML = this.altLabel;
 		objAltText.observe("click", function(event) {
@@ -1153,7 +1158,7 @@ FileField.prototype.removeSwfUploadRow = function(inputId, file) {
 	new Ajax.Request("upload.php", {
 		method: 'post',
 		parameters: {
-			do: 'remove', 
+			'do': 'remove', 
 			file: file.name,
 			PHPSESSID: "<?php echo session_id(); ?>"
 		}
@@ -1336,6 +1341,7 @@ FileField.prototype.uploadStart = function(file) {
 	
 	//*** Create input element.
 	var objElement = document.createElement('input');
+	objElement = Element.extend(objElement);
 	objElement.type = 'hidden';
 	objElement.id = this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "_" + this.settings.jsParent.fileCount++;
 	objElement.name = this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "[]";
@@ -1386,6 +1392,7 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 	
 	//*** Description.
 	var objAltText = document.createElement('p');
+	objAltText = Element.extend(objAltText);
 	objAltText.className = 'alt-text';
 	objAltText.innerHTML = __this.altLabel;
 	objAltText.observe("click", function(event) {
