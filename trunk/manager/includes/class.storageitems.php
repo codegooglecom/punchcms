@@ -120,7 +120,7 @@ class StorageItems extends DBA__Collection {
 		$intAccountId = $_CONF['app']['account']->getId();
 		$arrImages = array('jpg', 'jpeg', 'gif', 'png');
 		
-		$strSql = sprintf("SELECT * FROM pcms_storage_item WHERE parentId = '%s' AND typeId IN (%s) AND accountId = '%s' ORDER BY sort", $intParentId, STORAGE_TYPE_FILE, $intAccountId);
+		$strSql = sprintf("SELECT * FROM pcms_storage_item WHERE parentId = '%s' AND typeId IN (%s) AND accountId = '%s' ORDER BY name", $intParentId, STORAGE_TYPE_FILE, $intAccountId);
 		$objElements = StorageItem::select($strSql);
 		
 		$strReturn .= "<field id=\"{$intParentId}\"><![CDATA[";

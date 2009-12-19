@@ -447,7 +447,6 @@ function parseFiles($intElmntId, $strCommand) {
 									$objFtp = new FTP($strServer);
 									$objFtp->login($strUsername, $strPassword);
 									$strFile = $strRemoteFolder . $value;
-									echo "Delete file " . $strFile;
 									$objFtp->delete($strFile);
 								}
 							} else {
