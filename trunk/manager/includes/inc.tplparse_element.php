@@ -647,7 +647,7 @@ function parsePages($intElmntId, $strCommand) {
 																}
 																
 																//*** Move original file.
-																if (rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strLocalValue)) {	
+																if (file_exists($_PATHS['upload'] . $arrFile[0]) && rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strLocalValue)) {	
 																	//*** Move file to remote server.
 																	$objUpload = new SingleUpload();
 																	if (!$objUpload->moveToFTP($strLocalValue, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {

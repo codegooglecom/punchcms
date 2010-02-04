@@ -700,8 +700,8 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	//*** Initiate SWFUpload code.
 	var settings = {
 		jsParent : __this,
-		flash_url : "libraries/swfupload.swf",
-		upload_url: "upload.php",
+		flash_url : "/libraries/swfupload.swf",
+		upload_url: "/upload.php",
 		post_params: {
 			"PHPSESSID" : "<?php echo session_id(); ?>",
 			"fileId" : __this.id
@@ -718,7 +718,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		debug: false,
 
 		// Button Settings
-		button_image_url : "images/XPButtonUploadText_61x22.png",
+		button_image_url : "/images/XPButtonUploadText_61x22.png",
 		button_placeholder_id : __this.id + "_browse",
 		button_width: 61,
 		button_height: 22,
