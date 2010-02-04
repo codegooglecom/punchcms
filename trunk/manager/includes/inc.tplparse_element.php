@@ -588,12 +588,13 @@ function parsePages($intElmntId, $strCommand) {
 																				!empty($arrSetting['height']))) {										
 																			
 																			//*** Resize the image.
+																			$intQuality = (empty($arrSetting['quality'])) ? 75 : $arrSetting['quality'];
 																			ImageResizer::resize(
 																				$_PATHS['upload'] . $strFileName, 
 																				$arrSetting['width'],
 																				$arrSetting['height'],
 																				$arrSetting['scale'],
-																				$arrSetting['quality'],
+																				$intQuality,
 																				TRUE,
 																				NULL,
 																				FALSE,
@@ -627,12 +628,13 @@ function parsePages($intElmntId, $strCommand) {
 																	
 																	//*** Resize the image.
 																	if (rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strFileName)) {	
+																		$intQuality = (empty($arrSettings[0]['quality'])) ? 75 : $arrSettings[0]['quality'];
 																		ImageResizer::resize(
 																			$_PATHS['upload'] . $strFileName, 
 																			$arrSettings[0]['width'],
 																			$arrSettings[0]['height'],
 																			$arrSettings[0]['scale'],
-																			$arrSettings[0]['quality'],
+																			$intQuality,
 																			TRUE,
 																			NULL,
 																			FALSE,
@@ -707,12 +709,13 @@ function parsePages($intElmntId, $strCommand) {
 																$fileValue .= $subvalue . ":" . $localValues[$subkey] . "\n";
 																
 																//*** Resize the image.
+																$intQuality = (empty($arrSettings[0]['quality'])) ? 75 : $arrSettings[0]['quality'];
 																if ($blnResize) ImageResizer::resize(
 																		$_PATHS['upload'] . $localValues[$subkey], 
 																		$arrSettings[0]['width'],
 																		$arrSettings[0]['height'],
 																		$arrSettings[0]['scale'],
-																		$arrSettings[0]['quality'],
+																		$intQuality,
 																		TRUE,
 																		NULL,
 																		FALSE,
