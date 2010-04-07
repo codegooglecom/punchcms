@@ -530,8 +530,8 @@ div.tabwrapper div.anchor {
 	display: none;
 }
 
-div.tabwrapper div.wrap,
-#content div.wrap 
+div.tabwrapper div.wrap form div,
+#content div.wrap form div
 {
 	position: relative;
 	background: #e9edf6;
