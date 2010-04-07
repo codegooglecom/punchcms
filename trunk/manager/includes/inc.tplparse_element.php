@@ -1745,6 +1745,8 @@ function parsePages($intElmntId, $strCommand) {
 				if (trim($intEndMinute) == $minute) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
 				$objTpl->parseCurrentBlock();
 			}
+			
+			$objTpl->setVariable("LANG", strtolower($objLang->get("abbr")));
 
 			//*** Render the element form.
 			$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));

@@ -526,10 +526,6 @@ div.tabwrapper ul.anchors a.on:visited
 	background: #e9edf6 url('../images/bg_tab.jpg') left top repeat-x;
 }
 
-div.tabwrapper div.anchor {
-	display: none;
-}
-
 div.tabwrapper div.wrap form div,
 #content div.wrap form div
 {

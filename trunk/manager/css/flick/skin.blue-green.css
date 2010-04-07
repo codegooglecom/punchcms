@@ -21,7 +21,8 @@ a:visited
 	color: #33c;
 }
 
-a:hover {
+form a:hover,
+div a:hover {
 	background: #2C457C;
 	color: #fff;
 }

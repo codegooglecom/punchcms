@@ -78,6 +78,10 @@ function parseHeader($intCatId, $strCommand, $intElmntId) {
 	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
 		$objTpl->touchBlock("lightbox");
 	}
+	
+	$objLang = (isset($_SESSION["objLang"])) ? unserialize($_SESSION["objLang"]) : NULL;
+	$strLang = (!is_null($objLang)) ? strtolower($objLang->get("abbr")) : "en";
+	$objTpl->setVariable("DATEPICKER_LANG", $strLang);
 
 	$strReturn = $objTpl->get();
 

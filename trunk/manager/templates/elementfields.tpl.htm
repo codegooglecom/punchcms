@@ -217,16 +217,19 @@
 									</div>
 									<div class="required">
 										<label for="publish_end_date">{LABEL_DATE}</label>
-										<div id="publish_end_date_canvas" class="input-textdate" style="width:200px">{END_DATE_DISPLAY}</div>
-										<input type="hidden" id="publish_end_date" name="publish_end_date" value="{END_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_end" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
+										<input id="publish_end_date_show" type="text" class="input-textdate" name="publish_end_date_show" value="{END_DATE_DISPLAY}" />
+<!--										<div id="publish_end_date_canvas" class="input-textdate" style="width:200px">{END_DATE_DISPLAY}</div>-->
+										<input type="hidden" id="publish_end_date" name="publish_end_date" value="{END_DATE_VALUE}" />
 										<script type="text/javascript">
-											Calendar.setup({
-												inputField  : "publish_end_date",
-												displayArea : "publish_end_date_canvas",
-												daFormat 	: "%d %B %Y",
-												ifFormat    : "%d %B %Y %H:%M:%S",
-												button      : "calendarButton_end",
-												showsTime	: false
+											jQuery(function() {
+												jQuery("#publish_end_date_show").datepicker({
+													showOtherMonths: true, 
+													altField: '#publish_end_date', 
+													altFormat: 'mm-dd-yyyy ',
+													showOn: 'both',
+													buttonImage: 'images/date_select.gif',
+													buttonImageOnly: false
+												});
 											});
 										</script>
 									</div>
@@ -250,6 +253,7 @@
 							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
 						</div>
 					</div>
+					<!-- BEGIN tab.meta -->
 					<div id="section-meta" class="anchor">
 						<!-- BEGIN description-meta -->
 						<div class="description">
@@ -335,6 +339,8 @@
 							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
 						</div>
 					</div>
+					<!-- END tab.meta -->
+					<!-- BEGIN tab.permissions -->
 					<div id="section-permissions" class="anchor">
 						<!-- BEGIN description-permission -->
 						<div class="description">
@@ -378,6 +384,7 @@
 							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
 						</div>
 					</div>
+					<!-- END tab.permissions -->
 				</form>
 			</div>
 			<div id="footer">
