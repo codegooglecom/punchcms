@@ -76,6 +76,7 @@ ContentLanguage.require = function(libraryName) {
 	var objHead = document.getElementsByTagName("head");
 	objHead[0].appendChild(objScript);
 
+	//*** TODO: jQuery method.
 	//*** Inserting via DOM fails in Safari 2.0, so brute force approach.
 	//document.write('<script type="text/javascript" src="'+libraryName+'"></script>');
 }
@@ -116,9 +117,9 @@ ContentLanguage.prepareAdd = function() {
 }
 
 ContentLanguage.prototype.init = function() {
- 	$('language_active').onmouseover = function() { return objContentLanguage.buttonOver('activeElement', this); };
- 	$('language_active').onmouseout = function() { return objContentLanguage.buttonOut('activeElement', this); };
- 	$('language_active').onmousedown = function() { return objContentLanguage.toggleActiveElement(); };
+ 	jQuery("#language_active").bind("mouseover", function() { return objContentLanguage.buttonOver('activeElement', this); });
+ 	jQuery("#language_active").bind("mouseout", function() { return objContentLanguage.buttonOut('activeElement', this); });
+ 	jQuery("#language_active").bind("mousedown", function() { return objContentLanguage.toggleActiveElement(); });
 }
 
 ContentLanguage.prototype.swap = function(languageId) {
@@ -127,28 +128,30 @@ ContentLanguage.prototype.swap = function(languageId) {
 	
 	//*** Check is current and default language is equal.
 	if (this.currentLanguage == this.defaultLanguage || this.actives[this.currentLanguage] != true || this.actives[this.defaultLanguage] != true) {
-		$('language_cascade').src = "images/lang_unlocked_disabled.gif";
- 		$('language_cascade').onmouseover = null;
- 		$('language_cascade').onmouseout = null;
- 		$('language_cascade').onmousedown = null;
+		jQuery("#language_cascade").attr("src", "images/lang_unlocked_disabled.gif");
+ 		jQuery("#language_cascade").unbind("onmouseover");
+ 		jQuery("#language_cascade").unbind("onmouseout");
+ 		jQuery("#language_cascade").unbind("onmousedown");
 	} else {
 		if (this.cascades[this.currentLanguage] !== true) {
-			$('language_cascade').src = "images/lang_unlocked.gif";
+			jQuery("#language_cascade").attr("src", "images/lang_unlocked.gif");
 		} else {
-			$('language_cascade').src = "images/lang_locked.gif";
+			jQuery("#language_cascade").attr("src", "images/lang_locked.gif");
 		}
- 		$('language_cascade').onmouseover = function() { return objContentLanguage.buttonOver('cascadeElement', this); };
- 		$('language_cascade').onmouseout = function() { return objContentLanguage.buttonOut('cascadeElement', this); };
- 		$('language_cascade').onmousedown = function() { return objContentLanguage.toggleCascadeElement(); };
+ 		jQuery("#language_cascade").bind("mouseover", function() { return objContentLanguage.buttonOver("cascadeElement", this); });
+ 		jQuery("#language_cascade").bind("mouseout", function() { return objContentLanguage.buttonOut("cascadeElement", this); });
+ 		jQuery("#language_cascade").bind("mousedown", function() { return objContentLanguage.toggleCascadeElement(); });
 	}
 	
 	//*** Check the active state.
 	if (this.actives[this.currentLanguage] != true) {
+		//*** TODO: Replace the overlib library!
 		if (this.hover) overlib("<?php echo $objLang->get("langEnable", "tip") ?>");
-		$('language_active').src = "images/lang_disabled.gif";
+		jQuery("#language_active").attr("src", "images/lang_disabled.gif");
 	} else {
+		//*** TODO: Replace the overlib library!
 		if (this.hover) overlib("<?php echo $objLang->get("langDisable", "tip") ?>");
-		$('language_active').src = "images/lang_enabled.gif";	
+		jQuery("#language_active").attr("src", "images/lang_enabled.gif");	
 	}
 	
 	for (var count in this.fields) {
@@ -318,10 +321,10 @@ ContentLanguage.prototype.toggleCascadeElement = function() {
 	//*** Toggle button image.  
 	if (this.cascades[this.currentLanguage] == true) {
 		if (this.hover) overlib("<?php echo $objLang->get("langElementUnlock", "tip") ?>");
-		$('language_cascade').src = "images/lang_unlocked.gif";
+		jQuery("#language_cascade").attr("src", "images/lang_unlocked.gif");
 	} else {
 		if (this.hover) overlib("<?php echo $objLang->get("langElementCascade", "tip") ?>");
-		$('language_cascade').src = "images/lang_locked.gif";
+		jQuery("#language_cascade").attr("src", "images/lang_locked.gif");
 	}
 
 	//*** Take action according to the state.
@@ -345,7 +348,7 @@ ContentLanguage.prototype.toggleCascadeField = function(fieldId) {
 	
 	//*** Reset global cascade state.
 	this.cascades[this.currentLanguage] = false;
-	$('language_cascade').src = "images/lang_unlocked.gif";
+	jQuery("#language_cascade").attr("src", "images/lang_unlocked.gif");
 
 	//*** Take action according to the state.
 	this.toggleCascadeState(this.fields[fieldId].id, this.fields[fieldId].cascades[this.currentLanguage]);
@@ -381,12 +384,12 @@ ContentLanguage.prototype.toggleCascadeState = function(fieldId, state) {
 	
 	//*** Set the cascade input field.
 	var strValue = this.fields[fieldId].getCascades();
-	$(fieldId + "_cascades").value = strValue;
+	jQuery("#" + fieldId + "_cascades").val(strValue);
 }
 
 ContentLanguage.prototype.toggleActivesState = function() {		
 	//*** Set the actives input field.
-	$("language_actives").value = this.getActives();
+	jQuery("#language_actives").val(this.getActives());
 }
 
 ContentLanguage.prototype.setActives = function(strActives) {
@@ -415,23 +418,24 @@ ContentLanguage.prototype.getActives = function() {
 }
 
 ContentLanguage.prototype.setFieldValue = function(fieldId, strValue) {
-	$(fieldId + "_" + this.currentLanguage).value = strValue;
+	jQuery("#" + fieldId + "_" + this.currentLanguage).val(strValue);
 }
 
 ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 	var strUrl = "ajax.php";
-	var strPost = "cmd=StorageItems::getFileListHTML&parentId=" + $('frm_storage_' + objTrigger.id).options[$('frm_storage_' + objTrigger.id).selectedIndex].value.split("_").pop();
+	var strPost = "cmd=StorageItems::getFileListHTML&parentId=" + jQuery('#frm_storage_' + objTrigger.id).find('options:selected').val().split("_").pop();
 	
-	var objFiles = $('storageBrowser_' + objTrigger.id).getElementsBySelector('ul');
-	if (objFiles.length > 0) Element.remove(objFiles[0]);
+	var objFiles = jQuery("#storageBrowser_" + objTrigger.id + "ul");
+	if (objFiles.length > 0) objFiles.find(":first").remove();
 	
-	var objList = $('storageBrowser_' + objTrigger.id).getElementsBySelector('div.storageList')[0];
+	var objList = jQuery("#storageBrowser_" + objTrigger.id + "div.storageList:first").get(0);
 	var objLoader = document.createElement("div");
 	objLoader.className = "storageLoader";
 	objLoader.innerHTML = "<?php echo $objLang->get("loadingFiles", "form") ?>";
 	objLoader.style.display = "block";
 	objList.appendChild(objLoader);
 	
+	//*** TODO: jQuery ajax request.
 	var myAjax = new Ajax.Request(
 			strUrl, 
 			{
@@ -445,28 +449,30 @@ ContentLanguage.prototype.showStoragePage = function(objXHR, objTrigger) {
 	var objResponse = objXHR.responseXML;
 	var objField = objResponse.getElementsByTagName("field")[0];
 	
-	var objLoader = $('storageBrowser_' + objTrigger.id).getElementsBySelector('div.storageLoader')[0];
+	var objLoader = jQuery("#storageBrowser_" + objTrigger.id + "div.storageLoader").get(0);
 	objLoader.style.display = "none";
 	
-	var objList = $('storageBrowser_' + objTrigger.id).getElementsBySelector('div.storageList')[0];
+	var objList = jQuery("#storageBrowser_" + objTrigger.id + "div.storageList").get(0);
 	objList.innerHTML = objField.firstChild.nodeValue;
 	
 	//*** Attach events to the thumbs.
-	var objThumbs = $('storageBrowser_' + objTrigger.id).getElementsBySelector('li');
+	var objThumbs = jQuery("#storageBrowser_" + objTrigger.id + "li");
 	for (var intCount = 0; intCount < objThumbs.length; intCount++) {
-		var objLink = $(objThumbs[intCount]).getElementsBySelector("a")[0];
-		objLink.onmouseover = function(){
-			var objLabel = $(this).up("li").getElementsBySelector("span")[0];
-			return overlib(objLabel.innerHTML);
-		};
-		objLink.onmouseout = function(){
+		var objLink = objThumbs.eq(intCount).find("a:first");
+		objLink
+		.bind("mouseover", function(){
+			var objLabel = jQuery(this).parent("li").find("span:first");
+			//*** TODO: Replace overlib library
+			return overlib(objLabel.html());
+		})
+		.bind("mouseout", function(){
 			return nd();
-		};
-		objLink.onclick = function(){
-			var objLabel = $(this).up("li").getElementsBySelector("span")[0];
-			objTrigger.transferStorage(this, objLabel.innerHTML);
+		})
+		.bind("click", function(){
+			var objLabel = jQuery(this).parent("li").find("span:first");
+			objTrigger.transferStorage(this, objLabel.html());
 			return false;
-		};
+		});
 	}
 }
 
@@ -502,48 +508,48 @@ ContentField.prototype.setCascades = function(strCascades) {
 	for (var count = 0; count < arrCascades.length; count++) {
 		this.cascades[arrCascades[count]] = true;
 	}
-	$(this.id + "_cascades").value = this.getCascades();
+	jQuery("#" + this.id + "_cascades").val(this.getCascades());
 }
 
 ContentField.prototype.setIconCascade = function() {
 	//*** Attach mouse events to the cascade button.
 	if (this.parent.currentLanguage == this.parent.defaultLanguage || this.parent.actives[this.parent.currentLanguage] != true || this.parent.actives[this.parent.defaultLanguage] != true) {
-		$(this.id + "_cascade").onmouseover = null;
-		$(this.id + "_cascade").onmouseout = null;
-		$(this.id + "_cascade").onmousedown = null;
+		jQuery("#" + this.id + "_cascade").unbind("mouseover");
+		jQuery("#" + this.id + "_cascade").unbind("mouseout");
+		jQuery("#" + this.id + "_cascade").unbind("mousedown");
 
 		//*** Set the cascade icon.
 		if (this.cascades[this.parent.currentLanguage] == true) {
-			$(this.id + "_cascade").src = "images/lang_locked_disabled.gif";
+			jQuery("#" + this.id + "_cascade").attr("src", "images/lang_locked_disabled.gif");
 		} else {
-			$(this.id + "_cascade").src = "images/lang_unlocked_disabled.gif";
+			jQuery("#" + this.id + "_cascade").attr("src", "images/lang_unlocked_disabled.gif");
 		}
 	} else {
 		var strId = this.id;
-		$(this.id + "_cascade").onmouseover = function() { return objContentLanguage.buttonOver('cascadeField', this, strId); };
-		$(this.id + "_cascade").onmouseout = function() { return objContentLanguage.buttonOut('cascadeField', this, strId); };
-		$(this.id + "_cascade").onmousedown = function() { return objContentLanguage.toggleCascadeField(strId); };
+		jQuery("#" + this.id + "_cascade").bind("mouseover", function() { return objContentLanguage.buttonOver('cascadeField', this, strId); });
+		jQuery("#" + this.id + "_cascade").bind("mouseout", function() { return objContentLanguage.buttonOut('cascadeField', this, strId); });
+		jQuery("#" + this.id + "_cascade").bind("mousedown", function() { return objContentLanguage.toggleCascadeField(strId); });
 
 		//*** Set the cascade icon.
 		if (this.cascades[this.parent.currentLanguage] == true) {
 			if (this.parent.hover && this.parent.buttonType == "cascadeField") overlib("<?php echo $objLang->get("langFieldUnlock", "tip") ?>");
-			$(this.id + "_cascade").src = "images/lang_locked.gif";
+			jQuery("#" + this.id + "_cascade").attr("src", "images/lang_locked.gif");
 		} else {
 			if (this.parent.hover && this.parent.buttonType == "cascadeField") overlib("<?php echo $objLang->get("langFieldCascade", "tip") ?>");
-			$(this.id + "_cascade").src = "images/lang_unlocked.gif";
+			jQuery("#" + this.id + "_cascade").attr("src", "images/lang_unlocked.gif");
 		}
 	}
 }
 
 ContentField.prototype.toScreen = function() {
 	this.setIconCascade();
-	$(this.id).value = $(this.id + "_" + this.parent.currentLanguage).value;
+	jQuery("#" + this.id).val(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
 	
 	return true;
 }
 
 ContentField.prototype.toTemp = function() {
-	$(this.id + "_" + this.parent.currentLanguage).value = $(this.id).value;
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).val());
 	
 	return true;
 }
@@ -565,25 +571,25 @@ TextField.prototype.toScreen = function() {
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
 		//*** The element is not active.
-		$(this.id + "_alt").innerHTML = "<?php echo $objLang->get("langDisabled", "label") ?>";
-		Element.hide(this.id);
-		Element.show(this.id + "_alt");
+		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
+		jQuery("#" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
-		var strValue = $(this.id + "_" + this.parent.defaultLanguage).value;
-		$(this.id + "_alt").innerHTML = (strValue == "") ? "&nbsp;" : strValue;
-		Element.hide(this.id);
-		Element.show(this.id + "_alt");
+		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
+		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
+		jQuery("#" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();
 	} else {
 		//*** The field needs no special treatment.
-		Element.hide(this.id + "_alt");
-		Element.show(this.id);
-		$(this.id).value = $(this.id + "_" + this.parent.currentLanguage).value;
+		jQuery("#" + this.id + "_alt").hide();
+		jQuery("#" + this.id).show();
+		jQuery("#" + this.id).val(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
 	}
 }
 
 TextField.prototype.toTemp = function() {
-	$(this.id + "_" + this.parent.currentLanguage).value = $(this.id).value;
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).val());
 }
 
 /*** 
@@ -603,17 +609,17 @@ TextAreaField.prototype.toScreen = function() {
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
 		//*** The element is not active.
-		$(this.id + "_alt").innerHTML = "<?php echo $objLang->get("langDisabled", "label") ?>";
-		Element.hide(this.id + "___Frame");
-		Element.show(this.id + "_alt");
-		$(this.id + "_alt").setStyle({'display':'inline'});
+		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
+		jQuery("#" + this.id + "___Frame").hide();
+		//*** Replaced .show() and .setStyle({'display':'inline'}) for one line of jQuery
+		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
-		var strValue = $(this.id + "_" + this.parent.defaultLanguage).value;
-		$(this.id + "_alt").innerHTML = (strValue == "") ? "&nbsp;" : strValue;
-		Element.hide(this.id + "___Frame");
-		Element.show(this.id + "_alt");
-		$(this.id + "_alt").setStyle({'display':'inline'});
+		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
+		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
+		jQuery("#" + this.id + "___Frame").hide();
+		//*** Replaced .show() and .setStyle({'display':'inline'}) for one line of jQuery
+		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else {
 		//*** The field needs no special treatment.
 		Element.hide(this.id + "_alt");
@@ -622,7 +628,7 @@ TextAreaField.prototype.toScreen = function() {
 			var objArea = FCKeditorAPI.GetInstance(this.id);
 			if (typeof objArea == "object") {
 				if (objArea.Status == FCK_STATUS_COMPLETE) {
-					objArea.SetHTML($(this.id + "_" + this.parent.currentLanguage).value);
+					objArea.SetHTML(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
 				}
 			}
 		}
@@ -632,7 +638,7 @@ TextAreaField.prototype.toScreen = function() {
 TextAreaField.prototype.toTemp = function() {
 	var strValue = FCKeditorAPI.GetInstance(this.id).GetXHTML();
 	if (strValue == "<p>&nbsp;</p>") strValue = "";
-	$(this.id + "_" + this.parent.currentLanguage).value = strValue;
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(strValue);
 }
 
 /*** 
@@ -644,7 +650,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	this.base(strId, objParent, strCascades);
 	
 	//*** Set local properties.
-	this.trigger = $(strId);
+	this.trigger = jQuery("#" + strId).get(0); // Backwards compatibility, this has to be a DOM element.
 	this.subFiles = new Object();
 	this.maxFiles = 1;
 	this.maxChar = 50;
@@ -672,26 +678,26 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	}
 	
 	//*** Attach event to the library button.
-	$('browseStorage_' + strId).onclick = function(){
+	jQuery("#browseStorage_" + strId).bind("click", function(){
 		__this.openStorageBrowser();
 		return false;
-	};
+	});
 	
 	//*** Attach event to the library folder select.
-	$('frm_storage_' + strId).onchange = function(){
+	jQuery("#frm_storage_" + strId).bind("change", function(){
 		__this.parent.loadStoragePage(__this);
 		return false;
-	};
+	});
 	
 	//*** Create containers.
 	var langArray = [this.parent.currentLanguage, this.parent.defaultLanguage];
 	for (var intCount = 0; intCount < langArray.length; intCount++) {
 		if (!this.subFiles[langArray[intCount]]) {
-			var intCurrent = ($(this.id + "_" + langArray[intCount] + '_current').value) ? parseInt($(this.id + "_" + langArray[intCount] + '_current').value) : 0;
+			var intCurrent = (jQuery("#" + this.id + "_" + langArray[intCount] + "_current").val()) ? parseInt(jQuery("#" + this.id + "_" + langArray[intCount] + "_current").val()) : 0;
 			this.subFiles[langArray[intCount]] = {currentFiles:intCurrent, toUpload:new Array, uploaded:new Array()};
 
 			for (var intCountX = 1; intCountX < intCurrent + 1; intCountX++) {
-				this.subFiles[langArray[intCount]].uploaded.push($(this.id + "_" + langArray[intCount] + "_" + intCountX));
+				this.subFiles[langArray[intCount]].uploaded.push(jQuery("#" + this.id + "_" + langArray[intCount] + "_" + intCountX).get(0));
 				this.fileCount++;
 			}
 		}
@@ -753,10 +759,9 @@ FileField.prototype.toScreen = function() {
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
 		//*** The element is not active.
-		$(this.id + "_alt").innerHTML = "<?php echo $objLang->get("langDisabled", "label") ?>";
-		Element.hide(this.id + "_widget");
-		Element.show(this.id + "_alt");
-		$(this.id + "_alt").setStyle({'display':'inline'});
+		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
+		jQuery("#" + this.id + "_widget").hide();
+		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
 		var strValue = "";
@@ -767,14 +772,13 @@ FileField.prototype.toScreen = function() {
 		for (var intCount = 0; intCount < this.subFiles[this.parent.defaultLanguage].toUpload.length; intCount++) {
 			strValue += this.shortName(this.subFiles[this.parent.defaultLanguage].toUpload[intCount].value, 40) + "<br />";
 		}
-		$(this.id + "_alt").innerHTML = (strValue == "") ? "&nbsp;" : strValue;
-		Element.hide(this.id + "_widget");
-		Element.show(this.id + "_alt");	
-		$(this.id + "_alt").setStyle({'display':'inline'});
+		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
+		jQuery("#" + this.id + "_widget").hide();
+		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else {
 		//*** The field needs no special treatment.
-		Element.show(this.id + "_widget");	
-		Element.hide(this.id + "_alt");	
+		jQuery("#" + this.id + "_widget").show();	
+		jQuery("#" + this.id + "_alt").hide();
 		
 		//*** Insert upload rows.
 		jQuery("#" + this.id + "_widget div.required").show();
@@ -786,11 +790,11 @@ FileField.prototype.toScreen = function() {
 		
 		//*** Init object if not exists.
 		if (!this.subFiles[this.parent.currentLanguage]) {
-			var intCurrent = ($(this.id + "_" + this.parent.currentLanguage + '_current').value) ? parseInt($(this.id + "_" + this.parent.currentLanguage + '_current').value) : 0;
+			var intCurrent = (jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_current").val()) ? parseInt(jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_current").val()) : 0;
 			this.subFiles[this.parent.currentLanguage] = {currentFiles:intCurrent, toUpload:new Array, uploaded:new Array()};
 
 			for (var intCount = 1; intCount < intCurrent + 1; intCount++) {
-				this.subFiles[this.parent.currentLanguage].uploaded.push($(this.id + "_" + this.parent.currentLanguage + "_" + intCount));
+				this.subFiles[this.parent.currentLanguage].uploaded.push(jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_" + intCount).get(0));
 				this.fileCount++;
 			}
 		}
@@ -802,11 +806,11 @@ FileField.prototype.toScreen = function() {
 			} else {
 				this.addUploadRow(filledElement);
 			}
-			$("filelist_new_" + this.id).show();
+			jQuery("#filelist_new_" + this.id).show();
 		}
 		
 		//*** Insert current rows.
-		$("filelist_current_" + this.id).hide();
+		jQuery("#filelist_current_" + this.id).hide();
 		var objItems = jQuery("#filelist_current_" + this.id + " div.multifile");
 		objItems.each(function() {
 			jQuery(this).remove();
@@ -815,7 +819,7 @@ FileField.prototype.toScreen = function() {
 			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount];
 			var blnStorage = (filledElement.value.split(":").length > 2) ? true : false;
 			this.addCurrentRow(filledElement, blnStorage);
-			$("filelist_current_" + this.id).show();
+			jQuery("#filelist_current_" + this.id).show();
 		}
 		
 		//*** SWFUpload fields.
@@ -838,26 +842,30 @@ FileField.prototype.openStorageBrowser = function() {
 	var __this = this;
 
 	//*** Slide open.
-	Effect.DefaultOptions.duration = 0.5;
-	Effect.SlideDown('storageBrowser_' + this.id);
+	alert("TEST");
+	jQuery("#storageBrowser_" + this.id).fadeIn("slow");
 	
 	//*** Fill file list.
 	this.parent.loadStoragePage(this);
 	
 	//*** Switch button.
-	var storageButton = $('browseStorage_' + this.id);
-	var labelCache = storageButton.innerHTML;
-	storageButton.innerHTML = "Sluit Media Bibliotheek";
-	storageButton.onclick = function(){
-		Effect.SlideUp('storageBrowser_' + __this.id);
-		storageButton.innerHTML = labelCache;
-		
-		storageButton.onclick = function(){
-			__this.openStorageBrowser();
+	var storageButton = jQuery("#browseStorage_" + this.id);
+	var labelCache = storageButton.html();
+	
+	//*** TODO: Get this string from the language library
+	storageButton
+		.html("Sluit Media Bibliotheek")
+		.bind("click", function(){
+			Effect.SlideUp('storageBrowser_' + __this.id);
+			storageButton.innerHTML = labelCache;
+			
+			storageButton.onclick = function(){
+				__this.openStorageBrowser();
+				return false;
+			}
+			
 			return false;
-		}
-		return false;
-	};
+		});
 }
 
 FileField.prototype.transferField = function() {

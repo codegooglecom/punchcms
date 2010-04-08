@@ -94,15 +94,15 @@ Alias.loadElements = function(blnInit, strTargetField, strTargetForm) {
 	var strUrl = "ajax.php";
 	
 	if (blnInit != undefined && blnInit) {
-		intId = $(Alias.targetField).value;
+		intId = jQuery("#" + Alias.targetField).val();
 		var strPost = "cmd=Elements::getParentHTML&eid=" + intId;
 	} else {
 		var strPost = "cmd=Elements::getChildrenHTML&parentId=" + intId;
 	}
-	var objTraverse = $(Alias.targetForm).getElementsBySelector('div.traverse');
-	var objFieldset = $(objTraverse[0]).up('fieldset', 0);
+	var objTraverse = jQuery("#" + Alias.targetForm + "div.traverse");
+	var objFieldset = objTraverse.eq(0).parent("fieldset");
 
-	if (objTraverse.length > 0) objTraverse[0].remove();
+	if (objTraverse.length > 0) objTraverse.eq(0).remove();
 	new Insertion.Bottom(objFieldset, Alias.elementsLoader());
 		
 	var myAjax = new Ajax.Request(
@@ -115,36 +115,41 @@ Alias.loadElements = function(blnInit, strTargetField, strTargetForm) {
 }
 
 Alias.setElement = function(objSelect) {
-	var intParentId = objSelect[objSelect.selectedIndex].value;
-	var objParentRow = $(objSelect.id).up('div');
+	var objSelect = jQuery(objSelect);
+	var intParentId = objSelect.find("option:selected").val();
+	var objParentRow = objSelect.parent("div");
+
+	//*** TODO: Replace nextSibblings for a jQuery alternative
 	var objRows = objParentRow.nextSiblings();
-	var objSelects = $(Alias.targetForm).getElementsBySelector('select');
-	var objFieldset = $(Alias.targetForm).getElementsBySelector('fieldset.traverse')[0];
+
+	var objSelects = jQuery("#" + Alias.targetForm + "select");
+	var objFieldset = jQuery("#" + Alias.targetForm + "fieldset.traverse:first");
 	
 	for (var intCount = 0; intCount < objSelects.length; intCount++) {
-		var objRow = $(objSelects[intCount].id).up('div');
+		var objRow = objSelects.eq(intCount).parent("div");
 		for (var i = 0; i < objRows.length; i++) {
-			if (objRows[i] == objRow) {
+			if (objRows.eq(i) == objRow) {
 				objRow.remove();
 			}
 		}
 	}
 
-	var objTraverse = objFieldset.getElementsBySelector('div.traverse');
-	if (objTraverse.length > 0) objTraverse[0].remove();
-	new Insertion.Bottom(objFieldset, Alias.elementsTraverse());
+	var objTraverse = objFieldset.find("div.traverse");
+	if (objTraverse.length > 0) objTraverse.eq(0).remove();
+	objFieldset.append(Alias.elementsTraverse());
 	
 	intId = intParentId;
-	$(Alias.targetField).value = intParentId;
+	jQuery("#" + Alias.targetField).val() = intParentId;
 }
 
 Alias.showElements = function(objXHR) {
+//*** TODO: jQuerify this function and use jQuery $.ajax method.
 	var objResponse = objXHR.responseXML;
 	var objFields = objResponse.getElementsByTagName("field");
-	var objFieldset = $(Alias.targetForm).getElementsBySelector('fieldset.traverse')[0];
+	var objFieldset = jQuery("#" + Alias.targetForm + "fieldset.traverse:first");
 	
-	var objLoading = objFieldset.getElementsBySelector('div.loading');
-	if (objLoading.length > 0) objLoading[0].remove();
+	var objLoading = objFieldset.find("div.loading");
+	if (objLoading.length > 0) objLoading.eq(0).remove();
 	
 	for (var i = 0; i < objFields.length; i++) {
 		var strValue = objFields[i].firstChild.nodeValue;
@@ -154,7 +159,7 @@ Alias.showElements = function(objXHR) {
 		}
 	}
 			
-	var objSelect = $(Alias.targetField + "_" + intParentId);
+	var objSelect = jQuery("#" + Alias.targetField + "_" + intParentId);
 	Alias.setElement(objSelect);
 }
 
