@@ -534,6 +534,12 @@ div.tabwrapper div.wrap form div,
 	padding: 1px 10px 20px 10px;
 }
 
+div.tabwrapper div.wrap,
+#content div.wrap
+{
+	padding: 5px 15px 15px
+}
+
 * html #content div.wrap { /*star hack voor IE */
 	height : 1%;
 }
