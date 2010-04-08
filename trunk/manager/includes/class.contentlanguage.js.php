@@ -777,11 +777,11 @@ FileField.prototype.toScreen = function() {
 		Element.hide(this.id + "_alt");	
 		
 		//*** Insert upload rows.
-		$$("#" + this.id + "_widget div.required").invoke("show");
-		$("filelist_new_" + this.id).hide();
-		var objItems = $$("#filelist_new_" + this.id + " div.multifile");
-		objItems.each( function(familyMember) {
-			Element.remove(familyMember);
+		jQuery("#" + this.id + "_widget div.required").show();
+		jQuery("#filelist_new_" + this.id).hide();
+		var objItems = jQuery("#filelist_new_" + this.id + " div.multifile");
+		objItems.each(function() {
+			jQuery(this).remove();
 		});
 		
 		//*** Init object if not exists.
@@ -807,9 +807,9 @@ FileField.prototype.toScreen = function() {
 		
 		//*** Insert current rows.
 		$("filelist_current_" + this.id).hide();
-		var objItems = $$("#filelist_current_" + this.id + " div.multifile");
-		objItems.each( function(familyMember) {
-			Element.remove(familyMember);
+		var objItems = jQuery("#filelist_current_" + this.id + " div.multifile");
+		objItems.each(function() {
+			jQuery(this).remove();
 		});
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount];
@@ -924,8 +924,8 @@ FileField.prototype.addUploadRow = function(element) {
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
-		$$("#" + this.id + "_widget div.required").invoke("hide");
-		$$("#storageBrowser_" + this.id).invoke("hide");
+		jQuery("#" + this.id + "_widget div.required").hide();
+		jQuery("#storageBrowser_" + this.id).hide();
 	}
 		
 	Sortable.create("filelist_new_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
@@ -1010,8 +1010,8 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) {
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
-		$$("#" + this.id + "_widget div.required").invoke("hide");
-		$$("#storageBrowser_" + this.id).invoke("hide");
+		jQuery("#" + this.id + "_widget div.required").hide();
+		jQuery("#storageBrowser_" + this.id).hide();
 	}
 }
 
@@ -1143,7 +1143,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
-		$$("#storageBrowser_" + this.id).invoke("hide");
+		jQuery("#storageBrowser_" + this.id).hide();
 	}
 	
 	var strId = this.id;
@@ -1172,7 +1172,7 @@ FileField.prototype.removeSwfUploadRow = function(inputId, file) {
 	}
 	this.subFiles[this.parent.currentLanguage].toUpload = arrTemp;
 	
-	$$("#" + this.id + "_widget div.required").invoke("show");
+	jQuery("#" + this.id + "_widget div.required").show();
 	if (this.subFiles[this.parent.currentLanguage].toUpload.length == 0) {
 		$("filelist_new_" + this.id).hide();
 	}
@@ -1190,14 +1190,14 @@ FileField.prototype.removeUploadField = function(objTrigger) {
 	}
 	this.subFiles[this.parent.currentLanguage].toUpload = arrTemp;
 	
-	$$("#" + this.id + "_widget div.required").invoke("show");
+	jQuery("#" + this.id + "_widget div.required").show();
 	if (this.subFiles[this.parent.currentLanguage].toUpload.length == 0) {
-		$("filelist_new_" + this.id).hide();
+		jQuery("#filelist_new_" + this.id).hide();
 	}
 }
 
 FileField.prototype.removeCurrentField = function(objTrigger) {	
-	$$("#" + this.id + "_widget div.required").invoke("show");
+	jQuery("#" + this.id + "_widget div.required").show();
 	
 	var arrTemp = new Array();
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
@@ -1208,11 +1208,12 @@ FileField.prototype.removeCurrentField = function(objTrigger) {
 	this.subFiles[this.parent.currentLanguage].uploaded = arrTemp;
 	this.subFiles[this.parent.currentLanguage].currentFiles--;
 	
+	//*** TODO: convert javascript (parentNode etc) to jQuery
 	objTrigger.parentNode.element.parentNode.removeChild(objTrigger.parentNode.element);
 	objTrigger.parentNode.parentNode.removeChild(objTrigger.parentNode);
 	
 	if (this.subFiles[this.parent.currentLanguage].uploaded.length == 0) {
-		$("filelist_current_" + this.id).hide();
+		jQuery("#filelist_current_" + this.id).hide();
 	}
 	
 	this.toScreen();
@@ -1288,10 +1289,11 @@ FileField.prototype.swfUploadPreLoad = function() {
 }
 
 FileField.prototype.swfUploadLoaded = function() {
-	$$("#" + this.settings.jsParent.id).invoke("hide");
+	jQuery("#" + this.settings.jsParent.id).hide();
 }
 
 FileField.prototype.swfUploadLoadFailed = function() {
+	//*** TODO: Modal jQueryUI feedback box? 
 	//alert("swfUploadLoadFailed");
 }
 
@@ -1356,35 +1358,36 @@ FileField.prototype.uploadStart = function(file) {
 
 FileField.prototype.uploadProgress = function(file, bytesLoaded, bytesTotal) {
 	var percent = Math.ceil((bytesLoaded / bytesTotal) * 100);
-	$$("div." + file.id + " div.progressBar")[0].setStyle({width:percent + "%"});
+	jQuery("div." + file.id + " div.progressBar")[0].setStyle({width:percent + "%"});
 }
 
 FileField.prototype.uploadSuccess = function(file, serverData) {
 	var __this = this.settings.jsParent;
-	$$("div." + file.id + " div.progressWrapper")[0].remove();
-	$$("div." + file.id)[0].stopObserving("mouseover").stopObserving("mouseout");
-	$$("div." + file.id + " a.button")[0].innerHTML = __this.removeLabel;
+	jQuery("div." + file.id + " div.progressWrapper:first").remove();
+	jQuery("div." + file.id + ":first").stopObserving("mouseover").stopObserving("mouseout");
+	jQuery("div." + file.id + " a.button:first").html(__this.removeLabel);
 
 	if (__this.thumbPath != "") {
 		if (__this.isImage(file.name)) {
-			$$("div." + file.id + " a img")[0].src = "thumb.php?src=" + __this.uploadPath + file.name;
-			$$("div." + file.id + " a.document")[0]
-				.removeClassName("document")
-				.addClassName("thumbnail")
+			jQuery("div." + file.id + " a img:first").attr("src","thumb.php?src=" + __this.uploadPath + file.name);
+			jQuery("div." + file.id + " a.document:first")
+				.removeClass("document")
+				.addClass("thumbnail")
 				.stopObserving("mouseover")
 				.observe("mouseover", function() {
 					return overlib("<img src=\"" + __this.uploadPath + file.name + "\" alt=\"\" />", FULLHTML);
 				});
 		} else {
-			$$("div." + file.id + " a img")[0].src = "/images/ico_document.gif";
-			$$("div." + file.id + " a.document")[0]
-				.observe("click", function(event) {
+			jQuery("div." + file.id + " a img:first").attr("src","/images/ico_document.gif");
+			jQuery("div." + file.id + " a.document:first")
+				.bind("click", function(event) {
 					window.open(__this.thumbPath + "upload/" + file.name);
-					event.stop();
+					event.stopPropagation();
 					return false;
 				})
-				.stopObserving("mouseover")
-				.observe("mouseover", function() {
+				.unbind("mouseover")
+				.bind("mouseover", function() {
+					//*** TODO: Replace overlib library by a solid tooltip function
 					return overlib("This file will open in a new window.");
 				});
 		}
@@ -1398,7 +1401,7 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 	objAltText.observe("click", function(event) {
 		__this.startAltEdit(event);
 	});
-	$$("div." + file.id)[0].appendChild(objAltText);
+	jQuery("div." + file.id + ":first").append(objAltText);
 }
 
 FileField.prototype.startAltEdit = function(event) {

@@ -77,11 +77,19 @@
 									<p class="error">{ERROR_STRUCTURE}</p>
 									<!-- END error-structure-name -->
 									<label for="frm_structure">{LABEL_STRUCTURENAME}</label>
-									<select id="frm_structure" name="frm_structure" class="input-textlarge" onchange="$$('small.structureDescr').invoke('hide');$('descr_' + this.options[this.selectedIndex].value).show()">
+									<select id="frm_structure" name="frm_structure" class="input-textlarge">
 										<!-- BEGIN structure.item -->
 										<option value="{VALUE}">{LABEL}</option>
 										<!-- END structure.item -->
 									</select>
+									<script type="text/javascript">
+									jQuery(function(){
+										jQuery("#frm_structure").bind("change", function(){
+											jQuery("small.structureDescr").hide();
+											jQuery("#descr_" + jQuery(this).find("option:selected").val()).show();
+										});
+									});
+									</script>
 									<!-- BEGIN structure.description -->
 									<small id="descr_{VALUE}" class="structureDescr" style="{HIDE}">{BODY}</small>
 									<!-- END structure.description -->

@@ -92,9 +92,9 @@ PTemplateField.addSetting = function(type, trigger) {
 		case "image":
 			$("tfv_image_setting_name").up("div").show();
 			$("subImage").insert(trigger.up("fieldset").clone(true));
-			$$("a.removeButton").each(function(obj, index) {
+			jQuery("a.removeButton").each(function(index) {
 				if (index > 0) {
-					obj.show();
+					jQuery(this).show();
 				}
 			});
 			$("tfv_image_settings_count").value = ($("tfv_image_settings_count").value - 1) + 2;

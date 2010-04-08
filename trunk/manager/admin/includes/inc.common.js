@@ -1,20 +1,23 @@
+/*
+ * Initializing all the javascripts
+ */
 
-$(document).ready(function() {
-	$("#login").corner("14px");
+jQuery(function(){
 	
-	$("#handle").focus();
+	//*** Login page
+	jQuery("#login").corner("14px");
+	jQuery("#handle").focus();
 	
-	$("#frm_import_keep_settings").change(function(){
-			if (this.checked) {
-				$("#frm_import_overwrite").attr("checked", "checked");
-			}
+	//*** PunchCMS Super Admin stuff
+	jQuery("#frm_import_keep_settings").change(function(){
+		if (jQuery(this).is(":checked")) {
+			jQuery("#frm_import_overwrite").attr("checked", "checked");
 		}
-	);
-	
-	$("#frm_import_overwrite").change(function(){
-			if (!this.checked) {
-				$("#frm_import_keep_settings").removeAttr("checked");
-			}
+	});
+	jQuery("#frm_import_overwrite").change(function(){
+		if (!jQuery(this).is(":checked")) {
+			$("#frm_import_keep_settings").removeAttr("checked");
 		}
-	);
+	});
+	
 });

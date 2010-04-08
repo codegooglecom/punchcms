@@ -54,9 +54,9 @@ var PermissionList = new function() {
 }
 
 PermissionList.load = function() {
-	$$("div.selectList a").invoke('observe', 'click', PermissionList.toggleList);
-	$$("div.selectList").invoke('observe', 'click', PermissionList.untoggleList);
-	$$("div.permissions input").invoke('observe', 'click', function(){ PermissionList.updatePermissions() });
+	jQuery("div.selectList a").bind("click", PermissionList.toggleList);
+	jQuery("div.selectList").bind("click", PermissionList.untoggleList);
+	jQuery("div.permissions input").bind("click", PermissionList.updatePermissions);
 	Event.observe(document, 'keydown', PermissionList.setKey);
 	Event.observe(document, 'keyup', PermissionList.unsetKey);
 }
@@ -71,8 +71,8 @@ PermissionList.unsetKey = function(event) {
 
 PermissionList.untoggleList = function(event) {
 	if (!PermissionList.hasCtrl) {
-		$$('div.selectList a').each(function(obj){
-			$(obj).removeClassName('on');
+		jQuery('div.selectList a').each(function(){
+			$(this).removeClass('on');
 		});
 		PermissionList.clearPermissions();
 	}
@@ -121,20 +121,20 @@ PermissionList.clearPermissions = function() {
 }
 
 PermissionList.updatePermissions = function() {
-	$$('div.selectList a.on').each(function(obj){
-		var intId = obj.id.split("_").pop();
+	jQuery('div.selectList a.on').each(function(){
+		var intId = jQuery(this).attr("id").split("_").pop();
 		var arrPermissions = [];
 		
-		$$("div.permissions input").each(function(objInput){
-			if (objInput.checked) {
-				arrPermissions.push(PermissionList.MREP[objInput.id.split("_").pop()]);
+		jQuery("div.permissions input").each(function(){
+			if (jQuery(this).is(":checked")) {
+				arrPermissions.push(PermissionList.MREP[jQuery(this).attr("id").split("_").pop()]);
 			}
 		});
 		
 		var arrTemp = [];
-		PermissionList.permissions.each(function(obj){
-			if (intId != obj.id) {
-				arrTemp.push(obj);
+		PermissionList.permissions.each(function(){
+			if (intId != jQuery(this).attr("id")) {
+				arrTemp.push(this);
 			}
 		});
 		

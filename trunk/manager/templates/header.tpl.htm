@@ -20,6 +20,7 @@
 
 <script type="text/javascript" src="/libraries/jquery.js"></script>
 <script type="text/javascript" src="/libraries/jquery-ui.js"></script>
+<script type="text/javascript" src="/libraries/i18n/jquery.ui.datepicker-nl.js"></script>
 <script type="text/javascript" src="/libraries/prototype.js"></script>
 
 <!-- BEGIN calendar -->
@@ -84,8 +85,9 @@
 <script type="text/javascript" src="/includes/class.itemlist.js"></script>
 <script type="text/javascript">
 //*** Initialize all the (jQuery) javascript action and default settings.
-jQuery(function(){
-	$.datepicker.regional['{DATEPICKER_LANG}'];
+// {DATEPICKER_LANG}
+jQuery(function($){
+	$.datepicker.setDefaults($.datepicker.regional['nl']);
 });
 
 </script>
