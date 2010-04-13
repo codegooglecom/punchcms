@@ -36,19 +36,19 @@ div a:hover {
 }
 
 #login #canvas {
-	background: #F6F8FC url(../images/login-bg.gif) left top repeat-y;
+	background: #F6F8FC url(/images/login-bg.gif) left top repeat-y;
 }
 
 #login #canvas-top {
-	background: url(../images/login-top.gif) left top no-repeat;
+	background: url(/images/login-top.gif) left top no-repeat;
 }
 
 #login #canvas-bottom {
-	background: url(../images/login-bottom.gif) left bottom no-repeat;
+	background: url(/images/login-bottom.gif) left bottom no-repeat;
 }
 
 #login #canvas div.client {
-	background: #294379 url(../images/login-inner-top.gif) left top no-repeat;
+	background: #294379 url(/images/login-inner-top.gif) left top no-repeat;
 }
 
 #login #canvas span.systemlink {
@@ -72,13 +72,13 @@ div a:hover {
 }
 
 #login #canvas p.event-info {
-	background: #E9EDF6 url(../images/event_info.gif) 5px 5px no-repeat;
+	background: #E9EDF6 url(/images/event_info.gif) 5px 5px no-repeat;
 	border: 1px solid #eaeaea;
 	color: #425889;
 }
 
 #login #canvas p.event-error {
-	background: #E9EDF6 url(../images/event_error.gif) 5px 5px no-repeat;
+	background: #E9EDF6 url(/images/event_error.gif) 5px 5px no-repeat;
 	border: 1px solid #f66;
 	color: #c33;
 }
@@ -188,7 +188,7 @@ div a:hover {
 #nav a.active:link, 
 #nav a.active:visited 
 {
-	background: #E6EAF4 url("../images/bg_nav.jpg") left top repeat-x;
+	background: #E6EAF4 url("/images/bg_nav.jpg") left top repeat-x;
 	color: #555;
 }
 
@@ -251,7 +251,7 @@ div.tabwrapper ul.anchors a.on:link,
 div.tabwrapper ul.anchors a.on:visited
 {
 	color: #333;
-	background: #e9edf6 url('../images/bg_tab.jpg') left top repeat-x;
+	background: #e9edf6 url('/images/bg_tab.jpg') left top repeat-x;
 }
 
 div.tabwrapper div.wrap,
@@ -284,13 +284,13 @@ div.tabwrapper div.wrap,
 }
 
 #content div.selectList a.user {
-	background-image: url('../images/perm_user.gif');
+	background-image: url('/images/perm_user.gif');
 	background-position: 4px center;
 	background-repeat: no-repeat;
 }
 
 #content div.selectList a.group {
-	background-image: url('../images/perm_group.gif');
+	background-image: url('/images/perm_group.gif');
 	background-position: 4px center;
 	background-repeat: no-repeat;
 }
@@ -315,7 +315,7 @@ div.tabwrapper div.wrap,
 }
 
 #left-wrap #userProgress {
-	background: url('../images/progress.gif') left top no-repeat;
+	background: url('/images/progress.gif') left top no-repeat;
 }
 
 #left-wrap h4 {
@@ -348,14 +348,14 @@ div.tabwrapper div.wrap,
 #left-wrap div.newsbox div.off, 
 #newssend-wrap div.newsbox div.off
 {
-	background: #F6F8FB url(../images/bg_item.jpg) left top repeat-x;
+	background: #F6F8FB url(/images/bg_item.jpg) left top repeat-x;
 	border: 1px solid #eaeaea;
 }
 
 #left-wrap div.itembox div.on, 
 #left-wrap div.itembox div.offhover 
 {
-	background: #F6F8FB url(../images/bg_item_over.jpg) left top repeat-x;
+	background: #F6F8FB url(/images/bg_item_over.jpg) left top repeat-x;
 }
 
 #left-wrap div.itembox div.menu, 
@@ -366,39 +366,39 @@ div.tabwrapper div.wrap,
 }
 
 #left-wrap div.itembox div.moveDrag {
-	background: url("../images/butt_drag.gif") left top repeat-y;
+	background: url("/images/butt_drag.gif") left top repeat-y;
 }
 
 #left-wrap div.itembox div.element {
-	background: url("../images/ico_element.gif") 42px top no-repeat;
+	background: url("/images/ico_element.gif") 42px top no-repeat;
 }
 
 #left-wrap div.itembox div.language {
-	background: url("../images/ico_language.gif") 6px top no-repeat;
+	background: url("/images/ico_language.gif") 6px top no-repeat;
 }
 
 #left-wrap div.itembox div.folder {
-	background: url("../images/ico_folder.gif") 42px top no-repeat;
+	background: url("/images/ico_folder.gif") 42px top no-repeat;
 }
 
 #left-wrap div.itembox div.widget {
-	background: url("../images/ico_widget.gif") 42px top no-repeat;
+	background: url("/images/ico_widget.gif") 42px top no-repeat;
 }
 
 #left-wrap div.itembox div.template {
-	background: url("../images/ico_template.gif") 42px top no-repeat;
+	background: url("/images/ico_template.gif") 42px top no-repeat;
 }
 
 #left-wrap div.itembox div.widget_template {
-	background: url("../images/ico_widget_template.gif") 42px top no-repeat;
+	background: url("/images/ico_widget_template.gif") 42px top no-repeat;
 }
 
 #left-wrap div.itembox div.field {
-	background: url("../images/ico_field.gif") 42px top no-repeat;
+	background: url("/images/ico_field.gif") 42px top no-repeat;
 }
 
 #left-wrap div.itembox div.alias {
-	background: url("../images/ico_alias.gif") 30px -2px no-repeat;
+	background: url("/images/ico_alias.gif") 30px -2px no-repeat;
 }
 
 #left-wrap div.itembox p {
@@ -499,12 +499,12 @@ div.searchresult h4 a:hover {
 
 
 div.progressbg {
-	background: #aaabab url('../images/bg_progress.jpg') top left repeat-x;
+	background: #aaabab url('/images/bg_progress.jpg') top left repeat-x;
 	border: 1px solid #333;
 }
 
 div.progressbar {
-	background: #c5cfe7 url('../images/progressbar.jpg') top left repeat-x;
+	background: #c5cfe7 url('/images/progressbar.jpg') top left repeat-x;
 }
 
 /*
