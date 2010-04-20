@@ -1003,6 +1003,10 @@ function SetCMSElement(objSelect) {
 	
 	intElmntId = intParentId;
 	$("txtElement").value = intParentId;
+
+	var objTable = $('divElements').getElementsBySelector('tbody')[0];
+	objElmntTraverse = CMSElementsTraverse();
+	objTable.appendChild(objElmntTraverse);
 }
 
 function ShowCMSElements(objXHR) {
@@ -1023,10 +1027,9 @@ function ShowCMSElements(objXHR) {
 			
 	window.parent.SetAutoSize(true);
 	var objSelect = $("cmbLinkParent_" + intParentId);
-	SetCMSElement(objSelect);
-	
-	objElmntTraverse = CMSElementsTraverse();
-	objTable.appendChild(objElmntTraverse);
+	if (objSelect) {
+		SetCMSElement(objSelect);
+	}
 }
 
 function CMSElementsLoader() {	
