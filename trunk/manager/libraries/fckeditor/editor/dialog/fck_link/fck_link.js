@@ -975,7 +975,10 @@ function LoadCMSElements(blnInit) {
 		
 	objLoader = CMSElementsLoader();
 	objTable.appendChild(objLoader);
-	if (objElmntTraverse) objTable.removeChild(objElmntTraverse);
+	if (objElmntTraverse) {
+		objTable.removeChild(objElmntTraverse);
+		objElmntTraverse = null;
+	}
 		
 	var myAjax = new Ajax.Request(
 			strUrl, 
@@ -1005,8 +1008,10 @@ function SetCMSElement(objSelect) {
 	$("txtElement").value = intParentId;
 
 	var objTable = $('divElements').getElementsBySelector('tbody')[0];
-	objElmntTraverse = CMSElementsTraverse();
-	objTable.appendChild(objElmntTraverse);
+	if (!objElmntTraverse) {
+		objElmntTraverse = CMSElementsTraverse();
+		objTable.appendChild(objElmntTraverse);
+	}
 }
 
 function ShowCMSElements(objXHR) {
@@ -1079,7 +1084,10 @@ function LoadCMSMediaItems(blnInit) {
 		
 	objLoader = CMSElementsLoader();
 	objTable.appendChild(objLoader);
-	if (objMediaTraverse) objTable.removeChild(objMediaTraverse);
+	if (objMediaTraverse) {
+		objTable.removeChild(objMediaTraverse);
+		objMediaTraverse = null;
+	}
 		
 	var myAjax = new Ajax.Request(
 			strUrl, 
@@ -1107,6 +1115,12 @@ function SetCMSMedia(objSelect) {
 	
 	intMediaId = intParentId;
 	$("txtMedia").value = intParentId;
+
+	var objTable = $('divMedia').getElementsBySelector('tbody')[0];
+	if (!objMediaTraverse) {
+		objMediaTraverse = CMSMediaTraverse();
+		objTable.appendChild(objMediaTraverse);
+	}
 }
 
 function ShowCMSMediaItems(objXHR) {
@@ -1127,10 +1141,9 @@ function ShowCMSMediaItems(objXHR) {
 			
 	window.parent.SetAutoSize(true);
 	var objSelect = $("cmbLinkParent_" + intParentId);
-	SetCMSMedia(objSelect);
-	
-	objMediaTraverse = CMSMediaTraverse();
-	objTable.appendChild(objMediaTraverse);
+	if (objSelect) {
+		SetCMSMedia(objSelect);
+	}
 }
 
 function CMSMediaRow(strValue, intParentId) {
