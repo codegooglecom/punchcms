@@ -91,7 +91,6 @@ PTemplateField.addSetting = function(type, trigger) {
 	switch (type) {
 		case "image":
 			jQuery("#tfv_image_setting_name").parent("div").show();
-			console.log(trigger);
 			jQuery("#subImage").append(jQuery(trigger).parent().parent().clone(true));
 			jQuery("a.removeButton").each(function(index) {
 				if (index > 0) {
