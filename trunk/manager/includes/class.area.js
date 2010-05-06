@@ -14,50 +14,30 @@ Area.remove = function(intId) {
 	var strUrl = "ajax.php";
 	var strPost = "cmd=Area::remove&area_id=" + intId;
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Area.refresh
-			});
+	jQuery("#userProgress").fadeIn("show");
+	var request = jQuery.get(strUrl, strPost, Area.refresh, "xml");
 }
 
 Area.load = function(intId) {
 	var strUrl = "ajax.php";
 	var strPost = "cmd=Area::load&area_id=" + intId;
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Area.show
-			});
+	jQuery("#userProgress").fadeIn("show");
+	var request = jQuery.get(strUrl, strPost, Area.show, "xml");
 }
 
 Area.write = function(strFormId) {
 	var strUrl = "ajax.php";
 	var strPost = Forms.serialize(strFormId) + "&cmd=Area::add";
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'post', 
-				parameters: strPost, 
-				onComplete: Area.refresh
-			});
-
+	jQuery("#userProgress").fadeIn("show");
+	var request = jQuery.post(strUrl, strPost, Area.refresh, "xml");
 }
 
 Area.show = function(objResponse, strHeader) {
-	Element.hide('userProgress');
-	Forms.parseAjaxResponse(objResponse.responseXML);
-	
-	//alert(objResponse.responseText);
+	jQuery("#userProgress").fadeOut("fast", function(){
+		Forms.parseAjaxResponse(objResponse);
+	});
 }
 
 Area.refresh = function(objResponse, strHeader) {
@@ -70,12 +50,6 @@ Area.clearForm = function(strForm) {
 	var strUrl = "ajax.php";
 	var strPost = "cmd=Area::clearForm";
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Area.show
-			});
+	jQuery("#userProgress").fadeIn("show");
+	var request = jQuery.get(strUrl, strPost, Area.show, "xml");
 }

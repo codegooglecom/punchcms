@@ -16,7 +16,7 @@ jQuery(function(){
 	});
 	jQuery("#frm_import_overwrite").change(function(){
 		if (!jQuery(this).is(":checked")) {
-			$("#frm_import_keep_settings").removeAttr("checked");
+			jQuery("#frm_import_keep_settings").removeAttr("checked");
 		}
 	});
 	

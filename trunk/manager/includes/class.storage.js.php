@@ -21,7 +21,7 @@ Storage.initField = function(strId, objOptions) {
 function FileField(strId, objOptions) {
 	//*** Set local properties.
 	this.id = strId;
-	this.trigger = $(strId);
+	this.trigger = jQuery(strId).get(0);
 	this.subFiles = new Object();
 	this.maxFiles = 1;
 	this.maxChar = 50;
@@ -46,35 +46,34 @@ function FileField(strId, objOptions) {
 	}
 	
 	//*** Create containers.
-	var intCurrent = ($(this.id + "_current").value) ? parseInt($(this.id + "_current").value) : 0;
+	var intCurrent = (jQuery("#" + this.id + "_current").val()) ? parseInt(jQuery("#" + this.id + "_current").val()) : 0;
 	this.subFiles = {currentFiles:intCurrent, toUpload:new Array, uploaded:new Array()};
 
 	for (var intCountX = 1; intCountX < intCurrent + 1; intCountX++) {
-		this.subFiles.uploaded.push($(this.id + "_" + intCountX));
+		this.subFiles.uploaded.push(jQuery("#" + this.id + "_" + intCountX).get(0));
 		this.fileCount++;
 	}
 };
 
 FileField.prototype.toScreen = function() {		
 	//*** Insert value into the field.
-	Element.show(this.id + "_widget");	
-	Element.hide(this.id + "_alt");	
+	jQuery("#" + this.id + "_widget").show();	
+	jQuery("#" + this.id + "_alt").hide();	
 
 	//*** Insert upload rows.
 	jQuery("#" + this.id + "_widget div.required").show();
-	$("filelist_" + this.id).hide();
-	var objItems = jQuery("#filelist_" + this.id + " div.multifile");
-	objItems.each(function() {
+	jQuery("#filelist_" + this.id).hide();
+	jQuery("#filelist_" + this.id + " div.multifile").each(function() {
 		jQuery(this).remove();
 	});
 
 	//*** Init object if not exists.
 	if (!this.subFiles) {
-		var intCurrent = ($(this.id + "_current").value) ? parseInt($(this.id + "_current").value) : 0;
+		var intCurrent = (jQuery("#" + this.id + "_current").val()) ? parseInt(jQuery("#" + this.id + "_current").val()) : 0;
 		this.subFiles = {currentFiles:intCurrent, toUpload:new Array, uploaded:new Array()};
 
 		for (var intCount = 1; intCount < intCurrent + 1; intCount++) {
-			this.subFiles.uploaded.push($(this.id + "_" + intCount));
+			this.subFiles.uploaded.push(jQuery("#" + this.id + "_" + intCount).get(0));
 			this.fileCount++;
 		}
 	}
@@ -82,19 +81,19 @@ FileField.prototype.toScreen = function() {
 	for (var intCount = 0; intCount < this.subFiles.toUpload.length; intCount++) {
 		var filledElement = this.subFiles.toUpload[intCount];
 		this.addUploadRow(filledElement);
-		$("filelist_" + this.id).show();
+		jQuery("#filelist_" + this.id).show();
 	}
 
 	//*** Insert current rows.
-	$("filelist_" + this.id).hide();
-	var objItems = jQuery("#filelist_" + this.id + " div.multifile");
-	objItems.each(function() {
+	jQuery("#filelist_" + this.id).hide();
+	jQuery("#filelist_" + this.id + " div.multifile").each(function() {
 		jQuery(this).remove();
 	});
+	
 	for (var intCount = 0; intCount < this.subFiles.uploaded.length; intCount++) {
 		var filledElement = this.subFiles.uploaded[intCount];
 		this.addCurrentRow(filledElement);
-		$("filelist_" + this.id).show();
+		jQuery("#filelist_" + this.id).show();
 	}
 
 	var strId = this.id;
@@ -102,10 +101,10 @@ FileField.prototype.toScreen = function() {
 }
 
 FileField.prototype.transferField = function() {
-	$("filelist_" + this.id).show();
+	jQuery("#filelist_" + this.id).show();
 
 	//*** Set the id and name of the filled file field.
-	var filledElement = $(this.id);
+	var filledElement = jQuery("#" + this.id);
 	var objParent = this.parent;
 	var strId = this.id;
 	var __this = this;
@@ -162,7 +161,7 @@ FileField.prototype.addUploadRow = function(element) {
 	objRowValue.innerHTML = this.shortName(element.value, this.maxChar);
 	objRow.appendChild(objRowValue);
 
-	$("filelist_" + this.id).appendChild(objRow);
+	jQuery("#filelist_" + this.id).append(objRow);
 	
 	//*** Check max files.
 	if ((this.subFiles.toUpload.length + 1) + this.subFiles.currentFiles > this.maxFiles) {
@@ -230,7 +229,7 @@ FileField.prototype.addCurrentRow = function(element) {
 	objRowValue.innerHTML = labelValue;
 	objRow.appendChild(objRowValue);
 
-	$("filelist_" + this.id).appendChild(objRow);
+	jQuery("#filelist_" + this.id).append(objRow);
 	
 	//*** Check max files.
 	if ((this.subFiles.toUpload.length + 1) + this.subFiles.currentFiles > this.maxFiles) {
@@ -252,7 +251,7 @@ FileField.prototype.removeUploadField = function(objTrigger) {
 	
 	jQuery("#" + this.id + "_widget div.required").show();
 	if (this.subFiles.toUpload.length == 0) {
-		$("filelist_" + this.id).hide();
+		jQuery("#filelist_" + this.id).hide();
 	}
 }
 
@@ -270,7 +269,7 @@ FileField.prototype.removeCurrentField = function(objTrigger) {
 	objTrigger.parentNode.parentNode.removeChild(objTrigger.parentNode);
 	
 	if (this.subFiles.uploaded.length == 0) {
-		$("filelist_" + this.id).hide();
+		jQuery("#filelist_" + this.id).hide();
 	}
 	jQuery("#" + this.id + "_widget div.required").show();
 }
@@ -310,13 +309,13 @@ FileField.prototype.isImage = function(fileName) {
 
 FileField.prototype.sort = function() {
 	var arrFields = Sortable.serialize('filelist_' + this.id).split("&");
-	var objParent = $(this.id + '_widget');
+	var objParent = jQuery("#" + this.id + "_widget");
 	for (var intCount = 0; intCount < arrFields.length; intCount++) {
-		var strTemp = arrFields[intCount].replace('filelist_' + this.id + "[]=", "");
-		var objTemp = $(this.id + "_" + strTemp);
+		var strTemp = arrFields[intCount].replace("filelist_" + this.id + "[]=", "");
+		var objTemp = jQuery("#" + this.id + "_" + strTemp);
 		if (objTemp) {
-			Element.remove(objTemp);
-			objParent.appendChild(objTemp);
+			objTemp.remove();
+			objParent.append(objTemp);
 		}
 	}
 }

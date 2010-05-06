@@ -1689,7 +1689,7 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->parseCurrentBlock();
 				}
 
-				/*
+				
 				//*** Permissions tab.
 				$objTpl->setCurrentBlock("permission-title");
 				$objTpl->setVariable("HEADER", $objLang->get("permissions", "label"));
@@ -1697,7 +1697,7 @@ function parsePages($intElmntId, $strCommand) {
 				$objTpl->setCurrentBlock("description-permission");
 				$objTpl->setVariable("LABEL", $objLang->get("permissionInfo", "form"));
 				$objTpl->parseCurrentBlock();
-				*/
+				
 			}
 
 			//*** Publish tab.

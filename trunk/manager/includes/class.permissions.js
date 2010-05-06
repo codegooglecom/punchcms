@@ -72,7 +72,7 @@ PermissionList.unsetKey = function(event) {
 PermissionList.untoggleList = function(event) {
 	if (!PermissionList.hasCtrl) {
 		jQuery('div.selectList a').each(function(){
-			$(this).removeClass('on');
+			jQuery(this).removeClass('on');
 		});
 		PermissionList.clearPermissions();
 	}
@@ -107,7 +107,7 @@ PermissionList.setPermissions = function(intId) {
 		if (intId == obj.id) {
 			//*** Set checkboxes.
 			obj.permissions.each(function(int){
-				$("perm_" + PermissionList.PERM[int]).checked = true;
+				jQuery("#perm_" + PermissionList.PERM[int]).attr("checked","checked");
 			});
 			throw $break;
 		}
@@ -116,12 +116,12 @@ PermissionList.setPermissions = function(intId) {
 
 PermissionList.clearPermissions = function() {
 	for (var intCount in PermissionList.PERM) {
-		$("perm_" + PermissionList.PERM[intCount]).checked = false;
+		jQuery("#perm_" + PermissionList.PERM[intCount]).removeAttr("checked");
 	};
 }
 
 PermissionList.updatePermissions = function() {
-	jQuery('div.selectList a.on').each(function(){
+	jQuery("div.selectList a.on").each(function(){
 		var intId = jQuery(this).attr("id").split("_").pop();
 		var arrPermissions = [];
 		
@@ -141,14 +141,14 @@ PermissionList.updatePermissions = function() {
 		var objPermission = {id: intId, permissions: arrPermissions};
 		arrTemp.push(objPermission);
 		
-		$("perm_" + intId).nextSiblings().pop().value = arrPermissions.join(",");
+		jQuery("#perm_" + intId).next().val(arrPermissions.join(","));
 		
 		PermissionList.permissions = arrTemp;
 	});
 }
 
 PermissionList.addPermission = function(intId) {
-	var arrPermissions = $("perm_" + intId).nextSiblings().pop().value.split(",");
+	var arrPermissions = jQuery("#perm_" + intId).next().val().split(",");
 	var objPermission = {id: intId, permissions: arrPermissions};
 	PermissionList.permissions.push(objPermission);
 }
@@ -156,4 +156,6 @@ PermissionList.addPermission = function(intId) {
 /*** 
  * Init the permissions.
  */
-Event.observe(window, 'load', PermissionList.load);
+jQuery(function(){
+	PermissionList.load();
+});

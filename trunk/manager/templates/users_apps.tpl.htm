@@ -1,4 +1,3 @@
-
 					<div class="column">
 						<form id="applicationForm" class="users" method="post" action="#">
 							<h3><span id="userProgress"></span>{SUBTITLE}</h3>
@@ -14,6 +13,18 @@
 							<div>
 								<input type="hidden" id="application_id" name="application_id" />
 							</div>
-							<div class="subnav"><a href="javascript:void(0);" onclick="Application.load($F('itemList'), 'applicationForm');" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" onclick="Application.write('applicationForm');" class="input-button" value="{BUTTON_SAVE}" /></div>
+							<div class="subnav"><a id="cancel" href="#" rel="internal">{BUTTON_CANCEL}</a> | <input id="save" type="button" class="input-button" value="{BUTTON_SAVE}" /></div>
 						</form>
 					</div>
+					<script type="text/javascript">
+						jQuery("a#cancel").live("click", function(){
+							Application.clearForm("applicationForm");
+							return false;
+						});
+						jQuery("#save").live("click", function(){
+							Application.write("applicationForm");
+							return false;
+						});
+						
+						jQuery.debug({content: "Template: users_apps.tpl.htm"});
+					</script>

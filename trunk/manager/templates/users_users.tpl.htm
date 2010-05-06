@@ -1,4 +1,3 @@
-
 					<div class="column">
 						<form id="userForm" class="users" method="post" action="#">
 							<h3><span id="userProgress"></span>{SUBTITLE}</h3>
@@ -38,7 +37,7 @@
 								<h5 class="secondary">{AVAILABLE_RIGHTS_LABEL}</h5>
 								<ul class="sortable" id="allrights">
 									<!-- BEGIN user-allrights -->
-									<li id="right_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<li id="allrights_{VALUE}">{TEXT}</li>
 									<!-- END user-allrights -->
 								</ul>
 							</fieldset>
@@ -49,21 +48,46 @@
 								<h5 class="secondary">{AVAILABLE_GROUPS_LABEL}</h5>
 								<ul class="sortable" id="allgroups">
 									<!-- BEGIN user-allgroups -->
-									<li id="group_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<li id="group_{VALUE}">{TEXT}</li>
 									<!-- END user-allgroups -->
 								</ul>
 							</fieldset>
 							<div>
 								<input type="hidden" id="perm_user_id" name="perm_user_id" />
 							</div>
-							<div class="subnav"><a href="javascript:void(0);" onclick="User.load($F('itemList'), 'userForm');" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" onclick="User.write('userForm');" class="input-button" value="{BUTTON_SAVE}" /></div>
+							<div class="subnav"><a id="cancel" href="#" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" id="save" class="input-button" value="{BUTTON_SAVE}" /></div>
 							<script type="text/javascript">
 							// <![CDATA[
-								Position.includeScrollOffsets = true;
-								Sortable.create("rights", {dropOnEmpty:true,hoverclass:"sorthover",containment:["rights", "allrights"],constraint:false});
-								Sortable.create("allrights", {dropOnEmpty:true,hoverclass:"sorthover",containment:["rights", "allrights"],constraint:false});
-								Sortable.create("groups", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allgroups", "groups"],constraint:false});
-								Sortable.create("allgroups", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allgroups", "groups"],constraint:false});
+								//*** Add sortable functionality
+								jQuery("#rights, #allrights").sortable({
+									dropOnEmpty: true,
+									connectWith: "#rights, #allrights"
+								});
+								jQuery("#groups, #allgroups").sortable({
+									dropOnEmpty: true,
+									connectWith: "#groups, #allgroups"
+								});
+								//*** Add hover styling
+								jQuery("#rights li, #allrights li, #groups li, #allgroups li").live("mouseover mouseout", function(event){
+									if(event.type == "mouseover"){
+										jQuery(this).addClass("hover");
+									}
+									else {
+										jQuery(this).removeAttr("class");
+									}
+								});
+								
+								//*** Handle buttons
+								jQuery("a#cancel").live("click", function(){
+									User.load($F('itemList'), 'userForm');
+									return false;
+								});
+								jQuery("#save").live("click", function(){
+									User.write('userForm');
+									return false;
+								});
+
+								jQuery.debug({content: "Template: users_users.tpl.htm"});
 							// ]]>
 							</script>
 						</form>

@@ -3,7 +3,7 @@
 * Forms Class.
 *
 * Note:
-*   Requires the "prototype" library.
+*   Requires the "jQuery" library.
 **/
 
 function Forms() {
@@ -12,19 +12,20 @@ function Forms() {
 
 Forms.serialize = function (strFormId) {
 	var strReturn = "";
-	var objForm = $(strFormId);
-	var objLists = objForm.getElementsByTagName("ul");
+	var objForm = jQuery("#" + strFormId);
+	var objLists = objForm.find("ul");
+	var amp;
 	
-	for (var i in objLists) {
+	objLists.each(function(index){
 		try {
-			strReturn += Sortable.serialize(objLists[i].id) + "&";
-		} catch (e) {
-			//alert(e.message);
+			strReturn += jQuery(this).sortable("serialize", {key: jQuery(this).attr("id") + "[]"}) + "&";
 		}
-	}
-
-	strReturn += Form.serialize(strFormId);
-
+		catch (e) {
+			jQuery.debug({title: "*** ERROR CAUGHT IN Forms.serialize ***", content: e.message});
+		}
+	});
+	
+	strReturn += jQuery("#" + strFormId).serialize();
 	return strReturn;
 }
 
@@ -47,10 +48,21 @@ Forms.clear = function(strFormId, arrExclude) {
 	if (typeof arrExclude == 'undefined') {
 		arrExclude = new Array();
 	}
+
+	var sideForm = jQuery("#usersForm");
+	if(sideForm.length > 0){
+		sideForm.find("option").each(function(){
+			jQuery(this).attr("selected", false);
+		});
+	}
 	
-	var objForm = $(strFormId);
+	//*** Debug info.
+	jQuery.debug({title: "** Event **", content: "Form clear triggered"});
+	
+	var objForm = jQuery("#" + strFormId);
 	if (objForm) {
-		var objElements = objForm.elements;
+		jQuery.debug({content: objForm.find(":input")});
+		var objElements = objForm.find(":input");
 
 		for (var n = 0; n < objElements.length; n++) {
 			var objElement = objElements[n];
@@ -88,24 +100,55 @@ Forms.clear = function(strFormId, arrExclude) {
 			}
 		}
 		
-		var objElements = document.getElementsByClassName("widget", objForm);
+//		objForm.find(":input").each(function() {
+//			var type = this.type;
+//			var tag = this.tagName.toLowerCase(); // normalize case
+//			
+//			if (type == "text" || type == "password" || tag == "textarea"){
+//				this.value = "";
+//			}
+//			else if (type == "checkbox" || type == "radio"){
+//				this.checked = false;
+//			}
+//			else if (tag == "select") {
+//				this.selectedIndex = -1;
+//			}
+//		});
 		
-		for (var n = 0; n < objElements.length; n++) {
-			var objElement = objElements[n];
-
-			if (!inObject(arrExclude, objElement.id, "")) {
-				objElement.innerHTML = "";
+//		var objElements = document.getElementsByClassName("widget", objForm);
+//		
+//		for (var n = 0; n < objElements.length; n++) {
+//			var objElement = objElements[n];
+//
+//			if (!inObject(arrExclude, objElement.id, "")) {
+//				objElement.innerHTML = "";
+//			}
+//		}
+		var objElements = objForm.find(".widget");
+		objElements.each(function(){
+			var objElement = jQuery(this);
+			if(!inObject(arrExclude, objElement.attr("id"), "")) {
+				objElement.html(""); // Clear contents
 			}
-		}
+		});
 	}
 }
 
 Forms.parseAjaxResponse = function(objResponse) {
 	var blnReturn = true;
 	
-	//*** Fields.
-	var objFields = objResponse.getElementsByTagName("field");
+//	jQuery.debug({title: "objResponse", content: jQuery(objResponse).find("field")});
 	
+	//*** Fields.
+	var objFields = jQuery(objResponse).find("field");
+	
+//	objFields.each(function(i){
+//		var blnClear = true;
+//		
+//		if(jQuery(this).attr("name") == "name"){
+//			console.log(jQuery(this));
+//		}
+//	});
 	for (var i = 0; i < objFields.length; i++) {
 		var blnClear = true;
 		
@@ -117,7 +160,7 @@ Forms.parseAjaxResponse = function(objResponse) {
 		}
 
 		try {
-			var objField = $(strField);
+			var objField = jQuery("#" + strField).get(0);
 			if (eval(blnClear)) {
 				Forms.clearElementValue(objField);
 			}
@@ -178,46 +221,84 @@ Forms.parseAjaxResponse = function(objResponse) {
 	}
 	
 	//*** Widgets.
-	var objWidgets = objResponse.getElementsByTagName("widget");
+//	var objWidgets = objResponse.getElementsByTagName("widget");
+	var objWidgets = jQuery(objResponse).find("widget");
 	
-	for (var i = 0; i < objWidgets.length; i++) {
-		var strWidget = objWidgets[i].getAttribute("name");
-		var strContain = objWidgets[i].getAttribute("contain");
+	objWidgets.each(function(){
+		var strWidget = jQuery(this).attr("name");
+		var strContain = jQuery(this).attr("contain");
+//	for (var i = 0; i < objWidgets.length; i++) {
+//		var strWidget = objWidgets[i].getAttribute("name");
+//		var strContain = objWidgets[i].getAttribute("contain");
 
 		try {
-			var objWidget = $(strWidget);
+//			var objWidget = jQuery("#" + strWidget).get(0);
+			var objWidget = jQuery("#" + strWidget);
 			
 			//*** Empty the widget.
-			objWidget.innerHTML = "";
+//			objWidget.innerHTML = "";
+			objWidget.html("");
 			
 			//*** Fill the widget with values.
-			var objValues = objWidgets[i].getElementsByTagName("value");
-			
-			for (var j = 0; j < objValues.length; j++) {
-				var strValueName = objValues[j].getAttribute("name");
-				var strValueText = objValues[j].firstChild.nodeValue;
+//			var objValues = objWidgets[i].getElementsByTagName("value");
+			var objValues = jQuery(this).find("value");
+			objValues.each(function(){
 				
-				var objValue = document.createElement("li");
-				objValue.setAttribute("id", strValueName);
-				objValue.onmouseover = function() { Element.addClassName(this, 'hover'); };
-				objValue.onmouseout = function() { Element.removeClassName(this, 'hover'); };
-				var objText = document.createTextNode(strValueText);
-				objValue.appendChild(objText);
-				objWidget.appendChild(objValue);
-			}
+//			for (var j = 0; j < objValues.length; j++) {
+				var strValueName = jQuery(this).attr("name");
+//				var strValueText = objValues[j].firstChild.nodeValue;
+				var strValueText = jQuery(this).text();
+//				console.log("strValueName: " + strValueName);
+//				console.log("strValueText: " + strValueText);
+				
+//				var objValue = document.createElement("li");
+//				objValue.setAttribute("id", strValueName);
+//				objValue.onmouseover = function() { Element.addClassName(this, 'hover'); };
+//				objValue.onmouseout = function() { Element.removeClassName(this, 'hover'); };
+//				var objText = document.createTextNode(strValueText);
+//				objValue.appendChild(objText);
+//				objWidget.appendChild(objValue);
+				
+				var objValue = jQuery("<li></li>");
+				objValue
+					.attr("id", "rights_" + strValueName)
+					.hover(
+						function(){
+							jQuery(this).addClass("hover");
+						},
+						function(){
+							jQuery(this).removeClass("hover");
+						}
+					)
+					.append(strValueText);
+				
+				objWidget.append(objValue);
+				
+				
+			});
 			
-			//*** Refresh the Drag'n'Drop logic.
-			if (strContain == null) {
-				Sortable.create(strWidget, {tag:"li"});
-			} else {
-				Sortable.create(strWidget, {dropOnEmpty:true,hoverclass:'sorthover',containment:[strWidget, strContain],constraint:false});
-			}
+			//*** This isn't needed for Firefox. Only for all the other browsers. Re-apply the drag 'n' drop logic to the new (AJAX'ed) elements.
+			jQuery("#" + strWidget)
+				.sortable({
+					dropOnEmpty: true,
+					connectWith: "#rights, #allrights"
+				})
+				.find("li")
+				.hover(
+					function(){
+						jQuery(this).addClass("hover");
+					},
+					function(){
+						jQuery(this).removeClass("hover");
+					}
+				);
+				
 		} catch (e) {
 			//*** Could not find the element.
-			alert(e.message);
+			jQuery.debug({title: "*** ERROR CAUGHT IN Forms.parseAjaxResponse ***", content: e.message});
 			blnReturn = false;
 		}
-	}
+	});
 	
 	return blnReturn;
 }

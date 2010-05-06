@@ -39,7 +39,7 @@ function getBrowserInfo() {
 		else if (checkIt('x11')) OS 	= "Unix";
 		else if (checkIt('mac')) OS 	= "Mac"
 		else if (checkIt('win')) OS 	= "Windows"
-		else OS 								= "an unknown operating system";
+		else OS 						= "an unknown operating system";
 	}
 }
 

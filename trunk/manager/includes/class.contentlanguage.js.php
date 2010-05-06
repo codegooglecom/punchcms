@@ -423,17 +423,17 @@ ContentLanguage.prototype.setFieldValue = function(fieldId, strValue) {
 
 ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 	var strUrl = "ajax.php";
-	var strPost = "cmd=StorageItems::getFileListHTML&parentId=" + jQuery('#frm_storage_' + objTrigger.id).find('options:selected').val().split("_").pop();
+	var strPost = "cmd=StorageItems::getFileListHTML&parentId=" + jQuery('#frm_storage_' + objTrigger.id).find('option:selected').val().split("_").pop();
 	
 	var objFiles = jQuery("#storageBrowser_" + objTrigger.id + "ul");
 	if (objFiles.length > 0) objFiles.find(":first").remove();
 	
-	var objList = jQuery("#storageBrowser_" + objTrigger.id + "div.storageList:first").get(0);
+	var objList = jQuery("#storageBrowser_" + objTrigger.id + "div.storageList:first");
 	var objLoader = document.createElement("div");
 	objLoader.className = "storageLoader";
 	objLoader.innerHTML = "<?php echo $objLang->get("loadingFiles", "form") ?>";
 	objLoader.style.display = "block";
-	objList.appendChild(objLoader);
+	objList.append(objLoader);
 	
 	//*** TODO: jQuery ajax request.
 	var myAjax = new Ajax.Request(
@@ -512,6 +512,7 @@ ContentField.prototype.setCascades = function(strCascades) {
 }
 
 ContentField.prototype.setIconCascade = function() {
+
 	//*** Attach mouse events to the cascade button.
 	if (this.parent.currentLanguage == this.parent.defaultLanguage || this.parent.actives[this.parent.currentLanguage] != true || this.parent.actives[this.parent.defaultLanguage] != true) {
 		jQuery("#" + this.id + "_cascade").unbind("mouseover");
@@ -526,9 +527,9 @@ ContentField.prototype.setIconCascade = function() {
 		}
 	} else {
 		var strId = this.id;
-		jQuery("#" + this.id + "_cascade").bind("mouseover", function() { return objContentLanguage.buttonOver('cascadeField', this, strId); });
-		jQuery("#" + this.id + "_cascade").bind("mouseout", function() { return objContentLanguage.buttonOut('cascadeField', this, strId); });
-		jQuery("#" + this.id + "_cascade").bind("mousedown", function() { return objContentLanguage.toggleCascadeField(strId); });
+		jQuery("#" + this.id + "_cascade").get(0).onmouseover = function(){ return objContentLanguage.buttonOver('cascadeField', this, strId); };
+		jQuery("#" + this.id + "_cascade").get(0).onmouseout = function(){ return objContentLanguage.buttonOut('cascadeField', this, strId); };
+		jQuery("#" + this.id + "_cascade").get(0).onmousedown = function(){ return objContentLanguage.toggleCascadeField(strId); };
 
 		//*** Set the cascade icon.
 		if (this.cascades[this.parent.currentLanguage] == true) {
@@ -678,10 +679,18 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	}
 	
 	//*** Attach event to the library button.
-	jQuery("#browseStorage_" + strId).bind("click", function(){
-		__this.openStorageBrowser();
-		return false;
-	});
+	jQuery("#browseStorage_" + strId).toggle(
+		function(){
+			__this.openStorageBrowser();
+			jQuery(this).text("Sluit media browser");
+			return false;
+		},
+		function(){
+			__this.closeStorageBrowser();
+			jQuery(this).text("Media browser");
+			return false;
+		}
+	);
 	
 	//*** Attach event to the library folder select.
 	jQuery("#frm_storage_" + strId).bind("change", function(){
@@ -834,45 +843,47 @@ FileField.prototype.toScreen = function() {
 		}
 		
 		var strId = this.id;
-		Sortable.create("filelist_current_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
+		Sortable.create(
+			"filelist_current_" + this.id, 
+				{
+					tag: "div",
+					only: "multifile",
+					hoverclass: "sorthover",
+					onUpdate: function(){
+						objContentLanguage.sort(strId)
+					}
+				}
+			);
 	}
 }
 
 FileField.prototype.openStorageBrowser = function() {
 	var __this = this;
-
+	var closeLabel = "Sluit media bibliotheek";
+	
 	//*** Slide open.
-	alert("TEST");
-	jQuery("#storageBrowser_" + this.id).fadeIn("slow");
+	jQuery("#storageBrowser_" + this.id).slideDown("fast", function(){
+		var slideDown = this;
+
+		__this.parent.loadStoragePage(__this);
+		jQuery("#browseStorage_" + this.id).text(closeLabel);
+		
+	});
+}
+
+FileField.prototype.closeStorageBrowser = function() {
+	var __this = this;
 	
-	//*** Fill file list.
-	this.parent.loadStoragePage(this);
-	
-	//*** Switch button.
-	var storageButton = jQuery("#browseStorage_" + this.id);
-	var labelCache = storageButton.html();
-	
-	//*** TODO: Get this string from the language library
-	storageButton
-		.html("Sluit Media Bibliotheek")
-		.bind("click", function(){
-			Effect.SlideUp('storageBrowser_' + __this.id);
-			storageButton.innerHTML = labelCache;
-			
-			storageButton.onclick = function(){
-				__this.openStorageBrowser();
-				return false;
-			}
-			
-			return false;
-		});
+	jQuery("#storageBrowser_" + this.id).slideUp("fast", function(){
+		jQuery("#browseStorage_" + this.id).text("Media browser");
+	});
 }
 
 FileField.prototype.transferField = function() {
-	$("filelist_new_" + this.id).show();
+	jQuery("#filelist_new_" + this.id).show();
 
 	//*** Set the id and name of the filled file field.
-	var filledElement = $(this.id);
+	var filledElement = jQuery("#" + this.id);
 	var objParent = this.parent;
 	var strId = this.id;
 	
@@ -899,7 +910,7 @@ FileField.prototype.transferField = function() {
 	
 	//*** Appease Safari: display:none doesn't seem to work correctly in Safari.
 	filledElement.style.position = 'absolute';
-	filledElement.style.left = '-1000px';
+	filledElement.style.left = '-10000px';
 }
 
 FileField.prototype.addUploadRow = function(element) {
@@ -928,7 +939,7 @@ FileField.prototype.addUploadRow = function(element) {
 	objRowValue.innerHTML = this.shortName(element.value, this.maxChar);
 	objRow.appendChild(objRowValue);
 
-	$("filelist_new_" + this.id).appendChild(objRow);
+	jQuery("#filelist_new_" + this.id).append(objRow);
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
@@ -1014,7 +1025,7 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) {
 	});
 	objRow.appendChild(objAltText);
 
-	$("filelist_current_" + this.id).appendChild(objRow);
+	jQuery("#filelist_current_" + this.id).append(objRow);
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
@@ -1041,10 +1052,10 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	
 	if (file !== undefined) {
 		objRow.observe("mouseover", function() {
-			$(objRow.id).select("a img")[0].src = "/images/ico_loading_mo.gif";
+			jQuery("#" + objRow.id).find("a img").eq(0).attr("src", "/images/ico_loading_mo.gif");
 		})
 		.observe("mouseout", function() {
-				$(objRow.id).select("a img")[0].src = "/images/ico_loading.gif";
+			jQuery("#" + objRow.id).find("a img").eq(0).attr("src", "/images/ico_loading.gif");
 		});
 	}
 
@@ -1147,7 +1158,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		objRow.appendChild(objAltText);
 	}
 
-	$("filelist_new_" + this.id).appendChild(objRow);
+	jQuery("#filelist_new_" + this.id).append(objRow);
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
@@ -1159,10 +1170,11 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 }
 
 FileField.prototype.removeSwfUploadRow = function(inputId, file) {
-	$(inputId).remove();
-	$("file_" + inputId).remove();
+	jQuery("#" + inputId).remove();
+	jQuery("#file_" + inputId).remove();
 	
 	//*** Remove remotely.
+	//*** TODO: jQuerify this.
 	new Ajax.Request("upload.php", {
 		method: 'post',
 		parameters: {
@@ -1182,7 +1194,7 @@ FileField.prototype.removeSwfUploadRow = function(inputId, file) {
 	
 	jQuery("#" + this.id + "_widget div.required").show();
 	if (this.subFiles[this.parent.currentLanguage].toUpload.length == 0) {
-		$("filelist_new_" + this.id).hide();
+		jQuery("#filelist_new_" + this.id).hide();
 	}
 }	
 
@@ -1253,13 +1265,13 @@ FileField.prototype.transferStorage = function(objLink, strLabel) {
 	objElement.type = 'hidden';
 	objElement.id = this.id + "_" + this.parent.currentLanguage + "_" + this.fileCount++;
 	objElement.name = this.id + "_" + this.parent.currentLanguage + "[]";
-	objElement.value = strLabel + ":" + $(objLink).getElementsBySelector("img")[0].alt.split("/").pop() + ":" + $(objLink).id.split("_").pop();
-	$("filelist_new_" + this.id).appendChild(objElement);
+	objElement.value = strLabel + ":" + jQuery("#" + objLink).find("img:first").attr("alt").split("/").pop() + ":" + jQuery("#" + objLink).attr("id").split("_").pop();
+	jQuery("#filelist_new_" + this.id).append(objElement);
 	
 	this.subFiles[this.parent.currentLanguage].currentFiles++;
 	this.subFiles[this.parent.currentLanguage].uploaded.push(objElement);
 	
-	$("filelist_current_" + this.id).show();
+	jQuery("#filelist_current_" + this.id).show();
 	this.addCurrentRow(objElement, true);
 }
 
@@ -1281,13 +1293,13 @@ FileField.prototype.toTemp = function() {};
 
 FileField.prototype.sort = function() {
 	var arrFields = Sortable.serialize('filelist_current_' + this.id).split("&");
-	var objParent = $(this.id + '_widget');
+	var objParent = jQuery("#" + this.id + '_widget');
 	for (var intCount = 0; intCount < arrFields.length; intCount++) {
 		var strTemp = arrFields[intCount].replace('filelist_current_' + this.id + "[]=", "");
-		var objTemp = $(this.id + "_" + this.parent.currentLanguage + "_" + strTemp);
+		var objTemp = jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_" + strTemp);
 		if (objTemp) {
-			Element.remove(objTemp);
-			objParent.appendChild(objTemp);
+			objTemp.remove();
+			objParent.append(objTemp);
 		}
 	}
 }
@@ -1347,7 +1359,7 @@ FileField.prototype.fileDialogComplete = function(numFilesSelected, numFilesQueu
 }
 
 FileField.prototype.uploadStart = function(file) {
-	$("filelist_new_" + this.settings.jsParent.id).show();
+	jQuery("#filelist_new_" + this.settings.jsParent.id).show();
 	
 	//*** Create input element.
 	var objElement = document.createElement('input');
@@ -1357,7 +1369,7 @@ FileField.prototype.uploadStart = function(file) {
 	objElement.name = this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "[]";
 	objElement.value = file.name + ":::";
 	objElement.store("file", file);
-	$("filelist_new_" + this.settings.jsParent.id).appendChild(objElement);
+	jQuery("#filelist_new_" + this.settings.jsParent.id).append(objElement);
 		
 	this.settings.jsParent.subFiles[this.settings.jsParent.parent.currentLanguage].toUpload.push(objElement);
 	
@@ -1366,13 +1378,13 @@ FileField.prototype.uploadStart = function(file) {
 
 FileField.prototype.uploadProgress = function(file, bytesLoaded, bytesTotal) {
 	var percent = Math.ceil((bytesLoaded / bytesTotal) * 100);
-	jQuery("div." + file.id + " div.progressBar")[0].setStyle({width:percent + "%"});
+	jQuery("div." + file.id + " div.progressBar").get(0).setStyle({width:percent + "%"});
 }
 
 FileField.prototype.uploadSuccess = function(file, serverData) {
 	var __this = this.settings.jsParent;
 	jQuery("div." + file.id + " div.progressWrapper:first").remove();
-	jQuery("div." + file.id + ":first").stopObserving("mouseover").stopObserving("mouseout");
+	jQuery("div." + file.id + ":first").unbind("mouseover").unbind("mouseout");
 	jQuery("div." + file.id + " a.button:first").html(__this.removeLabel);
 
 	if (__this.thumbPath != "") {
@@ -1381,8 +1393,8 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 			jQuery("div." + file.id + " a.document:first")
 				.removeClass("document")
 				.addClass("thumbnail")
-				.stopObserving("mouseover")
-				.observe("mouseover", function() {
+				.unbind("mouseover")
+				.bind("mouseover", function() {
 					return overlib("<img src=\"" + __this.uploadPath + file.name + "\" alt=\"\" />", FULLHTML);
 				});
 		} else {
@@ -1429,7 +1441,7 @@ FileField.prototype.stopAltEdit = function(event) {
 	var arrId = event.findElement("div").id.split("_");
 	arrId.shift();
 	var strId = arrId.join("_");
-	var arrValue = $(strId).value.split(":");
+	var arrValue = jQuery("#" + strId).val().split(":");
 	var labelValue = arrValue.shift();
 	var fileValue = arrValue.shift();
 	fileValue = (fileValue == undefined) ? "" : fileValue;
@@ -1438,7 +1450,7 @@ FileField.prototype.stopAltEdit = function(event) {
 	var strText = event.findElement().value;
 	event.findElement().stopObserving("blur");
 	
-	$(strId).value = labelValue + ":" + fileValue + ":" + libraryValue + ":" + strText;
+	jQuery("#" + strId).val(labelValue + ":" + fileValue + ":" + libraryValue + ":" + strText);
 	
 	event.findElement("p").observe("click", function(event) {
 		__this.startAltEdit(event);
@@ -1501,34 +1513,35 @@ DateField.prototype.toScreen = function() {
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
 		//*** The element is not active.
-		$(this.id + "_alt").innerHTML = "<?php echo $objLang->get("langDisabled", "label") ?>";
-		Element.hide(this.id + "_canvas");
-		Element.hide("calendarButton_" + this.id);
-		Element.show(this.id + "_alt");
+		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
+		jQuery("#" + this.id + "_canvas").hide();
+		jQuery("#calendarButton_" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
-		var strValue = $(this.id + "_" + this.parent.defaultLanguage).value;
+		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
 		var objDate = Date.parseDate(strValue, "%d %B %Y %H:%M:%S");
 		
-		$(this.id + "_alt").innerHTML = (strValue == "") ? "&nbsp;" : objDate.print($(this.id + "_format").value);
-		Element.hide(this.id + "_canvas");
-		Element.hide("calendarButton_" + this.id);
-		Element.show(this.id + "_alt");	
+		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : objDate.print(jQuery("#" + this.id + "_format").val());
+		jQuery("#" + this.id + "_canvas").hide();
+		jQuery("#calendarButton_" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();	
 	} else {
 		//*** The field needs no special treatment.
-		var strValue = $(this.id + "_" + this.parent.currentLanguage).value;
+		var strValue = jQuery("#" + this.id + "_" + this.parent.currentLanguage).val();
 		var objDate = Date.parseDate(strValue, "%d %B %Y %H:%M:%S");
 		
-		$(this.id + "_canvas").innerHTML = (strValue == "") ? "&nbsp;" : objDate.print($(this.id + "_format").value);
-		$(this.id).value = strValue;
-		Element.hide(this.id + "_alt");
-		Element.show(this.id + "_canvas");
-		Element.show("calendarButton_" + this.id);
+		var strCanvasValue = (strValue == "") ? "&nbsp;" : objDate.print(jQuery("#" + this.id + "_format").val());
+		jQuery("#" + this.id + "_canvas").html(strCanvasValue);
+		jQuery("#" + this.id).val(strValue);
+		jQuery("#" + this.id + "_alt").hide();
+		jQuery("#" + this.id + "_canvas").show();
+		jQuery("#calendarButton_" + this.id).show();
 	}
 }
 
 DateField.prototype.toTemp = function() {
-	$(this.id + "_" + this.parent.currentLanguage).value = $(this.id).value;
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).val());
 }
 
 /*** 
@@ -1548,31 +1561,31 @@ CheckBox.prototype.toScreen = function() {
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
 		//*** The element is not active.
-		$(this.id + "_alt").innerHTML = "<?php echo $objLang->get("langDisabled", "label") ?>";
-		Element.hide(this.id);
-		$(this.id + "_alt").show();
-		$(this.id + "_alt").style.display = "inline";
+		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
+		jQuery("#" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();
+		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
-		var strValue = ($(this.id + "_" + this.parent.defaultLanguage).value == "1" || $(this.id + "_" + this.parent.defaultLanguage).value == "true") ? "true" : "false";
-		$(this.id + "_alt").innerHTML = strValue;
-		Element.hide(this.id);
-		$(this.id + "_alt").show();
-		$(this.id + "_alt").style.display = "inline";
+		var strValue = (jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val() == "1" || jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val() == "true") ? "true" : "false";
+		jQuery("#" + this.id + "_alt").html(strValue);
+		jQuery("#" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();
+		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else {
 		//*** The field needs no special treatment.
-		Element.hide(this.id + "_alt");
-		Element.show(this.id);
-		if ($(this.id + "_" + this.parent.currentLanguage).value == "1" || $(this.id + "_" + this.parent.currentLanguage).value == "true") {
-			$(this.id).checked = true;
+		jQuery("#" + this.id + "_alt").hide();
+		jQuery("#" + this.id).show();
+		if (jQuery("#" + this.id + "_" + this.parent.currentLanguage).val() == "1" || jQuery("#" + this.id + "_" + this.parent.currentLanguage).val() == "true") {
+			jQuery("#" + this.id).attr("checked","checked");
 		} else {
-			$(this.id).checked = false;
+			jQuery("#" + this.id).removeAttr("checked");
 		}
 	}
 }
 
 CheckBox.prototype.toTemp = function() {
-	$(this.id + "_" + this.parent.currentLanguage).value = $(this.id).checked;
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).get(0).checked);
 }
 
 /*** 
@@ -1592,31 +1605,31 @@ SelectListField.prototype.toScreen = function() {
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
 		//*** The element is not active.
-		$(this.id + "_alt").innerHTML = "<?php echo $objLang->get("langDisabled", "label") ?>";
-		Element.hide(this.id);
-		Element.show(this.id + "_alt");
+		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
+		jQuery("#" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
-		var arrValue = $(this.id + "_" + this.parent.defaultLanguage).value.split(",");
+		var arrValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val().split(",");
 		var strValue = "";
-		for (var intCount = 0; intCount < $(this.id).options.length; intCount++) {
-			if (arrValue.inArray($(this.id).options[intCount].value)) {
-				strValue += $(this.id).options[intCount].innerHTML + "<br />";
+		for (var intCount = 0; intCount < jQuery("#" + this.id).find("option").length; intCount++) {
+			if (arrValue.inArray(jQuery("#" + this.id).find("option:eq(" + intCount + ")").val())) {
+				strValue += jQuery("#" + this.id).find("option:eq(" + intCount + ")").html() + "<br />";
 			}
 		}
-		$(this.id + "_alt").innerHTML = (strValue == "") ? "&nbsp;" : strValue;
-		Element.hide(this.id);
-		Element.show(this.id + "_alt");	
+		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
+		jQuery("#" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();	
 	} else {
 		//*** The field needs no special treatment.
-		Element.hide(this.id + "_alt");
-		Element.show(this.id);
-		var arrDefault = $(this.id + "_" + this.parent.currentLanguage).value.split(",");
-		for (var intCount = 0; intCount < $(this.id).options.length; intCount++) {
-			if (arrDefault.inArray($(this.id).options[intCount].value)) {
-				$(this.id).options[intCount].selected = true;
+		jQuery("#" + this.id + "_alt").hide();
+		jQuery("#" + this.id).show();
+		var arrDefault = jQuery("#" + this.id + "_" + this.parent.currentLanguage).val().split(",");
+		for (var intCount = 0; intCount < jQuery("#" + this.id).find("option").length; intCount++) {
+			if (arrDefault.inArray(jQuery("#" + this.id).find("option:eq(" + intCount + ")").val())) {
+				jQuery("#" + this.id).find("option:eq(" + intCount + ")").attr("selected","selected");
 			} else {
-				$(this.id).options[intCount].selected = false;
+				jQuery("#" + this.id).find("option:eq(" + intCount + ")").removeAttr("selected");
 			}
 		}
 	}
@@ -1624,12 +1637,12 @@ SelectListField.prototype.toScreen = function() {
 
 SelectListField.prototype.toTemp = function() {
 	var arrValue = [];
-	for (var intCount = 0; intCount < $(this.id).options.length; intCount++) {
-		if ($(this.id).options[intCount].selected) {
-			arrValue.push($(this.id).options[intCount].value);
+	for (var intCount = 0; intCount < jQuery("#" + this.id).find("option").length; intCount++) {
+		if (jQuery("#" + this.id).find("option:eq(" + intCount + ")").is(":selected")) {
+			arrValue.push(jQuery("#" + this.id).find("option:eq(" + intCount + ")").val());
 		}
 	}
-	$(this.id + "_" + this.parent.currentLanguage).value = arrValue.join(",");
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(arrValue.join(","));
 }
 
 /*** 
@@ -1649,37 +1662,40 @@ CheckListField.prototype.toScreen = function() {
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
 		//*** The element is not active.
-		$(this.id + "_alt").innerHTML = "<?php echo $objLang->get("langDisabled", "label") ?>";
-		Element.hide(this.id + "_widget");
-		Element.show(this.id + "_alt");
-		$(this.id + "_alt").setStyle({'display':'inline'});
+		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
+		jQuery("#" + this.id + "_widget").hide();
+		jQuery("#" + this.id + "_alt").show();
+		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
-		var arrValue = $(this.id + "_" + this.parent.defaultLanguage).value.split(",");
+		var arrValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val().split(",");
 		var strValue = "";
-		var arrFields = $(this.id + "_widget").getElementsByTagName("input");
+		var arrFields = jQuery("#" + this.id + "_widget").find("input");
 		for (var intCount = 0; intCount < arrFields.length; intCount++) {
-			if (arrFields[intCount].name == this.id + "[]" && arrValue.inArray(arrFields[intCount].value)) {
-				var arrField = $(arrFields[intCount]);
-				strValue += arrField.up().lastChild.nodeValue + "<br />";
+			if (arrFields.eq(intCount).attr("name") == this.id + "[]" && arrValue.inArray(arrFields.eq(intCount).val())) {
+				var arrField = arrFields.eq(intCount);
+				strValue += arrField.parent().get(0).lastChild.nodeValue + "<br />";
 			}
 		}
-		$(this.id + "_alt").innerHTML = (strValue == "") ? "&nbsp;" : strValue;
-		Element.hide(this.id + "_widget");
-		Element.show(this.id + "_alt");	
-		$(this.id + "_alt").setStyle({'display':'inline'});
+		
+		var strAltValue = (strValue == "") ? "&nbsp;" : strValue;
+		jQuery("#" + this.id + "_alt").html(strAltValue);
+		jQuery("#" + this.id + "_widget").hide();
+		jQuery("#" + this.id + "_alt").show();	
+		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else {
 		//*** The field needs no special treatment.
-		Element.hide(this.id + "_alt");
-		Element.show(this.id + "_widget");
-		var arrDefault = $(this.id + "_" + this.parent.currentLanguage).value.split(",");
-		var arrFields = $(this.id + "_widget").getElementsByTagName("input");
+		
+		jQuery("#" + this.id + "_alt").hide();
+		jQuery("#" + this.id + "_widget").show();
+		var arrDefault = jQuery("#" + this.id + "_" + this.parent.currentLanguage).val().split(",");
+		var arrFields = jQuery("#" + this.id + "_widget").find("input");
 		for (var intCount = 0; intCount < arrFields.length; intCount++) {
-			if (arrFields[intCount].name == this.id + "[]") {
-				if (arrDefault.inArray(arrFields[intCount].value)) {
-					arrFields[intCount].checked = true;
+			if (arrFields.eq(intCount).attr("name") == this.id + "[]") {
+				if (arrDefault.inArray(arrFields.eq(intCount).val())) {
+					arrFields.eq(intCount).attr("checked","checked");
 				} else {
-					arrFields[intCount].checked = false;
+					arrFields.eq(intCount).removeAttr("checked");
 				}
 			}
 		}
@@ -1688,13 +1704,13 @@ CheckListField.prototype.toScreen = function() {
 
 CheckListField.prototype.toTemp = function() {
 	var arrValue = [];
-	var arrFields = $(this.id + "_widget").getElementsByTagName("input");
+	var arrFields = jQuery("#" + this.id + "_widget").find("input");
 	for (var intCount = 0; intCount < arrFields.length; intCount++) {
-		if (arrFields[intCount].name == this.id + "[]" && arrFields[intCount].checked == true) {
-			arrValue.push(arrFields[intCount].value);
+		if (arrFields.eq(intCount).attr("name") == this.id + "[]" && arrFields.eq(intCount).is(":checked")) {
+			arrValue.push(arrFields.eq(intCount).val());
 		}
 	}
-	$(this.id + "_" + this.parent.currentLanguage).value = arrValue.join(",");
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(arrValue.join(","));
 }
 
 /*** 

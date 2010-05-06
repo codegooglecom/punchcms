@@ -1,4 +1,3 @@
-
 /************************
 * User Class.
 *
@@ -12,52 +11,41 @@ function User() {
 
 User.remove = function(intId) {
 	var strUrl = "ajax.php";
-	var strPost = "cmd=User::remove&perm_user_id=" + intId;
+	var objPost = { cmd: "User::remove", perm_user_id: intId };
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: User.refresh
-			});
+	jQuery("#userProgress").fadeIn("fast");
+	var request = jQuery.get(strUrl, objPost, User.refresh, "xml");
 }
 
 User.load = function(intId) {
 	var strUrl = "ajax.php";
-	var strPost = "cmd=User::load&perm_user_id=" + intId;
+	var objPost = {cmd: "User::load", perm_user_id: intId };
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: User.show
-			});
+	jQuery("#userProgress").fadeIn("fast");
+	var request = jQuery.get(strUrl, objPost, User.show, "xml");
 }
 
 User.write = function(strFormId) {
 	var strUrl = "ajax.php";
 	var strPost = Forms.serialize(strFormId) + "&cmd=User::add";
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'post', 
-				parameters: strPost, 
-				onComplete: User.refresh
-			});
-
+	jQuery("#userProgress").fadeIn("fast");
+	var request = jQuery.post(strUrl, strPost, User.refresh, "xml");
 }
 
 User.show = function(objResponse, strHeader) {
-	Element.hide('userProgress');
-	Forms.parseAjaxResponse(objResponse.responseXML);
-	
-	//alert(objResponse.responseText);
+	jQuery("#userProgress").fadeOut("fast", function(){
+		Forms.parseAjaxResponse(objResponse);
+	});
+	User.sortable();
+}
+
+/*
+ * Test function to refresh the sortable functionality
+ */
+User.sortable = function(){
+	jQuery("#rights, #allrights, #groups, #allgroups").sortable("refresh");
+	jQuery.debug({content: "User.sortable triggered", title: "** EVENT **"});
 }
 
 User.refresh = function(objResponse, strHeader) {
@@ -65,17 +53,10 @@ User.refresh = function(objResponse, strHeader) {
 }
 
 User.clearForm = function(strForm) {
-	Forms.clear(strForm, ['perm_type']);
-	
 	var strUrl = "ajax.php";
-	var strPost = "cmd=User::clearForm";
+	var objPost = { cmd: "User::clearForm" };
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: User.show
-			});
+	Forms.clear(strForm, ['perm_type']);
+	jQuery("#userProgress").fadeIn("fast");
+	var request = jQuery.post(strUrl, objPost, User.show, "xml");
 }

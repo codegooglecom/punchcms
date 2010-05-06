@@ -102,7 +102,7 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 	switch ($intCatId) {
 		case NAV_MYPUNCH_LOGIN:
 			//*** Don't use the FormObject. The login screen has it's own errorcheck.
-			$strScript = "Event.observe(window, 'load', function() { $('handle').focus(); });";
+			$strScript = "jQuery(function(){ jQuery('#handle').focus(); });";
 			break;
 
 		case NAV_PCMS_ELEMENTS:

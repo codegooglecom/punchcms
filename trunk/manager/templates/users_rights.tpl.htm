@@ -1,4 +1,3 @@
-
 					<div class="column">
 						<form id="rightForm" class="users" method="post" action="#">
 							<h3><span id="userProgress"></span>{SUBTITLE}</h3>
@@ -21,7 +20,7 @@
 								<h5 class="secondary">{AVAILABLE_RIGHTS_LABEL}</h5>
 								<ul class="sortable" id="allrights">
 									<!-- BEGIN right-allrights -->
-									<li id="right_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<li id="right_{VALUE}">{TEXT}</li>
 									<!-- END right-allrights -->
 								</ul>
 							</fieldset>
@@ -32,7 +31,7 @@
 								<h5 class="secondary">{AVAILABLE_GROUPS_LABEL}</h5>
 								<ul class="sortable" id="allgroups">
 									<!-- BEGIN right-allgroups -->
-									<li id="group_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<li id="group_{VALUE}">{TEXT}</li>
 									<!-- END right-allgroups -->
 								</ul>
 							</fieldset>
@@ -46,24 +45,53 @@
 								<div class="scrolllist">
 									<ul class="sortable" id="allusers">
 										<!-- BEGIN right-allusers -->
-										<li id="user_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+										<li id="user_{VALUE}">{TEXT}</li>
 										<!-- END right-allusers -->
 									</ul>
 								</div>
 							</fieldset>
-							 <script type="text/javascript">
-							 // <![CDATA[
-									Sortable.create("rights", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allrights", "rights"],constraint:false});
-									Sortable.create("allrights", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allrights", "rights"],constraint:false});
-									Sortable.create("groups", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allgroups", "groups"],constraint:false});
-									Sortable.create("allgroups", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allgroups", "groups"],constraint:false});
-									Sortable.create("users", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allusers", "users"],constraint:false});
-									Sortable.create("allusers", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allusers", "users"],constraint:false});
-							 // ]]>
-							 </script>
 							<div>
 								<input type="hidden" id="right_id" name="right_id" />
 							</div>
-							<div class="subnav"><a href="javascript:void(0);" onclick="Right.load($F('itemList'), 'rightForm');" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" onclick="Right.write('rightForm');" class="input-button" value="{BUTTON_SAVE}" /></div>
+							<div class="subnav"><a id="cancel" href="#" rel="internal">{BUTTON_CANCEL}</a> | <input id="save" type="button" class="input-button" value="{BUTTON_SAVE}" /></div>
 						</form>
+						 <script type="text/javascript">
+						 // <![CDATA[
+
+						 	// TODO: VERY IMPORTANT: Add some feedback to the cancel and save buttons!
+							jQuery("#cancel").live("click", function(){
+								Right.load($F("itemList"), "rightForm");
+								return false;
+							});
+							jQuery("#save").live("click", function(){
+								Right.write('rightForm');
+								return false;
+							});
+							
+							jQuery("#allusers li, #allgroups li, #allrights li").live("mouseover mouseout", function(event){
+								if(event.type == "mouseover"){
+									jQuery(this).addClass("hover");
+								}
+								else {
+									jQuery(this).removeAttr("class"); // remove class the clean way.
+								}
+							});
+	
+						 	jQuery("#rights, #allrights").sortable({
+								dropOnEmpty: true,
+								connectWith: "#rights, #allrights"
+							});
+						 	jQuery("#groups, #allgroups").sortable({
+								dropOnEmpty: true,
+								connectWith: "#groups, #allgroups"
+							});
+						 	jQuery("#users, #allusers").sortable({
+								dropOnEmpty: true,
+								connectWith: "#users, #allusers"
+							});
+	
+							jQuery.debug({content: "Template: users_rights.tpl.htm"});
+							
+						 // ]]>
+						 </script>
 					</div>

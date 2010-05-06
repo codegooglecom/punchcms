@@ -526,6 +526,10 @@ div.tabwrapper ul.anchors a.on:visited
 	background: #e9edf6 url('../images/bg_tab.jpg') left top repeat-x;
 }
 
+div.tabwrapper div.anchor {
+	display: none;
+}
+
 div.tabwrapper div.wrap form div,
 #content div.wrap form div
 {
@@ -1007,7 +1011,7 @@ ul.sorthover {
 }
 
 ul.sortable li {
-	display: block;
+	display: block !important;
 	position: relative;
 	zoom: 1;
 	margin: 3px 0;
@@ -1025,10 +1029,11 @@ ul.sortable li.hover {
 
 ul.strong li {
 	background: #fff;
+	display: block !important;
 }
 
 div.scrolllist {
-	overflow:scroll;
+	overflow:scroll; /* Remove this line? */
 	position:relative;
 	height:104px;
 }

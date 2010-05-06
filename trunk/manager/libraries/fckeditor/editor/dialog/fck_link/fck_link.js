@@ -19,6 +19,8 @@
  * == END LICENSE ==
  *
  * Scripts related to the Link dialog window (see fck_link.html).
+ * 
+ * TODO: Optimize the double PunchCMS code at the bottom.
  */
 
 var dialog	= window.parent ;
@@ -958,81 +960,81 @@ function SetDefaultTarget()
 
 //#### START PunchCMS specific code.
 var objLoader;
-var objElmntTraverse;
+var objElmntTraverse = null;
 var objMediaTraverse;
 var intElmntId = 0;
 var intMediaId = 0;
 
+/*
+ * Begin Element logic.
+ */
+
 function LoadCMSElements(blnInit) {
 	var strUrl = "../../../../ajax.php";
 	if (blnInit != undefined && blnInit) {
-		intElmntId = GetE('txtElement').value;
-		var strPost = "cmd=Elements::getParentHTML&eid=" + intElmntId;
+		intElmntId = jQuery("#txtElement").val();
+		var strPost = {
+						cmd: "Elements::getParentHTML",
+						eid: intElmntId
+					};
 	} else {
-		var strPost = "cmd=Elements::getChildrenHTML&parentId=" + intElmntId;
+		var strPost = {
+						cmd: "Elements::getChildrenHTML",
+						parentId: intElmntId
+					};
 	}
-	var objTable = $('divElements').getElementsBySelector('tbody')[0];
+	var objTable = jQuery("#divElements").find("tbody");
 		
 	objLoader = CMSElementsLoader();
-	objTable.appendChild(objLoader);
+	objTable.append(objLoader);
+	
 	if (objElmntTraverse) {
-		objTable.removeChild(objElmntTraverse);
+		jQuery(objElmntTraverse).remove();
 		objElmntTraverse = null;
 	}
-		
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: ShowCMSElements
-			});
+
+	var request = jQuery.get(strUrl,
+					strPost,
+					ShowCMSElements
+				);	
 }
 
 function SetCMSElement(objSelect) {
-	var intParentId = objSelect[objSelect.selectedIndex].value;
-	var objParentRow = $(objSelect.id).up('tr');
-	var objRows = objParentRow.nextSiblings();
-	var objSelects = $('divElements').getElementsBySelector('select');
+	var intParentId = jQuery(objSelect).find("option:selected").val();
+	var objParentRow = jQuery(objSelect).parent().parent();
+	var objRows = objParentRow.nextAll();
 	
-	for (var intCount = 0; intCount < objSelects.length; intCount++) {
-		var objRow = $(objSelects[intCount].id).up('tr');
-		for (var i = 0; i < objRows.length; i++) {
-			if (objRows[i] == objRow) {
-				objRow.remove();
-			}
-		}
-	}
+	objRows.remove();
 	
 	intElmntId = intParentId;
-	$("txtElement").value = intParentId;
+	jQuery("#txtElement").val(intParentId);
 
-	var objTable = $('divElements').getElementsBySelector('tbody')[0];
-	if (!objElmntTraverse) {
-		objElmntTraverse = CMSElementsTraverse();
-		objTable.appendChild(objElmntTraverse);
-	}
+	var objTable = jQuery("#divElements").find("tbody");
+	
+	objElmntTraverse = CMSElementsTraverse();
+	objTable.append(objElmntTraverse);
 }
 
 function ShowCMSElements(objXHR) {
-	var objResponse = objXHR.responseXML;
-	var objFields = objResponse.getElementsByTagName("field");
-	var objTable = $('divElements').getElementsBySelector('tbody')[0];
+	var objFields = jQuery(objXHR).find("field");
+	var objTable = jQuery("#divElements").find("tbody");
+	var intParentId;
 	
-	if (objLoader) objTable.removeChild(objLoader);
+	if (objLoader) jQuery(objLoader).remove();
 	
-	for (var i = 0; i < objFields.length; i++) {
-		var strValue = objFields[i].firstChild.nodeValue;
-		var intParentId = objFields[i].attributes[0].value;
+	objFields.each(function(){
+		var strValue = jQuery(this).text();
+		intParentId = this.attributes[0].nodeValue;
+		
 		if (strValue) {
 			var objRow = CMSElementsRow(strValue, intParentId);
-			objTable.appendChild(objRow);
+			objTable.append(objRow);
 		}
-	}
-			
+	});
+	
 	window.parent.SetAutoSize(true);
-	var objSelect = $("cmbLinkParent_" + intParentId);
-	if (objSelect) {
+	var objSelect = jQuery("#cmbLinkParent_" + intParentId);
+	if (objSelect.length > 0) {
 		SetCMSElement(objSelect);
 	}
 }
@@ -1072,76 +1074,78 @@ function CMSElementsRow(strValue, intParentId) {
 	return objReturn;
 }
 
+
+/*
+ * Begin Media logic.
+ */
+
 function LoadCMSMediaItems(blnInit) {
 	var strUrl = "../../../../ajax.php";
 	if (blnInit != undefined && blnInit) {
-		intMediaId = GetE('txtMedia').value;
-		var strPost = "cmd=StorageItems::getParentHTML&eid=" + String(intMediaId).split('_').pop();
+		intMediaId = jQuery("#txtMedia").val();
+		var strPost = {
+						cmd: "StorageItems::getParentHTML",
+						eid: String(intMediaId).split('_').pop()
+					};
 	} else {
-		var strPost = "cmd=StorageItems::getChildrenHTML&parentId=" + String(intMediaId).split('_').pop();
+		var strPost = {
+						cmd: "StorageItems::getChildrenHTML",
+						parentId: String(intMediaId).split('_').pop()
+					};
 	}
-	var objTable = $('divMedia').getElementsBySelector('tbody')[0];
+	var objTable = jQuery("#divMedia").find("tbody");
 		
 	objLoader = CMSElementsLoader();
-	objTable.appendChild(objLoader);
+	objTable.append(objLoader);
+	
 	if (objMediaTraverse) {
-		objTable.removeChild(objMediaTraverse);
+		jQuery(objMediaTraverse).remove();
 		objMediaTraverse = null;
 	}
 		
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: ShowCMSMediaItems
-			});
+	//*** Is it really necessary to save the request in a variable?
+	var request = jQuery.get(strUrl,
+					strPost,
+					ShowCMSMediaItems
+				);
 }
 
 function SetCMSMedia(objSelect) {
-	var intParentId = objSelect[objSelect.selectedIndex].value;
-	var objParentRow = $(objSelect.id).up('tr');
-	var objRows = objParentRow.nextSiblings();
-	var objSelects = $('divMedia').getElementsBySelector('select');
-	
-	for (var intCount = 0; intCount < objSelects.length; intCount++) {
-		var objRow = $(objSelects[intCount].id).up('tr');
-		for (var i = 0; i < objRows.length; i++) {
-			if (objRows[i] == objRow) {
-				objRow.remove();
-			}
-		}
-	}
+	var intParentId = jQuery(objSelect).find("option:selected").val();
+	var objParentRow = jQuery(objSelect).parent().parent();
+	var objRows = objParentRow.nextAll();
+
+	objRows.remove();
 	
 	intMediaId = intParentId;
-	$("txtMedia").value = intParentId;
+	jQuery("#txtMedia").val(intParentId);
 
-	var objTable = $('divMedia').getElementsBySelector('tbody')[0];
-	if (!objMediaTraverse) {
-		objMediaTraverse = CMSMediaTraverse();
-		objTable.appendChild(objMediaTraverse);
-	}
+	var objTable = jQuery("#divMedia").find("tbody");
+	
+	objMediaTraverse = CMSMediaTraverse();
+	objTable.append(objMediaTraverse);
 }
 
 function ShowCMSMediaItems(objXHR) {
-	var objResponse = objXHR.responseXML;
-	var objFields = objResponse.getElementsByTagName("field");
-	var objTable = $('divMedia').getElementsBySelector('tbody')[0];
+	var objFields = jQuery(objXHR).find("field");
+	var objTable = jQuery("#divMedia").find("tbody");
+	var intParentId;
 	
-	if (objLoader) objTable.removeChild(objLoader);
+	if (objLoader) jQuery(objLoader).remove();
 	
-	for (var i = 0; i < objFields.length; i++) {
-		var strValue = objFields[i].firstChild.nodeValue;
-		var intParentId = objFields[i].attributes[0].value;
+	objFields.each(function(){
+		var strValue = jQuery(this).text(); // The contents of the <field> tag
+		intParentId = this.attributes[0].nodeValue;
+		
 		if (strValue) {
 			var objRow = CMSMediaRow(strValue, intParentId);
-			objTable.appendChild(objRow);
+			objTable.append(objRow);
 		}
-	}
+	});
 			
-	window.parent.SetAutoSize(true);
-	var objSelect = $("cmbLinkParent_" + intParentId);
-	if (objSelect) {
+	window.parent.SetAutoSize(true); // This is a FCKEditor function
+	var objSelect = jQuery("#cmbLinkParent_" + intParentId);
+	if (objSelect.length > 0) {
 		SetCMSMedia(objSelect);
 	}
 }

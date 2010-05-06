@@ -14,50 +14,30 @@ Right.remove = function(intId) {
 	var strUrl = "ajax.php";
 	var strPost = "cmd=Right::remove&right_id=" + intId;
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Right.refresh
-			});
+	jQuery("#userProgress").fadeIn("show");
+	var request = jQuery.get(strUrl, strPost, Right.refresh, "xml");
 }
 
 Right.load = function(intId) {
 	var strUrl = "ajax.php";
 	var strPost = "cmd=Right::load&right_id=" + intId;
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Right.show
-			});
+	jQuery("#userProgress").fadeIn("show");
+	var request = jQuery.get(strUrl, strPost, Right.show, "xml");
 }
 
 Right.write = function(strFormId) {
 	var strUrl = "ajax.php";
 	var strPost = Forms.serialize(strFormId) + "&cmd=Right::add";
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'post', 
-				parameters: strPost, 
-				onComplete: Right.refresh
-			});
-
+	jQuery("#userProgress").fadeIn("show");
+	var request = jQuery.post(strUrl, strPost, Right.refresh, "xml");
 }
 
 Right.show = function(objResponse, strHeader) {
-	Element.hide('userProgress');
-	Forms.parseAjaxResponse(objResponse.responseXML);
-	
-	//alert(objResponse.responseText);
+	jQuery("#userProgress").fadeOut("show", function(){
+		Forms.parseAjaxResponse(objResponse);
+	});
 }
 
 Right.refresh = function(objResponse, strHeader) {
@@ -65,17 +45,10 @@ Right.refresh = function(objResponse, strHeader) {
 }
 
 Right.clearForm = function(strForm) {
-	Forms.clear(strForm, ['area_id']);
-	
 	var strUrl = "ajax.php";
 	var strPost = "cmd=Right::clearForm";
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Right.show
-			});
+	Forms.clear(strForm, ['area_id']);
+	jQuery("#userProgress").fadeIn("show");
+	var request = jQuery.get(strUrl, strPost, Right.show, "xml");
 }

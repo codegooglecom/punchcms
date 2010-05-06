@@ -6,6 +6,7 @@
 <meta name="generator" content="{GENERATOR}" />
 <meta name="revision" content="{REVISION}" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
 <!-- BEGIN tree -->
@@ -20,8 +21,10 @@
 
 <script type="text/javascript" src="/libraries/jquery.js"></script>
 <script type="text/javascript" src="/libraries/jquery-ui.js"></script>
+<script type="text/javascript" src="/libraries/lib.debug.js"></script>
 <script type="text/javascript" src="/libraries/i18n/jquery.ui.datepicker-nl.js"></script>
 <script type="text/javascript" src="/libraries/prototype.js"></script>
+<script type="text/javascript" src="/includes/inc.common.js"></script>
 
 <!-- BEGIN calendar -->
 <link rel="stylesheet" type="text/css" href="/css/calendar.css" media="screen" />
@@ -81,13 +84,12 @@
 <script type="text/javascript" src="/libraries/niftycube.js"></script>
 <script type="text/javascript" src="/libraries/libform.js"></script>
 <script type="text/javascript" src="/includes/inc.validate.js"></script>
-<script type="text/javascript" src="/includes/inc.common.js"></script>
 <script type="text/javascript" src="/includes/class.itemlist.js"></script>
 <script type="text/javascript">
 //*** Initialize all the (jQuery) javascript action and default settings.
 // {DATEPICKER_LANG}
 jQuery(function($){
-	$.datepicker.setDefaults($.datepicker.regional['nl']);
+	$.datepicker.setDefaults($.datepicker.regional['{DATEPICKER_LANG}']);
 });
 
 </script>

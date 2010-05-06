@@ -1,9 +1,9 @@
 
 /************************
-* Application Class.
+* Application Class
 *
 * Note:
-*   Requires the "prototype" and "scriptacoulus" library.
+*   Requires the "jQuery" library.
 **/
 
 function Application() {	
@@ -12,52 +12,33 @@ function Application() {
 
 Application.remove = function(intId) {
 	var strUrl = "ajax.php";
-	var strPost = "cmd=Application::remove&application_id=" + intId;
+	var strPost = { cmd: "Application::remove",	application_id: intId };
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Application.refresh
-			});
+	jQuery("#userProgress").fadeIn("fast");
+	jQuery.get(strUrl, strPost,	Application.refresh, "xml");
 }
 
 Application.load = function(intId) {
 	var strUrl = "ajax.php";
-	var strPost = "cmd=Application::load&application_id=" + intId;
-
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Application.show
-			});
+	var strPost = {	cmd: "Application::load", application_id: intId	};
+	
+	jQuery("#userProgress").fadeIn("fast");
+	jQuery.get(strUrl, strPost,	Application.show, "xml");
 }
 
 Application.write = function(strFormId) {
 	var strUrl = "ajax.php";
 	var strPost = Forms.serialize(strFormId) + "&cmd=Application::add";
-
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'post', 
-				parameters: strPost, 
-				onComplete: Application.refresh
-			});
-
+	jQuery.debug({title: "Application.write strPost", content: strPost});
+	
+	jQuery("#userProgress").fadeIn("fast");
+	var request = jQuery.post(strUrl, strPost, Application.refresh, "xml");
 }
 
-Application.show = function(objResponse, strHeader) {
-	Element.hide('userProgress');
-	Forms.parseAjaxResponse(objResponse.responseXML);
-	
-	//alert(objResponse.responseText);
+Application.show = function(objResponse) {
+	jQuery("#userProgress").fadeOut("fast", function(){
+		Forms.parseAjaxResponse(objResponse);
+	});
 }
 
 Application.refresh = function(objResponse, strHeader) {
@@ -65,17 +46,10 @@ Application.refresh = function(objResponse, strHeader) {
 }
 
 Application.clearForm = function(strForm) {
-	Forms.clear(strForm);
-	
 	var strUrl = "ajax.php";
-	var strPost = "cmd=Application::clearForm";
+	var strPost = { cmd: "Application::clearForm" };
 
-	Element.show('userProgress');
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Application.show
-			});
+	Forms.clear(strForm);
+	jQuery("#userProgress").fadeIn("fast");
+	var request = jQuery.get(strUrl, strPost, Application.show, "xml");
 }

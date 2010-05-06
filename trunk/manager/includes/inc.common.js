@@ -11,7 +11,7 @@ function init() {
 	externalLinks();
 	
 	//*** Hide the progress animation.
-	if ($('userProgress')) Element.hide('userProgress');
+	if (jQuery('#userProgress').length > 0) jQuery('#userProgress').hide();
 	
 	try {
 		obtrudeItemBox();

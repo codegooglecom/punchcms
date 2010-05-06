@@ -24,7 +24,7 @@
 								<h5 class="secondary">{AVAILABLE_RIGHTS_LABEL}</h5>
 								<ul class="sortable" id="allrights">
 									<!-- BEGIN group-allrights -->
-									<li id="right_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<li id="right_{VALUE}">{TEXT}</li>
 									<!-- END group-allrights -->
 								</ul>
 							</fieldset>
@@ -38,7 +38,7 @@
 								<div class="scrolllist">
 									<ul class="sortable" id="allusers">
 										<!-- BEGIN group-allusers -->
-										<li id="user_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+										<li id="user_{VALUE}">{TEXT}</li>
 										<!-- END group-allusers -->
 									</ul>
 								</div>
@@ -53,7 +53,7 @@
 								<div class="scrolllist">
 									<ul class="sortable" id="allsubgroups">
 										<!-- BEGIN group-allsubgroups -->
-										<li id="group_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+										<li id="group_{VALUE}">{TEXT}</li>
 										<!-- END group-allsubgroups -->
 									</ul>
 								</div>
@@ -61,15 +61,44 @@
 							<div>
 								<input type="hidden" id="group_id" name="group_id" />
 							</div>
-							<div class="subnav"><a href="javascript:void(0);" onclick="Group.load($F('itemList'), 'groupForm');" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" onclick="Group.write('groupForm');" class="input-button" value="{BUTTON_SAVE}" /></div>
+							<div class="subnav"><a id="cancel" href="#" rel="internal">{BUTTON_CANCEL}</a> | <input id="save" type="button" class="input-button" value="{BUTTON_SAVE}" /></div>
 							<script type="text/javascript">
 							// <![CDATA[
-								Sortable.create("rights", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allrights", "rights"],constraint:false});
-								Sortable.create("allrights", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allrights", "rights"],constraint:false});
-								Sortable.create("users", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allusers", "users"],constraint:false});
-								Sortable.create("allusers", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allusers", "users"],constraint:false});
-								Sortable.create("subgroups", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allsubgroups", "subgroups"],constraint:false});
-								Sortable.create("allsubgroups", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allsubgroups", "subgroups"],constraint:false});
+								jQuery("#allsubgroups li, #allusers li, #allrights li").live("mouseover mouseout", function(event){
+									if(event.type == "mouseover"){
+										jQuery(this).addClass("hover");
+									}
+									else {
+										jQuery(this).removeAttr("class"); // Clean the clean way.
+									}
+								});
+								jQuery("#cancel").live("click", function(){
+									Group.load($F('itemList'), 'groupForm');
+									return false;
+								});
+								jQuery("#save").live("click", function(){
+									Group.write('groupForm');
+									return false;
+								});
+							
+								jQuery("#rights, #allrights").sortable({
+									dropOnEmpty: true,
+									connectWith: "#rights, #allrights"
+								});
+								jQuery("#users, #allusers").sortable({
+									dropOnEmpty: true,
+									connectWith: "#users, #allusers"
+								});
+								jQuery("#groups, #allgroups").sortable({
+									dropOnEmpty: true,
+									connectWith: "#groups, #allgroups"
+								});
+								jQuery("#subgroups, #allsubgroups").sortable({
+									dropOnEmpty: true,
+									connectWith: "#subgroups, #allsubgroups"
+								});
+
+								jQuery.debug({content: "Template: users_groups.tpl.htm"});
 							// ]]>
 							</script>
 						</form>

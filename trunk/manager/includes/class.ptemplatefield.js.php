@@ -90,14 +90,15 @@ PTemplateField.multiSelect = function() {
 PTemplateField.addSetting = function(type, trigger) {
 	switch (type) {
 		case "image":
-			$("tfv_image_setting_name").up("div").show();
-			$("subImage").insert(trigger.up("fieldset").clone(true));
+			jQuery("#tfv_image_setting_name").parent("div").show();
+			console.log(trigger);
+			jQuery("#subImage").append(jQuery(trigger).parent().parent().clone(true));
 			jQuery("a.removeButton").each(function(index) {
 				if (index > 0) {
 					jQuery(this).show();
 				}
 			});
-			$("tfv_image_settings_count").value = ($("tfv_image_settings_count").value - 1) + 2;
+			jQuery("#tfv_image_settings_count").val((jQuery("#tfv_image_settings_count").val() - 1) + 2);
 			break;
 	}
 	
@@ -108,10 +109,10 @@ PTemplateField.removeSetting = function(type, trigger) {
 	switch (type) {
 		case "image":
 			trigger.up("fieldset").remove();
-			$("tfv_image_settings_count").value = $("tfv_image_settings_count").value - 1;
+			jQuery("#tfv_image_settings_count").val(jQuery("#tfv_image_settings_count").val() - 1);
 			
-			if ($("tfv_image_settings_count").value == 0) {
-				$("tfv_image_setting_name").up("div").hide();
+			if (jQuery("#tfv_image_settings_count").val() == 0) {
+				jQuery("#tfv_image_setting_name").parent("div").hide();
 			}
 			break;
 	}

@@ -21,7 +21,7 @@
 								<h5 class="secondary">{AVAILABLE_ADMINS_LABEL}</h5>
 								<ul class="sortable" id="allusers">
 									<!-- BEGIN area-allusers -->
-									<li id="user_{VALUE}" onmouseover="Element.addClassName(this, 'hover');" onmouseout="Element.removeClassName(this, 'hover');">{TEXT}</li>
+									<li id="user_{VALUE}">{TEXT}</li>
 									<!-- END area-allusers -->
 								</ul>
 							</fieldset>
@@ -30,15 +30,36 @@
 								<h5>{SELECTED_RIGHTS_LABEL}</h5>
 								<ul class="sortable strong" id="rights"></ul>
 							</fieldset>
-							 <script type="text/javascript">
-							 // <![CDATA[
-									Sortable.create("users", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allusers", "users"],constraint:false});
-									Sortable.create("allusers", {dropOnEmpty:true,hoverclass:"sorthover",containment:["allusers", "users"],constraint:false});
-							 // ]]>
-							 </script>
 							<div>
 								<input type="hidden" id="area_id" name="area_id" />
 							</div>
-							<div class="subnav"><a href="javascript:void(0);" onclick="Area.load($F('itemList'), 'areaForm');" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" onclick="Area.write('areaForm');" class="input-button" value="{BUTTON_SAVE}" /></div>
+							<div class="subnav"><a id="cancel" href="#" rel="internal">{BUTTON_CANCEL}</a> | <input type="button" id="save" class="input-button" value="{BUTTON_SAVE}" /></div>
 						</form>
+						 <script type="text/javascript">
+						 // <![CDATA[
+						 	jQuery("#cancel").live("click", function(){
+								Area.load($F('itemList'), 'areaForm');
+								return false;
+							});
+							jQuery("#save").live("click", function(){
+								Area.write('areaForm');
+								return false;
+							});
+							jQuery("#allusers li").live("mouseover mouseout", function(event){
+								if(event.type == "mouseover"){
+									jQuery(this).addClass("hover");
+								}
+								else { // Mouseout
+									jQuery(this).removeAttr("class"); // Clean it the clean way
+								} 
+							});
+							
+						 	jQuery("#users, #allusers").sortable({
+								dropOnEmpty: true,
+								connectWith: "#users, #allusers"
+							});
+
+							jQuery.debug({content: "Template: users_areas.tpl.htm"});
+						 // ]]>
+						 </script>
 					</div>
