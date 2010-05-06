@@ -101,7 +101,7 @@ switch ($strDispatch) {
 				'maxlength' => 150,
 			),
 		  	'frm_alias'		=> array(
-				'type' => 'word',
+				'type' => 'string',
 				'maxlength' => 250,
 			),
 		  	'frm_template'	=> array(

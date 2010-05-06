@@ -65,7 +65,7 @@ Group.refresh = function(objResponse, strHeader) {
 }
 
 Group.clearForm = function(strForm) {
-	Forms.clear(strForm);
+	Forms.clear(strForm, ['right_level']);
 	
 	var strUrl = "ajax.php";
 	var strPost = "cmd=Group::clearForm";

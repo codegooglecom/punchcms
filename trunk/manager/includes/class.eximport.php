@@ -45,7 +45,7 @@
 */
 
 /*
- * ExImport Class v0.2.17
+ * ExImport Class v0.2.18
  * Exports and imports account data from the database.
  */
  
@@ -174,7 +174,7 @@ class ExImport {
 
 		//*** Destroy temporary account object.
 		unset($_CONF['app']['account']);
-
+		
 		//*** Return XML.
 		$objZip->addFile(NULL, 'data.xml', "", $objDoc->saveXML());
    		$objZip->save();
@@ -897,12 +897,31 @@ class ExImport {
 							
 							switch ($objDbField->getTypeId()) {
 								case FIELD_TYPE_FILE:
+									$arrFileTemp = explode("\n", $strValue);
+									foreach ($arrFileTemp as $fileValue) {
+										if (!empty($fileValue)) {
+											$arrTemp = explode(":", $fileValue);
+											$strSrc = (count($arrTemp) > 1) ? $arrTemp[1] : $arrTemp[0];
+											array_push($arrFiles, $strSrc);
+										}
+									}
+									break;
 								case FIELD_TYPE_IMAGE:
 									$arrFileTemp = explode("\n", $strValue);
 									foreach ($arrFileTemp as $fileValue) {
 										if (!empty($fileValue)) {
 											$arrTemp = explode(":", $fileValue);
 											$strSrc = (count($arrTemp) > 1) ? $arrTemp[1] : $arrTemp[0];
+
+											$objImageField = new ImageField($objDbField->getTemplateFieldId());
+											$arrSettings = $objImageField->getSettings();
+											foreach ($arrSettings as $key => $arrSetting) {
+												if (!empty($arrSetting['width']) ||	!empty($arrSetting['height'])) {
+													//*** Add file.
+													array_push($arrFiles, FileIO::add2Base($strSrc, $arrSetting['key']));
+												}
+											}
+											
 											array_push($arrFiles, $strSrc);
 										}
 									}
@@ -998,8 +1017,10 @@ class ExImport {
 		$arrOptions = array('naming' => LIVEUSER_SECTION_APPLICATION, 'filters' => array('account_id' => array(0)));
 		$arrDbRights = $objLiveAdmin->perm->outputRightsConstants('array', $arrOptions, 'direct');
 		$arrRights = array();
-		foreach ($arrDbRights as $key => $value) {
-			$arrRights[strtoupper($key)] = $value;
+		if (is_array($arrDbRights)) {
+			foreach ($arrDbRights as $key => $value) {
+				$arrRights[strtoupper($key)] = $value;
+			}
 		}
 		
 		//*** ACL applications.
@@ -1185,7 +1206,7 @@ class ExImport {
 		$arrFiles = self::array_normalize($arrFiles);
 		
 		foreach ($arrFiles as $value) {
-      		$strContents = file_get_contents($strLocation . $value);
+      		$strContents = @file_get_contents($strLocation . $value);
        		if ($strContents !== FALSE) {
         		$objZip->addFile(NULL, "files/" . $value, "", $strContents);
        		}
