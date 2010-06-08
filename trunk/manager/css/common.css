@@ -1222,3 +1222,13 @@ div.progresstext {
 .bgClass {}
   
 /*** END tooltip ***/
+
+
+/*
+ * IE7 fix
+ */
+
+#aliasForm,
+#aliasForm fieldset {
+	position: relative;
+}
