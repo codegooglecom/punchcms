@@ -28,41 +28,19 @@ function DragDropLink(){
 
 //*** Resize tree container.
 function resizeTree() {
-	 var objTree = jQuery("#treeContainer");
-	 var windowHeight = jQuery(window).height();
-	 var offsetY = objTree.offset().left;
-	 var treeHeight = windowHeight - offsetY - 60;
+	 var $objTree = jQuery("#treeContainer"),
+	 	 windowHeight = jQuery(window).height(),
+	 	 offsetY = objTree.offset().left,
+	 	 treeHeight = windowHeight - offsetY - 60;
+ 	 
 	 objTree.css({ height: treeHeight + "px"});
 }
 
 //*** Onload action.
 jQuery(function(){
-	/*
-	jQuery("ul.anchors a")
-	.bind("click", function(){
-		var __this = jQuery(this);
-		__this.each(function(){
-			jQuery(__this).removeClass("on");
-			var strId = jQuery(this).attr("href").split("#").pop();
-			console.log(strId);
-			jQuery("#"+strId).hide();
-		});
-		
-		__this.addClass('on');
-		var strId = jQuery(this).attr("href").split("#").pop();
-		jQuery("#"+strId).css({display:'block'});
-		if (typeof FCKeditorAPI == "object") {
-			for (var obj in FCKeditorAPI.__Instances) {
-				var objEdit = FCKeditorAPI.GetInstance(obj);
-				if (objEdit.Status == 2 && typeof objEdit.MakeEditable == "function") {
-					objEdit.MakeEditable();
-				}
-			}
-		}
-		return;
-	});
-	*/
-	$elementTabs = jQuery("#elementForm").tabs();
+	if(typeof $tabs == "undefined"){
+		$tabs = jQuery("#elementForm").tabs();
+	}
 	
 	if (jQuery("treeContainer").length > 0) {
 		//*** On resize, recalculate the size of the treeview module.

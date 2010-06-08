@@ -97,7 +97,12 @@ FileField.prototype.toScreen = function() {
 	}
 
 	var strId = this.id;
-	Sortable.create("filelist_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
+	jQuery("#filelist_" + this.id).sortable({
+		dropOnEmpty: true,
+		update: function(){
+			objContentLanguage.sort(strId);
+		}
+	});
 }
 
 FileField.prototype.transferField = function() {
@@ -167,8 +172,13 @@ FileField.prototype.addUploadRow = function(element) {
 	if ((this.subFiles.toUpload.length + 1) + this.subFiles.currentFiles > this.maxFiles) {
 		jQuery("#" + this.id + "_widget div.required").hide();
 	}
-		
-	Sortable.create("filelist_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
+	jQuery("#filelist_" + this.id).sortable({
+		dropOnEmpty: true,
+		update: function(){
+			objContentLanguage.sort(strId);
+		}
+	});	
+	// Sortable.create("filelist_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
 }
 
 FileField.prototype.addCurrentRow = function(element) {

@@ -2,7 +2,7 @@
 		<div id="left-wrap" class="center-wrap">
 			<!-- BEGIN aliases -->
 			<h2>
-				<span class="menu"><a href="javascript:;" onclick="{BUTTON_ADD_HREF}" rel="internal">{BUTTON_ADD}</a></span>
+				<span class="menu"><a href="javascript:Alias.prepareAdd();" rel="internal">{BUTTON_ADD}</a></span>
 				{ALIASES}
 			</h2>
 			<div class="wrap">
@@ -31,7 +31,7 @@
 					<fieldset class="traverse">
 						<div class="required traverse">
 							<label for="frm_element">&nbsp;</label>
-							<a href="javascript:;" onclick="Alias.loadElements()" rel="internal">One level deeper</a>
+							<a href="javascript:Alias.loadElements();" rel="internal">One level deeper</a>
 						</div>
 					</fieldset>
 					<div class="form-navigation">
@@ -49,11 +49,15 @@
 						<div class="itemcount">
 							{LIST_ITEMS_PER_PAGE} <a {LIST_LENGTH_HREF_10} rel="internal">10</a> <a {LIST_LENGTH_HREF_25} rel="internal">25</a> <a {LIST_LENGTH_HREF_100} rel="internal">100</a>
 						</div>
-						<a href="{BUTTON_LIST_SELECT_HREF}" rel="internal">{BUTTON_LIST_SELECT}</a> <span>{LIST_WITH_SELECTED} <select id="frm_list_action" name="frm_list_action" onchange="{LIST_ACTION_ONCHANGE}">
+						<a href="{BUTTON_LIST_SELECT_HREF}" rel="internal">{BUTTON_LIST_SELECT}</a> 
+						<span>
+							{LIST_WITH_SELECTED} 
+							<select id="frm_list_action" name="frm_list_action" onchange="{LIST_ACTION_ONCHANGE}">
 							<!-- BEGIN multiview-listactionitem -->
 							<option value="{LIST_ACTION_VALUE}">{LIST_ACTION_TEXT}</option>
 							<!-- END multiview-listactionitem -->
-						</select></span>
+							</select>
+						</span>
 					</div>
 					<!-- END multiview -->
 					<!-- BEGIN multiview-pagenav-top -->
@@ -72,10 +76,11 @@
 					<div id="itemlist">
 						<!-- BEGIN multiview-item -->
 						<div class="itembox" id="box_{MULTIITEM_VALUE}">
-							<div class="off" onmouseover="if (Element.addClassName) Element.addClassName(this, 'offhover');" onmouseout="if (Element.removeClassName) Element.removeClassName(this, 'offhover');" style="cursor:pointer">
+							<div class="off" style="cursor:pointer">
 								<div class="inactive">
 									<div class="menu">
-										<!-- BEGIN multiview-preview --><a href="{BUTTON_PREVIEW_HREF}" rel="internal">{BUTTON_PREVIEW}</a> | <!-- END multiview-preview --><!-- BEGIN multiview-duplicate --><a href="{BUTTON_DUPLICATE_HREF}" rel="internal">{BUTTON_DUPLICATE}</a> | <!-- END multiview-duplicate --><a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
+										<!-- BEGIN multiview-preview --><a href="{BUTTON_PREVIEW_HREF}" rel="internal">{BUTTON_PREVIEW}</a> | <!-- END multiview-preview -->
+										<!-- BEGIN multiview-duplicate --><a href="{BUTTON_DUPLICATE_HREF}" rel="internal">{BUTTON_DUPLICATE}</a> | <!-- END multiview-duplicate --><a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
 									</div>
 									<input type="checkbox" id="item_{MULTIITEM_VALUE}" name="item_{MULTIITEM_VALUE}" style="margin-top:2px" class="multiitem" />
 									<div class="{MULTIITEM_TYPE_CLASS}">
@@ -108,7 +113,16 @@
 			 		<!-- END alias.add -->
 			 		<!-- BEGIN alias.edit -->
 					Alias.loadElements(true);
-			 		<!-- END alias.edit -->					
+			 		<!-- END alias.edit -->		
+
+			 		jQuery("div.off").live("mouseover mouseout", function(event){
+						if(event.type == "mouseover"){
+							jQuery(this).addClass("offhover");
+						}
+						else {
+							jQuery(this).removeClass("offhover");
+						}
+				 	});			
 			 // ]]>
 			 </script>
 			<!-- END aliases -->

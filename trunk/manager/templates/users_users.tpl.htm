@@ -63,10 +63,13 @@
 									dropOnEmpty: true,
 									connectWith: "#rights, #allrights"
 								});
+								jQuery("#rights, #allrights").disableSelection();
+								
 								jQuery("#groups, #allgroups").sortable({
 									dropOnEmpty: true,
 									connectWith: "#groups, #allgroups"
 								});
+								jQuery("#groups, #allgroups").disableSelection();
 								//*** Add hover styling
 								jQuery("#rights li, #allrights li, #groups li, #allgroups li").live("mouseover mouseout", function(event){
 									if(event.type == "mouseover"){

@@ -7,7 +7,14 @@
 			<div id="content" class="hollyhacked">
 				<div class="wrap">
 					<h3>
-						<span class="menu"><!-- BEGIN headermenu_1 --><a href="{BUTTON_NEWFIELD_HREF}" rel="internal">{BUTTON_NEWFIELD}</a> | <!-- END headermenu_1 --><!-- BEGIN headermenu_5 --><a href="{BUTTON_NEWSUBJECT_HREF}" rel="internal">{BUTTON_NEWSUBJECT}</a><!-- END headermenu_5 --><!-- BEGIN headermenu_2 --> | <a href="{BUTTON_NEWFOLDER_HREF}" rel="internal">{BUTTON_NEWFOLDER}</a><!-- END headermenu_2 --><!-- BEGIN headermenu_7 --> | <a href="{BUTTON_NEWSTRUCTURE_HREF}" rel="internal">{BUTTON_NEWSTRUCTURE}</a><!-- END headermenu_7 --><!-- BEGIN headermenu_6 --> | <a href="{BUTTON_MAIN_DUPLICATE_HREF}" rel="internal">{BUTTON_MAIN_DUPLICATE}</a><!-- END headermenu_6 --><!-- BEGIN headermenu_3 --> | <a href="{BUTTON_EDIT_HREF}" rel="internal">{BUTTON_EDIT}</a><!-- END headermenu_3 --><!-- BEGIN headermenu_4 --> | <a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a><!-- END headermenu_4 --></span>
+						<span class="menu">
+							<!-- BEGIN headermenu_1 --><a href="{BUTTON_NEWFIELD_HREF}" rel="internal">{BUTTON_NEWFIELD}</a> | <!-- END headermenu_1 -->
+							<!-- BEGIN headermenu_5 --><a href="{BUTTON_NEWSUBJECT_HREF}" rel="internal">{BUTTON_NEWSUBJECT}</a><!-- END headermenu_5 -->
+							<!-- BEGIN headermenu_2 --> | <a href="{BUTTON_NEWFOLDER_HREF}" rel="internal">{BUTTON_NEWFOLDER}</a><!-- END headermenu_2 -->
+							<!-- BEGIN headermenu_7 --> | <a href="{BUTTON_NEWSTRUCTURE_HREF}" rel="internal">{BUTTON_NEWSTRUCTURE}</a><!-- END headermenu_7 -->
+							<!-- BEGIN headermenu_6 --> | <a href="{BUTTON_MAIN_DUPLICATE_HREF}" rel="internal">{BUTTON_MAIN_DUPLICATE}</a><!-- END headermenu_6 -->
+							<!-- BEGIN headermenu_3 --> | <a href="{BUTTON_EDIT_HREF}" rel="internal">{BUTTON_EDIT}</a><!-- END headermenu_3 -->
+							<!-- BEGIN headermenu_4 --> | <a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a><!-- END headermenu_4 --></span>
 						{LABEL_SUBJECT}<span class="name">&lsquo;{SUBJECT_NAME}&rsquo;</span>
 					</h3>
 					<div class="itemheader">
@@ -33,13 +40,16 @@
 					</div>
 					<!-- END multiview-pagenav-top -->
 					<br />
+					<!-- MULTIVIEW TEMPLATE -->
 					<div id="itemlist">
-						<!-- BEGIN multiview-item -->
+					<!-- BEGIN multiview-item -->
 						<div class="itembox" id="box_{MULTIITEM_VALUE}">
-							<div class="off" onmouseover="if (Element.addClassName) Element.addClassName(this, 'offhover');" onmouseout="if (Element.removeClassName) Element.removeClassName(this, 'offhover');">
+							<div class="off">
 								<div class="inactive">
 									<div class="menu">
-										<!-- BEGIN multiview-preview --><a href="{BUTTON_PREVIEW_HREF}" rel="internal">{BUTTON_PREVIEW}</a> | <!-- END multiview-preview --><!-- BEGIN multiview-duplicate --><a href="{BUTTON_DUPLICATE_HREF}" rel="internal">{BUTTON_DUPLICATE}</a> | <!-- END multiview-duplicate --><a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
+										 <!-- BEGIN multiview-preview --><a href="{BUTTON_PREVIEW_HREF}" rel="internal">{BUTTON_PREVIEW}</a> |  <!-- END multiview-preview -->  
+										 <!-- BEGIN multiview-duplicate --><a href="{BUTTON_DUPLICATE_HREF}" rel="internal">{BUTTON_DUPLICATE}</a> |  <!-- END multiview-duplicate -->
+										 <a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
 									</div>
 									<div class="moveDrag"></div>
 									<input type="checkbox" id="item_{MULTIITEM_VALUE}" name="item_{MULTIITEM_VALUE}" class="multiitem" />
@@ -51,11 +61,12 @@
 							</div>
 						</div>
 						 <script type="text/javascript">
-						 // <![CDATA[
+						 //<![CDATA[
+						 		alert("multiview.tpl.htm - Is there Draggable javascript on this page? Remove deprecated javascripts if not.");
 								//new Draggable("box_{MULTIITEM_VALUE}", {handle:"moveDrag", revert:true, onStart:Itemlist.startMove, onEnd:Itemlist.endMove});
 						 // ]]>
 						 </script>
-						<!-- END multiview-item -->
+					<!-- END multiview-item -->
 					</div>
 					<br />
 					<!-- BEGIN multiview-pagenav-bottom -->

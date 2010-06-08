@@ -57,8 +57,8 @@ PermissionList.load = function() {
 	jQuery("div.selectList a").bind("click", PermissionList.toggleList);
 	jQuery("div.selectList").bind("click", PermissionList.untoggleList);
 	jQuery("div.permissions input").bind("click", PermissionList.updatePermissions);
-	Event.observe(document, 'keydown', PermissionList.setKey);
-	Event.observe(document, 'keyup', PermissionList.unsetKey);
+	jQuery(document).live("keydown", PermissionList.setKey);
+	jQuery(document).live("keydown", PermissionList.unsetKey);
 }
 
 PermissionList.setKey = function(event) {

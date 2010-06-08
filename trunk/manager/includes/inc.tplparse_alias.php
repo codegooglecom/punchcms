@@ -174,7 +174,6 @@ function parseAlias($intAliasId, $strCommand) {
 			
 			$objTpl->setVariable("ALIASES", $objLang->get("aliases", "label"));
 			$objTpl->setVariable("BUTTON_ADD", $objLang->get("aliasAdd", "button"));
-			$objTpl->setVariable("BUTTON_ADD_HREF", "Alias.prepareAdd()");
 			
 			//*** Form variables.
 			if ($strCommand == CMD_EDIT) {

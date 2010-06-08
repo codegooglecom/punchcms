@@ -11,12 +11,21 @@ function Itemlist() {
 }
 
 Itemlist.init = function() {
-	Position.includeScrollOffsets = true;
+//	Position.includeScrollOffsets = true;
 	Itemlist.createSortable();
 }
 
 Itemlist.createSortable = function() {
-	Sortable.create("itemlist", {tag:"div", only:"itembox", onUpdate:initUpdateSort});
+	jQuery("#itemlist").sortable({
+		update: initUpdateSort,
+		axis: "y",
+		forceHelperSize: true,
+		containment: ".wrap"
+	});
+	var items = jQuery( "#itemlist" ).sortable( "option", "items" );
+
+	jQuery.debug({title: "items", content: items});
+	jQuery("#itemlist").disableSelection();
 }
 
 Itemlist.getChecked = function() {

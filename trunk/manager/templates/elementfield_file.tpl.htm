@@ -1,7 +1,7 @@
 
 								<div class="required">
 									<label for="{FIELD_ID}" class="widget">
-										<a href="javascript:;" rel="internal" class="fieldButton"><img id="{FIELD_ID}_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+										<a href="#" rel="internal" class="fieldButton"><img id="{FIELD_ID}_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
 										{FIELD_REQUIRED}{FIELD_NAME}
 									</label>
 									<div id="{FIELD_ID}_alt" class="input-textbig disabled" style="display:none;margin-left:146px;"></div>
@@ -42,8 +42,6 @@
 										<script type="text/javascript">
 										// <![CDATA[
 											objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.FILE, {maxFiles:{FIELD_MAX_FILES}, maxChar:{FIELD_MAX_CHAR}, removeLabel:'{FIELD_LABEL_REMOVE}', cancelLabel:'{FIELD_LABEL_CANCEL}', altLabel:'{FIELD_LABEL_ALT}', thumbPath:'{FIELD_THUMB_PATH}', uploadPath:'{FIELD_UPLOAD_PATH}', selectType:['upload', 'library'], fileType:'{FIELD_FILE_TYPE}'});
-											Sortable.create("filelist_current_{FIELD_ID}", {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort('{FIELD_ID}')}});
-											Sortable.create("filelist_new_{FIELD_ID}", {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort('{FIELD_ID}')}});
 										// ]]>
 										</script>
 									</div>

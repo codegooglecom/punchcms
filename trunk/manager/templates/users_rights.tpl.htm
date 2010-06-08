@@ -81,16 +81,19 @@
 								dropOnEmpty: true,
 								connectWith: "#rights, #allrights"
 							});
+							jQuery("#rights, #allrights").disableSelection();
+							
 						 	jQuery("#groups, #allgroups").sortable({
 								dropOnEmpty: true,
 								connectWith: "#groups, #allgroups"
 							});
+							jQuery("#groups, #allgroups").disableSelection();
+							
 						 	jQuery("#users, #allusers").sortable({
 								dropOnEmpty: true,
 								connectWith: "#users, #allusers"
 							});
-	
-							jQuery.debug({content: "Template: users_rights.tpl.htm"});
+							jQuery("#users, #allusers").disableSelection();
 							
 						 // ]]>
 						 </script>

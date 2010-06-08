@@ -15,14 +15,14 @@ if (!is_object($objLang)) {
 var intId = 0;
 
 var Alias = {
-	id:0,
-	checked:false,
-	targetField:"frm_element",
-	targetForm:"aliasForm"
+	id:				0,
+	checked:		false,
+	targetField:	"frm_element",
+	targetForm:		"aliasForm"
 }
 
 Alias.prepareAdd = function() {
-	Effect.BlindDown(Alias.targetForm);
+	jQuery("#" + Alias.targetForm).slideDown();
 }
 
 Alias.remove = function(intId, strRedirect) {
@@ -36,17 +36,15 @@ Alias.remove = function(intId, strRedirect) {
 
 Alias.multiDo = function(objField, strAction) {
 	var arrChecked = new Array();
-
-	//*** Get all checkbox fields.
-	arrCheckbox = document.getElementsByClassName("multiitem");
+	$arrCheckbox = jQuery(".multiitem");
 
 	//*** Loop through the fields to find the checked ones.
-	for (i = 0; i < arrCheckbox.length; i++) {
-		if (arrCheckbox[i].checked) {
-			var strId = arrCheckbox[i].id.substr(5);
+	$arrCheckbox.each(function(i){
+		if(jQuery(this).is(":checked")){
+			var strId = jQuery(this).attr("id").substr(5);
 			arrChecked.push(strId);
 		}
-	}
+	});
 
 	//*** Any fields checked?
 	if (arrChecked.length > 0) {
@@ -80,18 +78,20 @@ Alias.multiSelect = function() {
 	(this.checked) ? this.checked = false : this.checked = true;
 
 	//*** Get all checkbox fields.
-	arrCheckbox = document.getElementsByClassName("multiitem");
+	arrCheckbox = jQuery(".multiitem");
 
 	//*** Loop through the fields to check or uncheck.
 	for (i = 0; i < arrCheckbox.length; i++) {
-		arrCheckbox[i].checked = this.checked;
+		arrCheckbox.attr("checked", this.checked); 
 	}
 }
 
 Alias.loadElements = function(blnInit, strTargetField, strTargetForm) {
+	var strUrl = "ajax.php";
+
 	if (strTargetField != undefined) Alias.targetField = strTargetField;
 	if (strTargetForm != undefined) Alias.targetForm = strTargetForm;
-	var strUrl = "ajax.php";
+
 	
 	if (blnInit != undefined && blnInit) {
 		intId = jQuery("#" + Alias.targetField).val();
@@ -99,68 +99,65 @@ Alias.loadElements = function(blnInit, strTargetField, strTargetForm) {
 	} else {
 		var strPost = "cmd=Elements::getChildrenHTML&parentId=" + intId;
 	}
-	var objTraverse = jQuery("#" + Alias.targetForm + "div.traverse");
-	var objFieldset = objTraverse.eq(0).parent("fieldset");
+	
+	var $objTraverse = jQuery("#" + Alias.targetForm).find("div.traverse");
+	var $objFieldset = $objTraverse.parent();
 
-	if (objTraverse.length > 0) objTraverse.eq(0).remove();
-	new Insertion.Bottom(objFieldset, Alias.elementsLoader());
+	if ($objTraverse.length > 0) $objTraverse.remove();
+	$objFieldset.append(Alias.elementsLoader());
 		
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: Alias.showElements
-			});
+	var request = jQuery.get(strUrl, strPost, Alias.showElements, "xml");
 }
 
 Alias.setElement = function(objSelect) {
-	var objSelect = jQuery(objSelect);
-	var intParentId = objSelect.find("option:selected").val();
-	var objParentRow = objSelect.parent("div");
-
-	//*** TODO: Replace nextSibblings for a jQuery alternative
-	var objRows = objParentRow.nextSiblings();
-
-	var objSelects = jQuery("#" + Alias.targetForm + "select");
-	var objFieldset = jQuery("#" + Alias.targetForm + "fieldset.traverse:first");
-	
-	for (var intCount = 0; intCount < objSelects.length; intCount++) {
-		var objRow = objSelects.eq(intCount).parent("div");
-		for (var i = 0; i < objRows.length; i++) {
-			if (objRows.eq(i) == objRow) {
-				objRow.remove();
+	var $objSelect 		= (objSelect instanceof jQuery) ? objSelect : jQuery(objSelect), // Make sure it's a jQuery object	
+		intParentId 	= $objSelect.find("option:selected").val(),
+		$objParentRow 	= $objSelect.parent(),
+		$objRows 		= $objParentRow.nextAll("div"),
+		$objSelects 	= jQuery("#" + Alias.targetForm + " select"),
+		$objFieldset 	= jQuery("#" + Alias.targetForm + " fieldset.traverse"),
+		$objTraverse 	= $objFieldset.find("div.traverse");
+		
+	$objSelects.each(function(){
+		var __this = this,
+			$objRow = jQuery(__this).parent();
+			
+		$objRows.each(function(){
+			if(jQuery(this).get(0) == $objRow.get(0)){ // Use .get(0) to compare DOM objects instead of jQuery objects
+				$objRow.remove();
 			}
-		}
-	}
-
-	var objTraverse = objFieldset.find("div.traverse");
-	if (objTraverse.length > 0) objTraverse.eq(0).remove();
-	objFieldset.append(Alias.elementsTraverse());
+		});
+	});
+	
+	if ($objTraverse.length > 0) $objTraverse.remove();
+	$objFieldset.append(Alias.elementsTraverse());
 	
 	intId = intParentId;
-	jQuery("#" + Alias.targetField).val() = intParentId;
+	jQuery("#" + Alias.targetField).val(intParentId);
 }
 
 Alias.showElements = function(objXHR) {
-//*** TODO: jQuerify this function and use jQuery $.ajax method.
-	var objResponse = objXHR.responseXML;
-	var objFields = objResponse.getElementsByTagName("field");
-	var objFieldset = jQuery("#" + Alias.targetForm + "fieldset.traverse:first");
-	
-	var objLoading = objFieldset.find("div.loading");
-	if (objLoading.length > 0) objLoading.eq(0).remove();
-	
-	for (var i = 0; i < objFields.length; i++) {
-		var strValue = objFields[i].firstChild.nodeValue;
-		var intParentId = objFields[i].attributes[0].value;
+	var $objResponse 	= jQuery(objXHR),
+		$objFields 		= $objResponse.find("field"),
+		$objFieldset 	= jQuery("#" + Alias.targetForm).find("fieldset.traverse"),
+		$objLoading 	= $objFieldset.find("div.loading");
+		
+	if ($objLoading.length > 0) $objLoading.remove();
+
+	//*** Can't be a jQuery each() loop.
+	for (var i = 0; i < $objFields.length; i++) {
+		var strValue = $objFields.get(i).firstChild.nodeValue;
+		
 		if (strValue) {
-			new Insertion.Bottom(objFieldset, Alias.elementsRow(strValue, intParentId));
+			var intParentId = $objFields.get(i).attributes[0].value;
+			$objFieldset.append(Alias.elementsRow(strValue, intParentId));
 		}
 	}
-			
-	var objSelect = jQuery("#" + Alias.targetField + "_" + intParentId);
-	Alias.setElement(objSelect);
+	
+	if(typeof intParentId != "undefined"){
+		var $objSelect = jQuery("#" + Alias.targetField + "_" + intParentId);
+		Alias.setElement($objSelect);
+	}
 }
 
 Alias.elementsLoader = function() {
@@ -175,6 +172,9 @@ Alias.elementsTraverse = function() {
 	return strReturn;
 }
 
+/*
+ * Check onchange compatibility with Internet Explorer >= 7
+ */
 Alias.elementsRow = function(strValue, intParentId) {
 	var strLabel = (intParentId == 0) ? "* <?php echo $objLang->get("element", "form") ?>" : "&nbsp;";
 	var strReturn = "<div class=\"required\"><label for=\"" + Alias.targetField + "\">" + strLabel + "</label><select id=\"" + Alias.targetField + "_" + intParentId + "\" class=\"select-one\" onchange=\"Alias.setElement(this)\">";

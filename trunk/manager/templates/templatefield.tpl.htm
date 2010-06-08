@@ -1,4 +1,3 @@
-
 		<div id="left-wrap">
 			<h2>{MAINTITLE}<!-- BEGIN title.sub --> <span class="name">&lsquo;{MAINSUB}&rsquo;</span><!-- END title.sub --></h2>
 			<div id="treeContainer"></div>
@@ -129,7 +128,7 @@
 								</fieldset>
 								<!-- BEGIN image.settings -->
 								<fieldset>
-									<h5>Image Size settings <a href="javascript:void(0);" class="removeButton" onclick="PTemplateField.removeSetting('image', this)" style="{REMOVE_STYLE};" rel="internal">[-]</a><a href="javascript:void(0);" class="addButton" rel="internal" onclick="PTemplateField.addSetting('image', this);">[+] Add another template</a></h5>
+									<h5>Image Size settings <a href="javascript:PTemplateField.removeSetting('image', this);" class="removeButton" style="{REMOVE_STYLE};" rel="internal">[-]</a><a href="javascript:PTemplateField.addSetting('image', this);" class="addButton" rel="internal">[+] Add another template</a></h5>
 									<div class="required" style="{API_STYLE};">
 										<label for="tfv_image_setting_name">* API Name</label>
 										<input type="text" id="tfv_image_setting_name" name="tfv_image_setting_name[]" class="input-textlarge" value="{TFV_IMAGE_SETTING_NAME}" />

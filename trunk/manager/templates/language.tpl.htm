@@ -2,7 +2,7 @@
 		<div id="left-wrap" class="center-wrap">
 			<!-- BEGIN settings -->
 			<h2>
-				<span class="menu"><a href="javascript:;" onclick="{BUTTON_ADD_HREF}" rel="internal">{BUTTON_ADD}</a></span>
+				<span class="menu"><a href="javascript:{BUTTON_ADD_HREF};" rel="internal">{BUTTON_ADD}</a></span>
 				{LANGUAGES}
 			</h2>
 			<div class="wrap">
@@ -43,7 +43,7 @@
 				<div id="itemlist" style="margin:18px 10px;">
 					<!-- BEGIN multiview-item -->
 					<div class="itembox" id="box_{MULTIITEM_VALUE}">
-						<div class="off" onmouseover="if (Element.addClassName) Element.addClassName(this, 'offhover');" onmouseout="if (Element.removeClassName) Element.removeClassName(this, 'offhover');">
+						<div class="off">
 							<div class="inactive">
 								<div class="menu">
 									<a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
@@ -61,8 +61,23 @@
 			<script type="text/javascript">
 			 // <![CDATA[
 					var objContentLanguage = new ContentLanguage();
-					Position.includeScrollOffsets = true;
-					Sortable.create("itemlist", {tag:"div",only:"itembox",onUpdate:initUpdateSort});
+
+					jQuery(function(){
+						jQuery("div.off").live("mouseover mouseout", function(event){
+							if(event.type == "mouseover"){
+								jQuery(this).addClass("offhover");
+							}
+							else {
+								jQuery(this).removeClass("offhover");
+							}
+						});
+					});
+					jQuery("#itemlist").sortable({
+						update: initUpdateSort,
+						axis: "y",
+						forceHelperSize: true,
+						containment: "#left-wrap"
+					});
 			 // ]]>
 			 </script>
 			<!-- END settings -->

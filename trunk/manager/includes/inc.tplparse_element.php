@@ -1278,7 +1278,7 @@ function parsePages($intElmntId, $strCommand) {
 
 								//*** Parse the rest of the block.
 								$objFieldTpl->setCurrentBlock("field.file.select-type.library");
-								$objFieldTpl->setVariable("LABEL_LIBRARY", $objLang->get("pcmsStorage", "menu"));
+								$objFieldTpl->setVariable("LABEL_LIBRARY", $objLang->get("pcmsInlineStorage", "menu"));
 								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
 								$objFieldTpl->parseCurrentBlock();
 								

@@ -32,7 +32,7 @@ div a:hover {
  */
 
 #login {
-	background: #718BC4;
+	background: url(/images/bg_blue-gray.png) top left repeat-x #f5f7fa;
 }
 
 #login #canvas {

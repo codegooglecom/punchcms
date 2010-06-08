@@ -292,6 +292,7 @@ Forms.parseAjaxResponse = function(objResponse) {
 						jQuery(this).removeClass("hover");
 					}
 				);
+			jQuery("#" + strWidget).disableSelection();
 				
 		} catch (e) {
 			//*** Could not find the element.

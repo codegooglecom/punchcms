@@ -12,31 +12,6 @@ if (!is_object($objLang)) {
 
 ?>
 
-/*
-###########################################################################
-#  Copyright (c) 2006 Phixel.org (http://www.phixel.org)
-#
-#  Permission is hereby granted, free of charge, to any person obtaining
-#  a copy of this software and associated documentation files (the
-#  "Software"), to deal in the Software without restriction, including
-#  without limitation the rights to use, copy, modify, merge, publish,
-#  distribute, sublicense, and/or sell copies of the Software, and to
-#  permit persons to whom the Software is furnished to do so, subject to
-#  the following conditions:
-#
-#  The above copyright notice and this permission notice shall be
-#  included in all copies or substantial portions of the Software.
-#
-#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-#  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-#  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-#  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-#  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-#  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-#  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-###########################################################################
-*/
-
 /**************************************************************************
  * ContentLanguage Class.
  *************************************************************************/
@@ -45,7 +20,7 @@ if (!is_object($objLang)) {
  * ContentLanguage object.
  */
 var ContentLanguage = function() {
-	this.version = '1.1.2';
+	this.version = '1.1.2'; // 2.0 when jQuery is implemented?
 	this.currentLanguage = 0;
 	this.hover = false;
 	this.buttonType = "";
@@ -70,24 +45,27 @@ var ContentLanguage = function() {
 }
 
 ContentLanguage.require = function(libraryName) {
-	var objScript = document.createElement('script');
-	objScript.setAttribute('type', 'text/javascript');
-	objScript.setAttribute('src', libraryName);		
-	var objHead = document.getElementsByTagName("head");
-	objHead[0].appendChild(objScript);
+	alert("test");
+	var objScript = $("<script></script>");
+	objScript
+		.attr("type", "text/javascript")
+		.attr("src", libraryName);
+		
+	$("head").append(objScript);
+	
+<!--	var objScript = document.createElement('script');-->
+<!--	objScript.setAttribute('type', 'text/javascript');-->
+<!--	objScript.setAttribute('src', libraryName);		-->
+<!--	var objHead = document.getElementsByTagName("head");-->
+<!--	objHead[0].appendChild(objScript);-->
 
-	//*** TODO: jQuery method.
 	//*** Inserting via DOM fails in Safari 2.0, so brute force approach.
 	//document.write('<script type="text/javascript" src="'+libraryName+'"></script>');
 }
 
 ContentLanguage.load = function() {
-	if((typeof Prototype=='undefined') || 
-			(typeof Element == 'undefined') || 
-			(typeof Element.Methods=='undefined') ||
-			parseFloat(Prototype.Version.split(".")[0] + "." +
-			Prototype.Version.split(".")[1]) < 1.5)
-		throw("ContentLanguage class requires the Prototype JavaScript framework >= 1.5.0");
+	if(typeof jQuery == "undefined")
+		throw("ContentLanguage class requires the jQuery library >= 1.4.2");
 
 	$A(document.getElementsByTagName("script")).findAll( function(s) {
 		return (s.src && s.src.match(/pcms\.js(\?.*)?$/))
@@ -113,7 +91,7 @@ ContentLanguage.setDefault = function(intId) {
 }
 
 ContentLanguage.prepareAdd = function() {
-	Effect.BlindDown('languageForm');
+	jQuery("#languageForm").slideDown();
 }
 
 ContentLanguage.prototype.init = function() {
@@ -145,11 +123,9 @@ ContentLanguage.prototype.swap = function(languageId) {
 	
 	//*** Check the active state.
 	if (this.actives[this.currentLanguage] != true) {
-		//*** TODO: Replace the overlib library!
 		if (this.hover) overlib("<?php echo $objLang->get("langEnable", "tip") ?>");
 		jQuery("#language_active").attr("src", "images/lang_disabled.gif");
 	} else {
-		//*** TODO: Replace the overlib library!
 		if (this.hover) overlib("<?php echo $objLang->get("langDisable", "tip") ?>");
 		jQuery("#language_active").attr("src", "images/lang_enabled.gif");	
 	}
@@ -423,7 +399,11 @@ ContentLanguage.prototype.setFieldValue = function(fieldId, strValue) {
 
 ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 	var strUrl = "ajax.php";
-	var strPost = "cmd=StorageItems::getFileListHTML&parentId=" + jQuery('#frm_storage_' + objTrigger.id).find('option:selected').val().split("_").pop();
+	var strPost = 
+		{
+			cmd: "StorageItems::getFileListHTML",
+			parentId: jQuery('#frm_storage_' + objTrigger.id).find('option:selected').val().split("_").pop()
+		};
 	
 	var objFiles = jQuery("#storageBrowser_" + objTrigger.id + "ul");
 	if (objFiles.length > 0) objFiles.find(":first").remove();
@@ -436,44 +416,46 @@ ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 	objList.append(objLoader);
 	
 	//*** TODO: jQuery ajax request.
-	var myAjax = new Ajax.Request(
-			strUrl, 
-			{
-				method: 'get', 
-				parameters: strPost, 
-				onComplete: function(objXHR){objTrigger.parent.showStoragePage(objXHR, objTrigger);}
-			});
+<!--	var myAjax = new Ajax.Request(-->
+<!--			strUrl, -->
+<!--			{-->
+<!--				method: 'get', -->
+<!--				parameters: strPost, -->
+<!--				onComplete: function(objXHR){-->
+<!--					objTrigger.parent.showStoragePage(objXHR, objTrigger);-->
+<!--				}-->
+<!--			});-->
+	var request = jQuery.get(strUrl, strPost, function(data) { objTrigger.parent.showStoragePage(data, objTrigger); }, "xml");
 }
 
-ContentLanguage.prototype.showStoragePage = function(objXHR, objTrigger) {
-	var objResponse = objXHR.responseXML;
-	var objField = objResponse.getElementsByTagName("field")[0];
+ContentLanguage.prototype.showStoragePage = function(objResponse, objTrigger) {
 	
-	var objLoader = jQuery("#storageBrowser_" + objTrigger.id + "div.storageLoader").get(0);
-	objLoader.style.display = "none";
+	var $objField = jQuery(objResponse).find("field");
 	
-	var objList = jQuery("#storageBrowser_" + objTrigger.id + "div.storageList").get(0);
-	objList.innerHTML = objField.firstChild.nodeValue;
+	var $objLoader = jQuery("#storageBrowser_" + objTrigger.id + " div.storageLoader");
+	$objLoader.fadeOut();
+	
+	var $objList = jQuery("#storageBrowser_" + objTrigger.id + " div.storageList");
+	$objList.html($objField.text());
 	
 	//*** Attach events to the thumbs.
-	var objThumbs = jQuery("#storageBrowser_" + objTrigger.id + "li");
-	for (var intCount = 0; intCount < objThumbs.length; intCount++) {
-		var objLink = objThumbs.eq(intCount).find("a:first");
-		objLink
-		.bind("mouseover", function(){
-			var objLabel = jQuery(this).parent("li").find("span:first");
-			//*** TODO: Replace overlib library
-			return overlib(objLabel.html());
-		})
-		.bind("mouseout", function(){
-			return nd();
-		})
-		.bind("click", function(){
-			var objLabel = jQuery(this).parent("li").find("span:first");
-			objTrigger.transferStorage(this, objLabel.html());
-			return false;
-		});
-	}
+	jQuery("#storageBrowser_" + objTrigger.id + " li").each(function(i){
+		var $objLink = jQuery(this).find("a:first");
+		$objLink
+			.bind("mouseover mouseout", function(event){
+				if(event.type == "mouseover"){
+					var objLabel = jQuery(this).parent().find("span:first");
+					return overlib(objLabel.html());
+				} else {
+					return nd();
+				}
+			})
+			.bind("click", function(){
+				var objLabel = jQuery(this).parent().find("span:first");
+				objTrigger.transferStorage(jQuery(this), objLabel.html());
+				return false;
+			});
+	});
 }
 
 /*** 
@@ -612,19 +594,17 @@ TextAreaField.prototype.toScreen = function() {
 		//*** The element is not active.
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "___Frame").hide();
-		//*** Replaced .show() and .setStyle({'display':'inline'}) for one line of jQuery
 		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
 		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
 		jQuery("#" + this.id + "___Frame").hide();
-		//*** Replaced .show() and .setStyle({'display':'inline'}) for one line of jQuery
 		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else {
 		//*** The field needs no special treatment.
-		Element.hide(this.id + "_alt");
-		Element.show(this.id + "___Frame");
+		jQuery(this.id + "_alt").hide();
+		jQuery(this.id + "___Frame").show();
 		if (typeof FCKeditorAPI != "undefined") {
 			var objArea = FCKeditorAPI.GetInstance(this.id);
 			if (typeof objArea == "object") {
@@ -682,12 +662,12 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	jQuery("#browseStorage_" + strId).toggle(
 		function(){
 			__this.openStorageBrowser();
-			jQuery(this).text("Sluit media browser");
+			jQuery(this).text("<?php echo $objLang->get("pcmsInlineStorage", "menu"); ?>");
 			return false;
 		},
 		function(){
 			__this.closeStorageBrowser();
-			jQuery(this).text("Media browser");
+			jQuery(this).text("<?php echo $objLang->get("pcmsInlineStorage", "menu"); ?>");
 			return false;
 		}
 	);
@@ -781,7 +761,7 @@ FileField.prototype.toScreen = function() {
 		for (var intCount = 0; intCount < this.subFiles[this.parent.defaultLanguage].toUpload.length; intCount++) {
 			strValue += this.shortName(this.subFiles[this.parent.defaultLanguage].toUpload[intCount].value, 40) + "<br />";
 		}
-		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
+		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id + "_widget").hide();
 		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else {
@@ -792,8 +772,8 @@ FileField.prototype.toScreen = function() {
 		//*** Insert upload rows.
 		jQuery("#" + this.id + "_widget div.required").show();
 		jQuery("#filelist_new_" + this.id).hide();
-		var objItems = jQuery("#filelist_new_" + this.id + " div.multifile");
-		objItems.each(function() {
+		
+		jQuery("#filelist_new_" + this.id + " div.multifile").each(function() {
 			jQuery(this).remove();
 		});
 		
@@ -820,13 +800,15 @@ FileField.prototype.toScreen = function() {
 		
 		//*** Insert current rows.
 		jQuery("#filelist_current_" + this.id).hide();
-		var objItems = jQuery("#filelist_current_" + this.id + " div.multifile");
-		objItems.each(function() {
+		
+		jQuery("#filelist_current_" + this.id + " div.multifile").each(function() {
 			jQuery(this).remove();
 		});
+		
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
-			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount];
-			var blnStorage = (filledElement.value.split(":").length > 2) ? true : false;
+			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount],
+				blnStorage 	  = (filledElement.value.split(":").length > 2) ? true : false;
+			
 			this.addCurrentRow(filledElement, blnStorage);
 			jQuery("#filelist_current_" + this.id).show();
 		}
@@ -835,7 +817,9 @@ FileField.prototype.toScreen = function() {
 		try {
 			this.swfUpload.setFileUploadLimit(this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles));
 			this.swfUpload.setFileQueueLimit(this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles));
+			
 			var objStats = this.swfUpload.getStats();
+			
 			objStats.successful_uploads = this.subFiles[this.parent.currentLanguage].toUpload.length;
 			this.swfUpload.setStats(objStats);
 		} catch (e) {
@@ -843,348 +827,404 @@ FileField.prototype.toScreen = function() {
 		}
 		
 		var strId = this.id;
-		Sortable.create(
-			"filelist_current_" + this.id, 
-				{
-					tag: "div",
-					only: "multifile",
-					hoverclass: "sorthover",
-					onUpdate: function(){
-						objContentLanguage.sort(strId)
-					}
-				}
-			);
+		
+		jQuery("#filelist_current_" + this.id).sortable({
+			dropOnEmpty: true,
+			connectWith: "#groups, #allgroups",
+			update: function(){
+				objContentLanguage.sort(strId)
+			},
+			axis: "y"
+		});
+		jQuery("#filelist_current_" + this.id).disableSelection();
 	}
 }
 
 FileField.prototype.openStorageBrowser = function() {
-	var __this = this;
-	var closeLabel = "Sluit media bibliotheek";
-	
+	var __this 	   = this,
+		closeLabel = "<?php echo $objLang->get("pcmsCloseInlineStorage", "menu"); ?>";
+		
 	//*** Slide open.
 	jQuery("#storageBrowser_" + this.id).slideDown("fast", function(){
-		var slideDown = this;
-
+		jQuery("#browseStorage_" + __this.id).text(closeLabel);
 		__this.parent.loadStoragePage(__this);
-		jQuery("#browseStorage_" + this.id).text(closeLabel);
-		
 	});
 }
 
 FileField.prototype.closeStorageBrowser = function() {
-	var __this = this;
+	var __this = this,
+		defaultLabel = "<?php echo $objLang->get("pcmsInlineStorage", "menu"); ?>";
 	
 	jQuery("#storageBrowser_" + this.id).slideUp("fast", function(){
-		jQuery("#browseStorage_" + this.id).text("Media browser");
+		jQuery("#browseStorage_" + __this.id).text(defaultLabel);
 	});
 }
 
 FileField.prototype.transferField = function() {
+	jQuery.debug({title: "FileField.prototype.transferField", content: FileField.prototype.transferField});
 	jQuery("#filelist_new_" + this.id).show();
 
 	//*** Set the id and name of the filled file field.
-	var filledElement = jQuery("#" + this.id);
-	var objParent = this.parent;
-	var strId = this.id;
+	var $filledElement = jQuery("#" + this.id),
+		objParent 	   = this.parent,
+		strId 		   = this.id;
 	
-	this.subFiles[this.parent.currentLanguage].toUpload.push(filledElement);
+	this.subFiles[this.parent.currentLanguage].toUpload.push($filledElement);
 	
-	filledElement.id = this.id + "_" + this.parent.currentLanguage + "_" + this.fileCount++;
-	filledElement.name = this.id + "_" + this.parent.currentLanguage + "_new[]";
+	$filledElement
+		.attr("id", strId + "_" + objParent.currentLanguage + "_" + this.fileCount++)
+		.attr("name", strId + "_" + objParent.currentLanguage + "_new[]");
 	
 	//*** Create empty replacement.
-	var objElement = document.createElement('input');
-	objElement.type = 'file';
-	objElement.className = 'input-file';
-	objElement.id = this.id;
-	objElement.name = this.id + "_new";
-	
-	objElement.onchange = function() {
-		objParent.transferField(strId);
-	};
+	var $objElement = jQuery("<input />");
+	$objElement
+		.attr("type", "file")
+		.addClass("input-file")
+		.attr("id", strId)
+		.attr("name", strId + "_new")
+		.bind("change", function(){
+			objParent.transferField(strId);
+		});
 
-	filledElement.parentNode.insertBefore(objElement, filledElement.nextSibling);
+	$objElement.insertBefore($filledElement.next());
 
 	//*** Add row to the upload list.
-	this.addUploadRow(filledElement);
+	this.addUploadRow($filledElement);
 	
 	//*** Appease Safari: display:none doesn't seem to work correctly in Safari.
-	filledElement.style.position = 'absolute';
-	filledElement.style.left = '-10000px';
+	$filledElement.css({
+		"position" : "absolute",
+		"left" : "-100000px"
+	});
 }
 
-FileField.prototype.addUploadRow = function(element) {
-	var objParent = this.parent;
-	var strId = this.id;
+FileField.prototype.addUploadRow = function(element) { // element is a jQuery object
+	jQuery.debug({content: "FileField.prototype.addUploadRow triggered"});
+	var objParent  	 = this.parent,
+		strId 	   	 = this.id,
+		$element   	 = (element instanceof jQuery) ? element : jQuery(element), // Make sure it's a jQuery object
+		$objRow    	 = jQuery("<div></div>"),
+		$objButton 	 = jQuery("<a></a>"),
+		$objRowValue = jQuery("<p></p>");
 	
-	var objRow = document.createElement('div');
-	objRow.id = 'file_' + element.id;
-	objRow.className = 'multifile';
-	objRow.element = element;
+	$objRow
+		.attr("id", "file_" + $element.attr("id"))
+		.addClass("multifile")
+		.data("element", $element);
+	$objButton
+		.attr("href", "")
+		.addClass("button")
+		.html(this.removeLabel)
+		.bind("click", function(){
+			objParent.removeUploadField(strId, this);
+			return false;
+		});
+	$objRow.append($objButton);
+	$objRowValue
+		.html(this.shortName($element.attr("value"), this.maxChar))
+	$objRow
+		.append($objRowValue);
 
-	var objButton = document.createElement('a');
-	objButton.className = 'button';
-	objButton.innerHTML = this.removeLabel;
-	objButton.href = '';
-
-	//*** Delete function.
-	objButton.onclick = function() {
-		objParent.removeUploadField(strId, this);
-		return false;
-	};
-		
-	objRow.appendChild(objButton);
-	
-	var objRowValue = document.createElement('p');
-	objRowValue.innerHTML = this.shortName(element.value, this.maxChar);
-	objRow.appendChild(objRowValue);
-
-	jQuery("#filelist_new_" + this.id).append(objRow);
+	jQuery("#filelist_new_" + strId).append($objRow);
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
 		jQuery("#" + this.id + "_widget div.required").hide();
 		jQuery("#storageBrowser_" + this.id).hide();
 	}
-		
-	Sortable.create("filelist_new_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
+	jQuery("#filelist_new_" + this.id).sortable({
+		items: "div",
+		axis: "y",
+		update: function(){
+			objContentLanguage.sort(strId);
+		}
+	});
+	jQuery("h3").bind("sortstart", function(){ return false; });
 }
 
-FileField.prototype.addCurrentRow = function(element, blnStorage) {
-	var objParent = this.parent;
-	var strId = this.id;
+FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element should be a jQuery element
+	var objParent 		= this.parent,
+		strId 			= this.id,
+		$objRow			= jQuery("<div></div>"),
+		$element   		= (element instanceof jQuery) ? element : jQuery(element), // Make sure it's a jQuery object
+		$objButton  	= jQuery("<a></a>"),
+		$objThumb		= jQuery("<a></a>"),
+		$objRowValue 	= jQuery("<p></p>"),
+		$objAltText 	= jQuery("<p></p>");
 	
-	var objRow = document.createElement('div');
-	objRow.id = 'file_' + element.id;
-	objRow.className = (blnStorage) ? 'multifile storage' : 'multifile';
-	objRow.style.position = 'relative';
-	objRow.element = element;
+	$objRow
+		.attr("id", 'file_' + $element.attr("id")) 
+		.addClass((blnStorage) ? "multifile storage" : "multifile")
+		.css({"position":"relative"})
+		.data("element", $element);
 
-	//*** Delete button.
-	var objButton = document.createElement('a');
-	objButton.className = 'button';
-	objButton.innerHTML = this.removeLabel;
-	objButton.href = '';
-	objButton.onclick = function() {
-		objParent.removeCurrentField(strId, this);
-		return false;
-	};
-	objRow.appendChild(objButton);
+	$objButton
+		.addClass("button")
+		.html(this.removeLabel)
+		.attr("href", "")
+		.bind("click", function(){
+			objParent.removeCurrentField(strId, this);
+			return false;
+		});
 	
-	var arrValue = element.value.split(":");
-	var labelValue = arrValue.shift();
-	var fileValue = arrValue.shift();
-	var libraryValue = arrValue.shift();
-	var alttextValue = arrValue.shift();
+	$objRow.append($objButton);
+	
+	var arrValue = $element.attr("value").split(":"),
+		labelValue = arrValue.shift(),
+		fileValue = arrValue.shift(),
+		libraryValue = arrValue.shift(),
+		alttextValue = arrValue.shift();
 	
 	//*** Image thumbnail.
 	if (this.thumbPath != "") {
 		var __this = this;
 		if (this.isImage(fileValue)) {
-			var objThumb = document.createElement('a');
-			objThumb.className = 'thumbnail';
-			objThumb.innerHTML = '<img src="thumb.php?src=' + this.thumbPath + fileValue + '" alt="" />';
-			objThumb.href = '';
-			objThumb.onmouseover = function() {
-				return overlib('<img src="' + __this.thumbPath + fileValue + '" alt="" />', FULLHTML);
-			};
-			objThumb.onmouseout = function() {
-				return nd();
-			};
+			$objThumb
+				.addClass("thumbnail")
+				.html("<img src=\"thumb.php?src=" + this.thumbPath + fileValue + "\" alt=\"\" />")
+				.attr("href", "")
+				.bind("mouseover mouseout", function(event){
+					if(event.type == "mouseover"){
+						return overlib('<img src="' + __this.thumbPath + fileValue + '" alt="" />', FULLHTML);
+					}
+					else {
+						return nd();
+					}
+				});
 		} else {
-			var objThumb = document.createElement('a');
-			objThumb.className = 'document';
-			objThumb.innerHTML = '<img src="/images/ico_document.gif" alt="" />';
-			objThumb.href = '';
-			objThumb.onclick = function(){
-				window.open(__this.thumbPath + fileValue);
-				return false;
-			};
-			objThumb.onmouseover = function() {
-				return overlib('This file will open in a new window.');
-			};
-			objThumb.onmouseout = function() {
-				return nd();
-			};
+			$objThumb
+				.addClass("document")
+				.html("<img src=\"/images/ico_document.gif\" alt=\"\" />")
+				.attr("href", "")
+				.bind("click mouseover mouseout", function(event){
+					switch(event.type){
+						case "mouseover":
+							return overlib('This file will open in a new window.');
+						break;
+						case "mouseout":
+							return nd();
+						break;
+						case "click":
+							window.open(__this.thumbPath + fileValue);
+							return false;
+						break;
+					}
+				});
 		}
-		objRow.appendChild(objThumb);
+		
+		$objRow.append($objThumb); // Add the thumb to the row
 	}
 	
 	//*** Label.
-	var objRowValue = document.createElement('p');
-	objRowValue.innerHTML = labelValue;
-	objRow.appendChild(objRowValue);
+	$objRowValue.html(labelValue);
+	$objRow.append($objRowValue);
 	
 	//*** Description.
-	var objAltText = document.createElement('p');
-	objAltText = Element.extend(objAltText);
-	objAltText.className = 'alt-text';
-	objAltText.innerHTML = (alttextValue == "" || alttextValue == undefined) ? this.altLabel : alttextValue;
-	objAltText.observe("click", function(event) {
-		__this.startAltEdit(event);
-	});
-	objRow.appendChild(objAltText);
+	$objAltText
+		.addClass("alt-text")
+		.html((alttextValue == "" || alttextValue == undefined) ? this.altLabel : alttextValue)
+		.bind("click", function(event) {
+			__this.startAltEdit(event);
+		});
+		
+	$objRow.append($objAltText);
 
-	jQuery("#filelist_current_" + this.id).append(objRow);
+	jQuery("#filelist_current_" + strId).append($objRow);
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
-		jQuery("#" + this.id + "_widget div.required").hide();
-		jQuery("#storageBrowser_" + this.id).hide();
+		jQuery("#" + strId + "_widget div.required").hide();
+		jQuery("#storageBrowser_" + strId).hide();
 	}
 }
 
 FileField.prototype.addSwfUploadRow = function(element, file) {	
-	var __this = this;
-	
-	var objRow = document.createElement('div');
-	objRow = Element.extend(objRow);
-	objRow.id = 'file_' + element.id;
+	jQuery.debug({content: "FileField.prototype.addSwfUploadRow"});
+	var __this   			= this,
+		strId				= this.id,
+		$element 			= (element instanceof jQuery) ? element : jQuery(element), // Make it a jQuery object
+		$objRow 			= jQuery("<div></div>"),
+		$objButton 			= jQuery("<a></a>"),
+		$objThumb 			= jQuery("<a></a>"),
+		$tempFile 			= jQuery($element.data("file")),
+		$objRowValue 		= jQuery("<p></p>"),
+		$objProgressBar 	= jQuery("<div></div>"),
+		$objProgressWrapper = jQuery("<div></div>"),
+		$objAltText 		= jQuery("<p></p>");
+
+		
+	$objRow.attr("id", "file_" + $element.attr("id")); 
 	
 	if (file !== undefined) {
-		objRow.className = 'multifile storage ' + file.id;
+		$objRow.addClass("multifile storage " + file.id);
 	} else {
-		objRow.className = 'multifile storage ' + element.retrieve("file").id;
+		$objRow.addClass("multifile storage " + $element.data("file").id);
 	}
 	
-	objRow.style.position = 'relative';
-	objRow.element = element;
+	$objRow
+		.css("position","relative")
+		.data("element", element);
 	
 	if (file !== undefined) {
-		objRow.observe("mouseover", function() {
-			jQuery("#" + objRow.id).find("a img").eq(0).attr("src", "/images/ico_loading_mo.gif");
-		})
-		.observe("mouseout", function() {
-			jQuery("#" + objRow.id).find("a img").eq(0).attr("src", "/images/ico_loading.gif");
+		$objRow.bind("mouseover mouseout", function(event) {
+			if(event.type == "mouseover"){
+				jQuery("#" + $objRow.attr("id")).find("a img").eq(0).attr("src", "/images/ico_loading_mo.gif");
+			}
+			else { // Then it's a mouseout event
+				jQuery("#" + $objRow.attr("id")).find("a img").eq(0).attr("src", "/images/ico_loading.gif");
+			}
 		});
 	}
 
 	//*** Delete button.
-	var objButton = document.createElement('a');
-	objButton = Element.extend(objButton);
-	objButton.className = 'button';
+	$objButton.addClass("button");
 	
 	if (file !== undefined) {
-		objButton.innerHTML = this.cancelLabel;
-		objButton.observe("click", function(event) {
-			__this.cancelCurrentSwfUpload(element.id, file);
-			event.stop();
-			return false;
-		});
+		$objButton
+			.html(this.cancelLabel)
+			.bind("click", function(event) {
+				__this.cancelCurrentSwfUpload($element.attr("id"), file);
+				event.stopPropagation();
+				return false;
+			});
 	} else {
-		objButton.innerHTML = this.removeLabel;
-		objButton.observe("click", function(event) {
-			__this.cancelCurrentSwfUpload(element.id, element.retrieve("file"));
-			event.stop();
-			return false;
+		$objButton
+			.html(this.removeLabel)
+			.bind("click", function(event) {
+				__this.cancelCurrentSwfUpload($element.attr("id"), $element.data("file"));
+				event.stopPropagation();
+				return false;
 		});
 	}
-	objButton.href = '';
-	objRow.appendChild(objButton);
 	
-	var arrValue = element.value.split(":");
-	var labelValue = arrValue.shift();
-	var fileValue = arrValue.shift();
-	var libraryValue = arrValue.shift();
-	var alttextValue = arrValue.shift();
+	$objButton.attr("href","");
+	$objRow.append($objButton);
+	
+	var arrValue 		= $element.attr("value").split(":"),
+		labelValue 		= arrValue.shift(),
+		fileValue 		= arrValue.shift(),
+		libraryValue 	= arrValue.shift(),
+		alttextValue 	= arrValue.shift();
 		
 	//*** Image thumbnail.
-	var objThumb = document.createElement('a');
-	objThumb = Element.extend(objThumb);
-	objThumb.href = '';
+	$objThumb.attr("href","")
 	if (file !== undefined) {
-		objThumb.className = 'document';
-		objThumb.innerHTML = '<img src="/images/ico_loading.gif" alt="" />';
-		objThumb.observe("mouseover", function() {
-			return overlib('This file is being uploaded.');
-		})
-		.observe("mouseout", function() {
-			return nd();
-		});
+		$objThumb
+			.addClass("document")
+			.html("<img src=\"/images/ico_loading.gif\" alt=\"\" />")
+			.bind("mouseover mouseout", function(event) {
+				if(event.type == "mouseover"){ 
+					return overlib('This file is being uploaded.'); 
+				}
+				else { // It's a mouseout event 
+					return nd(); 
+				}
+			});
 	} else {
-		var tempFile = element.retrieve("file");
+		
 		if (__this.thumbPath != "") {
 			if (__this.isImage(tempFile.name)) {
-				objThumb.className = 'thumbnail';
-				objThumb.innerHTML = "<img src=\"thumb.php?src=" + __this.uploadPath + tempFile.name + "\" alt=\"\" />";
-				objThumb.observe("mouseover", function() {
-					return overlib("<img src=\"" + __this.uploadPath + tempFile.name + "\" alt=\"\" />", FULLHTML);
-				})
-				.observe("mouseout", function() {
-					return nd();
-				});
+				$objThumb
+					.addClass("thumbnail")
+					.html("<img src=\"thumb.php?src=" + __this.uploadPath + tempFile.name + "\" alt=\"\" />")
+					.bind("mouseover mouseout", function(event) {
+						if(event.type == "mouseover") { 
+							return overlib("<img src=\"" + __this.uploadPath + tempFile.name + "\" alt=\"\" />", FULLHTML);
+						}
+						else {
+							return nd();
+						}
+					});
 			} else {
-				objThumb.className = 'document';
-				objThumb.innerHTML = '<img src="/images/ico_document.gif" alt="" />';
-				objThumb.observe("click", function(event) {
-					window.open(__this.thumbPath + "upload/" + tempFile.name);
-					event.stop();
-					return false;
-				})
-				.observe("mouseover", function() {
-					return overlib("This file will open in a new window.");
-				})
-				.observe("mouseout", function() {
-					return nd();
-				});
+				$objThumb
+					.addClass("document")
+					.html("<img src=\"/images/ico_document.gif\" alt=\"\" />")
+					.bind("mouseover mouseout click", function(event) {
+						switch(event.type){
+							case "click":
+								window.open(__this.thumbPath + "upload/" + $tempFile.attr("name"));
+								event.stopPropagation(); // kill all further bubbling
+								return false;
+							break;
+							case "mouseover":
+								return overlib("This file will open in a new window.");
+							break;
+							case "mouseout":
+								return nd();
+							break;
+						}
+					});
 			}
 		}	
 	}
-	objRow.appendChild(objThumb);
+	$objRow.append($objThumb);
 	
 	//*** Label.
-	var objRowValue = document.createElement('p');
-	objRowValue.innerHTML = labelValue;
-	objRow.appendChild(objRowValue);
+	$objRowValue.html(labelValue);
+	$objRow.append($objRowValue);
 	
 	if (file !== undefined) {
 		//*** Progress.
-		var objProgressBar = document.createElement('div');
-		objProgressBar.className = 'progressBar';
-		
-		var objProgressWrapper = document.createElement('div');
-		objProgressWrapper.className = 'progressWrapper';
-		objProgressWrapper.appendChild(objProgressBar);
-		objRow.appendChild(objProgressWrapper);
+		$objProgressBar.addClass("progressBar");
+		$objProgressWrapper
+			.addClass("progressWrapper")
+			.append($objProgressBar);
+			
+		$objRow.append($objProgressWrapper);
 	} else {
 		//*** Description.
-		var objAltText = document.createElement('p');
-		objAltText = Element.extend(objAltText);
-		objAltText.className = 'alt-text';
-		objAltText.innerHTML = this.altLabel;
-		objAltText.observe("click", function(event) {
-			__this.startAltEdit(event);
-		});
-		objRow.appendChild(objAltText);
+		$objAltText
+			.addClass("alt-text")
+			.html(this.altLabel)
+			.bind("click", function(event) {
+				__this.startAltEdit(event);
+			});
+		$objRow.append($objAltText);
 	}
 
-	jQuery("#filelist_new_" + this.id).append(objRow);
+	jQuery("#filelist_new_" + strId).append($objRow);
 	
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
-		jQuery("#storageBrowser_" + this.id).hide();
+		jQuery("#storageBrowser_" + strId).hide();
 	}
 	
-	var strId = this.id;
-	Sortable.create("filelist_new_" + this.id, {tag:"div",only:"multifile",hoverclass:"sorthover",onUpdate:function(){objContentLanguage.sort(strId)}});
+	jQuery("#filelist_new_" + strId).sortable({
+		items: "div",
+		update: function(){
+			objContentLanguage.sort(strId);
+		},
+		axis: "y"
+	})
+	.bind("mouseover mouseout", function(event){
+		if(event.type == "mouseover"){
+			jQuery(this).addClass("sorthover");
+		}
+		else {
+			jQuery(this).removeAttr("class"); // Remove class the clean way
+		}
+	});
 }
 
 FileField.prototype.removeSwfUploadRow = function(inputId, file) {
+	var arrTemp = new Array();
+	
 	jQuery("#" + inputId).remove();
 	jQuery("#file_" + inputId).remove();
 	
 	//*** Remove remotely.
 	//*** TODO: jQuerify this.
-	new Ajax.Request("upload.php", {
-		method: 'post',
-		parameters: {
-			'do': 'remove', 
-			file: file.name,
-			PHPSESSID: "<?php echo session_id(); ?>"
-		}
-	});
+	objData = {
+		do: "remove",
+		file: file.name,
+		PHPSESSID: "<?php echo session_id(); ?>"
+	};
+	jQuery.post("upload.php", {}, 
+		function(data){
+			// TODO: Implement some feedback here
+		}, 
+	"xml"); // You want this to be json
 	
-	var arrTemp = new Array();
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].toUpload.length; intCount++) {
 		if (this.subFiles[this.parent.currentLanguage].toUpload[intCount].value != file.name) {
 			arrTemp.push(this.subFiles[this.parent.currentLanguage].toUpload[intCount]);
@@ -1199,38 +1239,50 @@ FileField.prototype.removeSwfUploadRow = function(inputId, file) {
 }	
 
 FileField.prototype.removeUploadField = function(objTrigger) {	
-	objTrigger.parentNode.element.parentNode.removeChild(objTrigger.parentNode.element);
-	objTrigger.parentNode.parentNode.removeChild(objTrigger.parentNode);
+	jQuery.debug({content: "FileField.prototype.removeUploadField triggered"});
+	var strId 			= this.id,
+		$objTrigger 	= (objTrigger instanceof jQuery) ? objTrigger : jQuery(objTrigger), // Make it a jQuery object
+		cacheValue 		= $objTrigger.parent().data("element").val();
+	
+	jQuery.debug({content: "Aantal over:" + $objTrigger.parent().data("element").length});
+	
+	$objTrigger.parent().data("element").remove();
+	$objTrigger.parent().remove();
+	// objTrigger.parentNode.element.parentNode.removeChild(objTrigger.parentNode.element);
+	// objTrigger.parentNode.parentNode.removeChild(objTrigger.parentNode);
 	
 	var arrTemp = new Array();
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].toUpload.length; intCount++) {
-		if (this.subFiles[this.parent.currentLanguage].toUpload[intCount].value != objTrigger.parentNode.element.value) {
+		if (this.subFiles[this.parent.currentLanguage].toUpload[intCount].value != cacheValue) {
 			arrTemp.push(this.subFiles[this.parent.currentLanguage].toUpload[intCount]);
 		}
 	}
 	this.subFiles[this.parent.currentLanguage].toUpload = arrTemp;
 	
-	jQuery("#" + this.id + "_widget div.required").show();
+	jQuery("#" + strId + "_widget div.required").show();
 	if (this.subFiles[this.parent.currentLanguage].toUpload.length == 0) {
-		jQuery("#filelist_new_" + this.id).hide();
+		jQuery("#filelist_new_" + strId).hide();
 	}
 }
 
 FileField.prototype.removeCurrentField = function(objTrigger) {	
+	var strId 			= this.id,
+		$objTrigger 	= (objTrigger instanceof jQuery) ? objTrigger : jQuery(objTrigger), // Make it a jQuery object
+		cacheValue 		= $objTrigger.parent().data("element").val(),
+		arrTemp 		= new Array();
+		
 	jQuery("#" + this.id + "_widget div.required").show();
 	
-	var arrTemp = new Array();
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
-		if (this.subFiles[this.parent.currentLanguage].uploaded[intCount].value != objTrigger.parentNode.element.value) {
+		if (this.subFiles[this.parent.currentLanguage].uploaded[intCount].value != cacheValue) {
 			arrTemp.push(this.subFiles[this.parent.currentLanguage].uploaded[intCount]);
 		}
 	}
 	this.subFiles[this.parent.currentLanguage].uploaded = arrTemp;
 	this.subFiles[this.parent.currentLanguage].currentFiles--;
 	
-	//*** TODO: convert javascript (parentNode etc) to jQuery
-	objTrigger.parentNode.element.parentNode.removeChild(objTrigger.parentNode.element);
-	objTrigger.parentNode.parentNode.removeChild(objTrigger.parentNode);
+	$objTrigger.parent().data("element").remove();
+	$objTrigger.parent().remove();
 	
 	if (this.subFiles[this.parent.currentLanguage].uploaded.length == 0) {
 		jQuery("#filelist_current_" + this.id).hide();
@@ -1256,16 +1308,16 @@ FileField.prototype.shortName = function(strInput, maxLength) {
 	return strInput;
 }
 
-FileField.prototype.transferStorage = function(objLink, strLabel) {
-	Effect.SwitchOff(objLink);
-	setTimeout(function(){Effect.Appear(objLink)}, 1200);
+FileField.prototype.transferStorage = function(objLink, strLabel) { // objLink is a jQuery object.
+	objLink.fadeOut("fast", function(){ jQuery(this).fadeIn("slow"); });
 
 	//*** Create input element.
 	var objElement = document.createElement('input');
 	objElement.type = 'hidden';
 	objElement.id = this.id + "_" + this.parent.currentLanguage + "_" + this.fileCount++;
 	objElement.name = this.id + "_" + this.parent.currentLanguage + "[]";
-	objElement.value = strLabel + ":" + jQuery("#" + objLink).find("img:first").attr("alt").split("/").pop() + ":" + jQuery("#" + objLink).attr("id").split("_").pop();
+	objElement.value = strLabel + ":" + objLink.find("img:first").attr("alt").split("/").pop() + ":" + objLink.attr("id").split("_").pop();
+	jQuery.debug({title: "objElement.value", content: objElement.value});
 	jQuery("#filelist_new_" + this.id).append(objElement);
 	
 	this.subFiles[this.parent.currentLanguage].currentFiles++;
@@ -1292,7 +1344,7 @@ FileField.prototype.isImage = function(fileName) {
 FileField.prototype.toTemp = function() {};
 
 FileField.prototype.sort = function() {
-	var arrFields = Sortable.serialize('filelist_current_' + this.id).split("&");
+	var arrFields = jQuery("#filelist_current_" + this.id).sortable("serialize").split("&");
 	var objParent = jQuery("#" + this.id + '_widget');
 	for (var intCount = 0; intCount < arrFields.length; intCount++) {
 		var strTemp = arrFields[intCount].replace('filelist_current_' + this.id + "[]=", "");
@@ -1359,26 +1411,28 @@ FileField.prototype.fileDialogComplete = function(numFilesSelected, numFilesQueu
 }
 
 FileField.prototype.uploadStart = function(file) {
+	var $objElement = jQuery("<input />");
 	jQuery("#filelist_new_" + this.settings.jsParent.id).show();
 	
 	//*** Create input element.
-	var objElement = document.createElement('input');
-	objElement = Element.extend(objElement);
-	objElement.type = 'hidden';
-	objElement.id = this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "_" + this.settings.jsParent.fileCount++;
-	objElement.name = this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "[]";
-	objElement.value = file.name + ":::";
-	objElement.store("file", file);
-	jQuery("#filelist_new_" + this.settings.jsParent.id).append(objElement);
+	$objElement
+		.attr("type", "hidden")
+		.attr("id", this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "_" + this.settings.jsParent.fileCount++)
+		.attr("name", this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "[]")
+		.attr("value", file.name + ":::")
+		.data("file", file);
 		
-	this.settings.jsParent.subFiles[this.settings.jsParent.parent.currentLanguage].toUpload.push(objElement);
-	
-	this.settings.jsParent.addSwfUploadRow(objElement, file);
+	jQuery.debug({title: "File", content: file});
+		
+	jQuery("#filelist_new_" + this.settings.jsParent.id).append($objElement);
+		
+	this.settings.jsParent.subFiles[this.settings.jsParent.parent.currentLanguage].toUpload.push($objElement);
+	this.settings.jsParent.addSwfUploadRow($objElement, file);
 }
 
 FileField.prototype.uploadProgress = function(file, bytesLoaded, bytesTotal) {
 	var percent = Math.ceil((bytesLoaded / bytesTotal) * 100);
-	jQuery("div." + file.id + " div.progressBar").get(0).setStyle({width:percent + "%"});
+	jQuery("div." + file.id + " div.progressBar").css({width:percent + "%"});
 }
 
 FileField.prototype.uploadSuccess = function(file, serverData) {
@@ -1414,21 +1468,22 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 	}	
 	
 	//*** Description.
-	var objAltText = document.createElement('p');
-	objAltText = Element.extend(objAltText);
-	objAltText.className = 'alt-text';
-	objAltText.innerHTML = __this.altLabel;
-	objAltText.observe("click", function(event) {
-		__this.startAltEdit(event);
-	});
-	jQuery("div." + file.id + ":first").append(objAltText);
+	var $objAltText = jQuery("<p></p>");
+	$objAltText
+		.addClass("alt-text")
+		.html(__this.altLabel)
+		.bind("click", function(event){
+			__this.startAltEdit(event);
+		});
+		
+	jQuery("div." + file.id + ":first").append($objAltText);
 }
 
 FileField.prototype.startAltEdit = function(event) {
-	var __this = this;
+	var __this 	= this,	
+		strId  	= event.findElement("div").id;
+		strText = event.findElement().innerHTML;
 	
-	var strId = event.findElement("div").id;
-	var strText = event.findElement().innerHTML;
 	event.findElement().stopObserving("click").innerHTML = "<input type=\"text\" id=\"" + strId + "_altedit" + "\" name=\"" + strId + "_altedit" + "\" value=\"" + strText + "\" class=\"alt-input\"></input>";
 	event.findElement().select("input")[0].observe("blur", function(event){
 		__this.stopAltEdit(event);

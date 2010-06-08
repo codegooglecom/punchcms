@@ -2,7 +2,7 @@ var intSortId;
 var intSortedId;
 var strSortElement;
 
-Event.observe(window, 'load', function() { 
+jQuery(function(){
 	init(); 
 });
 
@@ -218,40 +218,22 @@ function initUpdateSort() {
 	clearTimeout(intSortId);
 
 	//*** Set the timeout for a delayed save of the item sorting.
-	strSortElement = this.element.id;
+	strSortElement = this.id;
 	intSortId = setTimeout("submitUpdateSort()", 500);
 }
 
 function submitUpdateSort() {
 	//*** Submit the sorting of the items via Ajax.
 	intSortedId = intSortId;
-	var strPost = document.location.href;
-	
-	/* Sanitize the request string by filtering out any previously
-	 * sorted items.
-	 */
-	strPost = strPost.replace(/\&itemlist\[]=.*\&/ig, "&");
-	strPost = strPost.replace(/\&itemlist\[]=.*/ig, "");
-		
-	objPost = strPost.toQueryParams();
-		
-	if (strPost.indexOf("?") > -1) {
-		strPost += "&";
-	} else {
-		strPost += "?";
-	}
-	strPost += "cmd=12&" + Sortable.serialize(strSortElement);
+	var strPage = document.location.href;
+	var strData = "cmd=12&" + jQuery("#" + strSortElement).sortable("serialize", {key: "itemlist[]"});
 
-	new Ajax.Request(strPost, {
-		method: 'get',
-		onSuccess: function(transport) {
-			if (typeof objTree == "object") {
-				objTree.refreshItem(objPost.eid);
-			}
+	jQuery.get(strPage, strData, function(data){
+		if (typeof objTree == "object") {
+			objTree.refreshItem(jQuery.query.get("eid"));
+			jQuery.debug({content: jQuery.query.get("eid"), title: "jQuery.query.get"});
 		}
 	});
-	
-	//document.location.href = strPost;
 }
 
 function pauseUpdateSort() {

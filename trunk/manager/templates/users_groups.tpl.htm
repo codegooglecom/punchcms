@@ -85,20 +85,25 @@
 									dropOnEmpty: true,
 									connectWith: "#rights, #allrights"
 								});
+								jQuery("#rights, #allrights").disableSelection();
+								
 								jQuery("#users, #allusers").sortable({
 									dropOnEmpty: true,
 									connectWith: "#users, #allusers"
 								});
+								jQuery("#users, #allusers").disableSelection();
+								
 								jQuery("#groups, #allgroups").sortable({
 									dropOnEmpty: true,
 									connectWith: "#groups, #allgroups"
 								});
+								jQuery("#groups, #allgroups").disableSelection();
+								
 								jQuery("#subgroups, #allsubgroups").sortable({
 									dropOnEmpty: true,
 									connectWith: "#subgroups, #allsubgroups"
 								});
-
-								jQuery.debug({content: "Template: users_groups.tpl.htm"});
+								jQuery("#subgroups, #allsubgroups").disableSelection();
 							// ]]>
 							</script>
 						</form>
