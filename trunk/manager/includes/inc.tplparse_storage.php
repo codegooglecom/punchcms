@@ -479,7 +479,7 @@ function parseFiles($intElmntId, $strCommand) {
 
 			//*** Render the details tab.
 			$objTpl->setCurrentBlock("headertitel_simple");
-			$objTpl->setVariable("HEADER_TITLE", $objLang->get("details", "label"));
+			$objTpl->setVariable("HEADER_TITLE", $objLang->get("singleFile", "label"));
 			$objTpl->parseCurrentBlock();
 
 			//*** Render the element form.

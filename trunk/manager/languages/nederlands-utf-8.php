@@ -111,6 +111,7 @@ $_LANG['label']['for'] = "voor";
 $_LANG['label']['from'] = "van";
 $_LANG['label']['fieldsFor'] = "Velden voor";
 $_LANG['label']['elementsIn'] = "Elementen in";
+$_LANG['label']['singleFile'] = "Bestand uploaden";
 $_LANG['label']['details'] = "Details";
 $_LANG['label']['detailsFor'] = "Details voor";
 $_LANG['label']['templateDetails'] = "Sjabloon details";
@@ -357,6 +358,8 @@ $_LANG['alert']['aliasRemoveAlert'] = "Weet u zeker dat u deze snelkoppeling wil
 $_LANG['alert']['aliasesRemoveAlert'] = "Weet u zeker dat u deze snelkoppelingen wilt verwijderen?\\nDit kan links op de website onbruikbaar maken!";
 $_LANG['alert']['moveToFTP'] = "Uploaden naar de webserver is mislukt. Controleer de FTP instellingen en probeer het opnieuw.";
 $_LANG['alert']['elementBeforeLanguage'] = "U moet eerst een standaardtaal aanmaken voordat u een element kunt aanmaken!";
+$_LANG['alert']['newWindow'] = "Dit bestand zal in een nieuw venster openen.";
+
 
 $_LANG['help']['docHeader'] = "Documentatie";
 $_LANG['help']['docBody'] = "<p><a href=\"images/PunchCMS_handleiding.pdf\" rel=\"external\">Download</a> de documentatie van het CMS voor een inleiding en algemene uitleg van de functionaliteit.</p><p>Voor het bekijken van de documentatie heeft u de <a href=\"http://www.adobe.com/products/acrobat/readstep2.html\" rel=\"external\">Adobe Reader</a> nodig.</p>";

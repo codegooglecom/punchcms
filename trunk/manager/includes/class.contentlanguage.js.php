@@ -876,7 +876,8 @@ FileField.prototype.toScreen = function() {
 			update: function(){
 				objContentLanguage.sort(strId)
 			},
-			axis: "y"
+			axis: "y",
+			containment: jQuery(this).parent().parent().get(0)
 		});
 		jQuery("#filelist_current_" + this.id).disableSelection();
 	}
@@ -983,7 +984,8 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 		axis: "y",
 		update: function(){
 			objContentLanguage.sort(strId);
-		}
+		},
+		containment: jQuery(this).parent().parent().get(0)
 	});
 }
 
@@ -1189,7 +1191,8 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 					.bind("mouseover mouseout click", function(event) {
 						switch(event.type){
 							case "click":
-								window.open(__this.thumbPath + "upload/" + $tempFile.attr("name"));
+								//window.open(__this.thumbPath + "upload/" + $tempFile.attr("name"));
+								window.open(__this.uploadPath + tempFile.name);
 								event.stopPropagation(); // kill all further bubbling
 								return false;
 							break;
@@ -1242,7 +1245,8 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		update: function(){
 			objContentLanguage.sort(strId);
 		},
-		axis: "y"
+		axis: "y",
+		containment: jQuery("#filelist_new_" + strId).parent().parent().get(0) // Make it a DOM element
 	})
 	.bind("mouseover mouseout", function(event){
 		if(event.type == "mouseover"){
@@ -1505,7 +1509,7 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 			jQuery("div." + file.id + " a img:first").attr("src","/images/ico_document.gif");
 			jQuery("div." + file.id + " a.document:first")
 				.bind("click", function(event) {
-					window.open(__this.thumbPath + "upload/" + file.name);
+					window.open(__this.uploadPath + file.name);
 					event.stopPropagation();
 					return false;
 				})

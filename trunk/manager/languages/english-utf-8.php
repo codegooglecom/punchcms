@@ -111,6 +111,7 @@ $_LANG['label']['for'] = "for";
 $_LANG['label']['from'] = "from";
 $_LANG['label']['fieldsFor'] = "Fields for";
 $_LANG['label']['elementsIn'] = "Elements in";
+$_LANG['label']['singleFile'] = "Upload file";
 $_LANG['label']['details'] = "Details";
 $_LANG['label']['detailsFor'] = "Details for";
 $_LANG['label']['templateDetails'] = "Template details";
@@ -357,6 +358,8 @@ $_LANG['alert']['aliasRemoveAlert'] = "Are you sure you want to remove this alia
 $_LANG['alert']['aliasesRemoveAlert'] = "Are you sure you want to remove these aliases?\\nThis could render links on the website unusable!";
 $_LANG['alert']['moveToFTP'] = "Upload to the webserver failed. Check the FTP settings and try again.";
 $_LANG['alert']['elementBeforeLanguage'] = "You need to create a default language before you can create an element!";
+$_LANG['alert']['newWindow'] = "This file will open in a new window.";
+
 
 $_LANG['help']['docHeader'] = "Documentation";
 $_LANG['help']['docBody'] = "<p><a href=\"images/PunchCMS_manual.pdf\" rel=\"external\">Download</a> the CMS documentation to get an overall overview of the functionality.</p><p>You need <a href=\"http://www.adobe.com/products/acrobat/readstep2.html\" rel=\"external\">Adobe Reader</a> to view the documentation.</p>";

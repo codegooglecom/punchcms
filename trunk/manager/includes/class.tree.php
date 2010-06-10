@@ -151,7 +151,7 @@ class Tree {
 		
 		if ($strAction == "init" || empty($intElmntId)) {
 			$strReturn .= "<?xml version=\"1.0\" encoding=\"utf-8\"?><tree id=\"-1\">";
-			$strReturn .= "<item text=\"&lt;b&gt;WEBROOT&lt;/b&gt;\" id=\"0\" im0=\"webroot.gif\" im1=\"webroot.gif\" im2=\"webroot.gif\" open=\"1\">";
+			$strReturn .= "<item text=\"&lt;b&gt;Website&lt;/b&gt;\" id=\"0\" im0=\"webroot.gif\" im1=\"webroot.gif\" im2=\"webroot.gif\" open=\"1\">";
 			$strReturn .= self::buildXmlNodes($intElmntId, $strType, $strAction, $intElmntId);
 			$strReturn .= "</item>";
 			$strReturn .= "</tree>";

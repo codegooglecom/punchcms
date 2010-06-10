@@ -44,8 +44,8 @@ PTemplate.duplicate = function(intId, strRedirect) {
 }
 
 PTemplate.fieldTypeChange = function(objList) {
-	var arrObjects = new Array("subSingleList","subImage","subMaxCharacters","subFormat","subMinMaxValue","subFile","subMultiList", "subBoolean");
-	var arrSelect = new Array();
+	var arrObjects = ["subSingleList","subImage","subMaxCharacters","subFormat","subMinMaxValue","subFile","subMultiList", "subBoolean"];
+	var arrSelect = [];
 
 	switch (parseInt(objList[objList.selectedIndex].value)) {
 		case this.FIELD_TYPE_DATE:
@@ -96,9 +96,9 @@ PTemplate.fieldTypeChange = function(objList) {
 
 	for (var i = 0; i < arrSelect.length; i++) {
 		if (arrSelect[i] == 1) {
-			Element.show(arrObjects[i]);
+			jQuery(arrObjects[i]).show();
 		} else {
-			Element.hide(arrObjects[i]);
+			jQuery(arrObjects[i]).hide();
 		}
 	}
 }

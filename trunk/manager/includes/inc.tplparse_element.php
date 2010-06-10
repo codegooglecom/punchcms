@@ -21,7 +21,7 @@ function parsePages($intElmntId, $strCommand) {
 			$objElement = Element::selectByPK($intElmntId);
 
 			if (empty($intElmntId)) {
-				$strElmntName = "WEBROOT";
+				$strElmntName = "Website";
 			} else {
 				if (is_object($objElement)) {
 					$strElmntName = $objElement->getName();

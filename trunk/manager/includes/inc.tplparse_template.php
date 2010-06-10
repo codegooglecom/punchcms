@@ -17,7 +17,7 @@ function parseTemplates($intElmntId, $strCommand) {
 			$objTemplate = Template::selectByPK($intElmntId);
 
 			if (empty($intElmntId)) {
-				$strTemplateName = "WEBROOT";
+				$strTemplateName = "Website";
 			} else {
 				if (is_object($objTemplate)) {
 					$strTemplateName = $objTemplate->getName();

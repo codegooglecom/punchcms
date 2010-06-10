@@ -99,7 +99,7 @@ class StorageItems extends DBA__Collection {
 		$intAccountId = $_CONF['app']['account']->getId();
 
 		if ($intParentId == 0) {
-			$strReturn .= "<option value=\"eid_0\">WEBROOT</option>\n";
+			$strReturn .= "<option value=\"eid_0\">Website</option>\n";
 		}
 
 		$strSql = sprintf("SELECT * FROM pcms_storage_item WHERE parentId = '%s' AND typeId IN (%s) AND accountId = '%s' ORDER BY sort", $intParentId, STORAGE_TYPE_FOLDER, $intAccountId);

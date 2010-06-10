@@ -17,7 +17,7 @@ function parseForms($intElmntId, $strCommand) {
 			$objForm = Form::selectByPK($intElmntId);
 
 			if (empty($intElmntId)) {
-				$strFormName = "WEBROOT";
+				$strFormName = "Website";
 			} else {
 				if (is_object($objForm)) {
 					$strFormName = $objForm->getName();
