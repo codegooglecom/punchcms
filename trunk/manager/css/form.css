@@ -1,7 +1,6 @@
-
 form {
 	position: relative;
-	margin-top: 10px;
+	xmargin-top: 10px; /* Deprecated in Punch v3 */
 }
 
 form.fullpage {
@@ -416,7 +415,7 @@ form.users label.label-radio
 	float: none;
 	display: block;
 	width: 190px;
-	height: expression('1%');
+	height: expression('1%'); /* Is this hack still needed? */
 	padding: 5px 0 0 0;
 	margin: 0 0 5px 144px;
 	text-align: left;
@@ -427,7 +426,7 @@ form div.widget {
 	clear: both;
 	background-color: #d9e0ef;
 	border: 1px solid #c0c9de;
-	padding: 3px 0 10px 7px;
+	padding: 3px 7px 10px 7px;
 	margin-bottom: 8px;
 }
 
@@ -455,8 +454,9 @@ form div.widget div.multifile {
 	border: 1px solid #999999;
 	width: 472px;
 	margin: 0;
-	padding: 2px 5px 4px 3px;
+	padding: 2px 5px 2px 3px;
 	margin-bottom: 3px;
+	overflow: auto;
 }
 
 form div.widget div.multifile {
@@ -470,7 +470,7 @@ form div.widget div.multifile:hover {
 form div.widget div.multifile img {
 	float: left;
 	width: 15px;
-	height: 11px;
+	height: 15px;
 	border: 1px solid #ccc;
 }
 

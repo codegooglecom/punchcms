@@ -627,7 +627,7 @@ div.tabwrapper div.wrap,
 	color: #666;
 	border-bottom: 1px solid #A7A9AE;
 	padding-bottom: 3px;
-	margin: 5px 0;
+	margin: 10px 0 0;
 }
 
 #left-wrap h3 span.name {
@@ -765,7 +765,7 @@ div.tabwrapper div.wrap,
 }
 
 #left-wrap div.itembox div.moveDrag {
-	float: left;
+	position: absolute;
 	width: 8px;
 	background: url("../images/butt_drag.gif") left top repeat-y;
 	height: 28px;
@@ -812,10 +812,8 @@ div.tabwrapper div.wrap,
 }
 
 #left-wrap div.itembox input {
-	position: relative;
-	float: left;
-	display: inline;
-	margin: 7px 2px 7px 7px;
+	position: absolute;
+	margin: 7px 2px 7px 14px;
 	padding: 0;
 	width: 14px;
 	height: 14px;
@@ -1230,5 +1228,17 @@ div.progresstext {
 
 #aliasForm,
 #aliasForm fieldset {
+	position: relative;
+}
+
+div.itembox { /* IE7 needs "hasLayout" property */
+	height: 50px;
+	position: relative;
+}
+div.itembox * {
+	position: relative;
+}
+
+p.title {
 	position: relative;
 }

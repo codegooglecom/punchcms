@@ -19,12 +19,9 @@ Itemlist.createSortable = function() {
 	jQuery("#itemlist").sortable({
 		update: initUpdateSort,
 		axis: "y",
-		forceHelperSize: true,
-		containment: ".wrap"
+		forceHelperSize: true
 	});
 	var items = jQuery( "#itemlist" ).sortable( "option", "items" );
-
-	jQuery.debug({title: "items", content: items});
 	jQuery("#itemlist").disableSelection();
 }
 

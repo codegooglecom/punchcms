@@ -45,36 +45,30 @@ var ContentLanguage = function() {
 }
 
 ContentLanguage.require = function(libraryName) {
-	alert("test");
-	var objScript = $("<script></script>");
-	objScript
-		.attr("type", "text/javascript")
-		.attr("src", libraryName);
-		
-	$("head").append(objScript);
+	var $objScript = jQuery("<script></script>");
 	
-<!--	var objScript = document.createElement('script');-->
-<!--	objScript.setAttribute('type', 'text/javascript');-->
-<!--	objScript.setAttribute('src', libraryName);		-->
-<!--	var objHead = document.getElementsByTagName("head");-->
-<!--	objHead[0].appendChild(objScript);-->
+	objScript.attr({
+		type: "text/javascript",
+		src: libraryName
+	});
+	jQuery("head").append($objScript);
 
-	//*** Inserting via DOM fails in Safari 2.0, so brute force approach.
-	//document.write('<script type="text/javascript" src="'+libraryName+'"></script>');
 }
 
 ContentLanguage.load = function() {
 	if(typeof jQuery == "undefined")
 		throw("ContentLanguage class requires the jQuery library >= 1.4.2");
 
-	$A(document.getElementsByTagName("script")).findAll( function(s) {
-		return (s.src && s.src.match(/pcms\.js(\?.*)?$/))
-	}).each( function(s) {
-		var path = s.src.replace(/pcms\.js(\?.*)?$/,'');
-		var includes = s.src.match(/\?.*load=([a-z,]*)/);
-		(includes ? includes[1] : 'ptemplate,pfield').split(',').each(
-			function(include) { ContentLanguage.require(path+include+'.js') });
-	});
+alert("Old loading code in class.contentlanguage.js.php on line 62");
+
+//	$A(document.getElementsByTagName("script")).findAll( function(s) {
+//		return (s.src && s.src.match(/pcms\.js(\?.*)?$/))
+//	}).each( function(s) {
+//		var path = s.src.replace(/pcms\.js(\?.*)?$/,'');
+//		var includes = s.src.match(/\?.*load=([a-z,]*)/);
+//		(includes ? includes[1] : 'ptemplate,pfield').split(',').each(
+//			function(include) { ContentLanguage.require(path+include+'.js') });
+//	});
 }
 
 ContentLanguage.remove = function(intId) {
@@ -95,39 +89,66 @@ ContentLanguage.prepareAdd = function() {
 }
 
 ContentLanguage.prototype.init = function() {
- 	jQuery("#language_active").bind("mouseover", function() { return objContentLanguage.buttonOver('activeElement', this); });
- 	jQuery("#language_active").bind("mouseout", function() { return objContentLanguage.buttonOut('activeElement', this); });
- 	jQuery("#language_active").bind("mousedown", function() { return objContentLanguage.toggleActiveElement(); });
+ 	jQuery("#language_active").bind("mouseover mouseout mousedown", function(event) { 
+ 		switch(event.type){
+ 			case "mouseover":
+			 	return objContentLanguage.buttonOver('activeElement', this);
+ 				break;
+ 			case "mouseout":
+ 				return objContentLanguage.buttonOut('activeElement', this);
+ 				break;
+ 			case "mousedown":
+ 				return objContentLanguage.toggleActiveElement();
+ 				break;
+ 		}
+ 	});
 }
 
 ContentLanguage.prototype.swap = function(languageId) {
+	var $objImage 		= jQuery("#language_cascade"),
+		$objImageActive	= jQuery("#language_active"),
+		$objButton		= $objImage.parent();
+		
 	this.toTemp();
 	this.currentLanguage = languageId;
 	
 	//*** Check is current and default language is equal.
 	if (this.currentLanguage == this.defaultLanguage || this.actives[this.currentLanguage] != true || this.actives[this.defaultLanguage] != true) {
-		jQuery("#language_cascade").attr("src", "images/lang_unlocked_disabled.gif");
- 		jQuery("#language_cascade").unbind("onmouseover");
- 		jQuery("#language_cascade").unbind("onmouseout");
- 		jQuery("#language_cascade").unbind("onmousedown");
+		$objImage.attr("src", "images/lang_unlocked_disabled.gif");
+ 		$objButton.unbind("mouseover mouseout click");
 	} else {
 		if (this.cascades[this.currentLanguage] !== true) {
-			jQuery("#language_cascade").attr("src", "images/lang_unlocked.gif");
+			$objImage.attr("src", "images/lang_unlocked.gif");
 		} else {
-			jQuery("#language_cascade").attr("src", "images/lang_locked.gif");
+			$objImage.attr("src", "images/lang_locked.gif");
 		}
- 		jQuery("#language_cascade").bind("mouseover", function() { return objContentLanguage.buttonOver("cascadeElement", this); });
- 		jQuery("#language_cascade").bind("mouseout", function() { return objContentLanguage.buttonOut("cascadeElement", this); });
- 		jQuery("#language_cascade").bind("mousedown", function() { return objContentLanguage.toggleCascadeElement(); });
+		$objButton.bind("mouseover mouseout click", function(event){
+			var objReturn;
+			
+			switch(event.type){
+				case "mouseover":
+					objReturn = objContentLanguage.buttonOver("cascadeElement", this);
+					break;
+				case "mouseout":
+					objReturn = objContentLanguage.buttonOut("cascadeElement", this);
+					break;
+				case "click":
+					jQuery.debug({content: "clicker"});
+					objReturn = objContentLanguage.toggleCascadeElement();
+					break;
+			}
+			
+			return objReturn;
+		});
 	}
 	
 	//*** Check the active state.
 	if (this.actives[this.currentLanguage] != true) {
 		if (this.hover) overlib("<?php echo $objLang->get("langEnable", "tip") ?>");
-		jQuery("#language_active").attr("src", "images/lang_disabled.gif");
+		$objImageActive.attr("src", "images/lang_disabled.gif");
 	} else {
 		if (this.hover) overlib("<?php echo $objLang->get("langDisable", "tip") ?>");
-		jQuery("#language_active").attr("src", "images/lang_enabled.gif");	
+		$objImageActive.attr("src", "images/lang_enabled.gif");	
 	}
 	
 	for (var count in this.fields) {
@@ -211,27 +232,30 @@ ContentLanguage.prototype.removeCurrentField = function(fieldId, objTrigger) {
 	this.fields[fieldId].removeCurrentField(objTrigger);
 }
 
-ContentLanguage.prototype.buttonOver = function(strButtonType, objButton, fieldId) {
+ContentLanguage.prototype.buttonOver = function(strButtonType, objImage, fieldId) {
+	var $objImage 	= (objImage instanceof jQuery) ? objImage : jQuery(objImage), // Make sure it's a jQuery object
+		$objButton	= $objImage.parent();
+
 	this.hover = true;
 	this.buttonType = strButtonType;
 	
 	switch (strButtonType) {
 		case "cascadeElement":
 			if (this.cascades[this.currentLanguage] !== true) {
-				objButton.src = "images/lang_locked.gif";
+				$objImage.attr("src", "images/lang_locked.gif");
 				overlib("<?php echo $objLang->get("langElementCascade", "tip") ?>");
 			} else {
-				objButton.src = "images/lang_unlocked.gif";
+				$objImage.attr("src", "images/lang_unlocked.gif");
 				overlib("<?php echo $objLang->get("langElementUnlock", "tip") ?>");
 			}
 			break;
 			
 		case "cascadeField":
 			if (this.fields[fieldId].cascades[this.currentLanguage] !== true) {
-				objButton.src = "images/lang_locked.gif";
+				$objImage.attr("src", "images/lang_locked.gif");
 				overlib("<?php echo $objLang->get("langFieldCascade", "tip") ?>");
 			} else {
-				objButton.src = "images/lang_unlocked.gif";
+				$objImage.attr("src", "images/lang_unlocked.gif");
 				overlib("<?php echo $objLang->get("langFieldUnlock", "tip") ?>");
 			}
 			break;
@@ -239,43 +263,46 @@ ContentLanguage.prototype.buttonOver = function(strButtonType, objButton, fieldI
 		case "activeElement":
 			if (this.actives[this.currentLanguage] != true) {
 				overlib("<?php echo $objLang->get("langEnable", "tip") ?>");
-				objButton.src = "images/lang_enabled.gif";
+				$objImage.attr("src", "images/lang_enabled.gif");
 			} else {
 				overlib("<?php echo $objLang->get("langDisable", "tip") ?>");
-				objButton.src = "images/lang_disabled.gif";
+				$objImage.attr("src", "images/lang_disabled.gif");
 			}
 			break;
 	}
 }
 
-ContentLanguage.prototype.buttonOut = function(strButtonType, objButton, fieldId) {
+ContentLanguage.prototype.buttonOut = function(strButtonType, objImage, fieldId) {
+	var $objImage 	= (objImage instanceof jQuery) ? objImage : jQuery(objImage), // Make sure it's a jQuery object
+		$objButton	= $objImage.parent();
+	
 	this.hover = false;
 	this.buttonType = strButtonType;
 	
 	switch (strButtonType) {
 		case "cascadeElement":
 			if (this.cascades[this.currentLanguage] !== true) {
-				objButton.src = "images/lang_unlocked.gif";
+				$objImage.attr("src", "images/lang_unlocked.gif");
 			} else {
-				objButton.src = "images/lang_locked.gif";
+				$objImage.attr("src", "images/lang_locked.gif");
 			}
 			nd();
 			break;
 			
 		case "cascadeField":
 			if (this.fields[fieldId].cascades[this.currentLanguage] !== true) {
-				objButton.src = "images/lang_unlocked.gif";
+				$objImage.attr("src", "images/lang_unlocked.gif");
 			} else {
-				objButton.src = "images/lang_locked.gif";
+				$objImage.attr("src", "images/lang_locked.gif");
 			}
 			nd();
 			break;
 			
 		case "activeElement":
 			if (this.actives[this.currentLanguage] != true) {
-				objButton.src = "images/lang_disabled.gif";
+				$objImage.attr("src", "images/lang_disabled.gif");
 			} else {
-				objButton.src = "images/lang_enabled.gif";
+				$objImage.attr("src", "images/lang_enabled.gif");
 			}
 			nd();
 			break;
@@ -398,73 +425,65 @@ ContentLanguage.prototype.setFieldValue = function(fieldId, strValue) {
 }
 
 ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
-	var strUrl = "ajax.php";
-	var strPost = 
-		{
-			cmd: "StorageItems::getFileListHTML",
-			parentId: jQuery('#frm_storage_' + objTrigger.id).find('option:selected').val().split("_").pop()
-		};
+	var strUrl 			= "ajax.php",
+		$objFiles 		= jQuery("#storageBrowser_" + objTrigger.id + "ul"),
+		$objList 		= jQuery("#storageBrowser_" + objTrigger.id + "div.storageList:first"),
+		$objLoader 		= jQuery("<div></div>"),
+		strPost 		= {
+							cmd: "StorageItems::getFileListHTML",
+							parentId: jQuery('#frm_storage_' + objTrigger.id).find('option:selected').val().split("_").pop()
+						};
 	
-	var objFiles = jQuery("#storageBrowser_" + objTrigger.id + "ul");
-	if (objFiles.length > 0) objFiles.find(":first").remove();
+	if ($objFiles.length > 0) $objFiles.find(":first").remove();
 	
-	var objList = jQuery("#storageBrowser_" + objTrigger.id + "div.storageList:first");
-	var objLoader = document.createElement("div");
-	objLoader.className = "storageLoader";
-	objLoader.innerHTML = "<?php echo $objLang->get("loadingFiles", "form") ?>";
-	objLoader.style.display = "block";
-	objList.append(objLoader);
+	$objLoader
+		.addClass("storageLoader")
+		.html("<?php echo $objLang->get("loadingFiles", "form") ?>")
+		.css("display", "block");
+	$objList.append($objLoader);
 	
-	//*** TODO: jQuery ajax request.
-<!--	var myAjax = new Ajax.Request(-->
-<!--			strUrl, -->
-<!--			{-->
-<!--				method: 'get', -->
-<!--				parameters: strPost, -->
-<!--				onComplete: function(objXHR){-->
-<!--					objTrigger.parent.showStoragePage(objXHR, objTrigger);-->
-<!--				}-->
-<!--			});-->
 	var request = jQuery.get(strUrl, strPost, function(data) { objTrigger.parent.showStoragePage(data, objTrigger); }, "xml");
 }
 
 ContentLanguage.prototype.showStoragePage = function(objResponse, objTrigger) {
+	var $objField 	= jQuery(objResponse).find("field"),
+		$objLoader 	= jQuery("#storageBrowser_" + objTrigger.id + " div.storageLoader"),
+		$objList 	= jQuery("#storageBrowser_" + objTrigger.id + " div.storageList");
 	
-	var $objField = jQuery(objResponse).find("field");
-	
-	var $objLoader = jQuery("#storageBrowser_" + objTrigger.id + " div.storageLoader");
 	$objLoader.fadeOut();
-	
-	var $objList = jQuery("#storageBrowser_" + objTrigger.id + " div.storageList");
 	$objList.html($objField.text());
 	
 	//*** Attach events to the thumbs.
 	jQuery("#storageBrowser_" + objTrigger.id + " li").each(function(i){
 		var $objLink = jQuery(this).find("a:first");
+		
 		$objLink
-			.bind("mouseover mouseout", function(event){
-				if(event.type == "mouseover"){
-					var objLabel = jQuery(this).parent().find("span:first");
-					return overlib(objLabel.html());
-				} else {
-					return nd();
+			.bind("mouseover mouseout click", function(event){
+				var $objLabel = jQuery(this).parent().find("span:first");
+				
+				switch(event.type){
+					case "mouseover":
+						return overlib($objLabel.html());
+					break;
+					case "mouseout":
+						return nd();
+					break;
+					case "click":
+						objTrigger.transferStorage(jQuery(this), $objLabel.html());
+						return false;
+					break;
 				}
-			})
-			.bind("click", function(){
-				var objLabel = jQuery(this).parent().find("span:first");
-				objTrigger.transferStorage(jQuery(this), objLabel.html());
-				return false;
 			});
-	});
+	}); // End .each()
 }
 
 /*** 
  * ContentField object.
  */
 function ContentField(strId, objParent, strCascades) {
-	this.id 				= strId || 0;
-	this.parent				= objParent || null;
-	this.cascades 			= {};
+	this.id 		= strId || 0;
+	this.parent		= objParent || null;
+	this.cascades 	= {};
 	
 	if (strCascades != undefined) this.setCascades(strCascades);
 }
@@ -494,32 +513,49 @@ ContentField.prototype.setCascades = function(strCascades) {
 }
 
 ContentField.prototype.setIconCascade = function() {
+	var $objImage 	= jQuery("#" + this.id + "_cascade"),
+		$objButton	= $objImage.parent(),
+		strId 		= this.id;
 
 	//*** Attach mouse events to the cascade button.
 	if (this.parent.currentLanguage == this.parent.defaultLanguage || this.parent.actives[this.parent.currentLanguage] != true || this.parent.actives[this.parent.defaultLanguage] != true) {
-		jQuery("#" + this.id + "_cascade").unbind("mouseover");
-		jQuery("#" + this.id + "_cascade").unbind("mouseout");
-		jQuery("#" + this.id + "_cascade").unbind("mousedown");
+		$objButton.unbind("mouseover mouseout click");
 
 		//*** Set the cascade icon.
 		if (this.cascades[this.parent.currentLanguage] == true) {
-			jQuery("#" + this.id + "_cascade").attr("src", "images/lang_locked_disabled.gif");
+			var strImageSrc = "images/lang_locked_disabled.gif";
 		} else {
-			jQuery("#" + this.id + "_cascade").attr("src", "images/lang_unlocked_disabled.gif");
+			var strImageSrc = "images/lang_unlocked_disabled.gif";
 		}
+		$objImage.attr("src", strImageSrc);
+	
 	} else {
-		var strId = this.id;
-		jQuery("#" + this.id + "_cascade").get(0).onmouseover = function(){ return objContentLanguage.buttonOver('cascadeField', this, strId); };
-		jQuery("#" + this.id + "_cascade").get(0).onmouseout = function(){ return objContentLanguage.buttonOut('cascadeField', this, strId); };
-		jQuery("#" + this.id + "_cascade").get(0).onmousedown = function(){ return objContentLanguage.toggleCascadeField(strId); };
+		$objButton.unbind("mouseover mouseout click"); // Clear all events before binding new ones
+		$objButton.bind("mouseover mouseout click", function(event){
+			var objReturn;
+			
+			switch(event.type){
+				case "mouseover":
+					objContentLanguage.buttonOver('cascadeField', this, strId);
+				break;
+				case "mouseout":
+					objContentLanguage.buttonOut('cascadeField', this, strId);
+				break;
+				case "click":
+					objContentLanguage.toggleCascadeField(strId);
+				break;
+			}
+			
+			return false;
+		});
 
 		//*** Set the cascade icon.
 		if (this.cascades[this.parent.currentLanguage] == true) {
 			if (this.parent.hover && this.parent.buttonType == "cascadeField") overlib("<?php echo $objLang->get("langFieldUnlock", "tip") ?>");
-			jQuery("#" + this.id + "_cascade").attr("src", "images/lang_locked.gif");
+			$objImage.attr("src", "images/lang_locked.gif");
 		} else {
 			if (this.parent.hover && this.parent.buttonType == "cascadeField") overlib("<?php echo $objLang->get("langFieldCascade", "tip") ?>");
-			jQuery("#" + this.id + "_cascade").attr("src", "images/lang_unlocked.gif");
+			$objImage.attr("src", "images/lang_unlocked.gif");
 		}
 	}
 }
@@ -532,8 +568,9 @@ ContentField.prototype.toScreen = function() {
 }
 
 ContentField.prototype.toTemp = function() {
-	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).val());
+	var strValue = jQuery("#" + this.id).val();
 	
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(strValue);
 	return true;
 }
 
@@ -560,7 +597,7 @@ TextField.prototype.toScreen = function() {
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
-		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
+		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id).hide();
 		jQuery("#" + this.id + "_alt").show();
 	} else {
@@ -591,20 +628,23 @@ TextAreaField.prototype.toScreen = function() {
 	
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
+		jQuery.debug({content: "this.parent.actives[this.parent.currentLanguage] != true"});
+		
 		//*** The element is not active.
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "___Frame").hide();
 		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
+		jQuery.debug({content: "this.cascades[this.parent.currentLanguage] == true"});
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
-		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
+		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id + "___Frame").hide();
 		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else {
 		//*** The field needs no special treatment.
-		jQuery(this.id + "_alt").hide();
-		jQuery(this.id + "___Frame").show();
+		jQuery("#" + this.id + "_alt").hide();
+		jQuery("#" + this.id + "___Frame").show();
 		if (typeof FCKeditorAPI != "undefined") {
 			var objArea = FCKeditorAPI.GetInstance(this.id);
 			if (typeof objArea == "object") {
@@ -626,12 +666,13 @@ TextAreaField.prototype.toTemp = function() {
  * FileField object.
  */
 function FileField(strId, objParent, strCascades, objOptions) {
-	var __this = this;
+	var __this 		= this;
+		
 	this.base = ContentField;
 	this.base(strId, objParent, strCascades);
 	
 	//*** Set local properties.
-	this.trigger = jQuery("#" + strId).get(0); // Backwards compatibility, this has to be a DOM element.
+	this.$objTrigger = jQuery("#" + strId);
 	this.subFiles = new Object();
 	this.maxFiles = 1;
 	this.maxChar = 50;
@@ -648,14 +689,14 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	}
 
 	//*** Attach event to the file button.
-	if (this.trigger.tagName.toUpperCase() == 'INPUT' && this.trigger.type == 'file') {
+	if (this.$objTrigger.is("input") && this.$objTrigger.attr("type") == "file"){
 		//*** What to do when a file is selected.
-		this.trigger.onchange = function() {
+		this.$objTrigger.bind("change", function(){
 			objParent.transferField(strId);
-		};
+		});
 	} else {
 		//*** This can only be applied to file input elements!
-		alert('Error: ' + strId + ' is not a file input element!');
+		alert("Error: " + strId + " is not a file input element!");
 	}
 	
 	//*** Attach event to the library button.
@@ -679,14 +720,14 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	});
 	
 	//*** Create containers.
-	var langArray = [this.parent.currentLanguage, this.parent.defaultLanguage];
-	for (var intCount = 0; intCount < langArray.length; intCount++) {
-		if (!this.subFiles[langArray[intCount]]) {
-			var intCurrent = (jQuery("#" + this.id + "_" + langArray[intCount] + "_current").val()) ? parseInt(jQuery("#" + this.id + "_" + langArray[intCount] + "_current").val()) : 0;
-			this.subFiles[langArray[intCount]] = {currentFiles:intCurrent, toUpload:new Array, uploaded:new Array()};
+	var arrLang = [this.parent.currentLanguage, this.parent.defaultLanguage];
+	for (var intCount = 0; intCount < arrLang.length; intCount++) {
+		if (!this.subFiles[arrLang[intCount]]) {
+			var intCurrent = (jQuery("#" + this.id + "_" + arrLang[intCount] + "_current").val()) ? parseInt(jQuery("#" + this.id + "_" + arrLang[intCount] + "_current").val()) : 0;
+			this.subFiles[arrLang[intCount]] = {currentFiles:intCurrent, toUpload:new Array, uploaded:new Array()};
 
 			for (var intCountX = 1; intCountX < intCurrent + 1; intCountX++) {
-				this.subFiles[langArray[intCount]].uploaded.push(jQuery("#" + this.id + "_" + langArray[intCount] + "_" + intCountX).get(0));
+				this.subFiles[arrLang[intCount]].uploaded.push(jQuery("#" + this.id + "_" + arrLang[intCount] + "_" + intCountX).get(0));
 				this.fileCount++;
 			}
 		}
@@ -903,14 +944,19 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 	var objParent  	 = this.parent,
 		strId 	   	 = this.id,
 		$element   	 = (element instanceof jQuery) ? element : jQuery(element), // Make sure it's a jQuery object
-		$objRow    	 = jQuery("<div></div>"),
+		$objRow    	 = jQuery("<div></div>",{
+							id: "file_" + $element.attr("id"),
+							class: "multifile",
+							data: {"element": $element}
+						}),
 		$objButton 	 = jQuery("<a></a>"),
 		$objRowValue = jQuery("<p></p>");
 	
-	$objRow
-		.attr("id", "file_" + $element.attr("id"))
-		.addClass("multifile")
-		.data("element", $element);
+	//$objRow
+	//	.attr("id", "file_" + $element.attr("id"))
+	//	.addClass("multifile")
+	//	.data("element", $element);
+	
 	$objButton
 		.attr("href", "")
 		.addClass("button")
@@ -1020,12 +1066,12 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 	$objRow.append($objRowValue);
 	
 	//*** Description.
-	$objAltText
-		.addClass("alt-text")
-		.html((alttextValue == "" || alttextValue == undefined) ? this.altLabel : alttextValue)
-		.bind("click", function(event) {
-			__this.startAltEdit(event);
-		});
+	//$objAltText
+	//	.addClass("alt-text")
+	//	.html((alttextValue == "" || alttextValue == undefined) ? this.altLabel : alttextValue)
+	//	.bind("click", function() {
+	//		__this.startAltEdit(jQuery(this));
+	//	});
 		
 	$objRow.append($objAltText);
 
@@ -1173,13 +1219,13 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		$objRow.append($objProgressWrapper);
 	} else {
 		//*** Description.
-		$objAltText
-			.addClass("alt-text")
-			.html(this.altLabel)
-			.bind("click", function(event) {
-				__this.startAltEdit(event);
-			});
-		$objRow.append($objAltText);
+		//$objAltText
+		//	.addClass("alt-text")
+		//	.html(this.altLabel)
+		//	.bind("click", function() {
+		//		__this.startAltEdit(jQuery(this));
+		//	});
+		//$objRow.append($objAltText);
 	}
 
 	jQuery("#filelist_new_" + strId).append($objRow);
@@ -1309,22 +1355,25 @@ FileField.prototype.shortName = function(strInput, maxLength) {
 }
 
 FileField.prototype.transferStorage = function(objLink, strLabel) { // objLink is a jQuery object.
+	var $objElement = jQuery("<input />");
+	 
+	
 	objLink.fadeOut("fast", function(){ jQuery(this).fadeIn("slow"); });
 
 	//*** Create input element.
-	var objElement = document.createElement('input');
-	objElement.type = 'hidden';
-	objElement.id = this.id + "_" + this.parent.currentLanguage + "_" + this.fileCount++;
-	objElement.name = this.id + "_" + this.parent.currentLanguage + "[]";
-	objElement.value = strLabel + ":" + objLink.find("img:first").attr("alt").split("/").pop() + ":" + objLink.attr("id").split("_").pop();
-	jQuery.debug({title: "objElement.value", content: objElement.value});
-	jQuery("#filelist_new_" + this.id).append(objElement);
+	$objElement.attr({
+		type: "hidden",
+		id: this.id + "_" + this.parent.currentLanguage + "_" + this.fileCount++,
+		name: this.id + "_" + this.parent.currentLanguage + "[]",
+		value: strLabel + ":" + objLink.find("img:first").attr("alt").split("/").pop() + ":" + objLink.attr("id").split("_").pop()
+	});
+	jQuery("#filelist_new_" + this.id).append($objElement);
 	
 	this.subFiles[this.parent.currentLanguage].currentFiles++;
-	this.subFiles[this.parent.currentLanguage].uploaded.push(objElement);
+	this.subFiles[this.parent.currentLanguage].uploaded.push($objElement);
 	
 	jQuery("#filelist_current_" + this.id).show();
-	this.addCurrentRow(objElement, true);
+	this.addCurrentRow($objElement, true);
 }
 
 FileField.prototype.isImage = function(fileName) {
@@ -1468,48 +1517,68 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 	}	
 	
 	//*** Description.
-	var $objAltText = jQuery("<p></p>");
-	$objAltText
-		.addClass("alt-text")
-		.html(__this.altLabel)
-		.bind("click", function(event){
-			__this.startAltEdit(event);
-		});
+	//var $objAltText = jQuery("<p/>", {
+	//	class: "alt-text",
+	//	text: __this.altLabel,
+	//	click: function(){
+	//		__this.startAltEdit(jQuery(this));
+	//	}
+	//});
 		
 	jQuery("div." + file.id + ":first").append($objAltText);
 }
 
-FileField.prototype.startAltEdit = function(event) {
-	var __this 	= this,	
-		strId  	= event.findElement("div").id;
-		strText = event.findElement().innerHTML;
+FileField.prototype.startAltEdit = function($objElement) {
+	var __this 		= this,
+		$objParent 	= $objElement.parent(),
+		strId  		= $objParent.attr("id"),
+		strText 	= $objElement.html(),
+		$objInput 	= jQuery("<input />", {
+							type: "text",
+							id: strId + "_altedit",
+							name: strId + "_altedit",
+							value: strText,
+							class: "alt-input"
+						});
 	
-	event.findElement().stopObserving("click").innerHTML = "<input type=\"text\" id=\"" + strId + "_altedit" + "\" name=\"" + strId + "_altedit" + "\" value=\"" + strText + "\" class=\"alt-input\"></input>";
-	event.findElement().select("input")[0].observe("blur", function(event){
-		__this.stopAltEdit(event);
-	}).select();
+	//$objElement
+	//	.unbind("click")
+	//	.html($objInput)
+	//	.bind("focusout", function(){
+	//		__this.stopAltEdit(jQuery(this));
+	//	});
+	//jQuery("#" + strId + "_altedit").focus();
 }
 
-FileField.prototype.stopAltEdit = function(event) {
-	var __this = this;
+FileField.prototype.stopAltEdit = function($objElement) {
+	var __this 			= this,
+		$objParent 		= $objElement.parent(), // Parent div
+		arrId			= $objParent.attr("id").split("_"),
+		strTempId		= arrId.shift();
+		jQuery.debug({title: "$objParent.attr(id)", content: $objParent.attr("id")});
+		jQuery.debug({title: "arrId", content: arrId});
+		jQuery.debug({title: "strTempId", content: strTempId});
+		
+	var	strId 			= arrId.join("_");
+		jQuery.debug({title: "strId", content: strId});
 	
-	var arrId = event.findElement("div").id.split("_");
-	arrId.shift();
-	var strId = arrId.join("_");
-	var arrValue = jQuery("#" + strId).val().split(":");
-	var labelValue = arrValue.shift();
-	var fileValue = arrValue.shift();
-	fileValue = (fileValue == undefined) ? "" : fileValue;
-	var libraryValue = arrValue.shift();
-	libraryValue = (libraryValue == "" || libraryValue == undefined) ? 0 : libraryValue;	
-	var strText = event.findElement().value;
-	event.findElement().stopObserving("blur");
-	
+		arrValue		= jQuery("#" + strId).val().split(":"),
+		labelValue		= arrValue.shift(),
+		fileValue		= (typeof arrValue.shift() == "undefined") ? "" : arrValue.shift(),
+		libraryValue	= (arrValue.shift() == "" || arrValue.shift() == undefined) ? 0 : arrValue.shift(),
+		strText			= $objElement.val();
+		
+		
+
+	$objElement.unbind("focusout");		
 	jQuery("#" + strId).val(labelValue + ":" + fileValue + ":" + libraryValue + ":" + strText);
 	
-	event.findElement("p").observe("click", function(event) {
-		__this.startAltEdit(event);
-	}).innerHTML = strText;
+	$objParent
+		.find("p")
+		.bind("click", function(){
+			__this.startAltEdit(jQuery(this));
+		})
+		.html(strText);
 }
 
 FileField.prototype.uploadError = function(file, errorCode, message) {

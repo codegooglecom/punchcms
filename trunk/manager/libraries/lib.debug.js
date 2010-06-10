@@ -1,12 +1,13 @@
 /*
  * Debug library to easily enable and disable debug functions.
- * @version 0.2
+ * @version 0.3
  * @author Robin van Baalen
  * 
  * Note: 
  *   This library is dependant on the "jQuery" library.
  *   
  * Changelog: 
+ *   09/06 - Added listHandlers function for event handler debugging
  *   18/05 - Added basic multi browser suppport
  */
 
@@ -15,7 +16,7 @@ window.debug = true;
 
 jQuery.extend( {
 	debug: function() {
-		var args = arguments[0] || {}; // It's your object of arguments
+		var args = arguments[0] || {};
 	    var title = args.title || "";
 	    var content = args.content;
 	    
@@ -33,3 +34,19 @@ jQuery.extend( {
        	}
 	}
 });
+
+jQuery.fn.listHandlers = function(events, outputFunction) {
+    return this.each(function(i){
+        var elem = this,
+            dEvents = $(this).data("events");
+        
+        if (!dEvents) {return;}
+        $.each(dEvents, function(name, handler){
+            if((new RegExp("^(" + (events === "*" ? ".+" : events.replace(",","|").replace(/^on/i,"")) + ")$" ,"i")).test(name)) {
+               $.each(handler, function(i,handler){
+                   outputFunction(elem, "\n" + i + ": [" + name + "] : " + handler );
+               });
+           }
+        });
+    });
+};

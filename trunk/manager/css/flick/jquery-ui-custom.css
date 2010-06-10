@@ -1,10 +1,15 @@
 /*
-* @package: jQuery UI CSS Framework
+* @package: jQuery UI CSS Custom Framework
 * @version: 1.8 custom
 * 
 * Copyright (c) 2010 AUTHORS.txt (http://jqueryui.com/about)
 * Dual licensed under the MIT (MIT-LICENSE.txt) and GPL (GPL-LICENSE.txt) licenses.
 */
+
+/*
+ * Import the PunchCMS style
+ */
+@import url("skin.blue-green.css");
 
 /* Layout helpers
 ----------------------------------*/
@@ -20,7 +25,6 @@
 
 .ui-sortable-helper {
 	display: block !important;
-	position: absolute !important
 }
 
 /* Interaction Cues

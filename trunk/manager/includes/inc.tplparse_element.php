@@ -1515,7 +1515,7 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setVariable("DEFAULT_LANGUAGE", $intDefaultLanguage);
 					$objTpl->setVariable("ACTIVES_LANGUAGE", $intDefaultLanguage);
 					
-					/*
+					
 					//*** Meta tab.
 					$objTpl->setCurrentBlock("meta-title");
 					$objTpl->setVariable("HEADER", $objLang->get("meta", "label"));
@@ -1570,14 +1570,13 @@ function parsePages($intElmntId, $strCommand) {
 					}
 					
 					//*** Meta language cascades.
-					if (is_object($objElement)) {
-						$objMeta = $objElement->getMeta();
-					
-						$objTpl->setVariable("META_TITLE_CASCADES", implode(",", $objMeta->getCascades("title")));
-						$objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", $objMeta->getCascades("keywords")));
-						$objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", $objMeta->getCascades("description")));
-					}
-					*/
+//					if (is_object($objElement)) {
+//						$objMeta = $objElement->getMeta();
+//					
+//						$objTpl->setVariable("META_TITLE_CASCADES", implode(",", $objMeta->getCascades("title")));
+//						$objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", $objMeta->getCascades("keywords")));
+//						$objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", $objMeta->getCascades("description")));
+//					}
 				}
 			}
 
@@ -1701,6 +1700,7 @@ function parsePages($intElmntId, $strCommand) {
 			}
 
 			//*** Publish tab.
+			
 			$objTpl->setCurrentBlock("publish-title");
 			$objTpl->setVariable("HEADER", $objLang->get("publish", "label"));
 			$objTpl->parseCurrentBlock();
@@ -1745,6 +1745,7 @@ function parsePages($intElmntId, $strCommand) {
 				if (trim($intEndMinute) == $minute) $objTpl->setVariable("SELECTED", "selected=\"selected\"");
 				$objTpl->parseCurrentBlock();
 			}
+			
 			
 			$objTpl->setVariable("LANG", strtolower($objLang->get("abbr")));
 

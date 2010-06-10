@@ -8,7 +8,7 @@ jQuery(function(){
 
 function init() {
 	//*** Initiate page.
-	externalLinks();
+//	externalLinks();
 	
 	//*** Hide the progress animation.
 	if (jQuery('#userProgress').length > 0) jQuery('#userProgress').hide();
@@ -231,7 +231,6 @@ function submitUpdateSort() {
 	jQuery.get(strPage, strData, function(data){
 		if (typeof objTree == "object") {
 			objTree.refreshItem(jQuery.query.get("eid"));
-			jQuery.debug({content: jQuery.query.get("eid"), title: "jQuery.query.get"});
 		}
 	});
 }

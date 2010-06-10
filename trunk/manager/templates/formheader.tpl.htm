@@ -39,7 +39,7 @@ function resizeTree() {
 //*** Onload action.
 jQuery(function(){
 	if(typeof $tabs == "undefined"){
-		$tabs = jQuery("#elementForm").tabs();
+		$tabs = jQuery("#elementForm").tabs({cache: true});
 	}
 	
 	if (jQuery("treeContainer").length > 0) {

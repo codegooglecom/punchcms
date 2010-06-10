@@ -3,8 +3,8 @@
 			<h2>{MAINTITLE}<!-- BEGIN title.sub --> <span class="name">&lsquo;{MAINSUB}&rsquo;</span><!-- END title.sub --></h2>
 			<div id="treeContainer"></div>
 			<div id="content" class="hollyhacked tabwrapper">
+				<form id="elementForm" enctype="multipart/form-data" method="post" action="?" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
 				<span class="menu"><a href="{BUTTON_CANCEL_HREF}" rel="internal">{BUTTON_CANCEL}</a></span>
-				<form id="elementForm" enctype="multipart/form-data" method="post" action="?">
 					<!-- BEGIN error-main -->
 					<div class="error-main">
 						<p>{ERROR_MAIN}</p>
@@ -15,21 +15,21 @@
 					// ]]>
 					</script>
 					<!-- END error-main -->
-					<ul class="tabs">
+					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
 						<!-- BEGIN headertitel_simple -->
-						<li><a href="#section-details" class="on">{HEADER_TITLE}</a></li>
+						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#section-details" class="on">{HEADER_TITLE}</a></li>
 						<!-- END headertitel_simple -->
 						<!-- BEGIN field-title -->
-						<li><a href="#section-fields">{HEADER}</a></li>
+						<li class="ui-state-default ui-corner-top"><a href="#section-fields">{HEADER}</a></li>
 						<!-- END field-title -->
 						<!-- BEGIN meta-title -->
-						<li><a href="#section-meta">{HEADER}</a></li>
+						<li class="ui-state-default ui-corner-top"><a href="#section-meta">{HEADER}</a></li>
 						<!-- END meta-title -->
 						<!-- BEGIN publish-title -->
-						<li><a href="#section-publish">{HEADER}</a></li>
+						<li class="ui-state-default ui-corner-top"><a href="#section-publish">{HEADER}</a></li>
 						<!-- END publish-title -->
 						<!-- BEGIN permission-title -->
-						<li><a href="#section-permissions">{HEADER}</a></li>
+						<li class="ui-state-default ui-corner-top"><a href="#section-permissions">{HEADER}</a></li>
 						<!-- END permission-title -->
 					</ul>
 					<div id="section-details">
@@ -185,7 +185,7 @@
 										<div id="publish_start_date_canvas" class="input-textdate" style="width:200px">{START_DATE_DISPLAY}</div>
 										<input type="hidden" id="publish_start_date" name="publish_start_date" value="{START_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_start" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
 										<script type="text/javascript">
-											alert("elementfields.tpl.htm - Replace Calendar.setup by jQueryUI - Row 188");
+											jQuery.debug({title: "elementfields.tpl.htm", content: "Replace Calendar.setup by jQueryUI - Row 188");
 											Calendar.setup({
 												inputField  : "publish_start_date",
 												displayArea : "publish_start_date_canvas",
@@ -280,11 +280,11 @@
 							</div>
 							<script type="text/javascript">
 							// <![CDATA[
-								var objMetaLanguage = new MetaLanguage();
-								objMetaLanguage.currentLanguage = {ACTIVE_META_LANGUAGE};
-								objMetaLanguage.defaultLanguage = {DEFAULT_META_LANGUAGE};
-								objMetaLanguage.setActives('{ACTIVES_META_LANGUAGE}');
-								objMetaLanguage.init();
+								//var objMetaLanguage = new MetaLanguage();
+								//objMetaLanguage.currentLanguage = {ACTIVE_META_LANGUAGE};
+								//objMetaLanguage.defaultLanguage = {DEFAULT_META_LANGUAGE};
+								//objMetaLanguage.setActives('{ACTIVES_META_LANGUAGE}');
+								//objMetaLanguage.init();
 							// ]]>
 							</script>
 							<!-- END meta-language -->
