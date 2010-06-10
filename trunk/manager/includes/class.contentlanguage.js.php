@@ -673,7 +673,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	
 	//*** Set local properties.
 	this.$objTrigger = jQuery("#" + strId);
-	this.subFiles = new Object();
+	this.subFiles = {};
 	this.maxFiles = 1;
 	this.maxChar = 50;
 	this.fileCount = 1;
@@ -756,6 +756,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		// Button Settings
 		button_image_url : "/images/XPButtonUploadText_61x22.png",
 		button_placeholder_id : __this.id + "_browse",
+		button_window_mode: SWFUpload.WINDOW_MODE.OPAQUE,
 		button_width: 61,
 		button_height: 22,
 
@@ -902,13 +903,11 @@ FileField.prototype.closeStorageBrowser = function() {
 }
 
 FileField.prototype.transferField = function() {
-	jQuery.debug({title: "FileField.prototype.transferField", content: FileField.prototype.transferField});
-	jQuery("#filelist_new_" + this.id).show();
-
-	//*** Set the id and name of the filled file field.
 	var $filledElement = jQuery("#" + this.id),
 		objParent 	   = this.parent,
 		strId 		   = this.id;
+
+	jQuery("#filelist_new_" + this.id).show();
 	
 	this.subFiles[this.parent.currentLanguage].toUpload.push($filledElement);
 	
@@ -917,7 +916,7 @@ FileField.prototype.transferField = function() {
 		.attr("name", strId + "_" + objParent.currentLanguage + "_new[]");
 	
 	//*** Create empty replacement.
-	var $objElement = jQuery("<input />");
+	var $objElement = jQuery("<input />")
 	$objElement
 		.attr("type", "file")
 		.addClass("input-file")
@@ -925,6 +924,7 @@ FileField.prototype.transferField = function() {
 		.attr("name", strId + "_new")
 		.bind("change", function(){
 			objParent.transferField(strId);
+			jQuery.debug({content: "Change event triggered on inputfield " + strId});
 		});
 
 	$objElement.insertBefore($filledElement.next());
@@ -944,13 +944,13 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 	var objParent  	 = this.parent,
 		strId 	   	 = this.id,
 		$element   	 = (element instanceof jQuery) ? element : jQuery(element), // Make sure it's a jQuery object
-		$objRow    	 = jQuery("<div></div>",{
+		$objRow    	 = jQuery("<div />",{
 							id: "file_" + $element.attr("id"),
-							class: "multifile",
+							"class": "multifile",
 							data: {"element": $element}
 						}),
-		$objButton 	 = jQuery("<a></a>"),
-		$objRowValue = jQuery("<p></p>");
+		$objButton 	 = jQuery("<a />"),
+		$objRowValue = jQuery("<p />");
 	
 	//$objRow
 	//	.attr("id", "file_" + $element.attr("id"))
@@ -985,18 +985,17 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 			objContentLanguage.sort(strId);
 		}
 	});
-	jQuery("h3").bind("sortstart", function(){ return false; });
 }
 
 FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element should be a jQuery element
 	var objParent 		= this.parent,
 		strId 			= this.id,
-		$objRow			= jQuery("<div></div>"),
 		$element   		= (element instanceof jQuery) ? element : jQuery(element), // Make sure it's a jQuery object
-		$objButton  	= jQuery("<a></a>"),
-		$objThumb		= jQuery("<a></a>"),
-		$objRowValue 	= jQuery("<p></p>"),
-		$objAltText 	= jQuery("<p></p>");
+		$objRow			= jQuery("<div />"),
+		$objButton  	= jQuery("<a />"),
+		$objThumb		= jQuery("<a />"),
+		$objRowValue 	= jQuery("<p />"),
+		$objAltText 	= jQuery("<p />");
 	
 	$objRow
 		.attr("id", 'file_' + $element.attr("id")) 
@@ -1089,14 +1088,14 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	var __this   			= this,
 		strId				= this.id,
 		$element 			= (element instanceof jQuery) ? element : jQuery(element), // Make it a jQuery object
-		$objRow 			= jQuery("<div></div>"),
-		$objButton 			= jQuery("<a></a>"),
-		$objThumb 			= jQuery("<a></a>"),
+		$objRow 			= jQuery("<div/>"),
+		$objButton 			= jQuery("<a/>"),
+		$objThumb 			= jQuery("<a/>"),
 		$tempFile 			= jQuery($element.data("file")),
-		$objRowValue 		= jQuery("<p></p>"),
-		$objProgressBar 	= jQuery("<div></div>"),
-		$objProgressWrapper = jQuery("<div></div>"),
-		$objAltText 		= jQuery("<p></p>");
+		$objRowValue 		= jQuery("<p/>"),
+		$objProgressBar 	= jQuery("<div/>"),
+		$objProgressWrapper = jQuery("<div/>"),
+		$objAltText 		= jQuery("<p/>");
 
 		
 	$objRow.attr("id", "file_" + $element.attr("id")); 
@@ -1109,15 +1108,17 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	
 	$objRow
 		.css("position","relative")
-		.data("element", element);
+		.data("element", $element);
 	
 	if (file !== undefined) {
 		$objRow.bind("mouseover mouseout", function(event) {
 			if(event.type == "mouseover"){
-				jQuery("#" + $objRow.attr("id")).find("a img").eq(0).attr("src", "/images/ico_loading_mo.gif");
+				jQuery(this).find("a img").attr("src", "/images/ico_loading_mo.gif")
+				//jQuery("#" + $objRow.attr("id")).find("a img").eq(0).attr("src", "/images/ico_loading_mo.gif");
 			}
 			else { // Then it's a mouseout event
-				jQuery("#" + $objRow.attr("id")).find("a img").eq(0).attr("src", "/images/ico_loading.gif");
+				jQuery(this).find("a img").attr("src", "/images/ico_loading.gif");
+				//jQuery("#" + $objRow.attr("id")).find("a img").eq(0).attr("src", "/images/ico_loading.gif");
 			}
 		});
 	}
@@ -1228,6 +1229,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		//$objRow.append($objAltText);
 	}
 
+	jQuery.debug({content: $objRow});
 	jQuery("#filelist_new_" + strId).append($objRow);
 	
 	//*** Check max files.
@@ -1259,17 +1261,16 @@ FileField.prototype.removeSwfUploadRow = function(inputId, file) {
 	jQuery("#file_" + inputId).remove();
 	
 	//*** Remove remotely.
-	//*** TODO: jQuerify this.
 	objData = {
-		do: "remove",
-		file: file.name,
-		PHPSESSID: "<?php echo session_id(); ?>"
+		"do": "remove",
+		"file": file.name,
+		"PHPSESSID": "<?php echo session_id(); ?>"
 	};
-	jQuery.post("upload.php", {}, 
+	jQuery.post("upload.php", objData, 
 		function(data){
 			// TODO: Implement some feedback here
 		}, 
-	"xml"); // You want this to be json
+	"xml");
 	
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].toUpload.length; intCount++) {
 		if (this.subFiles[this.parent.currentLanguage].toUpload[intCount].value != file.name) {
@@ -1518,14 +1519,14 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 	
 	//*** Description.
 	//var $objAltText = jQuery("<p/>", {
-	//	class: "alt-text",
+	//	"class": "alt-text",
 	//	text: __this.altLabel,
 	//	click: function(){
 	//		__this.startAltEdit(jQuery(this));
 	//	}
 	//});
 		
-	jQuery("div." + file.id + ":first").append($objAltText);
+	//jQuery("div." + file.id + ":first").append($objAltText);
 }
 
 FileField.prototype.startAltEdit = function($objElement) {
@@ -1538,7 +1539,7 @@ FileField.prototype.startAltEdit = function($objElement) {
 							id: strId + "_altedit",
 							name: strId + "_altedit",
 							value: strText,
-							class: "alt-input"
+							"class": "alt-input"
 						});
 	
 	//$objElement

@@ -12,7 +12,7 @@
  */
 
 //*** Enable the debugger:
-window.debug = true;
+window.debug = false;
 
 jQuery.extend( {
 	debug: function() {
