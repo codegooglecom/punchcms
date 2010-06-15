@@ -10,8 +10,12 @@ form.ui-tabs div.ui-tabs-panel fieldset {
 }
 form.ui-tabs div.ui-tabs-panel fieldset div {
 	clear: both;
-	margin: 4px 0;
-}
+	margin: 5px 0;
+	overflow: auto;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div * {
+		clear: none !important;
+	}
 form.ui-tabs div.ui-tabs-panel fieldset div label {
 	color: #333;
 	display: block;
@@ -20,20 +24,17 @@ form.ui-tabs div.ui-tabs-panel fieldset div label {
 	padding: 2px 7px 3px 3px;
 	width: 136px;
 	font-size: 12px;
-}
-form.ui-tabs div.ui-tabs-panel fieldset div label.check,
-form.ui-tabs div.ui-tabs-panel fieldset div label.radio {
-	float: none;
-	margin: 0 0 5px 149px;
-	padding: 5px 0 0;
-	width: 334px;
-}
+	}
+	label.check,
+	label.radio {
+		float: none !important;
+	}
 form.ui-tabs div.ui-tabs-panel fieldset div input {
 	width: 300px;
 	padding: 3px;
 	font-size: 13px;
 	border: 1px #999 solid;
-	background: #aeaeae;
+	background: #F1F5F8;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	}
@@ -42,18 +43,40 @@ form.ui-tabs div.ui-tabs-panel fieldset div input {
 		width: 14px;
 		height: 14px;
 	}
-
+	form.ui-tabs div.ui-tabs-panel fieldset div div.input-textdate {
+		width: 250px;
+		float: left;
+		padding: 3px;
+		font-size: 13px;
+		border: 1px #999 solid;
+		background: #F1F5F8;
+		margin: 0;
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		}
+		form.ui-tabs div.ui-tabs-panel fieldset div a.date-button {
+			float: left;
+			margin: 4px 4px;
+		}
+		
 form.ui-tabs div.ui-tabs-panel fieldset div select {
 	padding: 3px;
 	width: 200px;
 	border: 1px #999 solid;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;	
-}
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div select.select-multiple {
+		height: 100px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .widget .row select {
+		width: 100px;
+	}
 form.ui-tabs div.ui-tabs-panel fieldset div textarea {
 	padding: 3px;
 	width: 300px;
 	border: 1px #999 solid;
+	background: #F1F5F8;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;	
 }
@@ -63,3 +86,51 @@ form.ui-tabs div.ui-tabs-panel fieldset div small {
 	margin: 0 0 6px 145px;
 	font-size: 10px;
 }
+form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
+	margin: 0;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div {
+		margin: 0;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .widget .row {
+		clear: both !important;
+		overflow: visible !important;
+	}
+form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
+	border: 1px #999 solid;
+	padding: 5px;
+	width: 480px;
+	position: relative;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile {
+		background: #F1F5F8;
+		padding: 5px;
+		border: 1px #999 solid;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		cursor: move;
+		overflow: auto;
+		position: relative;
+		top: 0;
+		left: 0;
+		margin: 3px 0;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail {
+		position: absolute;
+		left: 7px;
+		top: 7px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .document {
+		position: absolute;
+		top: 5px;
+		left: 7px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .button {
+		position: absolute;
+		right: 8px;
+		top: 3px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile p { 
+		margin-left: 25px;
+		float: left;
+	}

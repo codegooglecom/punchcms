@@ -177,10 +177,10 @@
 						<fieldset>
 							<div class="required">
 								<div class="widget">
-									<div class="required">
+									<div class="required row">
 										<label for="publish_start" class="check"><input type="checkbox" id="publish_start" name="publish_start" class="check" {START_DATE_ACTIVE} /> {LABEL_START_DATE}</label>
 									</div>
-									<div class="required">
+									<div class="required row">
 										<label for="publish_start_date">{LABEL_DATE}</label>
 										<div id="publish_start_date_canvas" class="input-textdate" style="width:200px">{START_DATE_DISPLAY}</div>
 										<input type="hidden" id="publish_start_date" name="publish_start_date" value="{START_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_start" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
@@ -196,7 +196,7 @@
 											});
 										</script>
 									</div>
-									<div class="required">
+									<div class="required row">
 										<label for="publish_start_hour">{LABEL_TIME}</label>
 										<select id="publish_start_hour" name="publish_start_hour" class="select-onesmall">
 											<!-- BEGIN date.start.hour -->
@@ -213,10 +213,10 @@
 							</div>
 							<div class="required">
 								<div class="widget">
-									<div class="required">
+									<div class="required row">
 										<label for="publish_end" class="check"><input type="checkbox" id="publish_end" name="publish_end" class="check" {END_DATE_ACTIVE} /> {LABEL_END_DATE}</label>
 									</div>
-									<div class="required">
+									<div class="required row">
 										<label for="publish_end_date">{LABEL_DATE}</label>
 										<input id="publish_end_date_show" type="text" class="input-textdate" name="publish_end_date_show" value="{END_DATE_DISPLAY}" />
 <!--										<div id="publish_end_date_canvas" class="input-textdate" style="width:200px">{END_DATE_DISPLAY}</div>-->
@@ -234,7 +234,7 @@
 											});
 										</script>
 									</div>
-									<div class="required">
+									<div class="required row">
 										<label for="publish_end_hour">{LABEL_TIME}</label>
 										<select id="publish_end_hour" name="publish_end_hour" class="select-onesmall">
 											<!-- BEGIN date.end.hour -->
