@@ -525,8 +525,13 @@ dhtmlXTreeObject.prototype.setItemStyle=function(itemId,style_string){
 
  var temp=dhtmlObject._globalIdStorageFind(parentId);
 
-
- if((temp.childsCount)&&(!start)&&(!dhtmlObject._edsbps))
+ /* 
+  * Bugfix
+  * @author: Robin van Baalen - Felix-iT
+  * 
+  * Added check for (temp) to if-statement. Without it, javascript throws error on 'temp is null'.
+  */ 
+ if((temp)&&(temp.childsCount)&&(!start)&&(!dhtmlObject._edsbps))
  var preNode=temp.childNodes[temp.childsCount-1];
  else
  var preNode=0;

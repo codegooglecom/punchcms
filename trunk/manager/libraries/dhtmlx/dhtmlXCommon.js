@@ -410,7 +410,7 @@ _dhtmlxError.prototype.catchError=function(type,func_name){
 _dhtmlxError.prototype.throwError=function(type,name,params){
  if(this.catches[type])return this.catches[type](type,name,params);
  if(this.catches["ALL"])return this.catches["ALL"](type,name,params);
- alert("Error type: "+arguments[0]+"\nDescription: "+arguments[1]);
+ jQuery.debug({title: "Error type: "+arguments[0], content: "Description: "+arguments[1]});
  return null;
 }
 
