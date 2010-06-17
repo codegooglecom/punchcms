@@ -6,7 +6,8 @@
 									</label>
 									<div id="{FIELD_ID}_alt" class="input-textlarge disabled" style="display:none;margin-left:146px;"></div>
 									<div id="{FIELD_ID}_widget" class="widget">
-										<div class="required">
+										<!-- BEGIN field.list -->
+										<div class="required {SUBFIELD_TYPE}">
 											<!-- BEGIN field.check.item -->
 											<label for="{SUBFIELD_ID}" class="check"><input type="{SUBFIELD_TYPE}" id="{SUBFIELD_ID}" name="{FIELD_ID}[]" class="check" value="{SUBFIELD_VALUE}" onchange="objContentLanguage.toTemp('{FIELD_ID}');" /> {SUBFIELD_TEXT}</label>
 											<!-- END field.check.item -->
@@ -14,6 +15,7 @@
 											<small>{FIELD_DESCRIPTION}</small>
 											<!-- END field.check.descr -->
 										</div>
+										<!-- END field.list -->
 										<!-- BEGIN field.check.value -->
 										<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
 										<!-- END field.check.value -->
@@ -22,6 +24,9 @@
 										<script type="text/javascript">
 										// <![CDATA[
 											objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.CHECK_LIST);
+											jQuery(function(){
+												//jQuery(".radio").buttonset();
+											});
 										// ]]>
 										</script>
 									</div>
