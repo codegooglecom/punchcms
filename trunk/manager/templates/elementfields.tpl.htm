@@ -1,10 +1,9 @@
-
 		<div id="left-wrap">
 			<h2>{MAINTITLE}<!-- BEGIN title.sub --> <span class="name">&lsquo;{MAINSUB}&rsquo;</span><!-- END title.sub --></h2>
 			<div id="treeContainer"></div>
-			<div id="content" class="hollyhacked tabwrapper">
+			<div id="content" class="hollyhacked">
 				<form id="elementForm" enctype="multipart/form-data" method="post" action="?" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-				<span class="menu"><a href="{BUTTON_CANCEL_HREF}" rel="internal">{BUTTON_CANCEL}</a></span>
+<!--				<span class="menu"><a href="{BUTTON_CANCEL_HREF}" rel="internal">{BUTTON_CANCEL}</a></span>-->
 					<!-- BEGIN error-main -->
 					<div class="error-main">
 						<p>{ERROR_MAIN}</p>
@@ -16,12 +15,12 @@
 					</script>
 					<!-- END error-main -->
 					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-						<!-- BEGIN headertitel_simple -->
-						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#section-details" class="on">{HEADER_TITLE}</a></li>
-						<!-- END headertitel_simple -->
 						<!-- BEGIN field-title -->
-						<li class="ui-state-default ui-corner-top"><a href="#section-fields">{HEADER}</a></li>
+						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#section-fields">{HEADER}</a></li>
 						<!-- END field-title -->
+						<!-- BEGIN headertitel_simple -->
+						<li class="ui-state-default ui-corner-top"><a href="#section-details" class="on">{HEADER_TITLE}</a></li>
+						<!-- END headertitel_simple -->
 						<!-- BEGIN meta-title -->
 						<li class="ui-state-default ui-corner-top"><a href="#section-meta">{HEADER}</a></li>
 						<!-- END meta-title -->
@@ -32,6 +31,67 @@
 						<li class="ui-state-default ui-corner-top"><a href="#section-permissions">{HEADER}</a></li>
 						<!-- END permission-title -->
 					</ul>
+					<div id="section-fields" class="anchor">
+						<!-- BEGIN description-fields -->
+						<div class="description">
+							<p>{LABEL}</p>
+						</div>
+						<!-- END description-fields -->
+						<fieldset>
+							<!-- BEGIN elementlanguage -->
+							<div class="optional{ERROR_LANGUAGE_ON}">
+								<!-- BEGIN error-language -->
+								<p class="error">{ERROR_LANGUAGE}</p>
+								<!-- END error-language -->
+								<label for="frm_language">
+									<a href="javascript:;" rel="internal" class="fieldButton"><img id="language_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+									<a href="javascript:;" rel="internal" class="fieldButton"><img id="language_active" src="images/lang_enabled.gif" width="17" height="16" alt="" /></a>
+									{LABEL_LANGUAGE}
+								</label>
+								<select id="frm_language" name="frm_language" class="select-one" onchange="objContentLanguage.swap(this.options[this.selectedIndex].value);">
+									<!-- BEGIN list_language -->
+									<option value="{LANGUAGELIST_VALUE}" {LANGUAGELIST_SELECTED}>{LANGUAGELIST_TEXT}</option>
+									<!-- END list_language -->
+								</select>
+								<input type="hidden" id="language_actives" name="language_actives" value="{ACTIVES_LANGUAGE}" />
+							</div>
+							<script type="text/javascript">
+							// <![CDATA[
+								var objContentLanguage = new ContentLanguage();
+								objContentLanguage.currentLanguage = {ACTIVE_LANGUAGE};
+								objContentLanguage.defaultLanguage = {DEFAULT_LANGUAGE};
+								objContentLanguage.setActives('{ACTIVES_LANGUAGE}');
+								objContentLanguage.init();
+
+								function FCKeditor_OnComplete(editorInstance) {										
+									editorInstance.Events.AttachEvent('OnBlur', FCKToTemp);
+									editorInstance.Events.AttachEvent('OnAfterLinkedFieldUpdate', FCKToTemp);
+									<!-- BEGIN field_textarea_oncomplete_value -->
+									objContentLanguage.addField('{ELEMENT_FIELD_ID}', '{ELEMENT_FIELD_CASCADES}', objContentLanguage.FIELDTYPE.TEXTAREA);
+									<!-- END field_textarea_oncomplete_value -->
+								}
+
+								function FCKToTemp(editorInstance) {
+									objContentLanguage.toTemp(editorInstance.Name);
+								}
+							// ]]>
+							</script>
+							<!-- END elementlanguage -->
+							<input type="hidden" name="dispatch" value="addElement" />
+						</fieldset>
+
+						<div class="divider"></div>
+
+						<!-- BEGIN elementfields -->
+						<fieldset>
+							{ELEMENT_FIELDS}
+						</fieldset>
+						<!-- END elementfields -->
+
+						<div class="form-navigation">
+							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
+						</div>
+					</div>
 					<div id="section-details" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 						<!-- BEGIN description-details -->
 						<div class="description">
@@ -104,67 +164,6 @@
 							<input type="hidden" name="cid" value="{CID}" />
 							<input type="hidden" name="cmd" value="{CMD}" />
 							<input type="hidden" name="eid" value="{EID}" />
-							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
-						</div>
-					</div>
-					<div id="section-fields" class="anchor">
-						<!-- BEGIN description-fields -->
-						<div class="description">
-							<p>{LABEL}</p>
-						</div>
-						<!-- END description-fields -->
-						<fieldset>
-							<!-- BEGIN elementlanguage -->
-							<div class="optional{ERROR_LANGUAGE_ON}">
-								<!-- BEGIN error-language -->
-								<p class="error">{ERROR_LANGUAGE}</p>
-								<!-- END error-language -->
-								<label for="frm_language">
-									<a href="javascript:;" rel="internal" class="fieldButton"><img id="language_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
-									<a href="javascript:;" rel="internal" class="fieldButton"><img id="language_active" src="images/lang_enabled.gif" width="17" height="16" alt="" /></a>
-									{LABEL_LANGUAGE}
-								</label>
-								<select id="frm_language" name="frm_language" class="select-one" onchange="objContentLanguage.swap(this.options[this.selectedIndex].value);">
-									<!-- BEGIN list_language -->
-									<option value="{LANGUAGELIST_VALUE}" {LANGUAGELIST_SELECTED}>{LANGUAGELIST_TEXT}</option>
-									<!-- END list_language -->
-								</select>
-								<input type="hidden" id="language_actives" name="language_actives" value="{ACTIVES_LANGUAGE}" />
-							</div>
-							<script type="text/javascript">
-							// <![CDATA[
-								var objContentLanguage = new ContentLanguage();
-								objContentLanguage.currentLanguage = {ACTIVE_LANGUAGE};
-								objContentLanguage.defaultLanguage = {DEFAULT_LANGUAGE};
-								objContentLanguage.setActives('{ACTIVES_LANGUAGE}');
-								objContentLanguage.init();
-
-								function FCKeditor_OnComplete(editorInstance) {										
-									editorInstance.Events.AttachEvent('OnBlur', FCKToTemp);
-									editorInstance.Events.AttachEvent('OnAfterLinkedFieldUpdate', FCKToTemp);
-									<!-- BEGIN field_textarea_oncomplete_value -->
-									objContentLanguage.addField('{ELEMENT_FIELD_ID}', '{ELEMENT_FIELD_CASCADES}', objContentLanguage.FIELDTYPE.TEXTAREA);
-									<!-- END field_textarea_oncomplete_value -->
-								}
-
-								function FCKToTemp(editorInstance) {
-									objContentLanguage.toTemp(editorInstance.Name);
-								}
-							// ]]>
-							</script>
-							<!-- END elementlanguage -->
-							<input type="hidden" name="dispatch" value="addElement" />
-						</fieldset>
-
-						<div class="divider"></div>
-
-						<!-- BEGIN elementfields -->
-						<fieldset>
-							{ELEMENT_FIELDS}
-						</fieldset>
-						<!-- END elementfields -->
-
-						<div class="form-navigation">
 							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
 						</div>
 					</div>

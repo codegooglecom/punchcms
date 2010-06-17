@@ -1690,12 +1690,12 @@ function parsePages($intElmntId, $strCommand) {
 
 				
 				//*** Permissions tab.
-				$objTpl->setCurrentBlock("permission-title");
-				$objTpl->setVariable("HEADER", $objLang->get("permissions", "label"));
-				$objTpl->parseCurrentBlock();
-				$objTpl->setCurrentBlock("description-permission");
-				$objTpl->setVariable("LABEL", $objLang->get("permissionInfo", "form"));
-				$objTpl->parseCurrentBlock();
+//				$objTpl->setCurrentBlock("permission-title");
+//				$objTpl->setVariable("HEADER", $objLang->get("permissions", "label"));
+//				$objTpl->parseCurrentBlock();
+//				$objTpl->setCurrentBlock("description-permission");
+//				$objTpl->setVariable("LABEL", $objLang->get("permissionInfo", "form"));
+//				$objTpl->parseCurrentBlock();
 				
 			}
 
