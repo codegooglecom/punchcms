@@ -1154,9 +1154,13 @@ function parsePages($intElmntId, $strCommand) {
 										$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
 										$objFieldTpl->parseCurrentBlock();
 										
+										
 										$intCount++;
 									}
 								}
+								$objFieldTpl->setCurrentBlock("field.list");
+								$objFieldTpl->setVariable("SUBFIELD_TYPE", $strType);
+								$objFieldTpl->parseCurrentBlock();
 
 								$objFieldTpl->setCurrentBlock("field.check");
 								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
@@ -1511,7 +1515,7 @@ function parsePages($intElmntId, $strCommand) {
 
 					$objTpl->setVariable("ELEMENT_FIELDS", $strFields);
 					$objTpl->setVariable("LABEL_LANGUAGE", $objLang->get("language", "form"));
-					$objTpl->setVariable("ACTIVE_LANGUAGE", $intSelectLanguage);
+					$objTpl->setVariable("ACTIVE_LANGUAGE", $intDefaultLanguage);
 					$objTpl->setVariable("DEFAULT_LANGUAGE", $intDefaultLanguage);
 					$objTpl->setVariable("ACTIVES_LANGUAGE", $intDefaultLanguage);
 					
