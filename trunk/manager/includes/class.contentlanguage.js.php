@@ -428,9 +428,15 @@ ContentLanguage.prototype.setFieldValue = function(fieldId, strValue) {
 
 ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 	var strUrl 			= "ajax.php",
-		$objFiles 		= jQuery("#storageBrowser_" + objTrigger.id + "ul"),
-		$objList 		= jQuery("#storageBrowser_" + objTrigger.id + "div.storageList:first"),
-		$objLoader 		= jQuery("<div></div>"),
+		$objFiles 		= jQuery("#storageBrowser_" + objTrigger.id + " ul"),
+		$objList 		= jQuery("#storageBrowser_" + objTrigger.id + " div.storageList"),
+		$objLoader 		= jQuery("<div/>",{
+							"class":"storageLoader",
+							"html": "<img src=\"/css/blue-green/images/ui-anim_basic_16x16.gif\" alt=\"\" /> <?php echo $objLang->get("loadingFiles", "form") ?>",
+							"css":{
+								"display":"block"
+							}
+						}),
 		strPost 		= {
 							cmd: "StorageItems::getFileListHTML",
 							parentId: jQuery('#frm_storage_' + objTrigger.id).find('option:selected').val().split("_").pop()
@@ -438,10 +444,7 @@ ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 	
 	if ($objFiles.length > 0) $objFiles.find(":first").remove();
 	
-	$objLoader
-		.addClass("storageLoader")
-		.html("<?php echo $objLang->get("loadingFiles", "form") ?>")
-		.css("display", "block");
+	jQuery(".storageLoader").remove(); // Clear all loaders before inserting a new one.
 	$objList.append($objLoader);
 	
 	var request = jQuery.get(strUrl, strPost, function(data) { objTrigger.parent.showStoragePage(data, objTrigger); }, "xml");
@@ -802,6 +805,7 @@ FileField.prototype.toScreen = function() {
 			strValue += this.shortName(arrValue[0], 40) + "<br />";
 		}
 		for (var intCount = 0; intCount < this.subFiles[this.parent.defaultLanguage].toUpload.length; intCount++) {
+			jQuery.debug({content: "Check contentLanguage function\nFileField.toScreen row 805", type:"warning"});
 			strValue += this.shortName(this.subFiles[this.parent.defaultLanguage].toUpload[intCount].value, 40) + "<br />";
 		}
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
