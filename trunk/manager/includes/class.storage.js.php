@@ -201,7 +201,8 @@ FileField.prototype.addUploadRow = function($element) {
 		dropOnEmpty: true,
 		update: function(){
 			objContentLanguage.sort(strId);
-		}
+		},
+		axis: "y"
 	});	
 }
 
