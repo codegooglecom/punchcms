@@ -102,6 +102,8 @@ ContentLanguage.prototype.init = function() {
  				break;
  		}
  	});
+ 	
+ 	jQuery("#frm_language option[value="+ this.defaultLanguage +"]").attr("selected","selected");
 }
 
 ContentLanguage.prototype.swap = function(languageId) {
@@ -633,14 +635,12 @@ TextAreaField.prototype.toScreen = function() {
 		//*** The element is not active.
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "___Frame").hide();
-		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		jQuery.debug({content: "this.cascades[this.parent.currentLanguage] == true"});
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id + "___Frame").hide();
-		jQuery("#" + this.id + "_alt").css("display","inline");
 	} else {
 		//*** The field needs no special treatment.
 		jQuery("#" + this.id + "_alt").hide();
@@ -792,7 +792,8 @@ FileField.prototype.toScreen = function() {
 		//*** The element is not active.
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "_widget").hide();
-		jQuery("#" + this.id + "_alt").css("display","inline");
+		//Fadein
+		jQuery("#" + this.id + "_alt").fadeIn();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
 		var strValue = "";
@@ -805,7 +806,8 @@ FileField.prototype.toScreen = function() {
 		}
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id + "_widget").hide();
-		jQuery("#" + this.id + "_alt").css("display","inline");
+		//Fadein
+		jQuery("#" + this.id + "_alt").fadeIn();
 	} else {
 		//*** The field needs no special treatment.
 		jQuery("#" + this.id + "_widget").show();	
@@ -876,8 +878,7 @@ FileField.prototype.toScreen = function() {
 			update: function(){
 				objContentLanguage.sort(strId)
 			},
-			axis: "y",
-			containment: jQuery(this).parent().parent().get(0)
+			axis: "y"
 		});
 		jQuery("#filelist_current_" + this.id).disableSelection();
 	}
@@ -984,8 +985,7 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 		axis: "y",
 		update: function(){
 			objContentLanguage.sort(strId);
-		},
-		containment: jQuery(this).parent().parent().get(0)
+		}
 	});
 }
 
@@ -1245,16 +1245,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		update: function(){
 			objContentLanguage.sort(strId);
 		},
-		axis: "y",
-		containment: jQuery("#filelist_new_" + strId).parent().parent().get(0) // Make it a DOM element
-	})
-	.bind("mouseover mouseout", function(event){
-		if(event.type == "mouseover"){
-			jQuery(this).addClass("sorthover");
-		}
-		else {
-			jQuery(this).removeAttr("class"); // Remove class the clean way
-		}
+		axis: "y"
 	});
 }
 
@@ -1465,6 +1456,7 @@ FileField.prototype.fileDialogComplete = function(numFilesSelected, numFilesQueu
 }
 
 FileField.prototype.uploadStart = function(file) {
+jQuery.debug({content: "uploadStart triggered", type: "info"});
 	var $objElement = jQuery("<input />");
 	jQuery("#filelist_new_" + this.settings.jsParent.id).show();
 	
@@ -1604,7 +1596,7 @@ FileField.prototype.uploadError = function(file, errorCode, message) {
 				break;
 		}
 	} catch (ex) {
-		//alert("Upload encountered a problem.");
+		jQuery.debug({content: "Upload encountered a problem.", type: "error"});
     }
 }
 
@@ -1693,14 +1685,16 @@ CheckBox.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id).hide();
 		jQuery("#" + this.id + "_alt").show();
-		jQuery("#" + this.id + "_alt").css("display","inline");
+		//Fadein
+		jQuery("#" + this.id + "_alt").fadeIn();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
 		var strValue = (jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val() == "1" || jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val() == "true") ? "true" : "false";
 		jQuery("#" + this.id + "_alt").html(strValue);
 		jQuery("#" + this.id).hide();
 		jQuery("#" + this.id + "_alt").show();
-		jQuery("#" + this.id + "_alt").css("display","inline");
+		//Fadein
+		jQuery("#" + this.id + "_alt").fadeIn();
 	} else {
 		//*** The field needs no special treatment.
 		jQuery("#" + this.id + "_alt").hide();
@@ -1794,7 +1788,8 @@ CheckListField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "_widget").hide();
 		jQuery("#" + this.id + "_alt").show();
-		jQuery("#" + this.id + "_alt").css("display","inline");
+		//Fadein
+		jQuery("#" + this.id + "_alt").fadeIn();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
 		var arrValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val().split(",");
@@ -1811,7 +1806,8 @@ CheckListField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").html(strAltValue);
 		jQuery("#" + this.id + "_widget").hide();
 		jQuery("#" + this.id + "_alt").show();	
-		jQuery("#" + this.id + "_alt").css("display","inline");
+		//Fadein
+		jQuery("#" + this.id + "_alt").fadeIn();
 	} else {
 		//*** The field needs no special treatment.
 		
