@@ -39,7 +39,9 @@ function resizeTree() {
 //*** Onload action.
 jQuery(function(){
 	if(typeof $tabs == "undefined"){
-		$tabs = jQuery("#elementForm").tabs({selected: 1});
+		$tabs = jQuery("#elementForm").tabs({
+					selected: {SELECTED_TAB}
+					});
 	}
 	
 	if (jQuery("treeContainer").length > 0) {
@@ -49,6 +51,9 @@ jQuery(function(){
 		});
 		resizeTree();
 	}
+
+	jQuery(".input-button").button();
+	
 });
 
 {SCRIPT}

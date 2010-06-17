@@ -316,6 +316,7 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 
 	//*** Tree scripts.
 	$strScript .= "\n";
+	$intSelectedTab = 0;
 	switch ($intCatId) {
 		case NAV_PCMS_TEMPLATES:
 			if ($strCommand == CMD_EDIT_FIELD) {
@@ -327,6 +328,7 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 
 		case NAV_PCMS_ELEMENTS:
 			$strScript .= Tree::treeRender("elements", $intElmntId);
+			if ($strCommand == CMD_EDIT) $intSelectedTab = 1;
 			break;
 
 		case NAV_MYPUNCH_USERS:
@@ -350,8 +352,9 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 	}
 	$strScript .= "}";
 
+	$objTpl->setVariable("SELECTED_TAB", $intSelectedTab);
 	$objTpl->setVariable("SCRIPT", $strScript);
-
+	
 	return $objTpl->get();
 }
 
