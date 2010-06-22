@@ -1,0 +1,34 @@
+/*
+* @package: jQuery UI CSS Custom Framework
+* @version: 1.0
+* @author: Robin van Baalen - Felix iT B.V.
+*/
+
+/* Import the PunchCMS style */
+@import url("skin.blue-green.css");
+
+.ui-widget,
+.ui-widget * {
+	font-family: Verdana, Arial, Sans-serif !important;
+}
+
+.ui-widget-content,
+.ui-widget-content * {
+	color: #333;
+}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+	text-decoration: none !important;
+}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+	xcolor: #2C457C !important;
+	text-decoration: none !important;
+}
+.ui-helper-clearfix {
+	overflow: hidden;
+}
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+	font-weight: bolder;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+	color: #fff !important;
+}
