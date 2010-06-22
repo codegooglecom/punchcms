@@ -129,7 +129,7 @@ class StorageItems extends DBA__Collection {
 			$objData = $objElement->getData();
 			$strExtension = substr(strrchr($objData->getLocalName(), '.'), 1);
 			$strImageSrc = (in_array($strExtension, $arrImages)) ? Setting::getValueByName("web_server") . Setting::getValueByName("file_folder") . $objData->getLocalName() : "/images/ico_document_big.gif";
-			$strReturn .= "<li><a href=\"\" id=\"eid_{$objElement->getId()}\"><img src=\"{$strImageSrc}\" alt=\"{$objData->getLocalName()}\" /></a><span>" . str_replace("&", "&amp;", $objElement->getName()) . "</span></li>";
+			$strReturn .= "<li><a href=\"\" id=\"eid_{$objElement->getId()}\"><img width=\"100\" height=\"100\" src=\"{$strImageSrc}\" alt=\"{$objData->getLocalName()}\" /></a><span>" . str_replace("&", "&amp;", $objElement->getName()) . "</span></li>";
 		}
 		$strReturn .= "</ul>";
 		$strReturn .= "]]></field>";
