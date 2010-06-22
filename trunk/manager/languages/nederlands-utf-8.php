@@ -112,6 +112,7 @@ $_LANG['label']['from'] = "van";
 $_LANG['label']['fieldsFor'] = "Velden voor";
 $_LANG['label']['elementsIn'] = "Elementen in";
 $_LANG['label']['singleFile'] = "Bestand uploaden";
+$_LANG['label']['newFolder'] = "Map aanmaken";
 $_LANG['label']['details'] = "Details";
 $_LANG['label']['detailsFor'] = "Details voor";
 $_LANG['label']['templateDetails'] = "Sjabloon details";

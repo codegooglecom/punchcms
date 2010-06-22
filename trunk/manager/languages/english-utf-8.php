@@ -112,6 +112,7 @@ $_LANG['label']['from'] = "from";
 $_LANG['label']['fieldsFor'] = "Fields for";
 $_LANG['label']['elementsIn'] = "Elements in";
 $_LANG['label']['singleFile'] = "Upload file";
+$_LANG['label']['newFolder'] = "New directory";
 $_LANG['label']['details'] = "Details";
 $_LANG['label']['detailsFor'] = "Details for";
 $_LANG['label']['templateDetails'] = "Template details";
