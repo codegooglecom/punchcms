@@ -1,12 +1,13 @@
 /*
  * @package: jQuery debugging library.
- * @version: 0.3.1
+ * @version: 0.3.2
  * @author: Robin van Baalen
  * 
  * Note: 
  *   This library is dependant on the "jQuery" library.
  *   
  * Changelog: 
+ *  22/06	- Both "warn" and "warning" are allowed debug types now.
  * 	16/06	- Implemented all Firebug's logging methods: info, error, warn, debug and log.
  * 	16/06	- Replaced jQuery.browser.mozilla for check if console is object
  *  09/06 	- Added listHandlers function for event handler debugging
@@ -38,6 +39,7 @@ jQuery.extend( {
 						console.error(content);
 						break;
 					case "warn":
+					case "warning":
 						if(title !== "") console.warn(title + ":");
 						console.warn(content);
 						break;
