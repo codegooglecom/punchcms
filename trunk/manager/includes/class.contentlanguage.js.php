@@ -790,6 +790,7 @@ FileField.prototype = new ContentField();
 FileField.prototype.toScreen = function() {
 	//*** Attach mouse events to the cascade button.
 	this.setIconCascade();
+	jQuery.debug({content: "Filefield toScreen triggered:\n" + this.id});
 		
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {

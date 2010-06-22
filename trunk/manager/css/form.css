@@ -94,7 +94,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div textarea {
 	padding: 3px;
 	width: 300px;
 	border: 1px #999 solid;
-	background: #F1F5F8;
+	background: #fff;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;	
 }
@@ -114,6 +114,9 @@ form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
 		clear: both !important;
 		overflow: visible !important;
 	}
+	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div input.file {
+		margin: 0 0 8px;
+	}
 form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	border: 1px #999 solid;
 	padding-bottom: 10px;
@@ -127,7 +130,8 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 		border: none !important;
 		padding: 0 5px;
 	}
-	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.required {
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.required,
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.optional {
 		background: #E0EEFF;
 		padding: 10px 11px 5px;
 		border-bottom: 1px #999 solid;
@@ -139,7 +143,8 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .ui-sortable {
 		margin: 3px 5px;
 	}
-	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile {
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile,
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile {
 		background: #F1F5F8;
 		padding: 5px;
 		border: 1px #999 solid;
@@ -152,35 +157,64 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 		left: 0;
 		margin: 3px 0;
 		}
+		form.ui-tabs div.ui-tabs-panel fieldset div .multifile {
+			cursor: auto !important;
+		}
 		form.ui-tabs div.ui-tabs-panel fieldset div .filefield .ui-sortable-helper {
 			-moz-box-shadow: 1px 1px 1px #999;
 			-webkit-box-shadow: 1px 1px 1px #999;
 		}
-	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail {
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail,
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile .thumbnail {
 		position: absolute;
 		left: 7px;
 		top: 7px;
 		}
-		form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail img {
+		form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail img,
+		form.ui-tabs div.ui-tabs-panel fieldset div .multifile .thumbnail img {
 			border: 1px #999 solid;
 		}
-		form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail:hover img {
+		form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail:hover img,
+		form.ui-tabs div.ui-tabs-panel fieldset div .multifile .thumbnail:hover img {
 			border: 1px #333 solid;
 		}
-	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .document {
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .document,
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile .document {
 		position: absolute;
 		top: 5px;
 		left: 7px;
 	}
-	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .button {
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .button,
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile .button {
 		position: absolute;
 		right: 8px;
 		top: 3px;
 	}
-	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile p { 
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile p, 
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile p { 
 		margin-left: 25px;
 		float: left;
 	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser {
+		background: none repeat scroll 0 0 #EAEAEA;
+		margin: 0 auto 20px;
+		padding: 5px;
+		width: 335px;
+		-moz-border-radius-bottomleft: 5px;
+		-moz-border-radius-bottomright: 5px;
+		-webkit-border-bottom-left-radius: 5px;
+		-webkit-border-bottom-right-radius: 5px;
+		}
+		form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser label {
+			float: left;
+			margin: 0 25px 0 14px;
+			padding: 4px 0;
+			width: auto;
+		}
+		form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser select {
+			float: left;
+		}
+		
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul {
 		list-style: none;
 		padding: 4px;
@@ -217,4 +251,5 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 		
 div.form-navigation {
 	float: right;
+	margin-top: 20px;
 }

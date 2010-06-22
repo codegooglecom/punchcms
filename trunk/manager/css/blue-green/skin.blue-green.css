@@ -211,6 +211,10 @@ div a:hover {
 	color: #F0EA00;
 }
 
+#left-wrap h2 a {
+	color: #fff !important;
+}
+
 #treeContainer {
 	border-right: 1px solid #eaeaea;
 	border-bottom: 1px solid #eaeaea;
@@ -557,4 +561,17 @@ div.progressbar {
 
 /*
  * END TOOLTIP MARKUP
+ */
+
+/*
+ * XML TREE MARKUP
+ */
+
+.selectedTreeRow {
+	color: #F0EA00 !important;
+	font-weight: bolder;
+}
+
+/*
+ * END XML TREE MARKUP
  */

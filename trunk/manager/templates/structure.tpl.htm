@@ -2,110 +2,108 @@
 			<h2>{MAINTITLE}<!-- BEGIN title.sub --> <span class="name">&lsquo;{MAINSUB}&rsquo;</span><!-- END title.sub --></h2>
 			<div id="treeContainer"></div>
 			<div id="content" class="hollyhacked">
-				<span class="menu"><a href="{BUTTON_CANCEL_HREF}" rel="internal">{BUTTON_CANCEL}</a></span>
-				<div class="tabs">
-					<ul class="anchors">
+				<form id="{FORM_NAME}" enctype="multipart/form-data" method="post" action="?" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
 						<!-- BEGIN headertitel_simple -->
-						<li><a href="#section-details" class="on">{HEADER_TITLE}</a></li>
+						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#section-details">{HEADER_TITLE}</a></li>
 						<!-- END headertitel_simple -->
 					</ul>
-				</div>
-				<div class="wrap">
-					<form id="{FORM_NAME}" enctype="multipart/form-data" method="post" action="?">
-						<div id="section-details">
-							<!-- BEGIN error-main -->
-							<div class="error-main">
-								<p>{ERROR_MAIN}</p>
-							</div>
-							<script type="text/javascript">
-							// <![CDATA[
-									Nifty("div.error-main");
-							// ]]>
-							</script>
-							<!-- END error-main -->
-
-							<!-- BEGIN structureadd.description -->
-							<div class="description">
-								<p>{LABEL_REQUIRED}</p>
-							</div>
-							<!-- END structureadd.description -->
-
-							<!-- BEGIN structureselects -->
-								<!-- BEGIN select.language -->
-							<fieldset>
-								<div class="required">
-									<label for="{SELECT_NAME}">{LABEL}</label>
-									<select id="{SELECT_NAME}" name="{SELECT_NAME}" class="input-textlarge">
-										<!-- BEGIN select.language.item -->
-										<option value="{VALUE}">{LABEL}</option>
-										<!-- END select.language.item -->
-									</select>
-									<small>{DESCRIPTION}</small>
-								</div>
-							</fieldset>
-								<!-- END select.language -->
-								<!-- BEGIN select.element -->
-							<fieldset class="traverse">
-								<div class="required traverse">
-									<label for="{SELECT_NAME}">&nbsp;</label>
-									<a href="javascript:;" onclick="Alias.loadElements()" rel="internal">One level deeper</a>
-								</div>
-							</fieldset>
-							<fieldset>
-								<div class="required">
-									<input type="hidden" id="{SELECT_NAME}" name="{SELECT_NAME}" />
-									<small>{DESCRIPTION}</small>
-								</div>
-								<script type="text/javascript">
-								 // <![CDATA[
-										Alias.loadElements(false, '{SELECT_NAME}', '{FORM_NAME}');	
-								 // ]]>
-								 </script>
-							</fieldset>
-								<!-- END select.element -->
-							<fieldset>
-								<input type="hidden" name="dispatch" value="addStructure" />
-								<input type="hidden" name="frm_structure" value="{FRM_STRUCURE}" />
-							</fieldset>
-							<!-- END structureselects -->
-
-							<!-- BEGIN structureadd -->
-							<fieldset>
-								<div class="required{ERROR_STRUCTURE_ON}">
-									<!-- BEGIN error-structure-name -->
-									<p class="error">{ERROR_STRUCTURE}</p>
-									<!-- END error-structure-name -->
-									<label for="frm_structure">{LABEL_STRUCTURENAME}</label>
-									<select id="frm_structure" name="frm_structure" class="input-textlarge">
-										<!-- BEGIN structure.item -->
-										<option value="{VALUE}">{LABEL}</option>
-										<!-- END structure.item -->
-									</select>
-									<script type="text/javascript">
-									jQuery(function(){
-										jQuery("#frm_structure").bind("change", function(){
-											jQuery("small.structureDescr").hide();
-											jQuery("#descr_" + jQuery(this).find("option:selected").val()).show();
-										});
-									});
-									</script>
-									<!-- BEGIN structure.description -->
-									<small id="descr_{VALUE}" class="structureDescr" style="{HIDE}">{BODY}</small>
-									<!-- END structure.description -->
-								</div>
-								<input type="hidden" name="dispatch" value="addStructure" />
-							</fieldset>
-							<!-- END structureadd -->
-
-							<div class="form-navigation">
-								<input type="hidden" name="cid" value="{CID}" />
-								<input type="hidden" name="cmd" value="{CMD}" />
-								<input type="hidden" name="eid" value="{EID}" />
-								<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
-							</div>
+					<div id="section-details" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+						<!-- BEGIN error-main -->
+						<div class="error-main">
+							<p>{ERROR_MAIN}</p>
 						</div>
-					</form>
-				</div>
+						<script type="text/javascript">
+						// <![CDATA[
+								Nifty("div.error-main");
+						// ]]>
+						</script>
+						<!-- END error-main -->
+
+						<!-- BEGIN structureadd.description -->
+						<div class="description">
+							<p>{LABEL_REQUIRED}</p>
+						</div>
+						<!-- END structureadd.description -->
+
+						<!-- BEGIN structureselects -->
+							<!-- BEGIN select.language -->
+						<fieldset>
+							<div class="required">
+								<label for="{SELECT_NAME}">{LABEL}</label>
+								<select id="{SELECT_NAME}" name="{SELECT_NAME}" class="input-textlarge">
+									<!-- BEGIN select.language.item -->
+									<option value="{VALUE}">{LABEL}</option>
+									<!-- END select.language.item -->
+								</select>
+								<small>{DESCRIPTION}</small>
+							</div>
+						</fieldset>
+							<!-- END select.language -->
+							<!-- BEGIN select.element -->
+						<fieldset class="traverse">
+							<div class="required traverse">
+								<label for="{SELECT_NAME}">&nbsp;</label>
+								<a href="#" id="#loadElements" rel="internal">One level deeper</a>
+							</div>
+						</fieldset>
+						<fieldset>
+							<div class="required">
+								<input type="hidden" id="{SELECT_NAME}" name="{SELECT_NAME}" />
+								<small>{DESCRIPTION}</small>
+							</div>
+						</fieldset>
+						<script type="text/javascript">
+						// <![CDATA[
+							Alias.loadElements(false, '{SELECT_NAME}', '{FORM_NAME}');
+							jQuery(function(){
+								jQuery("#loadElements").bind("click", function(){ Alias.loadElements(); return false;});
+							});
+						// ]]>
+						</script>
+							<!-- END select.element -->
+						<fieldset>
+							<input type="hidden" name="dispatch" value="addStructure" />
+							<input type="hidden" name="frm_structure" value="{FRM_STRUCURE}" />
+						</fieldset>
+						<!-- END structureselects -->
+
+						<!-- BEGIN structureadd -->
+						<fieldset>
+							<div class="required{ERROR_STRUCTURE_ON}">
+								<!-- BEGIN error-structure-name -->
+								<p class="error">{ERROR_STRUCTURE}</p>
+								<!-- END error-structure-name -->
+								<label for="frm_structure">{LABEL_STRUCTURENAME}</label>
+								<select id="frm_structure" name="frm_structure" class="input-textlarge">
+									<!-- BEGIN structure.item -->
+									<option value="{VALUE}">{LABEL}</option>
+									<!-- END structure.item -->
+								</select>
+								<script type="text/javascript">
+								jQuery(function(){
+									jQuery("#frm_structure").bind("change", function(){
+										jQuery("small.structureDescr").hide();
+										jQuery("#descr_" + jQuery(this).find("option:selected").val()).show();
+									});
+								});
+								</script>
+								<!-- BEGIN structure.description -->
+								<small id="descr_{VALUE}" class="structureDescr" style="{HIDE}">{BODY}</small>
+								<!-- END structure.description -->
+							</div>
+							<input type="hidden" name="dispatch" value="addStructure" />
+						</fieldset>
+						<!-- END structureadd -->
+
+						<div class="form-navigation">
+							<input type="hidden" name="cid" value="{CID}" />
+							<input type="hidden" name="cmd" value="{CMD}" />
+							<input type="hidden" name="eid" value="{EID}" />
+							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
+						</div>
+					</div>
+				</form>
 			</div>
 			<div id="footer">
 				&nbsp;<!-- The footer -->
@@ -113,3 +111,8 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+jQuery(function(){
+	jQuery.debug({content: "Template: \n" + "structure" + ".tpl.htm", type:"info"});
+});
+</script>

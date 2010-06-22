@@ -117,16 +117,16 @@ FileField.prototype.toScreen = function() {
 	}
 
 	var strId = this.id;
-	if(jQuery("#filelist_" + this.id).siblings().lenght > 1) {
-		jQuery.debug({content: "More than one, enable sortable."});
+	if(jQuery("#filelist_" + this.id).children().length > 1) {
+		jQuery.debug({content: "Experimental update! Check class.storage.js row 121 for debugging."});
+		jQuery("#filelist_" + this.id).sortable({
+			dropOnEmpty: true,
+			update: function(){
+				objContentLanguage.sort(strId);
+			},
+			axis: "y"
+		});
 	}
-	jQuery("#filelist_" + this.id).sortable({
-		dropOnEmpty: true,
-		update: function(){
-			objContentLanguage.sort(strId);
-		},
-		axis: "y"
-	});
 }
 
 FileField.prototype.transferField = function() {

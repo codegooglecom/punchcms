@@ -3,25 +3,27 @@
 				<span class="menu"><a href="{BUTTON_INDEX_HREF}" rel="internal">{BUTTON_INDEX}</a></span>
 				{MAINTITLE}
 			</h2>
-			<form id="searchForm" method="post" action="?">
-				<fieldset>
-					<!-- BEGIN searchdescription -->
-					<div class="searchdescription">
-						<p><b>{SEARCH_DESCRIPTION}</b></p>
-					</div>
-					<!-- END searchdescription -->
-					<div class="required">
-						<input type="text" id="query" name="query" class="input-textlarge" />
-						<input type="submit" value="{SEARCH_BUTTON}" class="input-button" />
-					</div>
-					<div class="optional" style="margin-bottom:5px;">
-						<input type="checkbox" id="search_all" name="search_all" class="input-checkbox" /><label for="search_all" class="label-search"> {SEARCH_ALL}</label>
-					</div>
-					<input type="hidden" name="dispatch" value="search" />
-					<input type="hidden" name="cid" value="{CID}" />
-					<input type="hidden" name="cmd" value="{CMD}" />
-					<input type="hidden" name="eid" value="{EID}" />
-				</fieldset>
+			<form id="searchForm" method="post" action="?" class="search ui-tabs ui-widget ui-widget-content ui-corner-all">
+				<div class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+					<fieldset>
+						<!-- BEGIN searchdescription -->
+						<div class="searchdescription">
+							<p><b>{SEARCH_DESCRIPTION}</b></p>
+						</div>
+						<!-- END searchdescription -->
+						<div class="required">
+							<input type="text" id="query" name="query" class="input-textlarge" />
+							<input type="submit" value="{SEARCH_BUTTON}" class="input-button" />
+						</div>
+						<div class="optional" style="margin-bottom:5px;">
+							<input type="checkbox" id="search_all" name="search_all" class="input-checkbox" /><label for="search_all" class="label-search"> {SEARCH_ALL}</label>
+						</div>
+						<input type="hidden" name="dispatch" value="search" />
+						<input type="hidden" name="cid" value="{CID}" />
+						<input type="hidden" name="cmd" value="{CMD}" />
+						<input type="hidden" name="eid" value="{EID}" />
+					</fieldset>
+				</div>
 			</form>
 			<!-- BEGIN searchresults -->
 			<div class="searchwrap">

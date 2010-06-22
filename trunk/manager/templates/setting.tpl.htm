@@ -31,18 +31,19 @@
 					<!-- END description -->
 					<fieldset>
 						<!-- BEGIN setting.checkbox -->
-						<div class="optional clearfix">
-							<label for="{FIELD_ID}" class="check"><input type="checkbox" id="{FIELD_ID}" name="{FIELD_ID}" class="input-checkbox" {FIELD_VALUE} /> {FIELD_LABEL}</label>
+						<div class="optional">
+							<label for="{FIELD_ID}">{FIELD_LABEL}</label>
+							<input type="checkbox" id="{FIELD_ID}" name="{FIELD_ID}" class="check" {FIELD_VALUE} />
 						</div>
 						<!-- END setting.checkbox -->
 						<!-- BEGIN setting.text -->
-						<div class="optional clearfix">
+						<div class="optional">
 							<label for="{FIELD_ID}">{FIELD_LABEL}</label>
 							<input type="{FIELD_TYPE}" id="{FIELD_ID}" name="{FIELD_ID}" class="input-textlarge" value="{FIELD_VALUE}" />
 						</div>
 						<!-- END setting.text -->
 						<!-- BEGIN setting.number -->
-						<div class="optional clearfix">
+						<div class="optional">
 							<label for="{FIELD_ID}">{FIELD_LABEL}</label>
 							<input type="text" id="{FIELD_ID}" name="{FIELD_ID}" class="input-textsmall" value="{FIELD_VALUE}" />
 						</div>
@@ -63,4 +64,9 @@
 
 	</div>
 </div>
+<script type="text/javascript">
+jQuery(function(){
+	jQuery.debug({content: "Template: \n" + "setting" + ".tpl.htm", type:"info"});
+});
+</script>
 

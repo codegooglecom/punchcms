@@ -5,8 +5,7 @@
 				<span class="menu"><a href="javascript:Alias.prepareAdd();" rel="internal">{BUTTON_ADD}</a></span>
 				{ALIASES}
 			</h2>
-			<div class="wrap">
-				<form id="aliasForm" method="post" action="?"{FRM_STYLE} class="fullpage">
+				<form id="aliasForm" method="post" action="?"{FRM_STYLE} class="fullpage ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<!-- BEGIN error-main -->
 					<div class="error-main">
 						<p>{ERROR_ALIAS_MAIN}</p>
@@ -17,30 +16,35 @@
 					// ]]>
 					</script>
 					<!-- END error-main -->
-					<fieldset>
-						<h3>{FRM_HEADER}</h3>
-						<div class="required">
-							<label for="frm_active" class="check"><input type="checkbox" id="frm_active" name="frm_active" class="input-checkbox" {FORM_ACTIVE_VALUE} /> {FRM_LABEL_ACTIVE}</label>							
+					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#alias-fields">{FRM_HEADER}</a></li>
+					</ul>
+					<div id="alias-fields" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+						<fieldset>
+							<div class="required">
+								<label for="frm_active">{FRM_LABEL_ACTIVE}</label>
+								<input type="checkbox" id="frm_active" name="frm_active" class="check" {FORM_ACTIVE_VALUE} />							
+							</div>
+							<div class="required">
+								<label for="frm_alias">* {FRM_LABEL_ALIAS}</label>
+								<input type="text" id="frm_alias" name="frm_alias" class="input-textlarge" value="{FORM_ALIAS_VALUE}" />
+								<small>{FRM_DESCR_ALIAS}</small>
+							</div>					
+						</fieldset>
+						<fieldset class="traverse">
+							<div class="required traverse">
+								<label for="frm_element">&nbsp;</label>
+								<a href="javascript:Alias.loadElements();" rel="internal">One level deeper</a>
+							</div>
+						</fieldset>
+						<div class="form-navigation">
+							<input type="hidden" name="cid" value="{CID}" />
+							<input type="hidden" name="cmd" value="{CMD}" />
+							<input type="hidden" name="eid" value="{EID}" />
+							<input type="hidden" name="dispatch" value="editAlias" />
+							<input type="hidden" id="frm_element" name="frm_element" value="{FORM_URL_VALUE}" />
+							<input type="submit" class="input-button" value="{FRM_LABEL_SAVE}" />
 						</div>
-						<div class="required">
-							<label for="frm_alias">* {FRM_LABEL_ALIAS}</label>
-							<input type="text" id="frm_alias" name="frm_alias" class="input-textlarge" value="{FORM_ALIAS_VALUE}" />
-							<small>{FRM_DESCR_ALIAS}</small>
-						</div>					
-					</fieldset>
-					<fieldset class="traverse">
-						<div class="required traverse">
-							<label for="frm_element">&nbsp;</label>
-							<a href="javascript:Alias.loadElements();" rel="internal">One level deeper</a>
-						</div>
-					</fieldset>
-					<div class="form-navigation">
-						<input type="hidden" name="cid" value="{CID}" />
-						<input type="hidden" name="cmd" value="{CMD}" />
-						<input type="hidden" name="eid" value="{EID}" />
-						<input type="hidden" name="dispatch" value="editAlias" />
-						<input type="hidden" id="frm_element" name="frm_element" value="{FORM_URL_VALUE}" />
-						<input type="submit" class="input-button" value="{FRM_LABEL_SAVE}" />
 					</div>
 				</form>
 				<div class="fullpage" style="margin:18px 10px;">
@@ -105,7 +109,6 @@
 					</div>
 					<!-- END multiview-pagenav-bottom -->
 				</div>
-			</div>			 
 			<script type="text/javascript">
 			 // <![CDATA[
 			 		<!-- BEGIN alias.add -->
@@ -130,4 +133,9 @@
 
 	</div>
 </div>
+<script type="text/javascript">
+jQuery(function(){
+	jQuery.debug({content: "Template: \n" + "alias" + ".tpl.htm", type:"info"});
+});
+</script>
 

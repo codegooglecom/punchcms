@@ -2,89 +2,87 @@
 			<h2>{MAINTITLE}<!-- BEGIN title.sub --> <span class="name">&lsquo;{MAINSUB}&rsquo;</span><!-- END title.sub --></h2>
 			<div id="treeContainer"></div>
 			<div id="content" class="hollyhacked">
-				<span class="menu"><a href="{BUTTON_CANCEL_HREF}" rel="internal">{BUTTON_CANCEL}</a></span>
-				<div class="tabs">
-					<ul class="anchors">
+				<form id="{FORM_NAME}" enctype="multipart/form-data" method="post" action="?" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
 						<!-- BEGIN headertitel_simple -->
-						<li><a href="#section-details" class="on">{HEADER_TITLE}</a></li>
+						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#section-details">{HEADER_TITLE}</a></li>
 						<!-- END headertitel_simple -->
 					</ul>
-				</div>
-				<div class="wrap">
-					<form id="{FORM_NAME}" enctype="multipart/form-data" method="post" action="?">
-						<div id="section-details">
-							<!-- BEGIN error-main -->
-							<div class="error-main">
-								<p>{ERROR_MAIN}</p>
-							</div>
-							<script type="text/javascript">
-							// <![CDATA[
-									Nifty("div.error-main");
-							// ]]>
-							</script>
-							<!-- END error-main -->
-
-							<div class="description">
-								<p>{LABEL_REQUIRED}</p>
-							</div>
-
-							<!-- BEGIN templateadd -->
-							<fieldset>
-								<div class="optional{ERROR_ISPAGE_ON}">
-									<!-- BEGIN error-ispage -->
-									<p class="error">{ERROR_ISPAGE}</p>
-									<!-- END error-ispage -->
-									<label for="frm_ispage" class="check"><input type="checkbox" id="frm_ispage" name="frm_ispage" class="check" {FORM_ISPAGE_VALUE} /> {LABEL_PAGECONTAINER}</label>
-								</div>
-								<div class="optional{ERROR_ISCONTAINER_ON}">
-									<!-- BEGIN error-iscontainer -->
-									<p class="error">{ERROR_ISCONTAINER}</p>
-									<!-- END error-iscontainer -->
-									<label for="frm_iscontainer" class="check"><input type="checkbox" id="frm_iscontainer" name="frm_iscontainer" class="check" {FORM_ISCONTAINER_VALUE} /> {LABEL_ISCONTAINER}</label>
-									<small>{ISCONTAINER_NOTE}</small>
-								</div>
-								<div class="optional{ERROR_FORCECREATION_ON}">
-									<!-- BEGIN error-forcecreation -->
-									<p class="error">{ERROR_FORCECREATION}</p>
-									<!-- END error-forcecreation -->
-									<label for="frm_forcecreation" class="check"><input type="checkbox" id="frm_forcecreation" name="frm_forcecreation" class="check" {FORM_FORCECREATION_VALUE} /> {LABEL_FORCECREATION}</label>
-									<small>{FORCECREATION_NOTE}</small>
-								</div>
-								<div class="required{ERROR_NAME_ON}">
-									<!-- BEGIN error-template-name -->
-									<p class="error">{ERROR_NAME}</p>
-									<!-- END error-template-name -->
-									<label for="frm_name">* {LABEL_TEMPLATENAME}</label>
-									<input type="text" id="frm_name" name="frm_name" class="input-textlarge" value="{FORM_NAME_VALUE}" />
-								</div>
-								<div class="optional{ERROR_APINAME_ON}">
-									<!-- BEGIN error-template-apiname -->
-									<p class="error">{ERROR_APINAME}</p>
-									<!-- END error-template-apiname -->
-									<label for="frm_apiname"><a href="#" title="{APINAME_DESCRIPTION}" rel="internal">API</a> {LABEL_NAME}</label>
-									<input type="text" id="frm_apiname" name="frm_apiname" class="input-textlarge" value="{FORM_APINAME_VALUE}" />
-									<small>{APINAME_NOTE}</small>
-								</div>
-								<div class="optional{ERROR_NOTES_ON}">
-									<!-- BEGIN error-template-notes -->
-									<p class="error">{ERROR_NOTES}</p>
-									<!-- END error-template-notes -->
-									<label for="frm_description">{LABEL_NOTES}</label>
-									<textarea id="frm_description" name="frm_description" class="input-textmedium" cols="32" rows="6">{FORM_NOTES_VALUE}</textarea>
-								</div>
-								<input type="hidden" name="dispatch" value="addTemplate" />
-							</fieldset>
-							<!-- END templateadd -->
-
-							<div class="form-navigation">
-								<input type="hidden" name="cid" value="{CID}" />
-								<input type="hidden" name="cmd" value="{CMD}" />
-								<input type="hidden" name="eid" value="{EID}" />
-								<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
-							</div>
+					<div id="section-details" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+						<!-- BEGIN error-main -->
+						<div class="error-main">
+							<p>{ERROR_MAIN}</p>
 						</div>
-					</form>
-				</div>
+						<script type="text/javascript">
+						// <![CDATA[
+								Nifty("div.error-main");
+						// ]]>
+						</script>
+						<!-- END error-main -->
+	
+						<div class="description">
+							<p>{LABEL_REQUIRED}</p>
+						</div>
+	
+						<!-- BEGIN templateadd -->
+						<fieldset>
+							<div class="optional{ERROR_ISPAGE_ON}">
+								<!-- BEGIN error-ispage -->
+								<p class="error">{ERROR_ISPAGE}</p>
+								<!-- END error-ispage -->
+								<label for="frm_ispage">{LABEL_PAGECONTAINER}</label>
+								<input type="checkbox" id="frm_ispage" name="frm_ispage" class="check" {FORM_ISPAGE_VALUE} />
+							</div>
+							<div class="optional{ERROR_ISCONTAINER_ON}">
+								<!-- BEGIN error-iscontainer -->
+								<p class="error">{ERROR_ISCONTAINER}</p>
+								<!-- END error-iscontainer -->
+								<label for="frm_iscontainer">{LABEL_ISCONTAINER}</label>
+								<input type="checkbox" id="frm_iscontainer" name="frm_iscontainer" class="check" {FORM_ISCONTAINER_VALUE} />
+								<small>{ISCONTAINER_NOTE}</small>
+							</div>
+							<div class="optional{ERROR_FORCECREATION_ON}">
+								<!-- BEGIN error-forcecreation -->
+								<p class="error">{ERROR_FORCECREATION}</p>
+								<!-- END error-forcecreation -->
+								<label for="frm_forcecreation">{LABEL_FORCECREATION}</label>
+								<input type="checkbox" id="frm_forcecreation" name="frm_forcecreation" class="check" {FORM_FORCECREATION_VALUE} />
+								<small>{FORCECREATION_NOTE}</small>
+							</div>
+							<div class="required{ERROR_NAME_ON}">
+								<!-- BEGIN error-template-name -->
+								<p class="error">{ERROR_NAME}</p>
+								<!-- END error-template-name -->
+								<label for="frm_name">* {LABEL_TEMPLATENAME}</label>
+								<input type="text" id="frm_name" name="frm_name" class="input-textlarge" value="{FORM_NAME_VALUE}" />
+							</div>
+							<div class="optional{ERROR_APINAME_ON}">
+								<!-- BEGIN error-template-apiname -->
+								<p class="error">{ERROR_APINAME}</p>
+								<!-- END error-template-apiname -->
+								<label for="frm_apiname"><a href="#" title="{APINAME_DESCRIPTION}" rel="internal">API</a> {LABEL_NAME}</label>
+								<input type="text" id="frm_apiname" name="frm_apiname" class="input-textlarge" value="{FORM_APINAME_VALUE}" />
+								<small>{APINAME_NOTE}</small>
+							</div>
+							<div class="optional{ERROR_NOTES_ON}">
+								<!-- BEGIN error-template-notes -->
+								<p class="error">{ERROR_NOTES}</p>
+								<!-- END error-template-notes -->
+								<label for="frm_description">{LABEL_NOTES}</label>
+								<textarea id="frm_description" name="frm_description" class="input-textmedium" cols="32" rows="6">{FORM_NOTES_VALUE}</textarea>
+							</div>
+							<input type="hidden" name="dispatch" value="addTemplate" />
+						</fieldset>
+						<!-- END templateadd -->
+	
+						<div class="form-navigation">
+							<input type="hidden" name="cid" value="{CID}" />
+							<input type="hidden" name="cmd" value="{CMD}" />
+							<input type="hidden" name="eid" value="{EID}" />
+							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
+						</div>
+					</div>
+				</form>
 			</div>
 			<div id="footer">
 				&nbsp;<!-- The footer -->
@@ -92,3 +90,8 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+jQuery(function(){
+	jQuery.debug({content: "Template: \n" + "template" + ".tpl.htm", type:"info"});
+});
+</script>
