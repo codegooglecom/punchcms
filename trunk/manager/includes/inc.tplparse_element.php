@@ -758,7 +758,7 @@ function parsePages($intElmntId, $strCommand) {
 						$objFtp = new FTP($strServer);
 						$objFtp->login($strUsername, $strPassword);
 						$objFtp->pasv(TRUE);
-						foreach ($arrFieldCache as $arrLanguage) {
+						foreach ($arrFieldCache as $intTemplateFieldId => $arrLanguage) {
 							foreach ($arrLanguage as $strValue) {
 								$arrValues = explode("\n", $strValue);
 								foreach ($arrValues as $value) {

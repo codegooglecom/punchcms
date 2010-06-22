@@ -432,7 +432,7 @@ ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 		$objList 		= jQuery("#storageBrowser_" + objTrigger.id + " div.storageList"),
 		$objLoader 		= jQuery("<div/>",{
 							"class":"storageLoader",
-							"html": "<img src=\"/css/blue-green/images/ui-anim_basic_16x16.gif\" alt=\"\" /> <?php echo $objLang->get("loadingFiles", "form") ?>",
+							"html": "<?php echo $objLang->get("loadingFiles", "form") ?>",
 							"css":{
 								"display":"block"
 							}
@@ -1276,6 +1276,7 @@ FileField.prototype.removeSwfUploadRow = function(inputId, file) {
 			arrTemp.push(this.subFiles[this.parent.currentLanguage].toUpload[intCount]);
 		}
 	}
+	
 	this.subFiles[this.parent.currentLanguage].toUpload = arrTemp;
 	
 	jQuery("#" + this.id + "_widget div.required").show();
@@ -1324,9 +1325,11 @@ FileField.prototype.removeCurrentField = function(objTrigger) {
 			arrTemp.push(this.subFiles[this.parent.currentLanguage].uploaded[intCount]);
 		}
 	}
+	jQuery.debug({title: "arrTemp", content: arrTemp});
 	this.subFiles[this.parent.currentLanguage].uploaded = arrTemp;
 	this.subFiles[this.parent.currentLanguage].currentFiles--;
 	
+	jQuery.debug({title: "$objTrigger.parent().data(element)", content: $objTrigger.parent().data("element")});
 	$objTrigger.parent().data("element").remove();
 	$objTrigger.parent().remove();
 	
