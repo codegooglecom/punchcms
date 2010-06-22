@@ -51,10 +51,11 @@ function FileField(strId, objOptions) {
 		this.$trigger.bind("change", function(){
 			__this.transferField();
 		});
-	} else {
-		//*** This can only be applied to file input elements!
-		jQuery.debug({title: "Punch error message", content: strId + " is not a file input element!"});
-	}
+	} 
+	//*** This can only be applied to file input elements!
+	//else {
+	//	jQuery.debug({content: "Punch error message\n" + strId + " is not a file input element!", type: "warning"});
+	//}
 	
 	//*** Create containers.
 	var intCurrent = (jQuery("#" + this.id + "_current").val()) ? parseInt(jQuery("#" + this.id + "_current").val()) : 0;
@@ -116,6 +117,9 @@ FileField.prototype.toScreen = function() {
 	}
 
 	var strId = this.id;
+	if(jQuery("#filelist_" + this.id).siblings().lenght > 1) {
+		jQuery.debug({content: "More than one, enable sortable."});
+	}
 	jQuery("#filelist_" + this.id).sortable({
 		dropOnEmpty: true,
 		update: function(){
