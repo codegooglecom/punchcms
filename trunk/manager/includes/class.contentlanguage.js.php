@@ -531,6 +531,7 @@ ContentField.prototype.setIconCascade = function() {
 			var strImageSrc = "images/lang_locked_disabled.gif";
 		} else {
 			var strImageSrc = "images/lang_unlocked_disabled.gif";
+			$objButton.bind("click", function(){ return false; }); // No need to be clickable
 		}
 		$objImage.attr("src", strImageSrc);
 	
