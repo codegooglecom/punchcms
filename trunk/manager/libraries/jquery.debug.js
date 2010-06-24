@@ -1,12 +1,13 @@
 /*
  * @package: jQuery debugging library.
- * @version: 0.3.2
+ * @version: 0.3.3
  * @author: Robin van Baalen
  * 
  * Note: 
  *   This library is dependant on the "jQuery" library.
  *   
  * Changelog: 
+ *  24/06	- For faster debugging, no more need for an object of arguments. Also introduced multiline debug messages. 
  *  22/06	- Both "warn" and "warning" are allowed debug types now.
  * 	16/06	- Implemented all Firebug's logging methods: info, error, warn, debug and log.
  * 	16/06	- Replaced jQuery.browser.mozilla for check if console is object
@@ -20,36 +21,40 @@ window.debug = true;
 /*
  * Debug function
  */
-jQuery.extend( {
+jQuery.extend({
 	debug: function() {
-		var args 	= arguments[0] || {};
-	    var title 	= args.title || "";
-	    var content = args.content;
-	    var type 	= args.type || "log";
+		if(typeof arguments[0] == "object"){
+			var args 	= arguments[0] || {};
+			var content = args.content;
+		}
+		else {
+			var args 	= {content: arguments[0]};
+			var content = args.content;
+		}
+		
+		var title 	= args.title || "";
+		var type 	= args.type || "log";
 	    
     	if(window.debug){
 			if(typeof console == "object"){
+				var strContent = (title !== "") ? title + ":\n" + content : content;
+				
 				switch(type){
 					case "info":
-						if(title !== "") console.info(title + ":");
-						console.info(content);
+						console.info(strContent);
 						break;
 					case "error":
-						if(title !== "") console.error(title + ":");
-						console.error(content);
+						console.error(strContent);
 						break;
 					case "warn":
 					case "warning":
-						if(title !== "") console.warn(title + ":");
-						console.warn(content);
+						console.warn(strContent);
 						break;
 					case "debug":
-						if(title !== "") console.debug(title + ":");
-						console.debug(content);
+						console.debug(strContent);
 						break;
 					default:
-						if(title !== "") console.log(title + ":");
-						console.log(content);
+						console.log(strContent);
 						break;
 				}
 			}
@@ -81,3 +86,5 @@ jQuery.fn.listHandlers = function(events, outputFunction) {
         });
     });
 };
+
+jQuery.debug({content: "test", title: "hallo", type: "warn"});
