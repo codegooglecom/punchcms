@@ -882,7 +882,8 @@ FileField.prototype.toScreen = function() {
 			dropOnEmpty: true,
 			connectWith: "#groups, #allgroups",
 			update: function(){
-				objContentLanguage.sort(strId)
+				objContentLanguage.sort(strId);
+				jQuery.debug({content: "Sort triggered", type:"info"});
 			},
 			axis: "y"
 		});
@@ -1398,14 +1399,16 @@ FileField.prototype.isImage = function(fileName) {
 FileField.prototype.toTemp = function() {};
 
 FileField.prototype.sort = function() {
-	var arrFields = jQuery("#filelist_current_" + this.id).sortable("serialize").split("&");
-	var objParent = jQuery("#" + this.id + '_widget');
+	var arrFields 	= jQuery("#filelist_current_" + this.id).sortable("serialize").split("&"),
+		$objParent 	= jQuery("#" + this.id + "_widget");
+	
 	for (var intCount = 0; intCount < arrFields.length; intCount++) {
-		var strTemp = arrFields[intCount].replace('filelist_current_' + this.id + "[]=", "");
-		var objTemp = jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_" + strTemp);
-		if (objTemp) {
-			objTemp.remove();
-			objParent.append(objTemp);
+		var strTemp = arrFields[intCount].replace("file_" + this.id + "_" + this.parent.currentLanguage + "[]=", ""),
+			$objTemp = jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_" + strTemp);
+		
+		if ($objTemp) {
+			$objTemp.remove();
+			$objParent.append($objTemp);
 		}
 	}
 }
