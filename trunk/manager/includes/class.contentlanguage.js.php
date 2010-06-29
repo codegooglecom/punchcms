@@ -857,7 +857,7 @@ FileField.prototype.toScreen = function() {
 		
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount],
-				blnStorage 	  = (filledElement.val().split(":").length > 2) ? true : false;
+				blnStorage 	  = (filledElement.value.split(":").length > 2) ? true : false;
 			
 			this.addCurrentRow(filledElement, blnStorage);
 			jQuery("#filelist_current_" + this.id).show();
