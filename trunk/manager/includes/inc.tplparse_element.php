@@ -758,7 +758,6 @@ function parsePages($intElmntId, $strCommand) {
 								}
 							}
 						}
-															//exit;
 												
 						//*** Remove deleted files.
 						$objFtp = new FTP($strServer);
