@@ -850,6 +850,7 @@ FileField.prototype.toScreen = function() {
 			jQuery(this).remove();
 		});
 		
+			jQuery.debug({title: "FilledElement", content: this.subFiles[this.parent.currentLanguage].uploaded});
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount],
 				blnStorage 	  = (filledElement.value.split(":").length > 2) ? true : false;
@@ -1352,8 +1353,7 @@ FileField.prototype.shortName = function(strInput, maxLength) {
 
 FileField.prototype.transferStorage = function(objLink, strLabel) { // objLink is a jQuery object.
 	var $objElement = jQuery("<input />");
-	 
-	
+
 	objLink.fadeOut("fast", function(){ jQuery(this).fadeIn("slow"); });
 
 	//*** Create input element.
@@ -1363,10 +1363,11 @@ FileField.prototype.transferStorage = function(objLink, strLabel) { // objLink i
 		name: this.id + "_" + this.parent.currentLanguage + "[]",
 		value: strLabel + ":" + objLink.find("img:first").attr("alt").split("/").pop() + ":" + objLink.attr("id").split("_").pop()
 	});
+	
 	jQuery("#filelist_new_" + this.id).append($objElement);
 	
 	this.subFiles[this.parent.currentLanguage].currentFiles++;
-	this.subFiles[this.parent.currentLanguage].uploaded.push($objElement);
+	this.subFiles[this.parent.currentLanguage].uploaded.push($objElement.get(0));
 	
 	jQuery("#filelist_current_" + this.id).show();
 	this.addCurrentRow($objElement, true);
