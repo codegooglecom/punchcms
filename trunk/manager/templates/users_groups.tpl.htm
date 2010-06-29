@@ -73,7 +73,7 @@
 									}
 								});
 								jQuery("#cancel").live("click", function(){
-									Group.load($F('itemList'), 'groupForm');
+									Group.load(jQuery('#itemlist option:selected').val());
 									return false;
 								});
 								jQuery("#save").live("click", function(){

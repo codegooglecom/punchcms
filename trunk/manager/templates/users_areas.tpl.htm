@@ -38,7 +38,7 @@
 						 <script type="text/javascript">
 						 // <![CDATA[
 						 	jQuery("#cancel").live("click", function(){
-								Area.load($F('itemList'), 'areaForm');
+								Area.load(jQuery('#itemlist option:selected').val());
 								return false;
 							});
 							jQuery("#save").live("click", function(){

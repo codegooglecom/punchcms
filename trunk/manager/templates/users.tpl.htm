@@ -6,12 +6,12 @@
 				<div class="wrap" style="float:left;">
 					<div id="folder">
 						<h3>
-							<!-- BEGIN main-buttons --><span class="menu"><a href="javascript:{OBJECT}.clearForm('{FORM}');" rel="internal">{BUTTON_NEW}</a> | <a href="javascript:{OBJECT}.remove($F('itemList'));" rel="internal">{BUTTON_REMOVE}</a></span><!-- END main-buttons -->
+							<!-- BEGIN main-buttons --><span class="menu"><a href="javascript:{OBJECT}.clearForm('{FORM}');" rel="internal">{BUTTON_NEW}</a> | <a href="javascript:{OBJECT}.remove(jQuery('#itemlist option:selected').val());" rel="internal">{BUTTON_REMOVE}</a></span><!-- END main-buttons -->
 							{LISTTITLE}
 						</h3>
 						<!-- BEGIN main-itemlist -->
 						<form id="usersForm" class="users" method="post" action="#">
-							<select id="itemList" name="itemList" class="select-multismall" multiple="multiple" size="21" onchange="{OBJECT}.load($F('itemList'));">
+							<select id="itemlist" name="itemList" class="select-multismall" multiple="multiple" size="21" onchange="{OBJECT}.load(jQuery('#itemlist option:selected').val());">
 								<!-- BEGIN main-items -->
 								<option value="{VALUE}">{TEXT}</option>
 								<!-- END main-items -->

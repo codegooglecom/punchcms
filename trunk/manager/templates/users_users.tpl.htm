@@ -82,7 +82,7 @@
 								
 								//*** Handle buttons
 								jQuery("a#cancel").live("click", function(){
-									User.load($F('itemList'), 'userForm');
+									User.load(jQuery('#itemlist option:selected').val());
 									return false;
 								});
 								jQuery("#save").live("click", function(){

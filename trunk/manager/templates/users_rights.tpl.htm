@@ -60,7 +60,7 @@
 
 						 	// TODO: VERY IMPORTANT: Add some feedback to the cancel and save buttons!
 							jQuery("#cancel").live("click", function(){
-								Right.load($F("itemList"), "rightForm");
+								Right.load(jQuery('#itemlist option:selected').val());
 								return false;
 							});
 							jQuery("#save").live("click", function(){
