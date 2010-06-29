@@ -60,9 +60,22 @@ class ElementFieldBigText extends DBA_ElementFieldBigText {
 								if (count($arrFile) > 1) {
 									//*** Check if the file is used by other elements.
 									if (!ElementField::fileHasDuplicates($value, 1)) {
-										//*** Remove file.
+										//*** Remove files.
 										$strFile = $strRemoteFolder . $arrFile[1];
 										$objFtp->delete($strFile);
+										
+										if ($objTemplateField->getTypeId() == FIELD_TYPE_IMAGE) {
+											//*** Remove template settings files.
+											$objImageField = new ImageField($objElementField->getTemplateFieldId());
+											$arrSettings = $objImageField->getSettings();
+											foreach ($arrSettings as $key => $arrSetting) {
+												if (!empty($arrSetting['width']) ||	!empty($arrSetting['height'])) {
+													//*** Remove file.
+													$strFile = $strRemoteFolder . FileIO::add2Base($arrFile[1], $arrSetting['key']);
+													$objFtp->delete($strFile);
+												}
+											}
+										}
 									}										
 								}
 							}
