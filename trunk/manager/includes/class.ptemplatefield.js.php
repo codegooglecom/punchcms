@@ -104,11 +104,11 @@ PTemplateField.addSetting = function(type, trigger) {
 			jQuery("#tfv_image_setting_name", $objClone).parent().show();
 			
 			var intValue = jQuery("#tfv_image_settings_count").val();
-			jQuery("#tfv_image_settings_count").val((intValue - 1) + 2);
+			jQuery("#tfv_image_settings_count").val((intValue - 1) + 2); // thisway javascript understands it's an integer
 			
 			$objClone.fadeIn("fast", function(){ 
 				jQuery.scrollTo($objClone, {duration: 1200}); 
-				jQuery(this).animate({backgroundColor: "#E0EEFF"}).animate({backgroundColor: "#ffffff"});
+				jQuery(this).animate({backgroundColor: "#E0EEFF"}).animate({backgroundColor: "#ffffff"}); // Blink the new fieldset
 			});
 			
 			break;
@@ -127,6 +127,7 @@ PTemplateField.removeSetting = function(type, trigger) {
 			$objElement.fadeOut("fast", function(){ 
 				jQuery(this).remove(); 
 				if (intCounter == 3) {
+					jQuery("#tfv_image_setting_name").val(""); // Reset the value.
 					jQuery("#tfv_image_setting_name").parent().hide();
 				}
 			});

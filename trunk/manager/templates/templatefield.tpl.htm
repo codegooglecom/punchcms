@@ -144,7 +144,8 @@
 								</div>
 								<div class="optional">
 									<label for="tfv_image_quality">Image quality</label>
-									<input type="text" id="tfv_image_quality" name="tfv_image_quality[]" class="input-textsmall" value="{TFV_IMAGE_QUALITY}" />
+									<input type="text" id="tfv_image_quality" name="tfv_image_quality[]" class="inline" value="{TFV_IMAGE_QUALITY}" /> %
+									<small style="display: none;">100% is the maximum image quality.</small>
 								</div>
 								<div class="optional">
 									<label for="tfv_image_grayscale">Convert to grayscale</label>
@@ -232,6 +233,16 @@
 					jQuery(".imgtpl-add").live("click", function(){
 						PTemplateField.addSetting("image", this);
 						return false;
+					});
+					jQuery("#tfv_image_quality").live("keyup", function(){
+						
+						if(jQuery(this).val() >= 100){
+							jQuery(this).val("100");
+							if(!jQuery(this).parent().find("small").is(":visible")){
+								jQuery(this).parent().find("small").fadeIn("fast").animate({color: "red"}).animate({color: "#333"});
+							}
+						}
+						
 					});
 				});
 			</script>
