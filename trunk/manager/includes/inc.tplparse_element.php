@@ -64,7 +64,13 @@ function parsePages($intElmntId, $strCommand) {
 							//	$objTpl->setVariable("MULTIITEM_HREF", "");
 							//}
 							if ($objSubElement->getActive() < 1) $objTpl->setVariable("MULTIITEM_ACTIVE", " class=\"inactive\"");
-							$objTpl->setVariable("MULTIITEM_NAME", htmlspecialchars($objSubElement->getName()));
+							
+							$strValue = htmlspecialchars($objSubElement->getName());
+							$strShortValue = getShortValue($strValue, 50);
+							$intSize = strlen($strValue);
+							$objTpl->setVariable("MULTIITEM_NAME", ($intSize > 50) ? $strShortValue : $strValue);
+							$objTpl->setVariable("MULTIITEM_TITLE", ($intSize > 50) ? $strValue : "");
+							
 
 							$strTypeClass = "";
 							if ($objSubElement->getTypeId() == ELM_TYPE_FOLDER) {

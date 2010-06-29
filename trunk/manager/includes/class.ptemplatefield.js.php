@@ -88,31 +88,50 @@ PTemplateField.multiSelect = function() {
 }
 
 PTemplateField.addSetting = function(type, trigger) {
+	var $objTrigger = (trigger instanceof jQuery) ? trigger : jQuery(trigger),
+		$objClone	= $objTrigger.parent().parent().clone();
+	
 	switch (type) {
 		case "image":
-			jQuery("#tfv_image_setting_name").parent("div").show();
-			jQuery("#subImage").append(jQuery(trigger).parent().parent().clone(true));
-			jQuery("a.removeButton").each(function(index) {
-				if (index > 0) {
-					jQuery(this).show();
-				}
+			jQuery("#tfv_image_setting_name").parent().show();
+			$objClone.hide();
+			jQuery("#subImage").append($objClone);
+			jQuery("a.removeButton:gt(0)").show();
+			$objClone.find("input").each(function(){
+				jQuery(this).val("");
 			});
-			jQuery("#tfv_image_settings_count").val((jQuery("#tfv_image_settings_count").val() - 1) + 2);
+			
+			jQuery("#tfv_image_setting_name", $objClone).parent().show();
+			
+			var intValue = jQuery("#tfv_image_settings_count").val();
+			jQuery("#tfv_image_settings_count").val((intValue - 1) + 2);
+			
+			$objClone.fadeIn("fast", function(){ 
+				jQuery.scrollTo($objClone, {duration: 1200}); 
+				jQuery(this).animate({backgroundColor: "#E0EEFF"}).animate({backgroundColor: "#ffffff"});
+			});
+			
 			break;
 	}
-	
 	return false;
+	
 }
 
 PTemplateField.removeSetting = function(type, trigger) {
+	var $objTrigger = (trigger instanceof jQuery) ? trigger : jQuery(trigger),
+		$objElement = $objTrigger.parent().parent(),
+		intCounter	= jQuery("fieldset", "#subImage").length;
+	
 	switch (type) {
 		case "image":
-			trigger.up("fieldset").remove();
+			$objElement.fadeOut("fast", function(){ 
+				jQuery(this).remove(); 
+				if (intCounter == 3) {
+					jQuery("#tfv_image_setting_name").parent().hide();
+				}
+			});
 			jQuery("#tfv_image_settings_count").val(jQuery("#tfv_image_settings_count").val() - 1);
 			
-			if (jQuery("#tfv_image_settings_count").val() == 0) {
-				jQuery("#tfv_image_setting_name").parent("div").hide();
-			}
 			break;
 	}
 	

@@ -50,7 +50,13 @@ function parseTemplates($intElmntId, $strCommand) {
 
 						$objTpl->setVariable("MULTIITEM_VALUE", $objField->getId());
 						$objTpl->setVariable("MULTIITEM_HREF", "href=\"?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objField->getId()}&amp;cmd=" . CMD_EDIT_FIELD . "\"");
-						$objTpl->setVariable("MULTIITEM_NAME", htmlspecialchars($objField->getName()));
+						
+						$strValue = htmlspecialchars($objField->getName());
+						$strShortValue = getShortValue($strValue, 50);
+						$intSize = strlen($strValue);
+						$objTpl->setVariable("MULTIITEM_NAME", ($intSize > 50) ? $strShortValue : $strValue);
+						$objTpl->setVariable("MULTIITEM_TITLE", ($intSize > 50) ? $strValue : "");
+						
 						$objTpl->setVariable("MULTIITEM_TYPE", ", " . $objFieldType->getName());
 						$objTpl->setVariable("MULTIITEM_TYPE_CLASS", "field");
 						$objTpl->setVariable("MULTIITEM_META", $strMeta);

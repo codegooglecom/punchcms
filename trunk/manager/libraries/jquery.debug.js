@@ -58,7 +58,7 @@ jQuery.extend({
 						break;
 				}
 			}
-			else {
+			else { // Most basic debugging
 				var strAlert = "";
 				if(title !== "") strAlert += title + ":\n\n";
 				strAlert += content + "\n";
@@ -86,5 +86,3 @@ jQuery.fn.listHandlers = function(events, outputFunction) {
         });
     });
 };
-
-jQuery.debug({content: "test", title: "hallo", type: "warn"});

@@ -5,7 +5,7 @@ textarea {
 }
 
 form.ui-tabs {
-	
+	border: 1px #ddd solid;
 }
 form.ui-tabs div.ui-tabs-panel a {
 	color: #2C457C;
@@ -17,7 +17,7 @@ form.ui-tabs div.ui-tabs-panel a:hover {
 	color: #2C457C;
 }
 form.ui-tabs div.ui-tabs-panel {
-	overflow:auto;
+	overflow: auto;
 }
 form.ui-tabs div.ui-tabs-panel fieldset {
 	margin: 10px 0 0;
@@ -31,6 +31,10 @@ form.ui-tabs div.ui-tabs-panel fieldset div {
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div div.clear {
 		clear: both !important;
+	}
+	
+form.ui-tabs div.ui-tabs-panel fieldset div.error input {
+	border: 1px solid #CD0A0A;
 	}
 form.ui-tabs div.ui-tabs-panel fieldset div label {
 	color: #333;
@@ -76,6 +80,9 @@ form.ui-tabs div.ui-tabs-panel fieldset div input {
 			float: left;
 			margin: 4px 4px;
 		}
+	form.ui-tabs div.ui-tabs-panel fieldset div input.inline {
+		width: 84px;
+	}
 		
 form.ui-tabs div.ui-tabs-panel fieldset div select {
 	padding: 3px;
@@ -101,7 +108,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div textarea {
 form.ui-tabs div.ui-tabs-panel fieldset div small {
 	clear: both;
 	display: block;
-	margin: 0 0 6px 145px;
+	margin: 4px 0 6px 149px;
 	font-size: 10px;
 }
 form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
@@ -129,6 +136,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield h3 {
 		border: none !important;
 		padding: 0 5px;
+		font-size: 12px !important;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.required,
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.optional {
@@ -142,6 +150,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .ui-sortable {
 		margin: 3px 5px;
+		position: static !important;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile,
 	form.ui-tabs div.ui-tabs-panel fieldset div .multifile {
@@ -164,6 +173,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 			-moz-box-shadow: 1px 1px 1px #999;
 			-webkit-box-shadow: 1px 1px 1px #999;
 		}
+		
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail,
 	form.ui-tabs div.ui-tabs-panel fieldset div .multifile .thumbnail {
 		position: absolute;

@@ -125,7 +125,7 @@
 							</fieldset>
 							<!-- BEGIN image.settings -->
 							<fieldset>
-								<h5>Image Size settings <a href="javascript:PTemplateField.removeSetting('image', this);" class="removeButton" style="{REMOVE_STYLE};" rel="internal">[-]</a><a href="javascript:PTemplateField.addSetting('image', this);" class="addButton" rel="internal">[+] Add another template</a></h5>
+								<h5>Image Size settings <a href="#" class="imgtpl-remove removeButton" style="{REMOVE_STYLE};" rel="internal">[-]</a><a href="#" class="imgtpl-add addButton" rel="internal">[+] Add another template</a></h5>
 								<div class="required" style="{API_STYLE};">
 									<label for="tfv_image_setting_name">* API Name</label>
 									<input type="text" id="tfv_image_setting_name" name="tfv_image_setting_name[]" class="input-textlarge" value="{TFV_IMAGE_SETTING_NAME}" />
@@ -133,8 +133,8 @@
 								</div>
 								<div class="optional">
 									<label for="tfv_field_width">Image size (W x H)</label>
-									<input type="text" id="tfv_field_width" name="tfv_field_width[]" class="input-textsmall" value="{TFV_FIELD_WIDTH}" /> x
-									<input type="text" id="tfv_field_height" name="tfv_field_height[]" class="input-textsmall" value="{TFV_FIELD_HEIGHT}" />
+									<input type="text" id="tfv_field_width" name="tfv_field_width[]" class="inline" value="{TFV_FIELD_WIDTH}" /> x
+									<input type="text" id="tfv_field_height" name="tfv_field_height[]" class="inline" value="{TFV_FIELD_HEIGHT}" />
 								</div>
 								<div class="optional">
 									<label for="tfv_image_scale">Scale method</label>								
@@ -147,7 +147,8 @@
 									<input type="text" id="tfv_image_quality" name="tfv_image_quality[]" class="input-textsmall" value="{TFV_IMAGE_QUALITY}" />
 								</div>
 								<div class="optional">
-									<label for="tfv_image_grayscale" class="check"><input type="checkbox" id="tfv_image_grayscale" name="tfv_image_grayscale[]" class="check" {TFV_IMAGE_GRAYSCALE} /> Convert to grayscale</label>
+									<label for="tfv_image_grayscale">Convert to grayscale</label>
+									<input type="checkbox" id="tfv_image_grayscale" name="tfv_image_grayscale[]" class="check" {TFV_IMAGE_GRAYSCALE} />
 								</div>
 							</fieldset>
 							<!-- END image.settings -->
@@ -222,6 +223,18 @@
 			<div id="footer">
 				&nbsp;
 			</div>
+			<script type="text/javascript">
+				jQuery(function(){
+					jQuery(".imgtpl-remove").live("click", function(){
+						PTemplateField.removeSetting("image", this);
+						return false;
+					});
+					jQuery(".imgtpl-add").live("click", function(){
+						PTemplateField.addSetting("image", this);
+						return false;
+					});
+				});
+			</script>
 		</div>
 	</div>
 </div>

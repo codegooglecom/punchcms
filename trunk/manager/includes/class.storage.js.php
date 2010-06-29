@@ -181,9 +181,9 @@ FileField.prototype.addUploadRow = function($element) {
 	});
 	var $objButton = jQuery("<a/>", {
 			"class": "button",
-			html: this.removeLabel,
+			"html": this.removeLabel,
 			"href": "",
-			click: function(){
+			"click": function(){
 				__this.removeUploadField(this);
 				return false;
 			}
@@ -226,9 +226,9 @@ FileField.prototype.addCurrentRow = function($element) {
 	});
 	var $objButton = jQuery("<a/>", {
 			"class": "button",
-			html: this.removeLabel,
+			"html": this.removeLabel,
 			"href": "#",
-			click: function(){
+			"click": function(){
 				__this.removeCurrentField(this);
 				return false;
 			}

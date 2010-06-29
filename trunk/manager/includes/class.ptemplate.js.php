@@ -96,9 +96,9 @@ PTemplate.fieldTypeChange = function(objList) {
 
 	for (var i = 0; i < arrSelect.length; i++) {
 		if (arrSelect[i] == 1) {
-			jQuery(arrObjects[i]).show();
+			jQuery("#" + arrObjects[i]).show();
 		} else {
-			jQuery(arrObjects[i]).hide();
+			jQuery("#" + arrObjects[i]).hide();
 		}
 	}
 }

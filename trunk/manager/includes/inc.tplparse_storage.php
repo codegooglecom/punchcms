@@ -56,7 +56,13 @@ function parseFiles($intElmntId, $strCommand) {
 
 						$objTpl->setVariable("MULTIITEM_VALUE", $objItem->getId());
 						$objTpl->setVariable("MULTIITEM_HREF", "href=\"?cid=" . NAV_PCMS_STORAGE . "&amp;eid={$objItem->getId()}&amp;cmd=" . CMD_EDIT . "\"");
-						$objTpl->setVariable("MULTIITEM_NAME", $objItem->getName());
+						
+						$strValue = htmlspecialchars($objItem->getName());
+						$strShortValue = getShortValue($strValue, 50);
+						$intSize = strlen($strValue);
+						$objTpl->setVariable("MULTIITEM_NAME", ($intSize > 50) ? $strShortValue : $strValue);
+						$objTpl->setVariable("MULTIITEM_TITLE", ($intSize > 50) ? $strValue : "");
+						
 						$objTpl->setVariable("MULTIITEM_META", $strMeta);
 						
 						switch ($objItem->getTypeId()) {
@@ -290,13 +296,12 @@ function parseFiles($intElmntId, $strCommand) {
 					$objTpl->setVariable("ERROR_NOTES", $objLang->get("commonTypeText", "formerror"));
 					$blnError = TRUE;
 				}
-
+				// Double code here?
 				if (is_null($_CLEAN_POST["dispatch"])) {
 					$blnError = TRUE;
 				}
 
-				//*** Check element specific fields.
-				//*** TODO!!
+				//*** TODO: Check element specific fields.
 
 				if ($blnError === TRUE) {
 					//*** Display global error.
@@ -304,8 +309,7 @@ function parseFiles($intElmntId, $strCommand) {
 					$objTpl->setVariable("FORM_NOTES_VALUE", $_POST["frm_description"]);
 					$objTpl->setVariable("ERROR_MAIN", $objLang->get("main", "formerror"));
 
-					//*** Display element specific errors.
-					//*** TODO!!
+					//*** TODO: Display element specific errors.
 				} else {
 					//*** Input is valid. Save the element.
 					if ($blnIsFolder || $strCommand == CMD_EDIT && is_array(Request::get('frm_file'))) {

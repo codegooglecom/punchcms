@@ -76,26 +76,20 @@
 						<h4>{PAGENAV_PAGE}</h4>
 					</div>
 					<!-- END multiview-pagenav-top -->
-					<br />
-					<div id="itemlist">
+					<div id="itemlist" class="language">
 						<!-- BEGIN multiview-item -->
 						<div class="itembox" id="box_{MULTIITEM_VALUE}">
-							<div class="off" style="cursor:pointer">
-								<div class="inactive">
-									<div class="menu">
-										<!-- BEGIN multiview-preview --><a href="{BUTTON_PREVIEW_HREF}" rel="internal">{BUTTON_PREVIEW}</a> | <!-- END multiview-preview -->
-										<!-- BEGIN multiview-duplicate --><a href="{BUTTON_DUPLICATE_HREF}" rel="internal">{BUTTON_DUPLICATE}</a> | <!-- END multiview-duplicate --><a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
-									</div>
-									<input type="checkbox" id="item_{MULTIITEM_VALUE}" name="item_{MULTIITEM_VALUE}" style="margin-top:2px" class="multiitem" />
-									<div class="{MULTIITEM_TYPE_CLASS}">
-										<p class="title"><a href="{MULTIITEM_HREF}"{MULTIITEM_ACTIVE} rel="internal">{MULTIITEM_ALIAS}</a> {MULTIITEM_POINTS_TO} <a href="{MULTIITEM_URL_HREF}" rel="internal" class="meta">{MULTIITEM_URL}</a></p>
-									</div>
-								</div>
+							<div class="menu">
+								<!-- BEGIN multiview-preview --><a href="{BUTTON_PREVIEW_HREF}" rel="internal">{BUTTON_PREVIEW}</a> | <!-- END multiview-preview -->
+								<!-- BEGIN multiview-duplicate --><a href="{BUTTON_DUPLICATE_HREF}" rel="internal">{BUTTON_DUPLICATE}</a> | <!-- END multiview-duplicate --><a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
+							</div>
+							<input type="checkbox" id="item_{MULTIITEM_VALUE}" name="item_{MULTIITEM_VALUE}" style="margin-top:2px" class="multiitem" />
+							<div class="{MULTIITEM_TYPE_CLASS}">
+								<p class="title"><a href="{MULTIITEM_HREF}"{MULTIITEM_ACTIVE} rel="internal">{MULTIITEM_ALIAS}</a> {MULTIITEM_POINTS_TO} <a href="{MULTIITEM_URL_HREF}" rel="internal" class="meta">{MULTIITEM_URL}</a></p>
 							</div>
 						</div>
 						<!-- END multiview-item -->
 					</div>
-					<br />
 					<!-- BEGIN multiview-pagenav-bottom -->
 					<div class="page-nav">
 						<p>
@@ -125,7 +119,7 @@
 						else {
 							jQuery(this).removeClass("offhover");
 						}
-				 	});			
+				 	});
 			 // ]]>
 			 </script>
 			<!-- END aliases -->

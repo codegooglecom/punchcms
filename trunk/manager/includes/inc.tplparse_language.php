@@ -68,7 +68,13 @@ function parseLanguage($intLangId, $strCommand) {
 				$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:ContentLanguage.remove({$objLanguage->getId()});");
 				$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("delete", "button"));
 				$objTpl->setVariable("MULTIITEM_HREF", "?cid=" . NAV_PCMS_LANGUAGES . "&amp;eid={$objLanguage->getId()}&amp;cmd=" . CMD_EDIT);
-				$objTpl->setVariable("MULTIITEM_NAME", $objLanguage->getName());
+				
+				$strValue = htmlspecialchars($objLanguage->getName());
+				$strShortValue = getShortValue($strValue, 50);
+				$intSize = strlen($strValue);
+				$objTpl->setVariable("MULTIITEM_NAME", ($intSize > 50) ? $strShortValue : $strValue);
+				$objTpl->setVariable("MULTIITEM_TITLE", ($intSize > 50) ? $strValue : "");
+				
 				$objTpl->setVariable("MULTIITEM_ABBR", $objLanguage->getAbbr());
 				if ($objLanguage->default > 0) {
 					$strValue = $objLang->get("standardLanguage", "label");

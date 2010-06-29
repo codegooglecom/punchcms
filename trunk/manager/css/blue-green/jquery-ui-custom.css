@@ -32,3 +32,11 @@
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
 	color: #fff !important;
 }
+.ui-sortable {
+	position: relative;
+}
+.ui-state-error {
+	padding: 12px;
+	margin: 9px;
+	background: #FEF1EC !important;
+}

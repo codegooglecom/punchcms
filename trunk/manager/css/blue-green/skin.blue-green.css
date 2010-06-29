@@ -258,10 +258,12 @@ div.tabwrapper ul.anchors a.on:visited
 	background: #e9edf6 url('/images/bg_tab.jpg') left top repeat-x;
 }
 
-div.tabwrapper div.wrap,
 #content div.wrap 
 {
-	background: #e9edf6;
+	background: #fff;
+	border: 1px #ddd solid;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 
 #content div.divider {
@@ -424,8 +426,10 @@ div.tabwrapper div.wrap,
 }
 
 #left-wrap div.page-nav {
-	background: none;
+	background: #E0EEFF;
 	border: 1px solid #AFB8CD;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 
 #left-wrap div.page-nav h4 {
