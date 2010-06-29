@@ -135,7 +135,6 @@ ContentLanguage.prototype.swap = function(languageId) {
 					objReturn = objContentLanguage.buttonOut("cascadeElement", this);
 					break;
 				case "click":
-					jQuery.debug({content: "clicker"});
 					objReturn = objContentLanguage.toggleCascadeElement();
 					break;
 			}
@@ -634,13 +633,11 @@ TextAreaField.prototype.toScreen = function() {
 	
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
-		jQuery.debug({content: "this.parent.actives[this.parent.currentLanguage] != true"});
 		
 		//*** The element is not active.
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "___Frame").hide();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
-		jQuery.debug({content: "this.cascades[this.parent.currentLanguage] == true"});
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
@@ -790,7 +787,6 @@ FileField.prototype = new ContentField();
 FileField.prototype.toScreen = function() {
 	//*** Attach mouse events to the cascade button.
 	this.setIconCascade();
-	jQuery.debug({content: "Filefield toScreen triggered:\n" + this.id});
 		
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
@@ -807,7 +803,6 @@ FileField.prototype.toScreen = function() {
 			strValue += this.shortName(arrValue[0], 40) + "<br />";
 		}
 		for (var intCount = 0; intCount < this.subFiles[this.parent.defaultLanguage].toUpload.length; intCount++) {
-			jQuery.debug({content: "Check contentLanguage function\nFileField.toScreen row 805", type:"warning"});
 			strValue += this.shortName(this.subFiles[this.parent.defaultLanguage].toUpload[intCount].value, 40) + "<br />";
 		}
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
@@ -858,6 +853,10 @@ FileField.prototype.toScreen = function() {
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount],
 				blnStorage 	  = (filledElement.value.split(":").length > 2) ? true : false;
+				
+				if(filledElement instanceof jQuery){
+					alert("FilledELement is jQuery object");
+				}
 			
 			this.addCurrentRow(filledElement, blnStorage);
 			jQuery("#filelist_current_" + this.id).show();
@@ -883,7 +882,6 @@ FileField.prototype.toScreen = function() {
 			connectWith: "#groups, #allgroups",
 			update: function(){
 				objContentLanguage.sort(strId);
-				jQuery.debug({content: "Sort triggered", type:"info"});
 			},
 			axis: "y"
 		});
@@ -933,7 +931,6 @@ FileField.prototype.transferField = function() {
 		.attr("name", strId + "_new")
 		.bind("change", function(){
 			objParent.transferField(strId);
-			jQuery.debug({content: "Change event triggered on inputfield " + strId});
 		});
 
 	$objElement.insertBefore($filledElement.next());
@@ -949,7 +946,6 @@ FileField.prototype.transferField = function() {
 }
 
 FileField.prototype.addUploadRow = function(element) { // element is a jQuery object
-	jQuery.debug({content: "FileField.prototype.addUploadRow triggered"});
 	var objParent  	 = this.parent,
 		strId 	   	 = this.id,
 		$element   	 = (element instanceof jQuery) ? element : jQuery(element), // Make sure it's a jQuery object
@@ -1093,7 +1089,6 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 }
 
 FileField.prototype.addSwfUploadRow = function(element, file) {	
-	jQuery.debug({content: "FileField.prototype.addSwfUploadRow"});
 	var __this   			= this,
 		strId				= this.id,
 		$element 			= (element instanceof jQuery) ? element : jQuery(element), // Make it a jQuery object
@@ -1239,7 +1234,6 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		//$objRow.append($objAltText);
 	}
 
-	jQuery.debug({content: $objRow});
 	jQuery("#filelist_new_" + strId).append($objRow);
 	
 	//*** Check max files.
@@ -1289,12 +1283,10 @@ FileField.prototype.removeSwfUploadRow = function(inputId, file) {
 }	
 
 FileField.prototype.removeUploadField = function(objTrigger) {	
-	jQuery.debug({content: "FileField.prototype.removeUploadField triggered"});
 	var strId 			= this.id,
 		$objTrigger 	= (objTrigger instanceof jQuery) ? objTrigger : jQuery(objTrigger), // Make it a jQuery object
 		cacheValue 		= $objTrigger.parent().data("element").val();
 	
-	jQuery.debug({content: "Aantal over:" + $objTrigger.parent().data("element").length});
 	
 	$objTrigger.parent().data("element").remove();
 	$objTrigger.parent().remove();
@@ -1328,11 +1320,9 @@ FileField.prototype.removeCurrentField = function(objTrigger) {
 			arrTemp.push(this.subFiles[this.parent.currentLanguage].uploaded[intCount]);
 		}
 	}
-	jQuery.debug({title: "arrTemp", content: arrTemp});
 	this.subFiles[this.parent.currentLanguage].uploaded = arrTemp;
 	this.subFiles[this.parent.currentLanguage].currentFiles--;
 	
-	jQuery.debug({title: "$objTrigger.parent().data(element)", content: $objTrigger.parent().data("element")});
 	$objTrigger.parent().data("element").remove();
 	$objTrigger.parent().remove();
 	
@@ -1468,7 +1458,6 @@ FileField.prototype.fileDialogComplete = function(numFilesSelected, numFilesQueu
 }
 
 FileField.prototype.uploadStart = function(file) {
-jQuery.debug({content: "uploadStart triggered", type: "info"});
 	var $objElement = jQuery("<input />");
 	jQuery("#filelist_new_" + this.settings.jsParent.id).show();
 	
@@ -1480,7 +1469,6 @@ jQuery.debug({content: "uploadStart triggered", type: "info"});
 		.attr("value", file.name + ":::")
 		.data("file", file);
 		
-	jQuery.debug({title: "File", content: file});
 		
 	jQuery("#filelist_new_" + this.settings.jsParent.id).append($objElement);
 		
@@ -1564,12 +1552,8 @@ FileField.prototype.stopAltEdit = function($objElement) {
 		$objParent 		= $objElement.parent(), // Parent div
 		arrId			= $objParent.attr("id").split("_"),
 		strTempId		= arrId.shift();
-		jQuery.debug({title: "$objParent.attr(id)", content: $objParent.attr("id")});
-		jQuery.debug({title: "arrId", content: arrId});
-		jQuery.debug({title: "strTempId", content: strTempId});
 		
 	var	strId 			= arrId.join("_");
-		jQuery.debug({title: "strId", content: strId});
 	
 		arrValue		= jQuery("#" + strId).val().split(":"),
 		labelValue		= arrValue.shift(),
