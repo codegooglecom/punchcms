@@ -297,9 +297,9 @@ function parseUsers($intElmntId, $strCommand) {
 									// TODO: Parse optgroup fields for shorter option values.
 									$objTpl->setCurrentBlock("main-items");
 									$strRight = $objApp['application_define_name'] . "::" . $objArea["area_define_name"] . "::" . $objRight["right_define_name"];
-									$strTitle = (strlen($strRight) > 20) ? " title=\"{$strRight}\"" : "";
+									$strOptionTitle = (strlen($strRight) > 20) ? " title=\"{$strRight}\"" : "";
 									$objTpl->setVariable("VALUE", $objRight["right_id"]);
-									$objTpl->setVariable("TITLE", $strTitle);
+									$objTpl->setVariable("OPT_TITLE", $strOptionTitle);
 									$objTpl->setVariable("TEXT", $objApp['application_define_name'] . "::" . $objArea["area_define_name"] . "::" . $objRight["right_define_name"]);
 									$objTpl->parseCurrentBlock();
 
