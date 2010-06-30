@@ -294,6 +294,7 @@ function parseUsers($intElmntId, $strCommand) {
 							if (is_array($objRights)) {
 								foreach ($objRights as $objRight) {
 									//*** List all rights.
+									// TODO: Parse optgroup fields for shorter option values.
 									$objTpl->setCurrentBlock("main-items");
 									$strRight = $objApp['application_define_name'] . "::" . $objArea["area_define_name"] . "::" . $objRight["right_define_name"];
 									$strTitle = (strlen($strRight) > 20) ? " title=\"{$strRight}\"" : "";
