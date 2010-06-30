@@ -1,9 +1,21 @@
+/*
+ * PunchCMS Form Styling
+ * @version: 1.0
+ * @author: Felix iT B.V. - Robin van Baalen
+ */
+
+/*
+ * General Markup
+ */
 input,
 select,
 textarea {
 	outline: 0;
 }
 
+/*
+ * Normal form markup
+ */
 form.ui-tabs {
 	border: 1px #ddd solid;
 }
@@ -262,4 +274,62 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 div.form-navigation {
 	float: right;
 	margin-top: 20px;
+}
+
+/*
+ * Small (column) form markup
+ */
+
+#folder form.ui-tabs,
+div.column form.ui-tabs {
+	border: none;
+}
+div.column form.ui-tabs div.ui-tabs-panel h3 {
+	margin: 0;
+}
+div.column form.ui-tabs div.ui-tabs-panel fieldset div label {
+	width: 120px;
+	}
+div.column form.ui-tabs div.ui-tabs-panel fieldset div input {
+	width: 150px !important;
+	}
+	div.column form.ui-tabs div.ui-tabs-panel fieldset div input.check {
+		width: auto !important;
+	}
+div.column form.ui-tabs div.ui-tabs-panel fieldset div select {
+	width: 158px !important;
+	}
+div.column form.ui-tabs div.ui-tabs-panel fieldset ul {
+	min-height: 50px;
+	margin: 5px 0;
+	}
+	div.column form.ui-tabs div.ui-tabs-panel fieldset ul li {
+		position: relative;
+		-moz-border-radius: 2px;
+		-webkit-border-radius: 2px;
+	}
+	
+#folder .menu {
+	width: 150px !important;
+	display: block;
+	clear: both;
+	margin: 0 auto 20px;
+}
+#folder select {
+	width: 160px;
+	min-height: 200px;
+	}
+	#folder select option {
+		padding: 5px;
+		cursor: pointer;
+	}
+	
+/*
+ * Hack
+ */
+a#new:hover span.ui-button-text {
+	color: #fff !important;
+}
+a#remove:hover span.ui-button-text {
+	color: #fff !important;
 }

@@ -664,8 +664,8 @@ div.center-wrap form {
 	padding: 6px;
 	margin: 6px;
 }
-.language .itembox {
-	
+#left-wrap .language .itembox {
+	height: 20px !important;
 }
 
 #left-wrap div.itembox div.on, 
@@ -1162,6 +1162,12 @@ div.progresstext {
   
 /*** END tooltip ***/
 
+/*
+ * Hacks
+ */
+.no-margin {
+	margin: 0 !important;
+}
 
 /*
  * IE7 fix

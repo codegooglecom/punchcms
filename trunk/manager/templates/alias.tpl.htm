@@ -5,7 +5,7 @@
 				<span class="menu"><a href="javascript:Alias.prepareAdd();" rel="internal">{BUTTON_ADD}</a></span>
 				{ALIASES}
 			</h2>
-				<form id="aliasForm" method="post" action="?"{FRM_STYLE} class="fullpage ui-tabs ui-widget ui-widget-content ui-corner-all">
+				<form id="aliasForm" method="post" action="?"{FRM_STYLE} title="{FRM_HEADER}" class="fullpage ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<!-- BEGIN error-main -->
 					<div class="error-main">
 						<p>{ERROR_ALIAS_MAIN}</p>
@@ -16,9 +16,6 @@
 					// ]]>
 					</script>
 					<!-- END error-main -->
-					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
-						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#alias-fields">{FRM_HEADER}</a></li>
-					</ul>
 					<div id="alias-fields" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 						<fieldset>
 							<div class="required">
@@ -130,6 +127,23 @@
 <script type="text/javascript">
 jQuery(function(){
 	jQuery.debug({content: "Template: \n" + "alias" + ".tpl.htm", type:"info"});
+	jQuery("#aliasForm").dialog({
+		modal: true,
+		autoOpen: false,
+		width: 600,
+		buttons: {
+			"Save alias": function(){
+				jQuery.debug("Save button pressed.");
+				jQuery.debug(jQuery(this));
+			},
+			"Cancel": function(){
+				jQuery(this).dialig("close");
+			}
+		},
+		open: function(){
+			jQuery(".form-navigation", this).hide();
+		}
+	});
 });
 </script>
 

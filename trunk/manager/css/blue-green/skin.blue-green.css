@@ -460,25 +460,35 @@ div.column h3 {
 }
 
 ul.sortable {
-	border: 1px dashed #A8AAB0;
+	border: 1px solid #ddd;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 
 ul.strong {
-	border: 1px dashed #555;
+	border: 1px solid #aaa;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 
 ul.sorthover {
 	border: 1px solid #333;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 
 ul.sortable li {
-	background: #E9EDF6;
+	background: #E0EEFF;
 	border: 1px solid #999;
-	color: #339;
+	color: #2C457C;
+}
+ul.sortable li a {
+	color: #2C457C;
 }
 
 ul.sortable li.hover {
 	background: #fff;
+	border: 1px #2C457C solid;
 }
 
 ul.strong li {
