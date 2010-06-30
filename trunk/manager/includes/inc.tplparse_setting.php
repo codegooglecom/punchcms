@@ -80,7 +80,7 @@ function parseSetting($intElmntId, $strCommand) {
 
 			$objTpl->setCurrentBlock("setting.{$objSetting->getType()}");
 			$objTpl->setVariable("FIELD_ID", "sfv_{$objSetting->getId()}");
-			$objTpl->setVariable("FIELD_LABEL", $strLabel);
+			$objTpl->setVariable("FIELD_LABEL", $objLang->get($objSetting->getName(), "settingsLabel"));
 			
 			switch ($objSetting->getType()) {
 				case "text":
