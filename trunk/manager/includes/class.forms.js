@@ -100,30 +100,6 @@ Forms.clear = function(strFormId, arrExclude) {
 			}
 		}
 		
-//		objForm.find(":input").each(function() {
-//			var type = this.type;
-//			var tag = this.tagName.toLowerCase(); // normalize case
-//			
-//			if (type == "text" || type == "password" || tag == "textarea"){
-//				this.value = "";
-//			}
-//			else if (type == "checkbox" || type == "radio"){
-//				this.checked = false;
-//			}
-//			else if (tag == "select") {
-//				this.selectedIndex = -1;
-//			}
-//		});
-		
-//		var objElements = document.getElementsByClassName("widget", objForm);
-//		
-//		for (var n = 0; n < objElements.length; n++) {
-//			var objElement = objElements[n];
-//
-//			if (!inObject(arrExclude, objElement.id, "")) {
-//				objElement.innerHTML = "";
-//			}
-//		}
 		var objElements = objForm.find(".widget");
 		objElements.each(function(){
 			var objElement = jQuery(this);
@@ -137,18 +113,9 @@ Forms.clear = function(strFormId, arrExclude) {
 Forms.parseAjaxResponse = function(objResponse) {
 	var blnReturn = true;
 	
-//	jQuery.debug({title: "objResponse", content: jQuery(objResponse).find("field")});
-	
 	//*** Fields.
 	var objFields = jQuery(objResponse).find("field");
 	
-//	objFields.each(function(i){
-//		var blnClear = true;
-//		
-//		if(jQuery(this).attr("name") == "name"){
-//			console.log(jQuery(this));
-//		}
-//	});
 	for (var i = 0; i < objFields.length; i++) {
 		var blnClear = true;
 		
@@ -221,44 +188,24 @@ Forms.parseAjaxResponse = function(objResponse) {
 	}
 	
 	//*** Widgets.
-//	var objWidgets = objResponse.getElementsByTagName("widget");
 	var objWidgets = jQuery(objResponse).find("widget");
 	
 	objWidgets.each(function(){
 		var strWidget = jQuery(this).attr("name");
 		var strContain = jQuery(this).attr("contain");
-//	for (var i = 0; i < objWidgets.length; i++) {
-//		var strWidget = objWidgets[i].getAttribute("name");
-//		var strContain = objWidgets[i].getAttribute("contain");
 
 		try {
-//			var objWidget = jQuery("#" + strWidget).get(0);
 			var objWidget = jQuery("#" + strWidget);
 			
 			//*** Empty the widget.
-//			objWidget.innerHTML = "";
 			objWidget.html("");
 			
 			//*** Fill the widget with values.
-//			var objValues = objWidgets[i].getElementsByTagName("value");
 			var objValues = jQuery(this).find("value");
 			objValues.each(function(){
 				
-//			for (var j = 0; j < objValues.length; j++) {
 				var strValueName = jQuery(this).attr("name");
-//				var strValueText = objValues[j].firstChild.nodeValue;
 				var strValueText = jQuery(this).text();
-//				console.log("strValueName: " + strValueName);
-//				console.log("strValueText: " + strValueText);
-				
-//				var objValue = document.createElement("li");
-//				objValue.setAttribute("id", strValueName);
-//				objValue.onmouseover = function() { Element.addClassName(this, 'hover'); };
-//				objValue.onmouseout = function() { Element.removeClassName(this, 'hover'); };
-//				var objText = document.createTextNode(strValueText);
-//				objValue.appendChild(objText);
-//				objWidget.appendChild(objValue);
-				
 				var objValue = jQuery("<li></li>");
 				objValue
 					.attr("id", "rights_" + strValueName)
@@ -277,22 +224,8 @@ Forms.parseAjaxResponse = function(objResponse) {
 				
 			});
 			
-			//*** This isn't needed for Firefox. Only for all the other browsers. Re-apply the drag 'n' drop logic to the new (AJAX'ed) elements.
-			jQuery("#" + strWidget)
-				.sortable({
-					dropOnEmpty: true,
-					connectWith: "#rights, #allrights"
-				})
-				.find("li")
-				.hover(
-					function(){
-						jQuery(this).addClass("hover");
-					},
-					function(){
-						jQuery(this).removeClass("hover");
-					}
-				);
-			jQuery("#" + strWidget).disableSelection();
+			//*** Refresh sortable functionality
+			jQuery("#" + strWidget).sortable("refresh");
 				
 		} catch (e) {
 			//*** Could not find the element.
