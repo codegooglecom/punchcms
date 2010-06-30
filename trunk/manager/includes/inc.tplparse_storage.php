@@ -131,6 +131,10 @@ function parseFiles($intElmntId, $strCommand) {
 
 			//*** Render the rest of the page.
 			$objTpl->setCurrentBlock("multiview");
+			
+			$objTpl->setVariable("ACTIONS_OPEN", $objLang->get("pcmsOpenActionsMenu", "menu"));
+			$objTpl->setVariable("ACTIONS_CLOSE", $objLang->get("pcmsCloseActionsMenu", "menu"));
+			
 			$objTpl->setVariable("LIST_LENGTH_HREF_10", "href=\"?list=10&amp;cid=" . NAV_PCMS_STORAGE . "&amp;eid=$intElmntId\"");
 			$objTpl->setVariable("LIST_LENGTH_HREF_25", "href=\"?list=25&amp;cid=" . NAV_PCMS_STORAGE . "&amp;eid=$intElmntId\"");
 			$objTpl->setVariable("LIST_LENGTH_HREF_100", "href=\"?list=100&amp;cid=" . NAV_PCMS_STORAGE . "&amp;eid=$intElmntId\"");
