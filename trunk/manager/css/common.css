@@ -562,14 +562,23 @@ div.center-wrap form {
 	color: #333;
 }
 
-#left-wrap span.menu {
-	float: right;
+
+#left-wrap div.action-menu {
 	position: relative;
 	color: #333;
 	font-size: 10px;
-	text-transform: capitalize;
-	padding: 7px 5px 0 0;
-}
+	overflow: auto;
+	padding: 7px 5px;
+	display: none;
+	-moz-border-radius-bottomleft: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	}
+	#left-wrap div.action-menu a {
+		float: right;
+		margin: 0 4px;
+	}
 
 #left-wrap h2 span.menu, 
 #left-wrap h3 span.menu

@@ -7,16 +7,18 @@
 			<div id="content" class="hollyhacked">
 				<div class="wrap">
 					<h3>
-						<span class="menu">
-							<!-- BEGIN headermenu_1 --><a href="{BUTTON_NEWFIELD_HREF}" rel="internal">{BUTTON_NEWFIELD}</a> | <!-- END headermenu_1 -->
-							<!-- BEGIN headermenu_5 --><a href="{BUTTON_NEWSUBJECT_HREF}" rel="internal">{BUTTON_NEWSUBJECT}</a><!-- END headermenu_5 -->
-							<!-- BEGIN headermenu_2 --> | <a href="{BUTTON_NEWFOLDER_HREF}" rel="internal">{BUTTON_NEWFOLDER}</a><!-- END headermenu_2 -->
-							<!-- BEGIN headermenu_7 --> | <a href="{BUTTON_NEWSTRUCTURE_HREF}" rel="internal">{BUTTON_NEWSTRUCTURE}</a><!-- END headermenu_7 -->
-							<!-- BEGIN headermenu_6 --> | <a href="{BUTTON_MAIN_DUPLICATE_HREF}" rel="internal">{BUTTON_MAIN_DUPLICATE}</a><!-- END headermenu_6 -->
-							<!-- BEGIN headermenu_3 --> | <a href="{BUTTON_EDIT_HREF}" rel="internal">{BUTTON_EDIT}</a><!-- END headermenu_3 -->
-							<!-- BEGIN headermenu_4 --> | <a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a><!-- END headermenu_4 --></span>
+						<span class="menu"><a href="#" id="btn-options">+ Acties</a></span>
 						{LABEL_SUBJECT}<span class="name">&lsquo;{SUBJECT_NAME}&rsquo;</span>
 					</h3>
+					<div class="action-menu">
+						<!-- BEGIN headermenu_1 --><a href="{BUTTON_NEWFIELD_HREF}" rel="internal" id="new-field">{BUTTON_NEWFIELD}</a><!-- END headermenu_1 -->
+						<!-- BEGIN headermenu_5 --><a href="{BUTTON_NEWSUBJECT_HREF}" rel="internal" id="new-element">{BUTTON_NEWSUBJECT}</a><!-- END headermenu_5 -->
+						<!-- BEGIN headermenu_2 --><a href="{BUTTON_NEWFOLDER_HREF}" rel="internal" id="new-folder">{BUTTON_NEWFOLDER}</a><!-- END headermenu_2 -->
+						<!-- BEGIN headermenu_7 --><a href="{BUTTON_NEWSTRUCTURE_HREF}" rel="internal" id="new-structure">{BUTTON_NEWSTRUCTURE}</a><!-- END headermenu_7 -->
+						<!-- BEGIN headermenu_6 --><a href="{BUTTON_MAIN_DUPLICATE_HREF}" rel="internal" id="btn-duplicate">{BUTTON_MAIN_DUPLICATE}</a><!-- END headermenu_6 -->
+						<!-- BEGIN headermenu_3 --><a href="{BUTTON_EDIT_HREF}" rel="internal" id="btn-edit">{BUTTON_EDIT}</a><!-- END headermenu_3 -->
+						<!-- BEGIN headermenu_4 --><a href="{BUTTON_REMOVE_HREF}" rel="internal" id="btn-remove">{BUTTON_REMOVE}</a><!-- END headermenu_4 -->
+					</div>
 					<div class="itemheader">
 						<div class="itemcount">
 							{LIST_ITEMS_PER_PAGE} <a {LIST_LENGTH_HREF_10} rel="internal">10</a> <a {LIST_LENGTH_HREF_25} rel="internal">25</a> <a {LIST_LENGTH_HREF_100} rel="internal">100</a>
@@ -74,6 +76,27 @@
 			 <script type="text/javascript">
 			 // <![CDATA[
 					Itemlist.init();
+					jQuery(function(){
+						jQuery("#btn-options").bind("click", function(){
+							if(jQuery("div.action-menu").is(":visible")){
+								jQuery("div.action-menu").slideUp("fast");
+								jQuery(this).text("+ Acties");
+							}
+							else {
+								jQuery("div.action-menu").slideDown("fast");
+								jQuery(this).text("- Acties");
+							}
+						});
+						
+						jQuery("#new-element").button({"icons": {"primary": "ui-icon-plus"}});
+						jQuery("#new-folder").button({"icons": {"primary": "ui-icon-plus"}});
+						jQuery("#new-field").button({"icons": {"primary": "ui-icon-plus"}});
+						jQuery("#new-structure").button({"icons": {"primary": "ui-icon-plus"}});
+						
+						jQuery("#btn-duplicate").button({"icons": {"primary": "ui-icon-newwin"}});
+						jQuery("#btn-edit").button({"icons": {"primary": "ui-icon-pencil"}});
+						jQuery("#btn-remove").button({"icons": {"primary": "ui-icon-cancel"}});
+					});
 			 // ]]>
 			 </script>
 			<!-- END multiview -->

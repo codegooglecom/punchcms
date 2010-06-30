@@ -42,7 +42,8 @@
 								<!-- BEGIN error-active -->
 								<p class="error">{ERROR_ACTIVE}</p>
 								<!-- END error-active -->
-								<label for="frm_active" class="check"><input type="checkbox" id="frm_active" name="frm_active" class="check" {FORM_ACTIVE_VALUE} /> {LABEL_ACTIVE}</label>
+								<label for="frm_active">{LABEL_ACTIVE}</label>
+								<input type="checkbox" id="frm_active" name="frm_active" class="check" {FORM_ACTIVE_VALUE} />
 							</div>
 							<!-- BEGIN elementispage -->
 							<div class="optional{ERROR_ISPAGE_ON}">
@@ -174,78 +175,70 @@
 						<!-- END description-publish -->
 						<fieldset>
 							<div class="required">
-								<div class="widget">
-									<div class="required row">
-										<label for="publish_start" class="check"><input type="checkbox" id="publish_start" name="publish_start" class="check" {START_DATE_ACTIVE} /> {LABEL_START_DATE}</label>
-									</div>
-									<div class="required row">
-										<label for="publish_start_date">{LABEL_DATE}</label>
-										<div id="publish_start_date_canvas" class="input-textdate" style="width:200px">{START_DATE_DISPLAY}</div>
-										<input type="hidden" id="publish_start_date" name="publish_start_date" value="{START_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_start" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
-										<script type="text/javascript">
-											jQuery.debug({content: "elementfields.tpl.htm - Row 188:\nReplace Calendar.setup by jQueryUI datepicker", type: "info"});
-											Calendar.setup({
-												inputField  : "publish_start_date",
-												displayArea : "publish_start_date_canvas",
-												daFormat 	: "%d %B %Y",
-												ifFormat    : "%d %B %Y %H:%M:%S",
-												button      : "calendarButton_start",
-												showsTime	: false
-											});
-										</script>
-									</div>
-									<div class="required row">
-										<label for="publish_start_hour">{LABEL_TIME}</label>
-										<select id="publish_start_hour" name="publish_start_hour" class="select-onesmall">
-											<!-- BEGIN date.start.hour -->
-											<option value="{VALUE}" {SELECTED}>{LABEL}</option>
-											<!-- END date.start.hour -->
-										</select>&nbsp;&nbsp;:&nbsp;
-										<select id="publish_start_minute" name="publish_start_minute" class="select-onesmall">
-											<!-- BEGIN date.start.minute -->
-											<option value="{VALUE}" {SELECTED}>{LABEL}</option>
-											<!-- END date.start.minute -->
-										</select>
-									</div>
-								</div>
+								<label for="publish_start">{LABEL_START_DATE}</label>
+								<input type="checkbox" id="publish_start" name="publish_start" class="check" {START_DATE_ACTIVE} />
 							</div>
 							<div class="required">
-								<div class="widget">
-									<div class="required row">
-										<label for="publish_end" class="check"><input type="checkbox" id="publish_end" name="publish_end" class="check" {END_DATE_ACTIVE} /> {LABEL_END_DATE}</label>
-									</div>
-									<div class="required row">
-										<label for="publish_end_date">{LABEL_DATE}</label>
-										<input id="publish_end_date_show" type="text" class="input-textdate" name="publish_end_date_show" value="{END_DATE_DISPLAY}" />
-<!--										<div id="publish_end_date_canvas" class="input-textdate" style="width:200px">{END_DATE_DISPLAY}</div>-->
-										<input type="hidden" id="publish_end_date" name="publish_end_date" value="{END_DATE_VALUE}" />
-										<script type="text/javascript">
-											jQuery(function() {
-												jQuery("#publish_end_date_show").datepicker({
-													showOtherMonths: true, 
-													altField: '#publish_end_date', 
-													altFormat: 'mm-dd-yyyy ',
-													showOn: 'both',
-													buttonImage: 'images/date_select.gif',
-													buttonImageOnly: false
-												});
-											});
-										</script>
-									</div>
-									<div class="required row">
-										<label for="publish_end_hour">{LABEL_TIME}</label>
-										<select id="publish_end_hour" name="publish_end_hour" class="select-onesmall">
-											<!-- BEGIN date.end.hour -->
-											<option value="{VALUE}" {SELECTED}>{LABEL}</option>
-											<!-- END date.end.hour -->
-										</select>&nbsp;&nbsp;:&nbsp;
-										<select id="publish_end_minute" name="publish_end_minute" class="select-onesmall">
-											<!-- BEGIN date.end.minute -->
-											<option value="{VALUE}" {SELECTED}>{LABEL}</option>
-											<!-- END date.end.minute -->
-										</select>
-									</div>
-								</div>
+								<label for="publish_start_date">{LABEL_DATE}</label>
+								<div id="publish_start_date_canvas" class="input-textdate" style="width:200px">{START_DATE_DISPLAY}</div>
+								<input type="hidden" id="publish_start_date" name="publish_start_date" value="{START_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_start" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
+								<script type="text/javascript">
+									Calendar.setup({
+										inputField  : "publish_start_date",
+										displayArea : "publish_start_date_canvas",
+										daFormat 	: "%d %B %Y",
+										ifFormat    : "%d %B %Y %H:%M:%S",
+										button      : "calendarButton_start",
+										showsTime	: false
+									});
+								</script>
+							</div>
+							<div class="required">
+								<label for="publish_start_hour">{LABEL_TIME}</label>
+								<select id="publish_start_hour" name="publish_start_hour" class="time">
+									<!-- BEGIN date.start.hour -->
+									<option value="{VALUE}" {SELECTED}>{LABEL}</option>
+									<!-- END date.start.hour -->
+								</select>&nbsp;&nbsp;:&nbsp;
+								<select id="publish_start_minute" name="publish_start_minute" class="time">
+									<!-- BEGIN date.start.minute -->
+									<option value="{VALUE}" {SELECTED}>{LABEL}</option>
+									<!-- END date.start.minute -->
+								</select>
+							</div>
+						</fieldset>
+						<fieldset>
+							<div class="required">
+								<label for="publish_end">{LABEL_END_DATE}</label>
+								<input type="checkbox" id="publish_end" name="publish_end" class="check" {END_DATE_ACTIVE} />
+							</div>
+							<div class="required">
+								<label for="publish_end_date">{LABEL_DATE}</label>
+								<div id="publish_end_date_canvas" class="input-textdate" style="width:200px">{END_DATE_DISPLAY}</div>
+								<input type="hidden" id="publish_end_date" name="publish_end_date" value="{END_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_end" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
+								<script type="text/javascript">
+									Calendar.setup({
+										inputField  : "publish_end_date",
+										displayArea : "publish_end_date_canvas",
+										daFormat 	: "%d %B %Y",
+										ifFormat    : "%d %B %Y %H:%M:%S",
+										button      : "calendarButton_end",
+										showsTime	: false
+									});
+								</script>
+							</div>
+							<div class="required">
+								<label for="publish_end_hour">{LABEL_TIME}</label>
+								<select id="publish_end_hour" name="publish_end_hour" class="time">
+									<!-- BEGIN date.end.hour -->
+									<option value="{VALUE}" {SELECTED}>{LABEL}</option>
+									<!-- END date.end.hour -->
+								</select>&nbsp;&nbsp;:&nbsp;
+								<select id="publish_end_minute" name="publish_end_minute" class="time">
+									<!-- BEGIN date.end.minute -->
+									<option value="{VALUE}" {SELECTED}>{LABEL}</option>
+									<!-- END date.end.minute -->
+								</select>
 							</div>
 						</fieldset>
 						<div class="form-navigation">

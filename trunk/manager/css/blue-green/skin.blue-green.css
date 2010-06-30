@@ -310,8 +310,9 @@ div.tabwrapper ul.anchors a.on:visited
 	color: #333;
 }
 
-#left-wrap span.menu {
+#left-wrap div.action-menu {
 	color: #333;
+	background: none repeat scroll 0 0 #E0EEFF;
 }
 
 #left-wrap h2 span.menu, 

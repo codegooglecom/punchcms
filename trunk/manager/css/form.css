@@ -54,7 +54,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div label {
 	float: left;
 	margin: 0 0 5px;
 	padding: 2px 7px 3px 3px;
-	width: 136px;
+	width: 150px;
 	font-size: 12px;
 	}
 	label.check,
@@ -104,11 +104,17 @@ form.ui-tabs div.ui-tabs-panel fieldset div select {
 	-webkit-border-radius: 3px;	
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div select.select-multiple {
-		height: 100px;
-	}
-	form.ui-tabs div.ui-tabs-panel fieldset div .widget .row select {
-		width: 100px;
-	}
+		min-height: 100px;
+		}
+		form.ui-tabs div.ui-tabs-panel fieldset div select.select-multiple option {
+			padding: 5px;
+		}
+	form.ui-tabs div.ui-tabs-panel fieldset div .time {
+		width: 50px;
+		}
+		form.ui-tabs div.ui-tabs-panel fieldset div .time option {
+			
+		}
 form.ui-tabs div.ui-tabs-panel fieldset div textarea {
 	padding: 3px;
 	width: 300px;
@@ -120,7 +126,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div textarea {
 form.ui-tabs div.ui-tabs-panel fieldset div small {
 	clear: both;
 	display: block;
-	margin: 4px 0 6px 149px;
+	margin: 4px 0 6px 161px;
 	font-size: 10px;
 }
 form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
@@ -140,7 +146,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	border: 1px #999 solid;
 	padding-bottom: 10px;
 	overflow: hidden;
-	width: 480px;
+	width: 488px;
 	position: relative;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
