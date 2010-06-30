@@ -7,7 +7,7 @@
 			<div id="content" class="hollyhacked">
 				<div class="wrap">
 					<h3>
-						<span class="menu"><a href="#" id="btn-options">+ Acties</a></span>
+						<span class="menu"><a href="#" id="btn-options">{ACTIONS_OPEN}</a></span>
 						{LABEL_SUBJECT}<span class="name">&lsquo;{SUBJECT_NAME}&rsquo;</span>
 					</h3>
 					<div class="action-menu">
@@ -80,11 +80,11 @@
 						jQuery("#btn-options").bind("click", function(){
 							if(jQuery("div.action-menu").is(":visible")){
 								jQuery("div.action-menu").slideUp("fast");
-								jQuery(this).text("+ Acties");
+								jQuery(this).text("{ACTIONS_OPEN}");
 							}
 							else {
 								jQuery("div.action-menu").slideDown("fast");
-								jQuery(this).text("- Acties");
+								jQuery(this).text("{ACTIONS_CLOSE}");
 							}
 						});
 						
