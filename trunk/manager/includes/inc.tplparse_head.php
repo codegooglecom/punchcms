@@ -63,6 +63,11 @@ function parseHeader($intCatId, $strCommand, $intElmntId) {
 			$objTpl->touchBlock("cms.aliases");
 			break;
 			
+		case NAV_PCMS_FEEDS:
+			$objTpl->touchBlock("animation");
+			$objTpl->touchBlock("cms.feeds");
+			break;
+			
 		case NAV_PCMS_LANGUAGES:
 			$objTpl->touchBlock("animation");
 			$objTpl->touchBlock("cms.languages");

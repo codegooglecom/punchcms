@@ -190,6 +190,9 @@ function parsePages($intElmntId, $strCommand) {
 
 			$objTpl->setVariable("BUTTON_NEWFOLDER", $objLang->get("newFolder", "button"));
 			$objTpl->setVariable("BUTTON_NEWFOLDER_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD_FOLDER);
+			
+			$objTpl->setVariable("BUTTON_NEWDYNAMIC", $objLang->get("newDynamic", "button"));
+			$objTpl->setVariable("BUTTON_NEWDYNAMIC_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD_DYNAMIC);
 
 			if ($intElmntId > 0) {
 				$objElement = Element::selectByPK($intElmntId);
@@ -322,6 +325,7 @@ function parsePages($intElmntId, $strCommand) {
 		case CMD_ADD:
 		case CMD_EDIT:
 		case CMD_ADD_FOLDER:
+		case CMD_ADD_DYNAMIC:
 
 			$objTpl->loadTemplatefile("elementfields.tpl.htm");
 			$blnError = FALSE;

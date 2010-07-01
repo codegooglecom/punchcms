@@ -129,6 +129,12 @@ switch ($intCatId) {
 		$strOutput .= parseAlias($intElmntId, $strCommand);
 		break;
 
+	case NAV_PCMS_FEEDS:
+		require_once('includes/inc.tplparse_feeds.php');
+		$strOutput .= parseMenu($intCatId, $strCommand);
+		$strOutput .= parseFeeds($intElmntId, $strCommand);
+		break;
+
 	case NAV_PCMS_SETTINGS:
 		require_once('includes/inc.tplparse_setting.php');
 		$strOutput .= parseMenu($intCatId, $strCommand);

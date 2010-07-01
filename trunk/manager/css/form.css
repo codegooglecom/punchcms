@@ -73,6 +73,9 @@ form.ui-tabs div.ui-tabs-panel fieldset div input {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	}
+	form.ui-tabs div.ui-tabs-panel fieldset div input.input-textsmall {
+		width: 108px;
+	}
 	form.ui-tabs div.ui-tabs-panel fieldset div input.check {
 		display: inline;
 		width: 14px;

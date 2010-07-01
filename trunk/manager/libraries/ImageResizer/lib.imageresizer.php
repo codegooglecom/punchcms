@@ -89,6 +89,10 @@ class ImageResizer {
 				//*** Don't blow the image up if it is smaller then the destination.
 				if (round($destWidth) > $objEditor->getWidth() && round($destHeight) > $objEditor->getHeight()) {
 					//*** Skipt the resize.
+					
+					$destX = ($objEditor->getWidth() - $intWidth) / 2;
+					$destY = ($objEditor->getHeight() - $intHeight) / 2;
+					$objEditor->crop(round($destX), round($destY), $intWidth, $intHeight);
 				} else {
 					$objEditor->resize(round($destWidth), round($destHeight));
 					

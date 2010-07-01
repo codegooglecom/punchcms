@@ -35,6 +35,7 @@ define('NAV_PCMS_LANGUAGES', 25);
 define('NAV_PCMS_FORMS', 26);
 define('NAV_PCMS_STORAGE', 27);
 define('NAV_PCMS_ALIASES', 29);
+define('NAV_PCMS_FEEDS', 30);
 define('NAV_MYPUNCH_PPROJECTS',19);
 define('NAV_PPROJECTS_PROJECTS',20);
 define('NAV_PPROJECTS_CONTACTS',21);
@@ -61,6 +62,7 @@ define('CMD_ACTIVATE', 17);
 define('CMD_DEACTIVATE', 18);
 define('CMD_ADD_STRUCTURE', 19);
 define('CMD_ADD_STRUCTURE_DETAIL', 20);
+define('CMD_ADD_DYNAMIC', 21);
 
 define('FIELD_TYPE_DATE', 1);
 define('FIELD_TYPE_SMALLTEXT', 2);
@@ -87,6 +89,7 @@ define('AUDIT_TYPE_LANGUAGE', 5);
 define('AUDIT_TYPE_SETTING', 6);
 define('AUDIT_TYPE_USER', 7);
 define('AUDIT_TYPE_STORAGE', 8);
+define('AUDIT_TYPE_FEED', 9);
 
 define('STORAGE_TYPE_FOLDER', 1);
 define('STORAGE_TYPE_FILE', 2);

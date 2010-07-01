@@ -569,7 +569,7 @@ div.center-wrap form {
 	font-size: 10px;
 	overflow: auto;
 	padding: 7px 5px;
-	display: none;
+	display: block;
 	-moz-border-radius-bottomleft: 5px;
 	-moz-border-radius-bottomright: 5px;
 	-webkit-border-bottom-right-radius: 5px;
@@ -577,7 +577,7 @@ div.center-wrap form {
 	}
 	#left-wrap div.action-menu a {
 		float: right;
-		margin: 0 4px;
+		margin: 0 2px;
 	}
 
 #left-wrap h2 span.menu, 
@@ -774,7 +774,9 @@ div.center-wrap form {
 	text-transform: none;
 }
 
-#left-wrap div.itembox div.alias p {
+#left-wrap div.itembox div.alias p,
+#left-wrap div.itembox div.feed p
+{
 	padding-left: 32px;
 	padding-bottom: 2px;
 }

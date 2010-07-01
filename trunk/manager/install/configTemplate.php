@@ -35,6 +35,7 @@ $_CONF['app']['msPcms']				= array (
 											"templates" => NAV_PCMS_TEMPLATES,
 											"storage" => NAV_PCMS_STORAGE,
 											"aliases" => NAV_PCMS_ALIASES,
+											"feeds" => NAV_PCMS_FEEDS,
 											"languages" => NAV_PCMS_LANGUAGES,
 											"settings" => NAV_PCMS_SETTINGS,
 											"search" => NAV_PCMS_SEARCH,

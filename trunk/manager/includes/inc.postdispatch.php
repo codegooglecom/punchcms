@@ -344,6 +344,40 @@ switch ($strDispatch) {
 		}
 
 		break;
+
+	case "editFeed":
+		$arrWhitelist = array(
+		  	'frm_active'		=> array(
+				'type' => 'word',
+				'maxlength' => 5,
+			),
+		  	'frm_name' 			=> array(
+				'type' => 'string',
+				'maxlength' => 250,
+				'required' => TRUE,
+			),
+		  	'frm_feed'		=> array(
+				'type' => 'string',
+				'maxlength' => 250,
+				'required' => TRUE,
+			),
+		  	'frm_refresh'	=> array(
+				'type' => 'int',
+				'maxlength' => 16,
+				'required' => TRUE,
+			),
+		  	'dispatch'			=> array(
+				'type' => 'string',
+				'maxlength' => 100,
+				'required' => TRUE,
+			),
+		);
+
+		if ($_POST) {
+		  $_CLEAN_POST = filterInput($_POST, $arrWhitelist);
+		}
+
+		break;
 		
 	case "addStructure":
 		$arrWhitelist = array(

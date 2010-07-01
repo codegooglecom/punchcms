@@ -123,6 +123,14 @@
 		<column name="id" primaryKey="true" />
 		<column name="name" type="varchar" />
 	</table>
+	<table name="pcms_feed" phpName="Feed">
+		<column name="id" primaryKey="true" />
+		<column name="accountId" type="integer" />
+		<column name="name" type="varchar" />
+		<column name="feed" type="varchar" />
+		<column name="refresh" type="integer" />
+		<column name="active" type="integer" default="1" />
+	</table>
 	<table name="pcms_storage_item" phpName="StorageItem">
 		<column name="id" primaryKey="true" />
 		<column name="accountId" type="integer" />

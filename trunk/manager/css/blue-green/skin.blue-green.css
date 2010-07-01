@@ -408,6 +408,10 @@ div.tabwrapper ul.anchors a.on:visited
 	background: url("/images/ico_alias.gif") 30px -2px no-repeat;
 }
 
+#left-wrap div.itembox div.feed {
+	background: url("/images/ico_alias.gif") 30px -2px no-repeat;
+}
+
 #left-wrap div.itembox p {
 	border-left: 1px solid #eaeaea;
 }

@@ -195,7 +195,11 @@ class ImageEditor {
     if(!$this->error && ($this->x != $width || $this->y != $height))
     {
       $tmpimage = imagecreatetruecolor($width, $height);
-      imagecopyresampled($tmpimage, $this->img, 0, 0, $x, $y,
+ 
+        imagealphablending($tmpimage, false); // turn off the alpha blending to keep the alpha channel
+        $background = imagecolorallocate($tmpimage, 0, 0, 0);
+        ImageColorTransparent($tmpimage, $background); // make the new temp image all transparent
+      imagecopyresized($tmpimage, $this->img, 0, 0, $x, $y,
                            $width, $height, $width, $height);
       imagedestroy($this->img);
       $this->img = $tmpimage;
