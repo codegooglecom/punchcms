@@ -26,20 +26,28 @@
 .ui-helper-clearfix {
 	overflow: hidden;
 }
+.ui-sortable-helper {
+	cursor: move !important;
+}
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
 	font-weight: bolder;
 }
 .ui-state-highlight {
 	color: #363636 !important;
+	background: #FBF9EE !important;
 }
 .ui-sortable {
 	position: relative;
 }
+.ui-state-highlight,
 .ui-state-error {
 	padding: 12px;
 	margin: 9px;
+}
+.ui-state-error {
 	background: #FEF1EC !important;
 }
+
 /*
  * Login window
  */

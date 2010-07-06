@@ -168,7 +168,7 @@ div.formWrapper div label.label-radio
 
 .input-button {
 	float: right;
-	width: auto;
+	width: auto !important;
 	padding: 3px 6px;
 	font: bold 11px Verdana;
 	color: #333;

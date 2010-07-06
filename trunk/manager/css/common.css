@@ -609,7 +609,9 @@ div.center-wrap form {
 	color: #333;
 }
 
-
+#left-wrap div.users div.action-menu {
+	margin-bottom: 0px;
+}
 #left-wrap div.action-menu {
 	position: relative;
 	color: #333;

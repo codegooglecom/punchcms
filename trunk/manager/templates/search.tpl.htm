@@ -7,16 +7,22 @@
 				<div class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 					<fieldset>
 						<!-- BEGIN searchdescription -->
-						<div class="searchdescription">
-							<p><b>{SEARCH_DESCRIPTION}</b></p>
+						<div class="ui-widget">
+							<div class="ui-state-highlight ui-corner-all">
+								<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-info"></span>{SEARCH_DESCRIPTION}</p>
+							</div>
 						</div>
+<!--						<div class="searchdescription">-->
+<!--							<p><b>{SEARCH_DESCRIPTION}</b></p>-->
+<!--						</div>-->
 						<!-- END searchdescription -->
 						<div class="required">
 							<input type="text" id="query" name="query" class="input-textlarge" />
 							<input type="submit" value="{SEARCH_BUTTON}" class="input-button" />
 						</div>
-						<div class="optional" style="margin-bottom:5px;">
-							<input type="checkbox" id="search_all" name="search_all" class="input-checkbox" /><label for="search_all" class="label-search"> {SEARCH_ALL}</label>
+						<div class="optional">
+							<label for="search_all"> {SEARCH_ALL}</label>
+							<input type="checkbox" id="search_all" name="search_all" class="check" />
 						</div>
 						<input type="hidden" name="dispatch" value="search" />
 						<input type="hidden" name="cid" value="{CID}" />

@@ -34,7 +34,7 @@ p.title {
 form.ui-tabs div.ui-tabs-panel fieldset div.optional,
 form.ui-tabs div.ui-tabs-panel fieldset div.required {
 	overflow: visible;
-	clear: both;
+	xclear: both;
 }
 form.ui-tabs div.ui-tabs-panel fieldset div.radio,
 form.ui-tabs div.ui-tabs-panel fieldset div.checkbox {

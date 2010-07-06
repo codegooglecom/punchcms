@@ -19,11 +19,11 @@ textarea {
 form.ui-tabs {
 	border: 1px #ddd solid;
 }
-form.ui-tabs div.ui-tabs-panel a {
+form.ui-tabs div.anchor a {
 	color: #2C457C;
 	text-decoration: underline;
 }
-form.ui-tabs div.ui-tabs-panel a:hover {
+form.ui-tabs div.anchor a:hover {
 	text-decoration: none;
 	background: none;
 	color: #2C457C;
@@ -37,7 +37,7 @@ form.ui-tabs div.ui-tabs-panel fieldset {
 }
 form.ui-tabs div.ui-tabs-panel fieldset div.optional,
 form.ui-tabs div.ui-tabs-panel fieldset div.required {
-	margin: 5px 0;
+	margin: 10px 0;
 	overflow: auto;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div * {
@@ -145,8 +145,10 @@ form.ui-tabs div.ui-tabs-panel fieldset div div.disabled {
 }
 form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
 	margin: 0;
+	position: relative;
 	}
-	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div {
+	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div.required,
+	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div.optional {
 		margin: 0;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .widget .row {
@@ -192,7 +194,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 		border: 1px #999 solid;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
-		cursor: move;
+		cursor: move !important;
 		overflow: auto;
 		position: relative;
 		top: 0;
@@ -331,11 +333,15 @@ div.column form.ui-tabs div.ui-tabs-panel fieldset ul {
 	}
 	
 #folder .menu {
-	width: 150px !important;
+	width: 162px !important;
 	display: block;
 	clear: both;
-	margin: 0 auto 20px;
-}
+	overflow: auto;
+	margin: 5px auto 20px;
+	}
+	#folder .menu a {
+		float: left;
+	}
 #folder select {
 	width: 160px;
 	min-height: 200px;
@@ -345,6 +351,10 @@ div.column form.ui-tabs div.ui-tabs-panel fieldset ul {
 		cursor: pointer;
 	}
 	
+.input-button {
+	width: auto !important;
+}
+	
 /*
  * Hack
  */
@@ -353,4 +363,6 @@ a#new:hover span.ui-button-text {
 }
 a#remove:hover span.ui-button-text {
 	color: #fff !important;
+}
+#folder form.ui-tabs div.ui-tabs-panel a {
 }
