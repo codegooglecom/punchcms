@@ -36,6 +36,9 @@
 	color: #363636 !important;
 	background: #FBF9EE !important;
 }
+.ui-state-focus {
+	color: #fff !important;
+}
 .ui-sortable {
 	position: relative;
 }
