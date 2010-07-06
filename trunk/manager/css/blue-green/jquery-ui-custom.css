@@ -40,4 +40,38 @@
 	margin: 9px;
 	background: #FEF1EC !important;
 }
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {background: #2c457c url(images/ui-bg_flat_75_2c457c_40x100.png) 50% 50% repeat-x !important; color: #fff !important; }
+/*
+	.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {background: #2c457c url(images/ui-bg_flat_75_2c457c_40x100.png) 50% 50% repeat-x !important; color: #fff !important; }
+*/
+
+/*
+ * Switch tabs markup - Tabs only
+ */
+.tabs .ui-state-default {
+	background: url("images/ui-bg_flat_100_2c457c_40x100.png") repeat-x scroll 50% 50% #2C457C !important;
+	border: 1px solid #333333 !important;
+	color: #FFFFFF !important;
+	font-weight: normal !important;
+	}
+	.tabs .ui-state-default a {
+		color: #FFFFFF !important;
+	}
+.tabs .ui-state-active {
+	background: url("images/ui-bg_flat_100_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF !important;
+	border: 1px solid #EAEAEA !important;
+	color: #2C457C !important;
+	font-weight: normal !important;
+	}
+	.tabs .ui-state-active a {
+		color: #2C457C !important;
+	}
+.tabs .ui-state-hover {
+	background: url("images/ui-bg_flat_100_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF !important;
+	border: 1px solid #EAEAEA !important;
+	color: #2C457C !important;
+	font-weight: normal !important;
+	}
+	.tabs .ui-state-hover a {
+		color: #2C457C !important;
+		background: none !important;
+	}

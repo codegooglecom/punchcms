@@ -179,17 +179,17 @@ div a:hover {
 }
 
 #nav a:hover {
-	background: #eaeaea;
+	background: #E6EAF4 url("/images/bg_nav.jpg") left top repeat-x;
 	color: #555;
-	border-top: 2px solid #eaeaea;
 }
 
 #nav a.active,
 #nav a.active:link, 
 #nav a.active:visited 
 {
-	background: #E6EAF4 url("/images/bg_nav.jpg") left top repeat-x;
+	background: #eaeaea;
 	color: #555;
+	border-top: 1px solid #eaeaea;
 }
 
 #newssend-wrap {

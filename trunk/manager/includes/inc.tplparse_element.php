@@ -1560,57 +1560,57 @@ function parsePages($intElmntId, $strCommand) {
 					
 					
 					//*** Meta tab.
-					$objTpl->setCurrentBlock("meta-title");
-					$objTpl->setVariable("HEADER", $objLang->get("meta", "label"));
-					$objTpl->parseCurrentBlock();
-					$objTpl->setCurrentBlock("description-meta");
-					$objTpl->setVariable("LABEL", $objLang->get("metaInfo", "form"));
-					$objTpl->parseCurrentBlock();
+//					$objTpl->setCurrentBlock("meta-title");
+//					$objTpl->setVariable("HEADER", $objLang->get("meta", "label"));
+//					$objTpl->parseCurrentBlock();
+//					$objTpl->setCurrentBlock("description-meta");
+//					$objTpl->setVariable("LABEL", $objLang->get("metaInfo", "form"));
+//					$objTpl->parseCurrentBlock();
 
 					//*** Meta specific labels
-					$objTpl->setVariable("LABEL_META_TITLE", $objLang->get("metaTitle", "label"));
-					$objTpl->setVariable("LABEL_META_KEYWORDS", $objLang->get("metaKeywords", "label"));
-					$objTpl->setVariable("LABEL_META_DESCRIPTION", $objLang->get("metaDescription", "label"));
-					$objTpl->setVariable("META_KEYWORDS_NOTE", $objLang->get("metaKeywords", "tip"));
-					$objTpl->setVariable("META_DESCRIPTION_NOTE", $objLang->get("metaDescription", "tip"));		
-					$objTpl->setVariable("ACTIVE_META_LANGUAGE", $intSelectLanguage);
-					$objTpl->setVariable("DEFAULT_META_LANGUAGE", $intDefaultLanguage);			
-					$objTpl->setVariable("LABEL_META_LANGUAGE", $objLang->get("language", "form"));
-					$objTpl->setVariable("ACTIVES_META_LANGUAGE", $intDefaultLanguage);
+//					$objTpl->setVariable("LABEL_META_TITLE", $objLang->get("metaTitle", "label"));
+//					$objTpl->setVariable("LABEL_META_KEYWORDS", $objLang->get("metaKeywords", "label"));
+//					$objTpl->setVariable("LABEL_META_DESCRIPTION", $objLang->get("metaDescription", "label"));
+//					$objTpl->setVariable("META_KEYWORDS_NOTE", $objLang->get("metaKeywords", "tip"));
+//					$objTpl->setVariable("META_DESCRIPTION_NOTE", $objLang->get("metaDescription", "tip"));		
+//					$objTpl->setVariable("ACTIVE_META_LANGUAGE", $intSelectLanguage);
+//					$objTpl->setVariable("DEFAULT_META_LANGUAGE", $intDefaultLanguage);			
+//					$objTpl->setVariable("LABEL_META_LANGUAGE", $objLang->get("language", "form"));
+//					$objTpl->setVariable("ACTIVES_META_LANGUAGE", $intDefaultLanguage);
 
 					//*** Meta languages					
-					$objContentLangs = ContentLanguage::select();
-					foreach ($objContentLangs as $objContentLanguage) {
-						$objTpl->setCurrentBlock("list_meta-language");
-						$objTpl->setVariable("LANGUAGELIST_VALUE", $objContentLanguage->getId());
-						if ($intDefaultLanguage == $objContentLanguage->getId()) {
-							$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName() . " (" . $objLang->get("default", "label") . ")");
-						} else {
-							$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName());
-						}
-						if ($intSelectLanguage == $objContentLanguage->getId()) $objTpl->setVariable("LANGUAGELIST_SELECTED", " selected=\"selected\"");
-						$objTpl->parseCurrentBlock();
-					}
+//					$objContentLangs = ContentLanguage::select();
+//					foreach ($objContentLangs as $objContentLanguage) {
+//						$objTpl->setCurrentBlock("list_meta-language");
+//						$objTpl->setVariable("LANGUAGELIST_VALUE", $objContentLanguage->getId());
+//						if ($intDefaultLanguage == $objContentLanguage->getId()) {
+//							$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName() . " (" . $objLang->get("default", "label") . ")");
+//						} else {
+//							$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName());
+//						}
+//						if ($intSelectLanguage == $objContentLanguage->getId()) $objTpl->setVariable("LANGUAGELIST_SELECTED", " selected=\"selected\"");
+//						$objTpl->parseCurrentBlock();
+//					}
 					
 					//*** Meta language values.
-					foreach ($objContentLangs as $objContentLanguage) {
-						$objMeta = (is_object($objElement)) ? $objElement->getMeta() : NULL;
-						
-						$objTpl->setCurrentBlock("field.meta_title.value");
-						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_title_{$objContentLanguage->getId()}");
-						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getTitle($objContentLanguage->getId()) : "");
-						$objTpl->parseCurrentBlock();
-						
-						$objTpl->setCurrentBlock("field.meta_keywords.value");
-						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_keywords_{$objContentLanguage->getId()}");
-						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getKeywords($objContentLanguage->getId()) : "");
-						$objTpl->parseCurrentBlock();
-						
-						$objTpl->setCurrentBlock("field.meta_description.value");
-						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_description_{$objContentLanguage->getId()}");
-						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getDescription($objContentLanguage->getId()) : "");
-						$objTpl->parseCurrentBlock();
-					}
+//					foreach ($objContentLangs as $objContentLanguage) {
+//						$objMeta = (is_object($objElement)) ? $objElement->getMeta() : NULL;
+//						
+//						$objTpl->setCurrentBlock("field.meta_title.value");
+//						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_title_{$objContentLanguage->getId()}");
+//						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getTitle($objContentLanguage->getId()) : "");
+//						$objTpl->parseCurrentBlock();
+//						
+//						$objTpl->setCurrentBlock("field.meta_keywords.value");
+//						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_keywords_{$objContentLanguage->getId()}");
+//						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getKeywords($objContentLanguage->getId()) : "");
+//						$objTpl->parseCurrentBlock();
+//						
+//						$objTpl->setCurrentBlock("field.meta_description.value");
+//						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_description_{$objContentLanguage->getId()}");
+//						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getDescription($objContentLanguage->getId()) : "");
+//						$objTpl->parseCurrentBlock();
+//					}
 					
 					//*** Meta language cascades.
 //					if (is_object($objElement)) {
