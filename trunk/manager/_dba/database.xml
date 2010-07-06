@@ -37,13 +37,20 @@
 		<column name="description" type="varchar" />
 		<column name="typeId" type="integer" />
 		<column name="templateId" type="integer" />
-		<column name="feedId" type="integer" />
 		<column name="isPage" type="integer" />
 		<column name="parentId" type="integer" />
 		<column name="userId" type="integer" />
 		<column name="groupId" type="integer" />
 		<column name="active" type="integer" default="1" />
 		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_element_feed" phpName="ElementFeed">
+		<column name="id" primaryKey="true" />
+		<column name="elementId" type="integer" />
+		<column name="feedId" type="integer" />
+		<column name="feedPath" type="varchar" />
+		<column name="maxItems" type="varchar" />
+		<column name="sortBy" type="varchar" />
 	</table>
 	<table name="pcms_element_field" phpName="ElementField">
 		<column name="id" primaryKey="true" />
@@ -52,6 +59,14 @@
 		<column name="fieldTypeId" type="integer" />
 		<column name="originalName" type="varchar" />
 		<column name="username" type="varchar" />
+	</table>
+	<table name="pcms_element_field_feed" phpName="ElementFieldFeed">
+		<column name="id" primaryKey="true" />
+		<column name="elementId" type="integer" />
+		<column name="templateFieldId" type="integer" />
+		<column name="xpath" type="varchar" />
+		<column name="languageId" type="integer" />
+		<column name="cascade" type="integer" />
 	</table>
 	<table name="pcms_element_field_bigtext" phpName="ElementFieldBigText">
 		<column name="id" primaryKey="true" />
@@ -129,6 +144,7 @@
 		<column name="accountId" type="integer" />
 		<column name="name" type="varchar" />
 		<column name="feed" type="varchar" />
+		<column name="basepath" type="varchar" />
 		<column name="refresh" type="integer" />
 		<column name="active" type="integer" default="1" />
 	</table>

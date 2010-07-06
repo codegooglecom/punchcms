@@ -9,10 +9,17 @@ jQuery.fn.positionAncestor = function(selector) {
             var $child = $(this);
             var childMarginEdgeLeft = $child.offset().left - parseInt($child.css("marginLeft"), 10);
             var childMarginEdgeTop = $child.offset().top - parseInt($child.css("marginTop"), 10);
-            var ancestorPaddingEdgeLeft = $ancestor.offset().left + parseInt($ancestor.css("borderLeftWidth"), 10);
-            var ancestorPaddingEdgeTop = $ancestor.offset().top + parseInt($ancestor.css("borderTopWidth"), 10);
+            
+            var borderWidth = parseInt($ancestor.css("borderLeftWidth"), 10);
+            if (isNaN(borderWidth)) borderWidth = 0;
+            var ancestorPaddingEdgeLeft = $ancestor.offset().left + borderWidth;
+
+            var borderWidth = parseInt($ancestor.css("borderTopWidth"), 10);
+            if (isNaN(borderWidth)) borderWidth = 0;
+            var ancestorPaddingEdgeTop = $ancestor.offset().top + borderWidth;
             left = childMarginEdgeLeft - ancestorPaddingEdgeLeft;
             top = childMarginEdgeTop - ancestorPaddingEdgeTop;
+            
             // we have found the ancestor and computed the position
             // stop iterating
             return false;

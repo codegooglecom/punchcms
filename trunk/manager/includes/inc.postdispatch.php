@@ -112,6 +112,10 @@ switch ($strDispatch) {
 				'type' => 'string',
 				'required' => TRUE,
 			),
+		  	'frm_maxitems'	=> array(
+				'type' => 'int',
+				'required' => FALSE,
+			),
 		  	'frm_description'	=> array(
 				'type' => 'text',
 				'maxlength' => 250,
@@ -364,6 +368,11 @@ switch ($strDispatch) {
 				'type' => 'string',
 				'maxlength' => 250,
 				'required' => TRUE,
+			),
+		  	'frm_basepath'	=> array(
+				'type' => 'string',
+				'maxlength' => 250,
+				'required' => FALSE,
 			),
 		  	'frm_refresh'	=> array(
 				'type' => 'int',

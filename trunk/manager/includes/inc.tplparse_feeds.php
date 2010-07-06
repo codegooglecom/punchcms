@@ -33,6 +33,10 @@ function parseFeeds($intFeedId, $strCommand) {
 					$blnError = TRUE;
 				}
 
+				if (is_null($_CLEAN_POST["frm_basepath"])) {
+					$blnError = TRUE;
+				}
+
 				if (is_null($_CLEAN_POST["frm_refresh"])) {
 					$blnError = TRUE;
 				}
@@ -46,6 +50,7 @@ function parseFeeds($intFeedId, $strCommand) {
 					$objTpl->setVariable("FORM_ACTIVE_VALUE", ($_POST["frm_active"] == "on") ? "checked=\"checked\"" : "");
 					$objTpl->setVariable("FORM_NAME_VALUE", $_POST["frm_name"]);
 					$objTpl->setVariable("FORM_FEED_VALUE", $_POST["frm_feed"]);
+					$objTpl->setVariable("FORM_BASEPATH_VALUE", $_POST["frm_basepath"]);
 					$objTpl->setVariable("FORM_REFRESH_VALUE", $_POST["frm_refresh"]);
 					$objTpl->setVariable("ERROR_FEED_MAIN", $objLang->get("main", "formerror"));
 				} else {
@@ -60,6 +65,7 @@ function parseFeeds($intFeedId, $strCommand) {
 					$objFeed->setActive(($_POST["frm_active"] == "on") ? 1 : 0);
 					$objFeed->setName($_CLEAN_POST["frm_name"]);
 					$objFeed->setFeed($_CLEAN_POST["frm_feed"]);
+					$objFeed->setBasepath($_CLEAN_POST["frm_basepath"]);
 					$objFeed->setRefresh($_CLEAN_POST["frm_refresh"]);
 					$objFeed->save();
 				
@@ -176,6 +182,7 @@ function parseFeeds($intFeedId, $strCommand) {
 				$objTpl->setVariable("FORM_ACTIVE_VALUE", ($objFeed->getActive()) ? "checked=\"checked\"" : "");
 				$objTpl->setVariable("FORM_NAME_VALUE", $objFeed->getName());
 				$objTpl->setVariable("FORM_FEED_VALUE", $objFeed->getFeed());
+				$objTpl->setVariable("FORM_BASEPATH_VALUE", $objFeed->getBasepath());
 				$objTpl->setVariable("FORM_REFRESH_VALUE", $objFeed->getRefresh());
 				$objTpl->setVariable("FRM_HEADER", $objLang->get("editFeed", "form"));
 				$objTpl->setVariable("FRM_STYLE", "");
@@ -197,6 +204,8 @@ function parseFeeds($intFeedId, $strCommand) {
 			$objTpl->setVariable("FRM_LABEL_ACTIVE", $objLang->get("active", "form"));
 			$objTpl->setVariable("FRM_LABEL_FEED", $objLang->get("feed", "form"));
 			$objTpl->setVariable("FRM_DESCR_FEED", $objLang->get("feed", "tip"));
+			$objTpl->setVariable("FRM_LABEL_BASEPATH", $objLang->get("basepath", "form"));
+			$objTpl->setVariable("FRM_DESCR_BASEPATH", $objLang->get("basepath", "tip"));
 			$objTpl->setVariable("FRM_LABEL_NAME", $objLang->get("name", "form"));
 			$objTpl->setVariable("FRM_DESCR_REFRESH", $objLang->get("refresh", "tip"));
 			$objTpl->setVariable("FRM_LABEL_REFRESH", $objLang->get("refresh", "form"));

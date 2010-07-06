@@ -483,15 +483,28 @@ div.center-wrap form {
 }
 
 #templatefields,
-#feedfields	
+#feedfields
 {
 	width: 228px;
 	float: left;
 	margin: 0 45px 0 0;
 }
 
-#feedfields {
+#left-wrap #feed-wrapper h5	{
+	width: 233px;
+	float: left;
+	margin: 0 45px 0 0;
+	padding-left: 5px;
+}
+
+#feedfields,
+#left-wrap #feed-wrapper h5.feed-header
+{
 	margin: 0 0 0 45px;
+}
+
+#header-wrapper {
+	margin: 0 !important;
 }
 
 #templatefields li,

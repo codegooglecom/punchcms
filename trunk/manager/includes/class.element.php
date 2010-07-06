@@ -529,6 +529,37 @@ class Element extends DBA_Element {
 			}
 		}
 	}
+	
+	public function getFeed() {
+		$objReturn = ElementFeed::selectByElement($this->id);		
+		
+		if ($objReturn->count() == 0) {
+			$objReturn = new ElementFeed();
+		} else if ($objReturn->count() >= 1) {
+			$objReturn = $objReturn->current();
+		}
+		
+		return $objReturn;
+	}
+	
+	public function setFeed($objFeed) {
+		if ($this->id > 0) {
+			$this->clearFeed();
+			
+			$objFeed->setElementId($this->id);
+			$objFeed->save();
+		}
+	}
+		
+	public function clearFeed() {
+		if ($this->id > 0) {
+			$objFeeds = ElementFeed::selectByElement($this->id);
+
+			foreach ($objFeeds as $objFeed) {
+				$objFeed->delete();
+			}
+		}
+	}
 		
 	public function clearAliases() {
 		if ($this->id > 0) {

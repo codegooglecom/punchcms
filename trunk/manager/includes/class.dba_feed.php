@@ -11,6 +11,7 @@ class DBA_Feed extends DBA__Object {
 	protected $accountid = 0;
 	protected $name = "";
 	protected $feed = "";
+	protected $basepath = "";
 	protected $refresh = 0;
 	protected $active = 1;
 
