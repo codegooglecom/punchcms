@@ -482,6 +482,53 @@ div.center-wrap form {
 	line-height: 0;
 }
 
+#templatefields,
+#feedfields	
+{
+	width: 228px;
+	float: left;
+	margin: 0 45px 0 0;
+}
+
+#feedfields {
+	margin: 0 0 0 45px;
+}
+
+#templatefields li,
+#feedfields li
+{
+	display: block;
+}
+
+#templatefields li {
+	cursor: default;
+}
+
+#feed-wrapper {
+	width: 570px;
+}
+
+#feedfields-wrapper {
+	position: relative;
+}
+
+#svgbasics {
+	border: 0 solid #448844;
+	left: 0;
+	position: absolute;
+	top: 0;
+	z-index: 0;
+	margin: 0;
+	padding: 0;
+}
+
+#svgbasics div {
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	z-index: 0;
+}
+
 #content a.date-button:hover {
 	background: none;
 }

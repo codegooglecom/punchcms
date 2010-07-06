@@ -330,15 +330,20 @@ function parsePages($intElmntId, $strCommand) {
 			$objTpl->loadTemplatefile("elementfields.tpl.htm");
 			$blnError = FALSE;
 			$blnIsFolder = FALSE;
+			$blnIsDynamic = FALSE;
 
 			//*** Check the element type (element or folder)
 			if ($strCommand == CMD_EDIT) {
 				$objElement = Element::selectByPK($intElmntId);
 				if (is_object($objElement) && $objElement->getTypeId() == ELM_TYPE_FOLDER) {
 					$blnIsFolder = TRUE;
+				} else if (is_object($objElement) && $objElement->getTypeId() == ELM_TYPE_DYNAMIC) {
+					$blnIsDynamic = TRUE;
 				}
 			} else if ($strCommand == CMD_ADD_FOLDER) {
 				$blnIsFolder = TRUE;
+			} else if ($strCommand == CMD_ADD_DYNAMIC) {
+				$blnIsDynamic = TRUE;
 			}
 
 			//*** Check if the rootfolder has been submitted.
@@ -355,6 +360,13 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setVariable("MAINSUB", $objElement->getName());
 				} else {
 					$objTpl->setVariable("MAINTITLE", $objLang->get("folderDetails", "label"));
+				}
+			} else if ($blnIsDynamic) {
+				if ($strCommand == CMD_EDIT) {
+					$objTpl->setVariable("MAINTITLE", $objLang->get("dynamicDetailsFor", "label"));
+					$objTpl->setVariable("MAINSUB", $objElement->getName());
+				} else {
+					$objTpl->setVariable("MAINTITLE", $objLang->get("dynamicDetails", "label"));
 				}
 			} else {
 				if ($strCommand == CMD_EDIT) {
@@ -380,6 +392,14 @@ function parsePages($intElmntId, $strCommand) {
 					if (is_null($_CLEAN_POST["frm_ispage"])) {
 						$objTpl->setVariable("ERROR_ISPAGE_ON", " error");
 						$objTpl->setVariable("ERROR_ISPAGE", $objLang->get("isPage", "formerror"));
+						$blnError = TRUE;
+					}
+				}
+
+				if ($strCommand == CMD_ADD_DYNAMIC || $blnIsDynamic) {
+					if (is_null($_CLEAN_POST["frm_feed"])) {
+						$objTpl->setVariable("ERROR_FEED_ON", " error");
+						$objTpl->setVariable("ERROR_FEED", $objLang->get("feed", "formerror"));
 						$blnError = TRUE;
 					}
 				}
@@ -468,6 +488,10 @@ function parsePages($intElmntId, $strCommand) {
 
 					if ($blnIsFolder) {
 						$objElement->setTypeId(ELM_TYPE_FOLDER);
+					} else if ($blnIsDynamic) {
+						$objElement->setTypeId(ELM_TYPE_DYNAMIC);
+						$objElement->setFeedId($_CLEAN_POST["frm_feed"]);
+						$objElement->setTemplateId($_CLEAN_POST["frm_template"]);
 					} else {
 						$objElement->setTypeId(ELM_TYPE_ELEMENT);
 						$objElement->setTemplateId($_CLEAN_POST["frm_template"]);
@@ -515,7 +539,7 @@ function parsePages($intElmntId, $strCommand) {
 					$objElement->setSchedule($objSchedule);
 
 					//*** Handle element values.
-					if (!$blnIsFolder) {
+					if (!$blnIsFolder && !$blnIsDynamic) {
 						//*** Cache and clear values.
 						$objCachedFields = $objElement->getFields(TRUE);
 						$objElement->clearFields();
@@ -901,632 +925,634 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setVariable("LABEL_ELEMENT_FIELDS", $objLang->get("elementFields", "label"));
 					$strFields = "";
 
-					foreach ($objFields as $objField) {
-						$objFieldTpl = new HTML_Template_ITX($_PATHS['templates']);
-						$objFieldTpl->loadTemplatefile("elementfield.tpl.htm");
-
-						//*** Get the field value from the element.
-						$strValue = "";
-						if (is_object($objElement)) {
-							$strValue = $objElement->getValueByTemplateField($objField->getId());
-						}
-						$strDescription = $objField->getDescription();
-
-						//*** Get the field type object.
-						$objType = TemplateFieldType::selectByPK($objField->getTypeId());
-
-						switch ($objField->getTypeId()) {
-							case FIELD_TYPE_DATE:
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.date', 'elementfield_date.tpl.htm');
-
-								foreach ($objContentLangs as $objContentLanguage) {
-									$objFieldTpl->setCurrentBlock("field.{$objType->getInput()}.value");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-									
-									if (is_object($objElement)) {
-										$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId(), TRUE);
-										$strValue = Date::fromMysql($_CONF['app']['universalDate'], $strValue);
-									} else {
-										$strValue = "";
-									}
-									
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", htmlspecialchars($strValue));
-									$objFieldTpl->parseCurrentBlock();
-								}
-
-								$objValue = $objField->getValueByName("tfv_field_format");
-								$strFormatValue = (is_object($objValue)) ? $objValue->getValue() : "";
-
-								$objFieldTpl->setCurrentBlock("field.date");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_DATE_FORMAT", $strFormatValue);
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-									if (is_object($objElementField)) {
-										$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
-									}
-								}
-								
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								$objFieldTpl->parseCurrentBlock();
-								break;
-
-							case FIELD_TYPE_LARGETEXT:
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.textarea', 'elementfield_textarea.tpl.htm');
-
-								foreach ($objContentLangs as $objContentLanguage) {
-									$objFieldTpl->setCurrentBlock("field.{$objType->getInput()}.value");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-
-									if (is_object($objElement)) {
-										$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
-									} else {
-										$strValue = "";
-									}
-																		
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", str_replace("$", "&#36;", htmlspecialchars($strValue)));
-
-									$objFieldTpl->parseCurrentBlock();
-								}
-
-								//*** Parse the special FCKeditor oncomplete section.
-								$objTpl->setCurrentBlock("field_{$objType->getInput()}_oncomplete_value");
-								$objTpl->setVariable("ELEMENT_FIELD_ID", "efv_{$objField->getId()}");
-									
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-									if (is_object($objElementField)) {
-										$objTpl->setVariable("ELEMENT_FIELD_CASCADES", implode(",", $objElementField->getCascades()));
-									}
-								}
-								
-								$objTpl->parseCurrentBlock();
-								
-								$oFCKeditor = new FCKeditor("efv_{$objField->getId()}");
-								$oFCKeditor->BasePath = 'libraries/fckeditor/';
-								$oFCKeditor->Config['DefaultLanguage'] = $objLang->get("abbr");
-								$oFCKeditor->Width = "490";
-
-								//*** Calculate and set the textarea height.
-								$minHeight = 165;
-								$maxHeight = 400;
-								$intHeight = $minHeight;
-								$objValue = $objField->getValueByName("tfv_field_max_characters");
-								$strMaxChar = (is_object($objValue)) ? $objValue->getValue() : "";
-								if (!empty($strMaxChar) && is_numeric($strMaxChar)) {
-									$intHeight = (($strMaxChar - 500) * 0.05) + $minHeight;
-									if ($intHeight < $minHeight) $intHeight = $minHeight;
-									if ($intHeight > $maxHeight) $intHeight = $maxHeight;
-								}
-								$oFCKeditor->Height = "{$intHeight}";
-
-								$objFieldTpl->setCurrentBlock("field.textarea");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								$objFieldTpl->setVariable("FIELD_TEXTAREA", $oFCKeditor->CreateHtml());
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								$objFieldTpl->parseCurrentBlock();
-								break;
-
-							case FIELD_TYPE_SELECT_LIST_SINGLE:
-							case FIELD_TYPE_SELECT_LIST_MULTI:
-								if ($objField->getTypeId() == FIELD_TYPE_SELECT_LIST_SINGLE) {
-									$objDefaultValue = $objField->getValueByName("tfv_list_default");
-									$objValue = $objField->getValueByName("tfv_list_value");
-									$strFieldClass = "select-one";
-									$strMultiple = "";
-								} else {
-									$objDefaultValue = $objField->getValueByName("tfv_multilist_default");
-									$objValue = $objField->getValueByName("tfv_multilist_value");
-									$strFieldClass = "select-multiple";
-									$strMultiple = "multiple=\"multiple\"";
-								}
-								
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.select', 'elementfield_selectlist.tpl.htm');
-								
-								$strTemplValue = (is_object($objDefaultValue)) ? $objDefaultValue->getValue() : "";
-									
-								foreach ($objContentLangs as $objContentLanguage) {
-									$objFieldTpl->setCurrentBlock("field.select.value");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-
-									//*** Determine the selected value for the list.
-									if (is_object($objElement)) {
-										$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
-									} else {
-										$strValue = NULL;
-									}
-									
-									if (!empty($strValue) || !is_null($strValue)) {
-										//*** Do Nothing.
-									} elseif (!empty($strTemplValue)) {
-										$strValue = $strTemplValue;
-									}
-									$arrDefaultValue = explode("\n", $strValue);
-									$arrValue = array();
-									foreach ($arrDefaultValue as $value) {
-										$value = trim($value);
-										if (!empty($value)) array_push($arrValue, $value);
-									}
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", implode(",", $arrValue));
-
-									$objFieldTpl->parseCurrentBlock();
-								}
-
-								//*** Render options for the list.
-								$strListValue = (is_object($objValue)) ? $objValue->getValue() : "";
-								$arrValues = explode("\n", $strListValue);
-
-								foreach ($arrValues as $value) {
-									if (!empty($value)) {
-										//*** Determine if we have a label.
-										$arrValue = explode(":", $value);
-										if (count($arrValue) > 1) {
-											$optionLabel = trim($arrValue[0]);
-											$optionValue = trim($arrValue[1]);
+					if (!$blnIsDynamic) {
+						foreach ($objFields as $objField) {
+							$objFieldTpl = new HTML_Template_ITX($_PATHS['templates']);
+							$objFieldTpl->loadTemplatefile("elementfield.tpl.htm");
+	
+							//*** Get the field value from the element.
+							$strValue = "";
+							if (is_object($objElement)) {
+								$strValue = $objElement->getValueByTemplateField($objField->getId());
+							}
+							$strDescription = $objField->getDescription();
+	
+							//*** Get the field type object.
+							$objType = TemplateFieldType::selectByPK($objField->getTypeId());
+	
+							switch ($objField->getTypeId()) {
+								case FIELD_TYPE_DATE:
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.date', 'elementfield_date.tpl.htm');
+	
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.{$objType->getInput()}.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+										
+										if (is_object($objElement)) {
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId(), TRUE);
+											$strValue = Date::fromMysql($_CONF['app']['universalDate'], $strValue);
 										} else {
-											$optionLabel = trim($value);
-											$optionValue = trim($value);
+											$strValue = "";
 										}
-
-										$objFieldTpl->setCurrentBlock("field.select.option");
-										$objFieldTpl->setVariable("FIELD_VALUE", $optionValue);
-										$objFieldTpl->setVariable("FIELD_TEXT", xhtmlsave($optionLabel));
+										
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", htmlspecialchars($strValue));
 										$objFieldTpl->parseCurrentBlock();
 									}
-								}
-
-								$objFieldTpl->setCurrentBlock("field.select");
-								$objFieldTpl->setVariable("FIELD_SELECT_SIZE", 1);
-								$objFieldTpl->setVariable("FIELD_CLASS", $strFieldClass);
-								$objFieldTpl->setVariable("FIELD_MULTIPLE", $strMultiple);
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-									if (is_object($objElementField)) {
-										$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
-									}
-								}
-								
-								$objFieldTpl->parseCurrentBlock();
-								break;
-
-							case FIELD_TYPE_CHECK_LIST_SINGLE:
-							case FIELD_TYPE_CHECK_LIST_MULTI:
-								if ($objField->getTypeId() == FIELD_TYPE_CHECK_LIST_SINGLE) {
-									$objDefaultValue = $objField->getValueByName("tfv_list_default");
-									$objValue = $objField->getValueByName("tfv_list_value");
-									$strType = "radio";
-								} else {
-									$objDefaultValue = $objField->getValueByName("tfv_multilist_default");
-									$objValue = $objField->getValueByName("tfv_multilist_value");
-									$strType = "checkbox";
-								}
-								
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.check', 'elementfield_checklist.tpl.htm');
-								
-								$strTemplValue = (is_object($objDefaultValue)) ? $objDefaultValue->getValue() : "";
+	
+									$objValue = $objField->getValueByName("tfv_field_format");
+									$strFormatValue = (is_object($objValue)) ? $objValue->getValue() : "";
+	
+									$objFieldTpl->setCurrentBlock("field.date");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_DATE_FORMAT", $strFormatValue);
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
 									
-								foreach ($objContentLangs as $objContentLanguage) {
-									$objFieldTpl->setCurrentBlock("field.check.value");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-
-									//*** Determine the selected value for the list.
 									if (is_object($objElement)) {
-										$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
-									} else {
-										$strValue = NULL;
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
 									}
 									
-									if (!empty($strValue) || !is_null($strValue)) {
-										//*** Do Nothing.
-									} elseif (!empty($strTemplValue)) {
-										$strValue = $strTemplValue;
-									}
-									$arrDefaultValue = explode("\n", $strValue);
-									$arrValue = array();
-									foreach ($arrDefaultValue as $value) {
-										$value = trim($value);
-										if (!empty($value)) array_push($arrValue, $value);
-									}
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", implode(",", $arrValue));
-
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
 									$objFieldTpl->parseCurrentBlock();
-								}
-
-								//*** Render options for the list.
-								$strListValue = (is_object($objValue)) ? $objValue->getValue() : "";
-								$arrValues = explode("\n", $strListValue);
-								$intCount = 0;
-
-								foreach ($arrValues as $value) {
-									if (!empty($value)) {
-										//*** Determine if we have a label.
-										$arrValue = explode(":", $value);
-										if (count($arrValue) > 1) {
-											$optionLabel = trim($arrValue[0]);
-											$optionValue = trim($arrValue[1]);
+									break;
+	
+								case FIELD_TYPE_LARGETEXT:
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.textarea', 'elementfield_textarea.tpl.htm');
+	
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.{$objType->getInput()}.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+	
+										if (is_object($objElement)) {
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
 										} else {
-											$optionLabel = trim($value);
-											$optionValue = trim($value);
+											$strValue = "";
 										}
-
-										$objFieldTpl->setCurrentBlock("field.check.item");
-										$objFieldTpl->setVariable("SUBFIELD_TYPE", $strType);
-										$objFieldTpl->setVariable("SUBFIELD_VALUE", $optionValue);
-										$objFieldTpl->setVariable("SUBFIELD_TEXT", $optionLabel);
-										$objFieldTpl->setVariable("SUBFIELD_ID", "efv_{$objField->getId()}_sub_$intCount");
-										$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+																			
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", str_replace("$", "&#36;", htmlspecialchars($strValue)));
+	
 										$objFieldTpl->parseCurrentBlock();
-										
-										
-										$intCount++;
 									}
-								}
-								$objFieldTpl->setCurrentBlock("field.list");
-								$objFieldTpl->setVariable("SUBFIELD_TYPE", $strType);
-								$objFieldTpl->parseCurrentBlock();
-
-								$objFieldTpl->setCurrentBlock("field.check");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-									if (is_object($objElementField)) {
-										$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+	
+									//*** Parse the special FCKeditor oncomplete section.
+									$objTpl->setCurrentBlock("field_{$objType->getInput()}_oncomplete_value");
+									$objTpl->setVariable("ELEMENT_FIELD_ID", "efv_{$objField->getId()}");
+										
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objTpl->setVariable("ELEMENT_FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
 									}
-								}
-								
-								$objFieldTpl->parseCurrentBlock();
-								break;
-
-							case FIELD_TYPE_IMAGE:
-								$objValue = $objField->getValueByName('tfv_image_count');
-								$intMaxFileCount = (is_object($objValue)) ? $objValue->getValue() : 10000;
-								$strCurrentTitle = $objLang->get("imagesCurrent", "label");
-								$strNewTitle = $objLang->get("imagesNew", "label");
-								$strThumbPath = Setting::getValueByName("web_server") . Setting::getValueByName("file_folder");
-								$strUploadPath = Request::getURI() . $_CONF['app']['baseUri'] . "files/";
-								
-							case FIELD_TYPE_FILE:
-								if (!isset($intMaxFileCount)) {
-									$objValue = $objField->getValueByName('tfv_file_count');
+									
+									$objTpl->parseCurrentBlock();
+									
+									$oFCKeditor = new FCKeditor("efv_{$objField->getId()}");
+									$oFCKeditor->BasePath = 'libraries/fckeditor/';
+									$oFCKeditor->Config['DefaultLanguage'] = $objLang->get("abbr");
+									$oFCKeditor->Width = "490";
+	
+									//*** Calculate and set the textarea height.
+									$minHeight = 165;
+									$maxHeight = 400;
+									$intHeight = $minHeight;
+									$objValue = $objField->getValueByName("tfv_field_max_characters");
+									$strMaxChar = (is_object($objValue)) ? $objValue->getValue() : "";
+									if (!empty($strMaxChar) && is_numeric($strMaxChar)) {
+										$intHeight = (($strMaxChar - 500) * 0.05) + $minHeight;
+										if ($intHeight < $minHeight) $intHeight = $minHeight;
+										if ($intHeight > $maxHeight) $intHeight = $maxHeight;
+									}
+									$oFCKeditor->Height = "{$intHeight}";
+	
+									$objFieldTpl->setCurrentBlock("field.textarea");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									$objFieldTpl->setVariable("FIELD_TEXTAREA", $oFCKeditor->CreateHtml());
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
+									$objFieldTpl->parseCurrentBlock();
+									break;
+	
+								case FIELD_TYPE_SELECT_LIST_SINGLE:
+								case FIELD_TYPE_SELECT_LIST_MULTI:
+									if ($objField->getTypeId() == FIELD_TYPE_SELECT_LIST_SINGLE) {
+										$objDefaultValue = $objField->getValueByName("tfv_list_default");
+										$objValue = $objField->getValueByName("tfv_list_value");
+										$strFieldClass = "select-one";
+										$strMultiple = "";
+									} else {
+										$objDefaultValue = $objField->getValueByName("tfv_multilist_default");
+										$objValue = $objField->getValueByName("tfv_multilist_value");
+										$strFieldClass = "select-multiple";
+										$strMultiple = "multiple=\"multiple\"";
+									}
+									
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.select', 'elementfield_selectlist.tpl.htm');
+									
+									$strTemplValue = (is_object($objDefaultValue)) ? $objDefaultValue->getValue() : "";
+										
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.select.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+	
+										//*** Determine the selected value for the list.
+										if (is_object($objElement)) {
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
+										} else {
+											$strValue = NULL;
+										}
+										
+										if (!empty($strValue) || !is_null($strValue)) {
+											//*** Do Nothing.
+										} elseif (!empty($strTemplValue)) {
+											$strValue = $strTemplValue;
+										}
+										$arrDefaultValue = explode("\n", $strValue);
+										$arrValue = array();
+										foreach ($arrDefaultValue as $value) {
+											$value = trim($value);
+											if (!empty($value)) array_push($arrValue, $value);
+										}
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", implode(",", $arrValue));
+	
+										$objFieldTpl->parseCurrentBlock();
+									}
+	
+									//*** Render options for the list.
+									$strListValue = (is_object($objValue)) ? $objValue->getValue() : "";
+									$arrValues = explode("\n", $strListValue);
+	
+									foreach ($arrValues as $value) {
+										if (!empty($value)) {
+											//*** Determine if we have a label.
+											$arrValue = explode(":", $value);
+											if (count($arrValue) > 1) {
+												$optionLabel = trim($arrValue[0]);
+												$optionValue = trim($arrValue[1]);
+											} else {
+												$optionLabel = trim($value);
+												$optionValue = trim($value);
+											}
+	
+											$objFieldTpl->setCurrentBlock("field.select.option");
+											$objFieldTpl->setVariable("FIELD_VALUE", $optionValue);
+											$objFieldTpl->setVariable("FIELD_TEXT", xhtmlsave($optionLabel));
+											$objFieldTpl->parseCurrentBlock();
+										}
+									}
+	
+									$objFieldTpl->setCurrentBlock("field.select");
+									$objFieldTpl->setVariable("FIELD_SELECT_SIZE", 1);
+									$objFieldTpl->setVariable("FIELD_CLASS", $strFieldClass);
+									$objFieldTpl->setVariable("FIELD_MULTIPLE", $strMultiple);
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
+									
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
+									}
+									
+									$objFieldTpl->parseCurrentBlock();
+									break;
+	
+								case FIELD_TYPE_CHECK_LIST_SINGLE:
+								case FIELD_TYPE_CHECK_LIST_MULTI:
+									if ($objField->getTypeId() == FIELD_TYPE_CHECK_LIST_SINGLE) {
+										$objDefaultValue = $objField->getValueByName("tfv_list_default");
+										$objValue = $objField->getValueByName("tfv_list_value");
+										$strType = "radio";
+									} else {
+										$objDefaultValue = $objField->getValueByName("tfv_multilist_default");
+										$objValue = $objField->getValueByName("tfv_multilist_value");
+										$strType = "checkbox";
+									}
+									
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.check', 'elementfield_checklist.tpl.htm');
+									
+									$strTemplValue = (is_object($objDefaultValue)) ? $objDefaultValue->getValue() : "";
+										
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.check.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+	
+										//*** Determine the selected value for the list.
+										if (is_object($objElement)) {
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
+										} else {
+											$strValue = NULL;
+										}
+										
+										if (!empty($strValue) || !is_null($strValue)) {
+											//*** Do Nothing.
+										} elseif (!empty($strTemplValue)) {
+											$strValue = $strTemplValue;
+										}
+										$arrDefaultValue = explode("\n", $strValue);
+										$arrValue = array();
+										foreach ($arrDefaultValue as $value) {
+											$value = trim($value);
+											if (!empty($value)) array_push($arrValue, $value);
+										}
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", implode(",", $arrValue));
+	
+										$objFieldTpl->parseCurrentBlock();
+									}
+	
+									//*** Render options for the list.
+									$strListValue = (is_object($objValue)) ? $objValue->getValue() : "";
+									$arrValues = explode("\n", $strListValue);
+									$intCount = 0;
+	
+									foreach ($arrValues as $value) {
+										if (!empty($value)) {
+											//*** Determine if we have a label.
+											$arrValue = explode(":", $value);
+											if (count($arrValue) > 1) {
+												$optionLabel = trim($arrValue[0]);
+												$optionValue = trim($arrValue[1]);
+											} else {
+												$optionLabel = trim($value);
+												$optionValue = trim($value);
+											}
+	
+											$objFieldTpl->setCurrentBlock("field.check.item");
+											$objFieldTpl->setVariable("SUBFIELD_TYPE", $strType);
+											$objFieldTpl->setVariable("SUBFIELD_VALUE", $optionValue);
+											$objFieldTpl->setVariable("SUBFIELD_TEXT", $optionLabel);
+											$objFieldTpl->setVariable("SUBFIELD_ID", "efv_{$objField->getId()}_sub_$intCount");
+											$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+											$objFieldTpl->parseCurrentBlock();
+											
+											
+											$intCount++;
+										}
+									}
+									$objFieldTpl->setCurrentBlock("field.list");
+									$objFieldTpl->setVariable("SUBFIELD_TYPE", $strType);
+									$objFieldTpl->parseCurrentBlock();
+	
+									$objFieldTpl->setCurrentBlock("field.check");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
+									
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
+									}
+									
+									$objFieldTpl->parseCurrentBlock();
+									break;
+	
+								case FIELD_TYPE_IMAGE:
+									$objValue = $objField->getValueByName('tfv_image_count');
 									$intMaxFileCount = (is_object($objValue)) ? $objValue->getValue() : 10000;
-									$strCurrentTitle = $objLang->get("filesCurrent", "label");
-									$strNewTitle = $objLang->get("filesNew", "label");
-									$strThumbPath = "";
+									$strCurrentTitle = $objLang->get("imagesCurrent", "label");
+									$strNewTitle = $objLang->get("imagesNew", "label");
+									$strThumbPath = Setting::getValueByName("web_server") . Setting::getValueByName("file_folder");
 									$strUploadPath = Request::getURI() . $_CONF['app']['baseUri'] . "files/";
-								}
-								
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-								}
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.file', 'elementfield_file.tpl.htm');
-
-								foreach ($objContentLangs as $objContentLanguage) {
-									if (is_object($objElement)) {
-										$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId(), TRUE);
-									} else {
-										$strValue = "";
+									
+								case FIELD_TYPE_FILE:
+									if (!isset($intMaxFileCount)) {
+										$objValue = $objField->getValueByName('tfv_file_count');
+										$intMaxFileCount = (is_object($objValue)) ? $objValue->getValue() : 10000;
+										$strCurrentTitle = $objLang->get("filesCurrent", "label");
+										$strNewTitle = $objLang->get("filesNew", "label");
+										$strThumbPath = "";
+										$strUploadPath = Request::getURI() . $_CONF['app']['baseUri'] . "files/";
 									}
 									
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+									}
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.file', 'elementfield_file.tpl.htm');
+	
+									foreach ($objContentLangs as $objContentLanguage) {
+										if (is_object($objElement)) {
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId(), TRUE);
+										} else {
+											$strValue = "";
+										}
+										
+										$intFileCount = 0;
+										if (!empty($strValue)) {
+											$arrValues = explode("\n", $strValue);
+	
+											foreach ($arrValues as $value) {
+												if (!empty($value)) {
+													$arrValue = explode(":", $value);
+													if (count($arrValue) > 1) {
+														$strValue = $arrValue[1];
+														$strLabel = $arrValue[0];
+	
+														//*** Media library item?
+														if (count($arrValue) > 2) {
+															$strValue = $arrValue[1] . ":" . $arrValue[2];
+														}
+													} else {
+														$strValue = $arrValue[0];
+														$strLabel = $arrValue[0];
+													}
+	
+													$intFileCount++;
+													
+													$objFieldTpl->setCurrentBlock("field.file.edit");
+													$objFieldTpl->setVariable("FIELD_LANGUAGE_ID_COUNT", "efv_{$objField->getId()}_{$objContentLanguage->getId()}_{$intFileCount}");
+													$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+													$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", "{$strLabel}:{$strValue}");
+													$objFieldTpl->parseCurrentBlock();
+												}
+											}
+										}			
+										
+										
+										$objFieldTpl->setCurrentBlock("field.file.value");						
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_CURRENT_FILES", $intFileCount);
+										
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ALTTEXT_VALUE", "");
+										$objFieldTpl->parseCurrentBlock();
+									}
+	
 									$intFileCount = 0;
 									if (!empty($strValue)) {
 										$arrValues = explode("\n", $strValue);
-
+							
 										foreach ($arrValues as $value) {
 											if (!empty($value)) {
 												$arrValue = explode(":", $value);
 												if (count($arrValue) > 1) {
 													$strValue = $arrValue[1];
 													$strLabel = $arrValue[0];
-
-													//*** Media library item?
-													if (count($arrValue) > 2) {
-														$strValue = $arrValue[1] . ":" . $arrValue[2];
-													}
 												} else {
 													$strValue = $arrValue[0];
 													$strLabel = $arrValue[0];
 												}
-
-												$intFileCount++;
-												
-												$objFieldTpl->setCurrentBlock("field.file.edit");
-												$objFieldTpl->setVariable("FIELD_LANGUAGE_ID_COUNT", "efv_{$objField->getId()}_{$objContentLanguage->getId()}_{$intFileCount}");
-												$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-												$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", "{$strLabel}:{$strValue}");
-												$objFieldTpl->parseCurrentBlock();
-											}
-										}
-									}			
-									
-									
-									$objFieldTpl->setCurrentBlock("field.file.value");						
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_CURRENT_FILES", $intFileCount);
-									
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ALTTEXT_VALUE", "");
-									$objFieldTpl->parseCurrentBlock();
-								}
-
-								$intFileCount = 0;
-								if (!empty($strValue)) {
-									$arrValues = explode("\n", $strValue);
-						
-									foreach ($arrValues as $value) {
-										if (!empty($value)) {
-											$arrValue = explode(":", $value);
-											if (count($arrValue) > 1) {
-												$strValue = $arrValue[1];
-												$strLabel = $arrValue[0];
-											} else {
-												$strValue = $arrValue[0];
-												$strLabel = $arrValue[0];
-											}
-
-											if ($objField->getTypeId() == FIELD_TYPE_IMAGE) {
-												$objFieldTpl->setCurrentBlock("thumbnail");
+	
+												if ($objField->getTypeId() == FIELD_TYPE_IMAGE) {
+													$objFieldTpl->setCurrentBlock("thumbnail");
+													$objFieldTpl->setVariable("FIELD_ORIGINAL_VALUE", $strLabel);
+													$objFieldTpl->setVariable("FIELD_VALUE", $strValue);
+													$objFieldTpl->parseCurrentBlock();
+												}
+												$objFieldTpl->setCurrentBlock("field.{$objType->getInput()}.edit");
+												$objFieldTpl->setVariable("FIELD_FILE_ID", "efv_{$objField->getId()}");
 												$objFieldTpl->setVariable("FIELD_ORIGINAL_VALUE", $strLabel);
 												$objFieldTpl->setVariable("FIELD_VALUE", $strValue);
 												$objFieldTpl->parseCurrentBlock();
+												
+												$intFileCount++;
 											}
-											$objFieldTpl->setCurrentBlock("field.{$objType->getInput()}.edit");
-											$objFieldTpl->setVariable("FIELD_FILE_ID", "efv_{$objField->getId()}");
-											$objFieldTpl->setVariable("FIELD_ORIGINAL_VALUE", $strLabel);
-											$objFieldTpl->setVariable("FIELD_VALUE", $strValue);
-											$objFieldTpl->parseCurrentBlock();
-											
-											$intFileCount++;
 										}
-									}
-								}								
-
-								//*** Parse the rest of the block.
-								$objFieldTpl->setCurrentBlock("field.file.select-type.library");
-								$objFieldTpl->setVariable("LABEL_LIBRARY", $objLang->get("pcmsInlineStorage", "menu"));
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								$objFieldTpl->parseCurrentBlock();
-								
-								$objFieldTpl->setCurrentBlock("field.file.select-type.upload");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								$objFieldTpl->parseCurrentBlock();
-								
-								$objFieldTpl->setCurrentBlock("field.file");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								$objFieldTpl->setVariable("FIELD_BROWSE_NAME", $objLang->get("browseImage", "label"));
-								//$objFieldTpl->setVariable("FIELD_ALT_NAME", $objLang->get("altImage", "label"));
-								$objFieldTpl->setVariable("FIELD_CURRENT_FILES", $intFileCount);
-								$objFieldTpl->setVariable("FIELD_MAX_FILES", $intMaxFileCount);
-								$objFieldTpl->setVariable("FIELD_THUMB_PATH", $strThumbPath);
-								$objFieldTpl->setVariable("FIELD_UPLOAD_PATH", $strUploadPath);
-								$objFieldTpl->setVariable("FIELD_MAX_CHAR", 60);
-								$objFieldTpl->setVariable("STORAGE_ITEMS", StorageItems::getFolderListHTML());
-								$objFieldTpl->setVariable("LABEL_CHOOSE_FOLDER", $objLang->get("chooseFolder", "label"));
-								$objFieldTpl->setVariable("FIELD_HEADER_CURRENT", $strCurrentTitle);
-								$objFieldTpl->setVariable("FIELD_HEADER_NEW", $strNewTitle);
-								$objFieldTpl->setVariable("FIELD_LABEL_REMOVE", $objLang->get("delete", "button"));
-								$objFieldTpl->setVariable("FIELD_LABEL_CANCEL", strtolower($objLang->get("cancel", "button")));
-								$objFieldTpl->setVariable("FIELD_LABEL_ALT", $objLang->get("alttag", "button"));
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								if (is_object($objElementField)) {
-									$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
-								}
-								
-								if ($objField->getTypeId() == FIELD_TYPE_FILE) {
-									$objValue = $objField->getValueByName("tfv_file_extension");
-									$strExtensions = (is_object($objValue)) ? $objValue->getValue() : "";
-									if (!empty($strExtensions)) {
-										$strExtensions = str_replace("%s", Setting::getValueByName('file_upload_extensions'), $strExtensions);
-									} else {
-										$strExtensions = strtolower(Setting::getValueByName('file_upload_extensions'));
-									}
-								} else {
-									$strExtensions = strtolower(Setting::getValueByName('image_upload_extensions'));
-								}
-								$objFieldTpl->setVariable("FIELD_FILE_TYPE", "*" . implode("; *", explode(" ", $strExtensions)));
-								
-								$objFieldTpl->parseCurrentBlock();
-								break;
-
-							case FIELD_TYPE_SMALLTEXT:
-							case FIELD_TYPE_NUMBER:
-							case FIELD_TYPE_LINK:
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.text', 'elementfield_text.tpl.htm');
-								
-								foreach ($objContentLangs as $objContentLanguage) {
-									$objFieldTpl->setCurrentBlock("field.text.value");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-
-									if (is_object($objElement)) {
-										$strValue = htmlspecialchars($objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId()));
-									} else {
-										$strValue = "";
-									}
-
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
-
+									}								
+	
+									//*** Parse the rest of the block.
+									$objFieldTpl->setCurrentBlock("field.file.select-type.library");
+									$objFieldTpl->setVariable("LABEL_LIBRARY", $objLang->get("pcmsInlineStorage", "menu"));
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
 									$objFieldTpl->parseCurrentBlock();
-								}
-
-								$objFieldTpl->setCurrentBlock("field.text");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+									
+									$objFieldTpl->setCurrentBlock("field.file.select-type.upload");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									$objFieldTpl->parseCurrentBlock();
+									
+									$objFieldTpl->setCurrentBlock("field.file");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									$objFieldTpl->setVariable("FIELD_BROWSE_NAME", $objLang->get("browseImage", "label"));
+									//$objFieldTpl->setVariable("FIELD_ALT_NAME", $objLang->get("altImage", "label"));
+									$objFieldTpl->setVariable("FIELD_CURRENT_FILES", $intFileCount);
+									$objFieldTpl->setVariable("FIELD_MAX_FILES", $intMaxFileCount);
+									$objFieldTpl->setVariable("FIELD_THUMB_PATH", $strThumbPath);
+									$objFieldTpl->setVariable("FIELD_UPLOAD_PATH", $strUploadPath);
+									$objFieldTpl->setVariable("FIELD_MAX_CHAR", 60);
+									$objFieldTpl->setVariable("STORAGE_ITEMS", StorageItems::getFolderListHTML());
+									$objFieldTpl->setVariable("LABEL_CHOOSE_FOLDER", $objLang->get("chooseFolder", "label"));
+									$objFieldTpl->setVariable("FIELD_HEADER_CURRENT", $strCurrentTitle);
+									$objFieldTpl->setVariable("FIELD_HEADER_NEW", $strNewTitle);
+									$objFieldTpl->setVariable("FIELD_LABEL_REMOVE", $objLang->get("delete", "button"));
+									$objFieldTpl->setVariable("FIELD_LABEL_CANCEL", strtolower($objLang->get("cancel", "button")));
+									$objFieldTpl->setVariable("FIELD_LABEL_ALT", $objLang->get("alttag", "button"));
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
 									if (is_object($objElementField)) {
 										$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
-									}
-								}
-								
-								$objFieldTpl->parseCurrentBlock();
-								break;
-
-							case FIELD_TYPE_SIMPLETEXT:
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.simpletext', 'elementfield_simpletext.tpl.htm');
-								
-								foreach ($objContentLangs as $objContentLanguage) {
-									$objFieldTpl->setCurrentBlock("field.simpletext.value");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-
-									if (is_object($objElement)) {
-										$strValue = htmlspecialchars($objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId()));
-									} else {
-										$strValue = "";
-									}
-
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
-
-									$objFieldTpl->parseCurrentBlock();
-								}
-								
-								//*** Calculate and set the textarea height.
-								$minHeight = 115;
-								$maxHeight = 400;
-								$intHeight = $minHeight;
-								$objValue = $objField->getValueByName("tfv_field_max_characters");
-								$strMaxChar = (is_object($objValue)) ? $objValue->getValue() : "";
-								if (!empty($strMaxChar) && is_numeric($strMaxChar)) {
-									$intHeight = (($strMaxChar - 500) * 0.05) + $minHeight;
-									if ($intHeight < $minHeight) $intHeight = $minHeight;
-									if ($intHeight > $maxHeight) $intHeight = $maxHeight;
-								}
-
-								$objFieldTpl->setCurrentBlock("field.simpletext");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								$objFieldTpl->setVariable("FIELD_HEIGHT", "{$intHeight}px");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-									if (is_object($objElementField)) {
-										$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
-									}
-								}
-								
-								$objFieldTpl->parseCurrentBlock();
-								break;
-
-							case FIELD_TYPE_USER:
-								$strFieldClass = "select-one";
-								
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.select', 'elementfield_selectlist.tpl.htm');
-																	
-								foreach ($objContentLangs as $objContentLanguage) {
-									$objFieldTpl->setCurrentBlock("field.select.value");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-
-									//*** Determine the selected value for the list.
-									if (is_object($objElement)) {
-										$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
-									} else {
-										$strValue = "";
 									}
 									
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
-
+									if ($objField->getTypeId() == FIELD_TYPE_FILE) {
+										$objValue = $objField->getValueByName("tfv_file_extension");
+										$strExtensions = (is_object($objValue)) ? $objValue->getValue() : "";
+										if (!empty($strExtensions)) {
+											$strExtensions = str_replace("%s", Setting::getValueByName('file_upload_extensions'), $strExtensions);
+										} else {
+											$strExtensions = strtolower(Setting::getValueByName('file_upload_extensions'));
+										}
+									} else {
+										$strExtensions = strtolower(Setting::getValueByName('image_upload_extensions'));
+									}
+									$objFieldTpl->setVariable("FIELD_FILE_TYPE", "*" . implode("; *", explode(" ", $strExtensions)));
+									
 									$objFieldTpl->parseCurrentBlock();
-								}
-
-								//*** Render options for the list.
-								global $objLiveAdmin;
-								$filters = array('container' => 'auth', 'filters' => array('account_id' => array($_CONF['app']['account']->getId())));
-								$objUsers = $objLiveAdmin->getUsers($filters);
-								if (is_array($objUsers)) {
-									foreach ($objUsers as $objUser) {
-										$objFieldTpl->setCurrentBlock("field.select.option");
-										$objFieldTpl->setVariable("FIELD_VALUE", $objUser["perm_user_id"]);
-										$objFieldTpl->setVariable("FIELD_TEXT", xhtmlsave($objUser["handle"]));
+									break;
+	
+								case FIELD_TYPE_SMALLTEXT:
+								case FIELD_TYPE_NUMBER:
+								case FIELD_TYPE_LINK:
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.text', 'elementfield_text.tpl.htm');
+									
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.text.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+	
+										if (is_object($objElement)) {
+											$strValue = htmlspecialchars($objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId()));
+										} else {
+											$strValue = "";
+										}
+	
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
+	
 										$objFieldTpl->parseCurrentBlock();
 									}
-								}
-
-								$objFieldTpl->setCurrentBlock("field.select");
-								$objFieldTpl->setVariable("FIELD_SELECT_SIZE", 1);
-								$objFieldTpl->setVariable("FIELD_CLASS", $strFieldClass);
-								$objFieldTpl->setVariable("FIELD_MULTIPLE", "");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-									if (is_object($objElementField)) {
-										$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
-									}
-								}
-								
-								$objFieldTpl->parseCurrentBlock();								
-								break;
-
-							case FIELD_TYPE_BOOLEAN:
-								$objDefaultValue = $objField->getValueByName("tfv_boolean_default");
-								$strTemplValue = (is_object($objDefaultValue)) ? $objDefaultValue->getValue() : "";
+	
+									$objFieldTpl->setCurrentBlock("field.text");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
 									
-								$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.checkbox', 'elementfield_checkbox.tpl.htm');
-
-								foreach ($objContentLangs as $objContentLanguage) {
-									$objFieldTpl->setCurrentBlock("field.checkbox.value");
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
-
 									if (is_object($objElement)) {
-										$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
-									} else {
-										$strValue = NULL;
-									}
-																		
-									if (!empty($strValue) || !is_null($strValue)) {
-										//*** Do Nothing.
-									} elseif (!empty($strTemplValue)) {
-										$strValue = $strTemplValue;
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
 									}
 									
-									$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
-
 									$objFieldTpl->parseCurrentBlock();
-								}
-								
-								$objFieldTpl->setCurrentBlock("field.checkbox");
-								$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
-								if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
-								$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-								$objFieldTpl->setVariable("FIELD_VALUE", $strValue);
-								if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
-								
-								if (is_object($objElement)) {
-									$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-									if (is_object($objElementField)) {
-										$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+									break;
+	
+								case FIELD_TYPE_SIMPLETEXT:
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.simpletext', 'elementfield_simpletext.tpl.htm');
+									
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.simpletext.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+	
+										if (is_object($objElement)) {
+											$strValue = htmlspecialchars($objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId()));
+										} else {
+											$strValue = "";
+										}
+	
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
+	
+										$objFieldTpl->parseCurrentBlock();
 									}
-								}
-								
-								$objFieldTpl->parseCurrentBlock();
-								break;
+									
+									//*** Calculate and set the textarea height.
+									$minHeight = 115;
+									$maxHeight = 400;
+									$intHeight = $minHeight;
+									$objValue = $objField->getValueByName("tfv_field_max_characters");
+									$strMaxChar = (is_object($objValue)) ? $objValue->getValue() : "";
+									if (!empty($strMaxChar) && is_numeric($strMaxChar)) {
+										$intHeight = (($strMaxChar - 500) * 0.05) + $minHeight;
+										if ($intHeight < $minHeight) $intHeight = $minHeight;
+										if ($intHeight > $maxHeight) $intHeight = $maxHeight;
+									}
+	
+									$objFieldTpl->setCurrentBlock("field.simpletext");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									$objFieldTpl->setVariable("FIELD_HEIGHT", "{$intHeight}px");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
+									
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
+									}
+									
+									$objFieldTpl->parseCurrentBlock();
+									break;
+	
+								case FIELD_TYPE_USER:
+									$strFieldClass = "select-one";
+									
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.select', 'elementfield_selectlist.tpl.htm');
+																		
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.select.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+	
+										//*** Determine the selected value for the list.
+										if (is_object($objElement)) {
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
+										} else {
+											$strValue = "";
+										}
+										
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
+	
+										$objFieldTpl->parseCurrentBlock();
+									}
+	
+									//*** Render options for the list.
+									global $objLiveAdmin;
+									$filters = array('container' => 'auth', 'filters' => array('account_id' => array($_CONF['app']['account']->getId())));
+									$objUsers = $objLiveAdmin->getUsers($filters);
+									if (is_array($objUsers)) {
+										foreach ($objUsers as $objUser) {
+											$objFieldTpl->setCurrentBlock("field.select.option");
+											$objFieldTpl->setVariable("FIELD_VALUE", $objUser["perm_user_id"]);
+											$objFieldTpl->setVariable("FIELD_TEXT", xhtmlsave($objUser["handle"]));
+											$objFieldTpl->parseCurrentBlock();
+										}
+									}
+	
+									$objFieldTpl->setCurrentBlock("field.select");
+									$objFieldTpl->setVariable("FIELD_SELECT_SIZE", 1);
+									$objFieldTpl->setVariable("FIELD_CLASS", $strFieldClass);
+									$objFieldTpl->setVariable("FIELD_MULTIPLE", "");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
+									
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
+									}
+									
+									$objFieldTpl->parseCurrentBlock();								
+									break;
+	
+								case FIELD_TYPE_BOOLEAN:
+									$objDefaultValue = $objField->getValueByName("tfv_boolean_default");
+									$strTemplValue = (is_object($objDefaultValue)) ? $objDefaultValue->getValue() : "";
+										
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.checkbox', 'elementfield_checkbox.tpl.htm');
+	
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.checkbox.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+	
+										if (is_object($objElement)) {
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
+										} else {
+											$strValue = NULL;
+										}
+																			
+										if (!empty($strValue) || !is_null($strValue)) {
+											//*** Do Nothing.
+										} elseif (!empty($strTemplValue)) {
+											$strValue = $strTemplValue;
+										}
+										
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
+	
+										$objFieldTpl->parseCurrentBlock();
+									}
+									
+									$objFieldTpl->setCurrentBlock("field.checkbox");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									$objFieldTpl->setVariable("FIELD_VALUE", $strValue);
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
+									
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
+									}
+									
+									$objFieldTpl->parseCurrentBlock();
+									break;
+							}
+	
+							$strFields .= $objFieldTpl->get();
 						}
-
-						$strFields .= $objFieldTpl->get();
 					}
 
-					$objTpl->setVariable("ELEMENT_FIELDS", $strFields);
+					if (!empty($strFields)) $objTpl->setVariable("ELEMENT_FIELDS", $strFields);
 					$objTpl->setVariable("LABEL_LANGUAGE", $objLang->get("language", "form"));
 					$objTpl->setVariable("ACTIVE_LANGUAGE", $intDefaultLanguage);
 					$objTpl->setVariable("DEFAULT_LANGUAGE", $intDefaultLanguage);
@@ -1595,6 +1621,32 @@ function parsePages($intElmntId, $strCommand) {
 //						$objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", $objMeta->getCascades("description")));
 //					}
 				}
+											
+				//*** Feeds if dynamic.
+				if ($blnIsDynamic) {			
+					if ($strCommand == CMD_EDIT) {
+						$objFeed = Feed::selectByPK($objElement->getFeedId());
+						$objFeeds = new DBA__Collection();
+						$objFeeds->addObject($objFeed);
+					} else {	
+						$objFeeds = Feed::select();
+					}
+					
+					if (is_object($objFeeds)) {
+						foreach ($objFeeds as $objFeed) {
+							$objTpl->setCurrentBlock("list_feed");
+							$objTpl->setVariable("FEEDLIST_VALUE", $objFeed->getId());
+							$objTpl->setVariable("FEEDLIST_TEXT", $objFeed->getName());
+							$objTpl->parseCurrentBlock();
+						}
+					}
+										
+					if ($strCommand == CMD_EDIT) {
+						$objTpl->setCurrentBlock("elementfeedfields");
+						$objTpl->setVariable("HUT", "");
+						$objTpl->parseCurrentBlock();
+					}
+				}
 			}
 
 			//*** Render the element form.
@@ -1620,6 +1672,10 @@ function parsePages($intElmntId, $strCommand) {
 			} else {			
 				$objTpl->setVariable("LABEL_ELEMENTNAME", $objLang->get("elementName", "form"));
 				$objTpl->setVariable("LABEL_TEMPLATENAME", $objLang->get("template", "form"));
+				
+				if ($blnIsDynamic) {
+					$objTpl->setVariable("LABEL_FEEDNAME", $objLang->get("feed", "form"));
+				}
 			}
 			
 			//*** Predefine schedule variables.

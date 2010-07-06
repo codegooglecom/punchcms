@@ -12,7 +12,8 @@ define('SQL_QUERY_ERROR', 3);
 define("ELM_TYPE_FOLDER", 1);
 define("ELM_TYPE_ELEMENT", 2);
 define("ELM_TYPE_CONTAINER", 3);
-define("ELM_TYPE_ALL", "'1','2','3'");
+define("ELM_TYPE_DYNAMIC", 4);
+define("ELM_TYPE_ALL", "'1','2','3','4'");
 
 define('NAV_MYPUNCH_ACCOUNT', 17);
 define('NAV_MYPUNCH_PROFILE', 2);

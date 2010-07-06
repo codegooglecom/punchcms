@@ -29,8 +29,8 @@
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
 	font-weight: bolder;
 }
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-	color: #fff !important;
+.ui-state-highlight {
+	color: #363636 !important;
 }
 .ui-sortable {
 	position: relative;

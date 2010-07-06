@@ -108,6 +108,10 @@ switch ($strDispatch) {
 				'type' => 'string',
 				'required' => TRUE,
 			),
+		  	'frm_feed'	=> array(
+				'type' => 'string',
+				'required' => TRUE,
+			),
 		  	'frm_description'	=> array(
 				'type' => 'text',
 				'maxlength' => 250,

@@ -54,7 +54,7 @@ class Alias extends DBA_Alias {
 		return parent::select($strSql);
 	}
 
-	public static function selectByUrl($strUrl) {
+	public static function selectByUrl($strUrl, $blnList = FALSE) {
 		global $_CONF;
 		parent::$__object = "Alias";
 		parent::$__table = "pcms_alias";
@@ -65,7 +65,9 @@ class Alias extends DBA_Alias {
 		}
 
 		$objAliases = parent::select($strSql);
-		if ($objAliases->count() > 0) $objReturn = $objAliases->current();
+		if ($objAliases->count() > 0) {
+			$objReturn = ($blnList) ? $objAliases : $objAliases->current();
+		}
 		
 		return $objReturn;
 	}

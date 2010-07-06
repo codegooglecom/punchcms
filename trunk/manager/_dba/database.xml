@@ -37,6 +37,7 @@
 		<column name="description" type="varchar" />
 		<column name="typeId" type="integer" />
 		<column name="templateId" type="integer" />
+		<column name="feedId" type="integer" />
 		<column name="isPage" type="integer" />
 		<column name="parentId" type="integer" />
 		<column name="userId" type="integer" />

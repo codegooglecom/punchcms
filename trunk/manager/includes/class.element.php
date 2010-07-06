@@ -65,6 +65,15 @@ class Element extends DBA_Element {
 		//*** Delete permissions.
 		$this->clearPermissions();
 		
+		//*** Delete aliases.
+		$this->clearAliases();
+		
+		//*** Delete schedules.
+		$this->clearSchedule();
+		
+		//*** Delete languages.
+		$this->clearLanguages();
+		
 		//*** Delete child elements.
 		$objElements = $this->getElements();
 		foreach ($objElements as $objElement) {
@@ -517,6 +526,16 @@ class Element extends DBA_Element {
 
 			foreach ($objSchedules as $objSchedule) {
 				$objSchedule->delete();
+			}
+		}
+	}
+		
+	public function clearAliases() {
+		if ($this->id > 0) {
+			$objAliases = Alias::selectByUrl($this->id, TRUE);
+
+			foreach ($objAliases as $objAlias) {
+				$objAlias->delete();
 			}
 		}
 	}

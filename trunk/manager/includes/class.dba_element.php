@@ -15,6 +15,7 @@ class DBA_Element extends DBA__Object {
 	protected $description = "";
 	protected $typeid = 0;
 	protected $templateid = 0;
+	protected $feedid = 0;
 	protected $ispage = 0;
 	protected $parentid = 0;
 	protected $userid = 0;

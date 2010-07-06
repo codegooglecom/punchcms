@@ -89,6 +89,19 @@
 								</select>
 							</div>
 							<!-- END elementtemplate -->
+							<!-- BEGIN elementfeed -->
+							<div class="required{ERROR_FEED_ON}">
+								<!-- BEGIN error-feedname -->
+								<p class="error">{ERROR_FEED}</p>
+								<!-- END error-feedname -->
+								<label for="frm_feed">* {LABEL_FEEDNAME}</label>
+								<select id="frm_feed" name="frm_feed" class="select-one">
+									<!-- BEGIN list_feed -->
+									<option value="{FEEDLIST_VALUE}" {FEEDLIST_SELECTED}>{FEEDLIST_TEXT}</option>
+									<!-- END list_feed -->
+								</select>
+							</div>
+							<!-- END elementfeed -->
 							<div class="optional{ERROR_NOTES_ON}">
 								<!-- BEGIN error-element-notes -->
 								<p class="error">{ERROR_NOTES}</p>
@@ -162,6 +175,95 @@
 							{ELEMENT_FIELDS}
 						</fieldset>
 						<!-- END elementfields -->
+
+						<!-- BEGIN elementfeedfields -->
+						{HUT}
+						<fieldset id="feed-wrapper">
+							<h5>Template Fields</h5>
+							<h5>Feed Fields</h5>
+							<div id="feedfields-wrapper">
+								<div id="svgbasics"></div>
+								<ul id="templatefields" class="sortable">
+									<li id="tpf_34">Image</li>
+									<li id="tpf_35">Show in lightbox</li>
+									<li id="tpf_36">Title</li>
+									<li id="tpf_37">Body</li>
+								</ul>
+								<ul id="feedfields" class="sortable">
+									<li id="ff_1" class="/rss/channel/item/title">title</li>
+									<li id="ff_2" class="/rss/channel/item/link">link</li>
+									<li id="ff_3" class="/rss/channel/item/guid">guid</li>
+									<li id="ff_4" class="/rss/channel/item/description">description</li>
+									<li id="ff_5" class="/rss/channel/item/pubDate">pubDate</li>
+									<li id="ff_6" class="/rss/channel/item/category">category</li>
+									<li id="ff_7" class="/rss/channel/item/category">category</li>
+									<li id="ff_8" class="/rss/channel/item/geolocation">geolocation</li>
+									<li id="ff_9" class="/rss/channel/item/enclosure">enclosure</li>
+									<li id="ff_10" class="/rss/channel/item/enclosure/@url">enclosure@url</li>
+									<li id="ff_11" class="/rss/channel/item/enclosure/@type">enclosure@type</li>
+								</ul>
+							</div>
+						</fieldset>
+						<script type="text/javascript">
+							$(function() {
+								$("#svgbasics")
+									.css( "height", $("#feedfields-wrapper").height())
+									.css( "width", $("#feedfields-wrapper").width());
+								
+								$("#feedfields li")
+									.draggable({ revert: "valid", revertDuration: 300, containment: "#feedfields-wrapper", opacity: 0.50 })
+									.hover(
+										function(){ $(this).addClass("hover"); }, 
+										function(){ $(this).removeClass("hover"); }
+									);
+								$("#templatefields li").droppable({
+									activeClass: 'ui-state-active',
+									hoverClass: 'ui-state-highlight',
+									drop: function(event, ui) {
+										var $dragger = $(ui.draggable);
+										if ($dragger.data("svgStart")) { 
+											//$($dragger.data("svgStart")).remove();
+											//$($dragger.data("svgCenter")).remove();
+											//$($dragger.data("svgEnd")).remove();
+										}
+										svgDrawLine($(this), $dragger);
+									}
+								});
+							});
+
+							function svgDrawLine(eTarget, eSource) {								
+								setTimeout(function(){							
+									var $source = eSource;
+									var $target = eTarget;
+
+									// origin -> ending ... from left to right
+									var originX = $source.positionAncestor("#feedfields-wrapper").left;
+									var originY = $source.positionAncestor("#feedfields-wrapper").top + 15;
+									
+									var endingX = $target.positionAncestor("#feedfields-wrapper").left + $target.width() + 10;
+									var endingY = $target.positionAncestor("#feedfields-wrapper").top + 15;
+
+									alert($source.positionAncestor("#feedfields-wrapper").left);
+									// draw lines
+									var svg = $("#svgbasics");
+									
+									var space = 20;
+									var color = "orange";
+									
+									// drawLine(X1, Y1, X2, Y2);
+									var start = svg.drawLine(originX, originY, originX - space, originY, { 'color': color, 'stroke': 2 }); // beginning		
+									var center = svg.drawLine(originX - space, originY, endingX + space, endingY, { 'color': color, 'stroke': 2 }); // diagonal line	
+									var end = svg.drawLine(endingX + space, endingY, endingX, endingY, { 'color': color, 'stroke': 2 }); // ending
+
+									$source.data("svgStart", start);
+									$source.data("svgCenter", center);
+									$source.data("svgEnd", end);
+								}, 350);
+							}
+
+						</script>
+
+						<!-- END elementfeedfields -->
 
 						<div class="form-navigation">
 							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
