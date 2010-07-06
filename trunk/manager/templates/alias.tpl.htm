@@ -127,23 +127,23 @@
 <script type="text/javascript">
 jQuery(function(){
 	jQuery.debug({content: "Template: \n" + "alias" + ".tpl.htm", type:"info"});
-	jQuery("#aliasForm").dialog({
-		modal: true,
-		autoOpen: false,
-		width: 600,
-		buttons: {
-			"Save alias": function(){
-				jQuery.debug("Save button pressed.");
-				jQuery.debug(jQuery(this));
-			},
-			"Cancel": function(){
-				jQuery(this).dialig("close");
-			}
-		},
-		open: function(){
-			jQuery(".form-navigation", this).hide();
-		}
-	});
+	//jQuery("#aliasForm").dialog({
+	//	modal: true,
+	//	autoOpen: false,
+	//	width: 600,
+	//	buttons: {
+	//		"Save alias": function(){
+	//			jQuery.debug("Save button pressed.");
+	//			jQuery.debug(jQuery(this));
+	//		},
+	//		"Cancel": function(){
+	//			jQuery(this).dialig("close");
+	//		}
+	//	},
+	//	open: function(){
+	//		jQuery(".form-navigation", this).hide();
+	//	}
+	//});
 });
 </script>
 

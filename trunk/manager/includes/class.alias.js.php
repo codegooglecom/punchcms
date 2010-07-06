@@ -22,7 +22,8 @@ var Alias = {
 }
 
 Alias.prepareAdd = function() {
-	jQuery("#" + Alias.targetForm).dialog("open");
+	jQuery("#" + Alias.targetForm).slideDown();
+	//jQuery("#" + Alias.targetForm).dialog("open");
 }
 
 Alias.remove = function(intId, strRedirect) {
