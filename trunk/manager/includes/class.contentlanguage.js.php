@@ -628,6 +628,7 @@ function TextAreaField(strId, objParent, strCascades) {
 TextAreaField.prototype = new ContentField();
 
 TextAreaField.prototype.toScreen = function() {
+	
 	//*** Attach mouse events to the cascade button.
 	this.setIconCascade();
 	
@@ -638,9 +639,12 @@ TextAreaField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "___Frame").hide();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
+		jQuery.debug("TextAreaField.prototype.toScreen cascades");
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
+		jQuery.debug(strValue);
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
+		jQuery("#" + this.id + "_alt").show();
 		jQuery("#" + this.id + "___Frame").hide();
 	} else {
 		//*** The field needs no special treatment.
