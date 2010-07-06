@@ -65,13 +65,15 @@
 									//*** Add sortable functionality
 									jQuery("#rights, #allrights").sortable({
 										dropOnEmpty: true,
-										connectWith: "#rights, #allrights"
+										connectWith: "#rights, #allrights",
+										axis: "y"
 									});
 									jQuery("#rights, #allrights").disableSelection();
 									
 									jQuery("#groups, #allgroups").sortable({
 										dropOnEmpty: true,
-										connectWith: "#groups, #allgroups"
+										connectWith: "#groups, #allgroups",
+										axis: "y"
 									});
 									jQuery("#groups, #allgroups").disableSelection();
 									//*** Add hover styling

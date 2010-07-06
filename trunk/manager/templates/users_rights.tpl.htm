@@ -81,21 +81,24 @@
 								}
 							});
 							
-								jQuery("#rights, #allrights").sortable({
+							jQuery("#rights, #allrights").sortable({
 								dropOnEmpty: true,
-								connectWith: "#rights, #allrights"
+								connectWith: "#rights, #allrights",
+								axis: "y"
 							});
 							jQuery("#rights, #allrights").disableSelection();
 							
 								jQuery("#groups, #allgroups").sortable({
 								dropOnEmpty: true,
-								connectWith: "#groups, #allgroups"
+								connectWith: "#groups, #allgroups",
+								axis: "y"
 							});
 							jQuery("#groups, #allgroups").disableSelection();
 							
-								jQuery("#users, #allusers").sortable({
+							jQuery("#users, #allusers").sortable({
 								dropOnEmpty: true,
-								connectWith: "#users, #allusers"
+								connectWith: "#users, #allusers",
+								axis: "y"
 							});
 							jQuery("#users, #allusers").disableSelection();
 						
