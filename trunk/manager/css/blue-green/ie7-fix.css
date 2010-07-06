@@ -1,0 +1,50 @@
+@CHARSET "UTF-8";
+
+/*
+ * @package: IE7 fixes for blue-green skin.
+ * @version: 1.0
+ * @author: Felix iT - Robin van Baalen
+ */
+
+/*
+ * General markup fixes
+ */
+
+#aliasForm,
+#aliasForm fieldset {
+	position: relative;
+}
+
+/* IE7 needs "hasLayout" property */
+div.itembox { 
+	height: 32px;
+	}
+	div.itembox * {
+		position: relative;
+	}
+
+p.title {
+	position: relative;
+}
+
+/*
+ * Form markup fixes
+ */
+
+form.ui-tabs div.ui-tabs-panel fieldset div.optional,
+form.ui-tabs div.ui-tabs-panel fieldset div.required {
+	overflow: visible;
+	clear: both;
+}
+form.ui-tabs div.ui-tabs-panel fieldset div.radio,
+form.ui-tabs div.ui-tabs-panel fieldset div.checkbox {
+	overflow: auto;
+}
+form.ui-tabs div.ui-tabs-panel fieldset div select.select-multiple {
+	height: 100px;
+}
+.form-navigation a {
+	display: block;
+	float: left;
+	padding-top: 7px;
+}

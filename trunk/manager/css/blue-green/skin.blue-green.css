@@ -32,7 +32,7 @@ div a:hover {
  */
 
 #login {
-	background: url(/images/bg_blue-gray.png) top left repeat-x #f5f7fa;
+	xbackground: url(/images/bg_blue-gray.png) top left repeat-x #f5f7fa;
 }
 
 #login #canvas {
@@ -96,7 +96,7 @@ div a:hover {
 #login #canvas .input-button,
 #login #canvas .select-one 
 {
-	color: #333;
+	xcolor: #333;
 }
 
 #login #canvas a:link,

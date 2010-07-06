@@ -35,7 +35,8 @@ form.ui-tabs div.ui-tabs-panel fieldset {
 	margin: 10px 0 0;
 	border: none;
 }
-form.ui-tabs div.ui-tabs-panel fieldset div {
+form.ui-tabs div.ui-tabs-panel fieldset div.optional,
+form.ui-tabs div.ui-tabs-panel fieldset div.required {
 	margin: 5px 0;
 	overflow: auto;
 	}
@@ -106,6 +107,10 @@ form.ui-tabs div.ui-tabs-panel fieldset div select {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;	
 	}
+	form.ui-tabs div.ui-tabs-panel fieldset div input[type=radio],
+	form.ui-tabs div.ui-tabs-panel fieldset div input[type=checkbox] {
+		border: none; /* We do not want that on checkboxes and radio buttons */
+	}	
 	form.ui-tabs div.ui-tabs-panel fieldset div select.select-multiple {
 		min-height: 100px;
 		}

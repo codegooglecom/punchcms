@@ -617,10 +617,11 @@ div.center-wrap form {
 	overflow: auto;
 	padding: 7px 5px;
 	display: block;
-	-moz-border-radius-bottomleft: 5px;
-	-moz-border-radius-bottomright: 5px;
-	-webkit-border-bottom-right-radius: 5px;
-	-webkit-border-bottom-left-radius: 5px;
+	margin-bottom:15px;
+	margin-top:5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 	}
 	#left-wrap div.action-menu a {
 		float: right;
@@ -1225,24 +1226,4 @@ div.progresstext {
  */
 .no-margin {
 	margin: 0 !important;
-}
-
-/*
- * IE7 fix
- */
-
-#aliasForm,
-#aliasForm fieldset {
-	position: relative;
-}
-
-div.itembox { /* IE7 needs "hasLayout" property */
-	height: 32px;
-}
-div.itembox * {
-	position: relative;
-}
-
-p.title {
-	position: relative;
 }

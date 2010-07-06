@@ -41,8 +41,15 @@
 	background: #FEF1EC !important;
 }
 /*
-	.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {background: #2c457c url(images/ui-bg_flat_75_2c457c_40x100.png) 50% 50% repeat-x !important; color: #fff !important; }
-*/
+ * Login window
+ */
+#login #canvas .input-button {
+	color: #333;
+	padding: 5px 10px;
+}
+#login #canvas .input-button:hover {
+	color: #fff;
+}
 
 /*
  * Switch tabs markup - Tabs only
