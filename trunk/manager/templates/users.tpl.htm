@@ -3,7 +3,11 @@
 			<h2>{MAINTITLE}</h2>
 			<div id="treeContainer"></div>
 			<div id="content" class="hollyhacked">
-				<div class="wrap" style="float:left;">
+				<div class="wrap users" style="float:left;">
+					<div class="action-menu">
+						<a id="new" href="javascript:{OBJECT}.clearForm('{FORM}');" rel="internal">{BUTTON_NEW}</a>
+						<a id="remove" href="javascript:{OBJECT}.remove(jQuery('#itemlist option:selected').val());" rel="internal">{BUTTON_REMOVE}</a>
+					</div>
 					<div id="folder">
 						<!-- BEGIN main-itemlist -->
 						<form id="usersForm" method="post" action="#" class="users ui-tabs ui-widget ui-widget-content ui-corner-all">
@@ -13,10 +17,6 @@
 									{LISTTITLE}
 									<!-- END main-buttons -->
 								</h3>
-								<span class="menu">
-									<a id="new" href="javascript:{OBJECT}.clearForm('{FORM}');" rel="internal">{BUTTON_NEW}</a>
-									<a id="remove" href="javascript:{OBJECT}.remove(jQuery('#itemlist option:selected').val());" rel="internal">{BUTTON_REMOVE}</a>
-								</span>
 								<fieldset>
 									<select id="itemlist" name="itemList" class="select-multismall" multiple="multiple" onchange="{OBJECT}.load(jQuery('#itemlist option:selected').val());">
 										<!-- BEGIN main-items -->
