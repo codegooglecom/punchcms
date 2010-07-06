@@ -78,17 +78,6 @@
 			 // <![CDATA[
 					Itemlist.init();
 					jQuery(function(){
-						jQuery("#btn-options").bind("click", function(){
-							if(jQuery("div.action-menu").is(":visible")){
-								jQuery("div.action-menu").slideUp("fast");
-								jQuery(this).text("{ACTIONS_OPEN}");
-							}
-							else {
-								jQuery("div.action-menu").slideDown("fast");
-								jQuery(this).text("{ACTIONS_CLOSE}");
-							}
-						});
-
 						jQuery("#new-dynamic").button({"icons": {"primary": "ui-icon-plus"}});
 						jQuery("#new-element").button({"icons": {"primary": "ui-icon-plus"}});
 						jQuery("#new-folder").button({"icons": {"primary": "ui-icon-plus"}});
