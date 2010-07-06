@@ -478,7 +478,7 @@ div.center-wrap form {
 
 #content div.divider {
 	border-bottom: 1px dashed #6A6E77;
-	margin-bottom: 5px;
+	margin: 10px 0 5px;
 	line-height: 0;
 }
 
