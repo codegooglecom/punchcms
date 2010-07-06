@@ -137,6 +137,12 @@ form.ui-tabs div.ui-tabs-panel fieldset div small {
 	margin: 4px 0 6px 161px;
 	font-size: 10px;
 }
+form.ui-tabs div.ui-tabs-panel fieldset div div.disabled {
+	background: none repeat scroll 0 0 #EAEAEA;
+	float: left;
+	padding: 5px;
+	width: 478px;
+}
 form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
 	margin: 0;
 	}
@@ -153,6 +159,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
 form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	border: 1px #999 solid;
 	padding-bottom: 10px;
+	float: left; /* Safari likes that */
 	overflow: hidden;
 	width: 488px;
 	position: relative;
