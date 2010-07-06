@@ -47,4 +47,10 @@ form.ui-tabs div.ui-tabs-panel fieldset div select.select-multiple {
 	display: block;
 	float: left;
 	padding-top: 7px;
-}
+	margin-right: 5px;
+	}
+	.form-navigation a:hover {
+		text-decoration: none;
+		background: none;
+		color: #2C457C;
+	}

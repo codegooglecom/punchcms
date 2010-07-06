@@ -297,7 +297,10 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 div.form-navigation {
 	float: right;
 	margin-top: 20px;
-}
+	}
+	div.form-navigation a {
+		margin-right: 10px;
+	}
 
 /*
  * Small (column) form markup
@@ -313,11 +316,10 @@ div.column form.ui-tabs div.ui-tabs-panel h3 {
 div.column form.ui-tabs div.ui-tabs-panel fieldset div label {
 	width: 120px;
 	}
-div.column form.ui-tabs div.ui-tabs-panel fieldset div input {
+div.column form.ui-tabs div.ui-tabs-panel fieldset div input[type=text] {
 	width: 150px !important;
 	}
 	div.column form.ui-tabs div.ui-tabs-panel fieldset div input.check {
-		width: auto !important;
 	}
 div.column form.ui-tabs div.ui-tabs-panel fieldset div select {
 	width: 158px !important;
