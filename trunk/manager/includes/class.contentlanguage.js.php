@@ -762,8 +762,8 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		button_image_url : "/images/XPButtonUploadText_61x22.png",
 		button_placeholder_id : __this.id + "_browse",
 		button_window_mode: SWFUpload.WINDOW_MODE.OPAQUE,
-		button_width: 67,
-		button_height: 24,
+		button_width: 61,
+		button_height: 22,
 
 		// The event handler functions are defined in handlers.js
 		swfupload_loaded_handler : __this.swfUploadLoaded,
