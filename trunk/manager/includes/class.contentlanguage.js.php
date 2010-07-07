@@ -639,10 +639,8 @@ TextAreaField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "___Frame").hide();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
-		jQuery.debug("TextAreaField.prototype.toScreen cascades");
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
-		jQuery.debug(strValue);
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id + "_alt").show();
 		jQuery("#" + this.id + "___Frame").hide();
@@ -854,15 +852,10 @@ FileField.prototype.toScreen = function() {
 			jQuery(this).remove();
 		});
 		
-			jQuery.debug({title: "FilledElement", content: this.subFiles[this.parent.currentLanguage].uploaded});
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount],
 				blnStorage 	  = (filledElement.value.split(":").length > 2) ? true : false;
 				
-				if(filledElement instanceof jQuery){
-					alert("FilledELement is jQuery object");
-				}
-			
 			this.addCurrentRow(filledElement, blnStorage);
 			jQuery("#filelist_current_" + this.id).show();
 		}
@@ -881,6 +874,14 @@ FileField.prototype.toScreen = function() {
 		}
 		
 		var strId = this.id;
+		
+		$.debug({content: $("#" + this.id + "_widget h3").next()});
+		$("#" + this.id + "_widget h3").next().each(function(){
+			if($(this).children().length < 0){
+				jQuery.debug("Niet zichtbaar");
+			}
+		});
+		
 		
 		jQuery("#filelist_current_" + this.id).sortable({
 			dropOnEmpty: true,
