@@ -3,16 +3,6 @@
 			<div id="treeContainer"></div>
 			<div id="content" class="hollyhacked">
 				<form id="elementForm" enctype="multipart/form-data" method="post" action="?" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
-					<!-- BEGIN error-main -->
-					<div class="error-main">
-						<p>{ERROR_MAIN}</p>
-					</div>
-					<script type="text/javascript">
-					// <![CDATA[
-							Nifty("div.error-main");
-					// ]]>
-					</script>
-					<!-- END error-main -->
 					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
 						<!-- BEGIN headertitel_simple -->
 						<li class="ui-state-default ui-corner-top"><a href="#section-details" class="on">{HEADER_TITLE}</a></li>
@@ -30,6 +20,13 @@
 						<li class="ui-state-default ui-corner-top"><a href="#section-permissions">{HEADER}</a></li>
 						<!-- END permission-title -->
 					</ul>
+					<!-- BEGIN error-main -->
+					<div class="ui-widget">
+						<div class="ui-state-error ui-corner-all">
+							<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>{ERROR_MAIN}</p>
+						</div>
+					</div>
+					<!-- END error-main -->
 					<div id="section-details" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 						<!-- BEGIN description-details -->
 						<div class="description">
@@ -263,81 +260,142 @@
 					<!-- END section-fields -->
 					<div id="section-publish" class="anchor">
 						<!-- BEGIN description-publish -->
-						<div class="description">
-							<p>{LABEL}</p>
+						<div class="required ui-widget">
+							<div class="ui-state-highlight ui-corner-all">
+								<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-info"></span>{LABEL}</p>
+							</div>
 						</div>
 						<!-- END description-publish -->
 						<fieldset>
 							<div class="required">
-								<label for="publish_start">{LABEL_START_DATE}</label>
-								<input type="checkbox" id="publish_start" name="publish_start" class="check" {START_DATE_ACTIVE} />
-							</div>
-							<div class="required">
-								<label for="publish_start_date">{LABEL_DATE}</label>
-								<div id="publish_start_date_canvas" class="input-textdate" style="width:200px">{START_DATE_DISPLAY}</div>
-								<input type="hidden" id="publish_start_date" name="publish_start_date" value="{START_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_start" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
-								<script type="text/javascript">
-									Calendar.setup({
-										inputField  : "publish_start_date",
-										displayArea : "publish_start_date_canvas",
-										daFormat 	: "%d %B %Y",
-										ifFormat    : "%d %B %Y %H:%M:%S",
-										button      : "calendarButton_start",
-										showsTime	: false
-									});
-								</script>
-							</div>
-							<div class="required">
-								<label for="publish_start_hour">{LABEL_TIME}</label>
-								<select id="publish_start_hour" name="publish_start_hour" class="time">
-									<!-- BEGIN date.start.hour -->
-									<option value="{VALUE}" {SELECTED}>{LABEL}</option>
-									<!-- END date.start.hour -->
-								</select>&nbsp;&nbsp;:&nbsp;
-								<select id="publish_start_minute" name="publish_start_minute" class="time">
-									<!-- BEGIN date.start.minute -->
-									<option value="{VALUE}" {SELECTED}>{LABEL}</option>
-									<!-- END date.start.minute -->
-								</select>
+								<div class="widget filefield">
+									<div class="header">
+										<label for="publish_start">{LABEL_START_DATE}</label>
+										<input type="checkbox" id="publish_start" name="publish_start" class="check" {START_DATE_ACTIVE} />
+									</div>
+									<div class="required __temp">
+										<label for="publish_now">
+											{LABEL_DATE}
+										</label>
+										<div class="input-textdate disabled">Direct</div>
+									</div>
+									<div class="required" style="display: none">
+										<label for="publish_start_date">{LABEL_DATE}</label>
+										<div id="publish_start_date_canvas" class="input-textdate" style="width:200px">{START_DATE_DISPLAY}</div>
+										<input type="hidden" id="publish_start_date" name="publish_start_date" value="{START_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_start" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
+										<script type="text/javascript">
+											Calendar.setup({
+												inputField  : "publish_start_date",
+												displayArea : "publish_start_date_canvas",
+												daFormat 	: "%d %B %Y",
+												ifFormat    : "%d %B %Y %H:%M:%S",
+												button      : "calendarButton_start",
+												showsTime	: false
+											});
+										</script>
+									</div>
+									<div class="required" style="display: none">
+										<label for="publish_start_hour">{LABEL_TIME}</label>
+										<select id="publish_start_hour" name="publish_start_hour" class="time">
+											<!-- BEGIN date.start.hour -->
+											<option value="{VALUE}" {SELECTED}>{LABEL}</option>
+											<!-- END date.start.hour -->
+										</select>&nbsp;&nbsp;:&nbsp;
+										<select id="publish_start_minute" name="publish_start_minute" class="time">
+											<!-- BEGIN date.start.minute -->
+											<option value="{VALUE}" {SELECTED}>{LABEL}</option>
+											<!-- END date.start.minute -->
+										</select>
+									</div>
+								</div>
 							</div>
 						</fieldset>
 						<fieldset>
 							<div class="required">
-								<label for="publish_end">{LABEL_END_DATE}</label>
-								<input type="checkbox" id="publish_end" name="publish_end" class="check" {END_DATE_ACTIVE} />
-							</div>
-							<div class="required">
-								<label for="publish_end_date">{LABEL_DATE}</label>
-								<div id="publish_end_date_canvas" class="input-textdate" style="width:200px">{END_DATE_DISPLAY}</div>
-								<input type="hidden" id="publish_end_date" name="publish_end_date" value="{END_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_end" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
-								<script type="text/javascript">
-									Calendar.setup({
-										inputField  : "publish_end_date",
-										displayArea : "publish_end_date_canvas",
-										daFormat 	: "%d %B %Y",
-										ifFormat    : "%d %B %Y %H:%M:%S",
-										button      : "calendarButton_end",
-										showsTime	: false
-									});
-								</script>
-							</div>
-							<div class="required">
-								<label for="publish_end_hour">{LABEL_TIME}</label>
-								<select id="publish_end_hour" name="publish_end_hour" class="time">
-									<!-- BEGIN date.end.hour -->
-									<option value="{VALUE}" {SELECTED}>{LABEL}</option>
-									<!-- END date.end.hour -->
-								</select>&nbsp;&nbsp;:&nbsp;
-								<select id="publish_end_minute" name="publish_end_minute" class="time">
-									<!-- BEGIN date.end.minute -->
-									<option value="{VALUE}" {SELECTED}>{LABEL}</option>
-									<!-- END date.end.minute -->
-								</select>
+								<div class="widget filefield">
+									<div class="header">
+										<label for="publish_end">{LABEL_END_DATE}</label>
+										<input type="checkbox" id="publish_end" name="publish_end" class="check" {END_DATE_ACTIVE} />
+									</div>
+									<div class="required __temp" style="display: block">
+										<label for="publish_now">
+											{LABEL_DATE}
+										</label>
+										<div class="input-textdate disabled">Direct</div>
+									</div>
+									<div class="required" style="display: none;">
+										<label for="publish_end_date">{LABEL_DATE}</label>
+										<div id="publish_end_date_canvas" class="input-textdate">{END_DATE_DISPLAY}</div>
+										<input type="hidden" id="publish_end_date" name="publish_end_date" value="{END_DATE_VALUE}" /> <a href="javascript:;" id="calendarButton_end" class="date-button" rel="internal"><img src="images/date_select.gif" alt="{LABEL_DATE_CHOOSER}" /></a>
+										<script type="text/javascript">
+											Calendar.setup({
+												inputField  : "publish_end_date",
+												displayArea : "publish_end_date_canvas",
+												daFormat 	: "%d %B %Y",
+												ifFormat    : "%d %B %Y %H:%M:%S",
+												button      : "calendarButton_end",
+												showsTime	: false
+											});
+										</script>
+									</div>
+									<div class="required" style="display: none;">
+										<label for="publish_end_hour">{LABEL_TIME}</label>
+										<select id="publish_end_hour" name="publish_end_hour" class="time">
+											<!-- BEGIN date.end.hour -->
+											<option value="{VALUE}" {SELECTED}>{LABEL}</option>
+											<!-- END date.end.hour -->
+										</select>&nbsp;&nbsp;:&nbsp;
+										<select id="publish_end_minute" name="publish_end_minute" class="time">
+											<!-- BEGIN date.end.minute -->
+											<option value="{VALUE}" {SELECTED}>{LABEL}</option>
+											<!-- END date.end.minute -->
+										</select>
+									</div>
+								</div>
 							</div>
 						</fieldset>
 						<div class="form-navigation">
 							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
 						</div>
+						<script type="text/javascript">
+						<!--
+							jQuery(function(){
+								//Onload
+								jQuery(".widget", "#section-publish").find(":checkbox").each(function(i){
+									var $temp 		= jQuery(".widget", "#section-publish").eq(i).find(".required:first");
+									var $elements 	= jQuery(".widget", "#section-publish").eq(i).find(".required:gt(0)");
+
+									jQuery.debug($elements);
+									jQuery.debug($temp);
+									
+									if(jQuery(this).is(":checked")) {
+										$elements.show();
+										$temp.hide();
+									}
+									else {
+										$temp.show();
+										$elements.hide();
+									}
+								});
+								
+								jQuery(".widget", "#section-publish").find(":checkbox").bind("click", function(){
+									var $temp 		= jQuery(this).parent().parent().find(".__temp");
+									var $elements 	= $temp.nextAll();
+
+									if(jQuery(this).is(":checked")) {
+										$temp.fadeOut("fast", function(){
+											$elements.fadeIn("fast");
+										});
+									}
+									else {
+										$elements.fadeOut("fast", function(){
+											$temp.fadeIn("fast");
+										});
+									}
+								});
+							});
+						-->
+						</script>
 					</div>
 					<!-- BEGIN tab.meta -->
 					<div id="section-meta" class="anchor">

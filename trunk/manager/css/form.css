@@ -82,10 +82,14 @@ form.ui-tabs div.ui-tabs-panel fieldset div input {
 		width: 14px;
 		height: 14px;
 	}
+	form.ui-tabs div.ui-tabs-panel fieldset div div.input-textdate.disabled {
+		background-color: #eaeaea;
+		color: #999;
+	}
 	form.ui-tabs div.ui-tabs-panel fieldset div div.input-textdate {
-		width: 250px;
+		width: 200px !important;
 		float: left;
-		padding: 3px;
+		padding: 3px !important;
 		font-size: 13px;
 		border: 1px #999 solid;
 		margin: 0;
@@ -149,7 +153,8 @@ form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div.required,
 	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div.optional {
-		margin: 0;
+		margin-left: 10px;
+		margin-right: 10px;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .widget .row {
 		clear: both !important;
@@ -173,11 +178,12 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 		padding: 0 5px;
 		font-size: 12px !important;
 	}
-	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.required,
-	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.optional {
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .header {
 		background: #E0EEFF;
 		padding: 10px 11px 5px;
 		border-bottom: 1px #999 solid;
+		margin: 0 0 10px;
+		overflow: auto;
 		-moz-border-radius-topleft: 4px;
 		-moz-border-radius-topright: 4px;
 		-webkit-border-top-left-radius: 4px;		
