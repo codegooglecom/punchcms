@@ -5,17 +5,14 @@
 				<span class="menu"><a href="javascript:Alias.prepareAdd();" rel="internal">{BUTTON_ADD}</a></span>
 				{ALIASES}
 			</h2>
-				<form id="aliasForm" method="post" action="?"{FRM_STYLE} title="{FRM_HEADER}" class="fullpage ui-tabs ui-widget ui-widget-content ui-corner-all">
-					<!-- BEGIN error-main -->
-					<div class="error-main">
-						<p>{ERROR_ALIAS_MAIN}</p>
+				<!-- BEGIN error-main -->
+				<div class="ui-widget">
+					<div class="ui-state-error ui-corner-all">
+						<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>{ERROR_ALIAS_MAIN}</p>
 					</div>
-					<script type="text/javascript">
-					// <![CDATA[
-							Nifty("div.error-main");
-					// ]]>
-					</script>
-					<!-- END error-main -->
+				</div>
+				<!-- END error-main -->
+				<form id="aliasForm" method="post" action="?"{FRM_STYLE} title="{FRM_HEADER}" class="fullpage ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<div id="alias-fields" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
 						<fieldset>
 							<div class="required">

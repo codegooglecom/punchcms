@@ -15,14 +15,11 @@
 					</h3>
 					<form id="{FORM_NAME}" enctype="multipart/form-data" method="post" action="?">
 						<!-- BEGIN error-main -->
-						<div class="error-main">
-							<p>{ERROR_MAIN}</p>
+						<div class="ui-widget">
+							<div class="ui-state-error ui-corner-all">
+								<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>{ERROR_MAIN}</p>
+							</div>
 						</div>
-						<script type="text/javascript">
-						// <![CDATA[
-								Nifty("div.error-main");
-						// ]]>
-						</script>
 						<!-- END error-main -->
 
 						<div class="description">

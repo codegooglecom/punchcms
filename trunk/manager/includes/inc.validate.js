@@ -12,18 +12,18 @@ function validateForm(strFormId) {
 	/* to validate form elements.
 	/*********************************************************************/
 	
-	var blnReturn = true;
-	var arrMultyElements = new Array();
-	var objAlerter = new FormAlerter(strFormId);
+	var blnReturn 			= true;
+	var arrMultyElements 	= new Array();
+	var objAlerter 			= new FormAlerter(strFormId);
 
 	//*** Set the form object.
 	try {
-		var objForm = document.getElementById(strFormId);
+		var $objForm = jQuery("#" + strFormId);
 	} catch(e) {
 		alert("Er ging iets mis bij het aanroepen van het formulier.\nFoutmelding: " + e.message);
 	}
 	
-	if (objForm) {
+	if ($objForm.length > 0) {
 		/*** Loop through the elements of the form and look for elements 
 			  that need validation. */
 		var formElements = objForm.elements;
@@ -158,9 +158,8 @@ FormAlerter.prototype.pop = function(strElementName) {
 			}
 
 			//*** Remove error description from the element.
-			if (objErrorElmnt.className.toLowerCase() == "error") {
-				objParent.removeChild(objErrorElmnt);
-
+			if (objErrorElmnt.attr("class").toLowerCase() == "error") {
+				objErrorElmnt.remove();
 			}
 		}
 	}
@@ -169,11 +168,11 @@ FormAlerter.prototype.pop = function(strElementName) {
 FormAlerter.prototype.mainPush = function(strError) {
 	//*** Add main alert to the document.
 
-	var objForm = document.getElementById(this.id);
+	var $objForm = jQuery("#" + this.id);
 	var blnFound = false;
 	
 	try {
-		blnFound = Element.hasClassName(objForm.firstChild, "error-main");
+		blnFound = jQuery($objForm.next()).hasClass("error-main");
 	} catch(e) {
 		//alert(e.message);
 	}
@@ -182,7 +181,6 @@ FormAlerter.prototype.mainPush = function(strError) {
 		var objErrorElmnt = this.constructMainError(strError);
 	
 		objForm.insertBefore(objErrorElmnt, objForm.firstChild);
-		Nifty("div.error-main");
 	}
 	scroll(0,0);
 };
@@ -204,21 +202,40 @@ FormAlerter.prototype.mainPop = function() {
 FormAlerter.prototype.constructMainError = function(strError) {
 	//*** Build the MainError HTML. ***************************************
 	//*
+	//* <div class="ui-widget">
+	//* 	<div class="ui-state-error ui-corner-all">
+	//* 		<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>{ERROR_MAIN}</p>
+	//* 	</div>
+	//* </div>
+	//* 
 	//* <div class="error-main">
 	//*     <p>The error string.</p>
 	//* </div>
 	//*********************************************************************
 
-	var objCurrent = document.createElement("p");
-	var objText = document.createTextNode(strError); 
-	objCurrent.appendChild(objText);
+	var $uiWidget 		= jQuery("<div/>",{ "class": "ui-widget" });
+	var $uiStateError 	= jQuery("<div/>",{ "class": "ui-state-error ui-corner-all" });
+	var $paragraph		= jQuery("<p/>", {"text": strError});
+	var $uiIcon			= jQuery("<span/>", {
+							"css": {
+								"float":"left",
+								"margin-right":"0.3em"
+							},
+							"class":"ui-icon ui-icon-alert"
+						});
+	
+	var $objCurrent = $uiWidget.append($uiStateError.append($paragraph.append($uiIcon)));
+	
+//	var objCurrent = document.createElement("p");
+//	var objText = document.createTextNode(strError); 
+//	objCurrent.appendChild(objText);
+//
+//	var objDiv = document.createElement("div");
+//	objDiv.className = "error-main";
+//	objDiv.appendChild(objCurrent);
+//	objCurrent = objDiv;
 
-	var objDiv = document.createElement("div");
-	objDiv.className = "error-main";
-	objDiv.appendChild(objCurrent);
-	objCurrent = objDiv;
-
-	return objCurrent;
+	return $objCurrent;
 };
 
 FormAlerter.prototype.constructError = function(strError) {

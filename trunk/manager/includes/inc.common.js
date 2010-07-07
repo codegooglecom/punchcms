@@ -4,6 +4,11 @@ var strSortElement;
 
 jQuery(function(){
 	init(); 
+	jQuery(".ui-state-highlight, .ui-state-error")
+		.css("cursor", "pointer")
+		.live("click", function(){
+			jQuery(this).fadeOut("slow");
+		});
 });
 
 function init() {

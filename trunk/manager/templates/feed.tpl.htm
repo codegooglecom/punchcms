@@ -7,14 +7,11 @@
 			</h2>
 				<form id="feedForm" method="post" action="?"{FRM_STYLE} class="fullpage ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<!-- BEGIN error-main -->
-					<div class="error-main">
-						<p>{ERROR_FEED_MAIN}</p>
+					<div class="ui-widget">
+						<div class="ui-state-error ui-corner-all">
+							<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>{ERROR_FEED_MAIN}</p>
+						</div>
 					</div>
-					<script type="text/javascript">
-					// <![CDATA[
-							Nifty("div.error-main");
-					// ]]>
-					</script>
 					<!-- END error-main -->
 					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
 						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#alias-fields">{FRM_HEADER}</a></li>
