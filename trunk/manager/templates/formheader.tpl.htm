@@ -28,23 +28,24 @@ function DragDropLink(){
 
 //*** Resize tree container.
 function resizeTree() {
-	 var $objTree = jQuery("#treeContainer"),
-	 	 windowHeight = jQuery(window).height(),
-	 	 offsetY = objTree.offset().left,
-	 	 treeHeight = windowHeight - offsetY - 60;
+	 var $objTree 		= jQuery("#treeContainer"),
+	 	 windowHeight 	= jQuery(window).height(),
+	 	 offsetY 		= $objTree.offset().left,
+	 	 headerHeight	= 180,
+	 	 treeHeight 	= windowHeight - offsetY - headerHeight;
  	 
-	 objTree.css({ height: treeHeight + "px"});
+	 $objTree.css({ height: treeHeight + "px"});
 }
 
 //*** Onload action.
 jQuery(function(){
 	if(typeof $tabs == "undefined"){
 		$tabs = jQuery("#elementForm").tabs({
-					selected: {SELECTED_TAB}
-					});
+			selected: {SELECTED_TAB}
+		});
 	}
 	
-	if (jQuery("treeContainer").length > 0) {
+	if (jQuery("#treeContainer").length > 0) {
 		//*** On resize, recalculate the size of the treeview module.
 		jQuery(window).bind("resize", function(){	
 			resizeTree();
