@@ -110,7 +110,11 @@ switch ($strDispatch) {
 			),
 		  	'frm_feed'	=> array(
 				'type' => 'string',
-				'required' => TRUE,
+				'required' => FALSE,
+			),
+		  	'frm_feedpath'	=> array(
+				'type' => 'string',
+				'required' => FALSE,
 			),
 		  	'frm_maxitems'	=> array(
 				'type' => 'int',
@@ -370,7 +374,7 @@ switch ($strDispatch) {
 				'required' => TRUE,
 			),
 		  	'frm_basepath'	=> array(
-				'type' => 'string',
+				'type' => 'text',
 				'maxlength' => 250,
 				'required' => FALSE,
 			),

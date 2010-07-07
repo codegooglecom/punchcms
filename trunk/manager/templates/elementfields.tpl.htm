@@ -90,6 +90,7 @@
 							</div>
 							<!-- END elementtemplate -->
 							<!-- BEGIN elementfeed -->
+								<!-- BEGIN elementfeed.feed -->
 							<div class="required{ERROR_FEED_ON}">
 								<!-- BEGIN error-feedname -->
 								<p class="error">{ERROR_FEED}</p>
@@ -101,11 +102,25 @@
 									<!-- END list_feed -->
 								</select>
 							</div>
+								<!-- END elementfeed.feed -->
+								<!-- BEGIN elementfeed.path -->
+							<div class="required{ERROR_FEEDPATH_ON}">
+								<!-- BEGIN error-feedpath -->
+								<p class="error">{ERROR_FEEDPATH}</p>
+								<!-- END error-feedpath -->
+								<label for="frm_feedpath">* {LABEL_FEEDPATH}</label>
+								<select id="frm_feedpath" name="frm_feedpath" class="select-one">
+									<!-- BEGIN list_feedpath -->
+									<option value="{VALUE}" {SELECTED}>{TEXT}</option>
+									<!-- END list_feedpath -->
+								</select>
+							</div>
+								<!-- END elementfeed.path -->
 							<div class="required{ERROR_MAXITEMS_ON}">
 								<!-- BEGIN error-maxitems -->
 								<p class="error">{ERROR_MAXITEMS}</p>
 								<!-- END error-maxitems -->
-								<label for="frm_maxitems">* {LABEL_MAXITEMS}</label>
+								<label for="frm_maxitems">{LABEL_MAXITEMS}</label>
 								<input type="text" id="frm_maxitems" name="frm_maxitems" class="input-textsmall" value="{FORM_MAXITEMS_VALUE}" />
 							</div>
 							<!-- END elementfeed -->
@@ -219,6 +234,7 @@
 										<!-- BEGIN feed.field.value -->
 										<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
 										<!-- END feed.field.value -->
+										<input type="hidden" name="{FIELD_ID}" value="" />
 										<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
 										<script type="text/javascript">
 										// <![CDATA[

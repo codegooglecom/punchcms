@@ -25,7 +25,32 @@ class ElementFeed extends DBA_ElementFeed {
 		
 		return $objReturn;
 	}
+	
+	public function getStructuredNodes() {
+		$arrReturn = array();
 
+		$objFeed = Feed::selectByPK($this->getFeedId());
+		$strPath = $this->getFeedPath();
+		if (!empty($strPath)) $strPath = "/" . $strPath;
+		$strPath .= "/*";
+		$arrReturn = $objFeed->getStructuredNodes($strPath);
+		
+		return $arrReturn;
+	}	
+	
+	public function delete() {
+		self::$__object = "ElementFeed";
+		self::$__table = "pcms_element_feed";
+
+		//*** Remove Feed Fields.
+		$objFields = ElementFieldFeed::selectByElement($this->getElementId());
+		foreach ($objFields as $objField) {
+			$objField->delete();
+		}
+		
+		return parent::delete();
+	}
+	
 }
 
 ?>

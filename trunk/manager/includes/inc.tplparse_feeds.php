@@ -68,6 +68,9 @@ function parseFeeds($intFeedId, $strCommand) {
 					$objFeed->setBasepath($_CLEAN_POST["frm_basepath"]);
 					$objFeed->setRefresh($_CLEAN_POST["frm_refresh"]);
 					$objFeed->save();
+					
+					//*** Cache feed.
+					$objFeed->cache();
 				
 					header("Location: " . Request::getURI() . "/?cid=" . NAV_PCMS_FEEDS);
 					exit();

@@ -10,6 +10,7 @@ class DBA_ElementFieldFeed extends DBA__Object {
 	protected $id = NULL;
 	protected $elementid = 0;
 	protected $templatefieldid = 0;
+	protected $feedpath = "";
 	protected $xpath = "";
 	protected $languageid = 0;
 	protected $cascade = 0;

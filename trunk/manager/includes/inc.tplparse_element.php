@@ -403,6 +403,12 @@ function parsePages($intElmntId, $strCommand) {
 						$blnError = TRUE;
 					}
 					
+					if (is_null($_CLEAN_POST["frm_feedpath"])) {
+						$objTpl->setVariable("ERROR_FEEDPATH_ON", " error");
+						$objTpl->setVariable("ERROR_FEEDPATH", $objLang->get("feedPath", "formerror"));
+						$blnError = TRUE;
+					}
+					
 					if (is_null($_CLEAN_POST["frm_maxitems"])) {
 						$objTpl->setVariable("ERROR_MAXITEMS_ON", " error");
 						$objTpl->setVariable("ERROR_MAXITEMS", $objLang->get("maxItems", "formerror"));
@@ -470,6 +476,7 @@ function parsePages($intElmntId, $strCommand) {
 					//*** Input is valid. Save the element.
 					if ($strCommand == CMD_EDIT) {
 						$objElement = Element::selectByPK($intElmntId);
+						$objParent = Element::selectByPK($objElement->getParentId());
 					} else {
 						$objParent = Element::selectByPK($_POST["eid"]);
 						$objPermissions = new ElementPermission();
@@ -510,13 +517,17 @@ function parsePages($intElmntId, $strCommand) {
 					$objElement->save();
 					
 					if ($blnIsDynamic) {
-						$objElementFeed = new ElementFeed();
-						$objElementFeed->setFeedId($_CLEAN_POST["frm_feed"]);
-						$objElementFeed->setMaxItems($_CLEAN_POST["frm_maxitems"]);
+						$intFeedId = $_CLEAN_POST["frm_feed"];
+						if (empty($intFeedId)) $intFeedId = $objParent->getFeed()->getId();
 						
+						$objElementFeed = new ElementFeed();
+						$objElementFeed->setFeedId($intFeedId);
+						$objElementFeed->setFeedPath($_CLEAN_POST["frm_feedpath"]);
+						$objElementFeed->setMaxItems($_CLEAN_POST["frm_maxitems"]);
+												
 						$objElement->setFeed($objElementFeed);
 					}
-					
+										
 					//*** Handle the Alias value.
 					$objElement->setAlias($_CLEAN_POST["frm_alias"]);
 					
@@ -557,7 +568,7 @@ function parsePages($intElmntId, $strCommand) {
 					$objElement->setSchedule($objSchedule);
 
 					//*** Handle element values.
-					if (!$blnIsFolder && !$blnIsDynamic) {
+					if (!$blnIsFolder) {
 						//*** Cache and clear values.
 						$objCachedFields = $objElement->getFields(TRUE);
 						$objElement->clearFields();
@@ -583,6 +594,7 @@ function parsePages($intElmntId, $strCommand) {
 						}
 												
 						foreach ($_REQUEST as $key => $value) {
+							//*** Template Fields.
 							if (substr($key, 0, 4) == "efv_") {
 								//*** Get the template Id from the request
 								$intTemplateFieldId = substr($key, 4);
@@ -807,6 +819,35 @@ function parsePages($intElmntId, $strCommand) {
 									}
 								}
 							}
+							
+							//*** Feed Fields.
+							if (substr($key, 0, 4) == "tpf_") {
+								//*** Get the template Id from the request
+								$intTemplateFieldId = substr($key, 4);
+
+								//*** Is the Id really an Id?
+								if (is_numeric($intTemplateFieldId)) {
+									//*** Get the cascade value for the currentfield.
+									$arrCascades = explode(",", request("efv_{$intTemplateFieldId}_cascades"));
+
+									//*** Loop through the languages to insert the value by language.
+									$objContentLangs = ContentLanguage::select();
+									foreach ($objContentLangs as $objContentLanguage) {
+										//*** Insert the value by language.
+										(in_array($objContentLanguage->getId(), $arrCascades)) ? $blnCascade = TRUE : $blnCascade = FALSE;
+										$strValue = request("tpf_{$intTemplateFieldId}_{$objContentLanguage->getId()}");
+										
+										$objFeedField = new ElementFieldFeed();
+										$objFeedField->setElementId($objElement->getId());
+										$objFeedField->setTemplateFieldId($intTemplateFieldId);
+										$objFeedField->setFeedPath($strValue);
+										$objFeedField->setXpath($strValue);
+										$objFeedField->setLanguageId($objContentLanguage->getId());
+										$objFeedField->setCascade(($blnCascade) ? 1 : 0);
+										$objFeedField->save();
+									}
+								}
+							}
 						}
 												
 						//*** Remove deleted files.
@@ -858,7 +899,7 @@ function parsePages($intElmntId, $strCommand) {
 							$objElement->setLanguageActive($objContentLanguage->getId(), TRUE);
 						}
 					}
-
+					
 					//*** Redirect the page.
 					if (empty($strMessage)) {
 						header("Location: " . Request::getUri() . "/?cid=" . $_POST["cid"] . "&cmd=" . CMD_LIST . "&eid=" . $objElement->getParentId());
@@ -1658,28 +1699,47 @@ function parsePages($intElmntId, $strCommand) {
 						$objFeed = Feed::selectByPK($objElementFeed->getFeedId());
 						$objFeeds = new DBA__Collection();
 						$objFeeds->addObject($objFeed);
+						
+						$objParent = Element::selectByPK($objElement->getParentId());
 					} else {	
 						$objFeeds = Feed::select();
-					}
 					
-					if (is_object($objFeeds)) {
-						foreach ($objFeeds as $objFeed) {
-							$objTpl->setCurrentBlock("list_feed");
-							$objTpl->setVariable("FEEDLIST_VALUE", $objFeed->getId());
-							$objTpl->setVariable("FEEDLIST_TEXT", $objFeed->getName());
-							$objTpl->parseCurrentBlock();
+						$objParent = Element::selectByPK($intElmntId);
+					}
+
+					if (isset($objParent) && $objParent->getTypeId() == ELM_TYPE_DYNAMIC) {
+						$objNodes = $objParent->getFeed()->getStructuredNodes();
+						
+						if (count($objNodes) > 0) {
+							foreach ($objNodes as $objSubElement) {
+								$objTpl->setCurrentBlock("list_feedpath");
+								$objTpl->setVariable("VALUE", $objSubElement->getName());
+								$objTpl->setVariable("TEXT", $objSubElement->getName());
+								$objTpl->parseCurrentBlock();
+							}
+						}
+					} else {
+						if (is_object($objFeeds)) {
+							foreach ($objFeeds as $objFeed) {
+								$objTpl->setCurrentBlock("list_feed");
+								$objTpl->setVariable("FEEDLIST_VALUE", $objFeed->getId());
+								$objTpl->setVariable("FEEDLIST_TEXT", $objFeed->getName());
+								$objTpl->parseCurrentBlock();
+							}
 						}
 					}
 										
 					if ($strCommand == CMD_EDIT) {	
 						$objTpl->setVariable("FORM_MAXITEMS_VALUE", $objElementFeed->getMaxItems());
 						
+						//*** Template fields.
 						foreach ($objFields as $objField) {								
 							foreach ($objContentLangs as $objContentLanguage) {
 								$objTpl->setCurrentBlock("feed.field.value");
 								$objTpl->setVariable("FIELD_LANGUAGE_ID", "tpf_{$objField->getId()}_{$objContentLanguage->getId()}");
 
 								if (is_object($objElement)) {
+									echo "sdffsd";
 									$strValue = htmlspecialchars($objElement->getFeedValueByTemplateField($objField->getId(), $objContentLanguage->getId()));
 								} else {
 									$strValue = "";
@@ -1702,6 +1762,15 @@ function parsePages($intElmntId, $strCommand) {
 								
 							$objTpl->parseCurrentBlock();
 						}
+						
+						//*** Feed fields.
+						$objFeedFields = $objElementFeed->getStructuredNodes();
+						foreach ($objFeedFields as $objFeedField) {
+							$objTpl->setCurrentBlock("feed.tag");
+							$objTpl->setVariable("ID", "ff_" . $objFeedField->getName());
+							$objTpl->setVariable("TAG", $objFeedField->getName());
+							$objTpl->parseCurrentBlock();							
+						}			
 					}
 				}
 			}
@@ -1731,7 +1800,11 @@ function parsePages($intElmntId, $strCommand) {
 				$objTpl->setVariable("LABEL_TEMPLATENAME", $objLang->get("template", "form"));
 				
 				if ($blnIsDynamic) {
-					$objTpl->setVariable("LABEL_FEEDNAME", $objLang->get("feed", "form"));
+					if (isset($objParent) && $objParent->getTypeId() == ELM_TYPE_DYNAMIC) {
+						$objTpl->setVariable("LABEL_FEEDPATH", $objLang->get("basepath", "form"));
+					} else {
+						$objTpl->setVariable("LABEL_FEEDNAME", $objLang->get("feed", "form"));	
+					}					
 					$objTpl->setVariable("LABEL_MAXITEMS", $objLang->get("maxItems", "form"));
 				}
 			}

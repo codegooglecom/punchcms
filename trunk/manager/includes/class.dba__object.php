@@ -1,9 +1,11 @@
 <?php
 
-/* General DBA Object Class v0.2.0
+/* General DBA Object Class v0.2.1
  * Holds the properties and methods of a DBA objects.
  *
  * CHANGELOG
+ * version 0.2.1, 07 July 2010
+ *   FIX: Fixed the delete method. Account Id had a faulty check.
  * version 0.2.0, 03 August 2009
  *   FIX: Fixed the __set method. Booleans get converted to 0 or 1.
  * version 0.1.9, 23 March 2009
@@ -192,7 +194,7 @@ class DBA__Object {
 
 		if ($this->id > 0) {
 			$strSql = sprintf("DELETE FROM " . self::$__table . " WHERE id = %s", self::quote($this->id));
-			if (!is_null($accountId)) {
+			if (is_numeric($accountId)) {
 				$strSql .= sprintf(" AND `accountId` = %s", self::quote($accountId));
 			}
 

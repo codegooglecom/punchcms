@@ -74,6 +74,9 @@ class Element extends DBA_Element {
 		//*** Delete languages.
 		$this->clearLanguages();
 		
+		//*** Delete feed.
+		$this->clearFeed();
+		
 		//*** Delete child elements.
 		$objElements = $this->getElements();
 		foreach ($objElements as $objElement) {

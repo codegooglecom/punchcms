@@ -64,6 +64,7 @@
 		<column name="id" primaryKey="true" />
 		<column name="elementId" type="integer" />
 		<column name="templateFieldId" type="integer" />
+		<column name="feedPath" type="varchar" />
 		<column name="xpath" type="varchar" />
 		<column name="languageId" type="integer" />
 		<column name="cascade" type="integer" />

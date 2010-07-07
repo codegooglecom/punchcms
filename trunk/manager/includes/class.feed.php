@@ -52,6 +52,44 @@ class Feed extends DBA_Feed {
 		return parent::select($strSql);
 	}
 
+	public function cache() {
+		global $_PATHS;
+		
+		$strHash = md5($this->getFeed());	
+		@file_put_contents($_PATHS['upload'] . $strHash, file_get_contents($this->getFeed()));
+	}
+	
+	public function getRawBody() {
+		global $_PATHS;
+		
+		$strHash = md5($this->getFeed());	
+		$strReturn = @file_get_contents($_PATHS['upload'] . $strHash);
+		
+		return $strReturn;
+	}
+	
+	public function getBody($strXpath = "") {
+		$strBody = $this->getRawBody();
+		
+		$objXml = simplexml_load_string($strBody);
+		$objReturn = $objXml->xpath($this->getBasepath() . $strXpath);
+		
+		return $objReturn;
+	}
+	
+	public function getStructuredNodes($strXpath = "") {
+		$arrReturn = array();
+		
+		$objElements = $this->getBody($strXpath);
+		foreach ($objElements as $objElement) {
+			if ($objElement instanceof SimpleXMLElement && !isset($arrReturn[$objElement->getName()])) {
+				$arrReturn[$objElement->getName()] = $objElement;
+			}
+		}
+		
+		return $arrReturn;
+	}
+	
 }
 
 ?>

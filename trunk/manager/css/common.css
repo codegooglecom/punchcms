@@ -523,6 +523,7 @@ div.center-wrap form {
 
 #feedfields-wrapper {
 	position: relative;
+	float: left;
 }
 
 #svgbasics {
