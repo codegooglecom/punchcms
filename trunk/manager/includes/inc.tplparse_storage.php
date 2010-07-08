@@ -294,14 +294,16 @@ function parseFiles($intElmntId, $strCommand) {
 					$objTpl->setVariable("ERROR_NAME", $objLang->get("templateName", "formerror"));
 					$blnError = TRUE;
 				}
+				
+				if(empty($_FILES['frm_file_new']['name'][0])){
+					$objTpl->setVariable("ERROR_FILE_ON", " error");
+					$objTpl->setVariable("ERROR_FILE", $objLang->get("noFile", "formerror"));
+					$blnError = TRUE;
+				}
 
 				if (is_null($_CLEAN_POST["frm_description"])) {
 					$objTpl->setVariable("ERROR_NOTES_ON", " error");
 					$objTpl->setVariable("ERROR_NOTES", $objLang->get("commonTypeText", "formerror"));
-					$blnError = TRUE;
-				}
-				// Double code here?
-				if (is_null($_CLEAN_POST["dispatch"])) {
 					$blnError = TRUE;
 				}
 
@@ -354,7 +356,7 @@ function parseFiles($intElmntId, $strCommand) {
 							$strOldFile = $objData->getLocalName();
 						}
 																				
-						if (isset($_FILES['frm_file_new'])) {	
+						if (isset($_FILES['frm_file_new'])) {
 							$objMultiUpload->setExtensions(explode(" ", Setting::getValueByName('file_upload_extensions') . " " . Setting::getValueByName('image_upload_extensions')));
 							$objMultiUpload->setTempNames($_FILES['frm_file_new']['tmp_name']);
 							$objMultiUpload->setOriginalNames($_FILES['frm_file_new']['name']);
@@ -365,10 +367,12 @@ function parseFiles($intElmntId, $strCommand) {
 								//*** Everything is cool.
 								$localValues = $objMultiUpload->getLocalNames();
 								$arrCleanup = array();
+								print_r($objMultiUpload->getOriginalNames());
+								exit;
 								foreach ($objMultiUpload->getOriginalNames() as $subkey => $subvalue) {
 									$blnSkipData = FALSE;
 									
-									if (!empty($subvalue)) {										
+									if (!is_null($subvalue)) {										
 										if ($strCommand == CMD_ADD) {
 											if (FileIO::extension($subvalue) == "zip") {
 												//*** Zip file. Extract and add.
@@ -474,7 +478,8 @@ function parseFiles($intElmntId, $strCommand) {
 
 					//*** Redirect the page.
 					if (empty($strMessage)) {
-						header("Location: " . Request::getUri() . "/?cid=" . $_POST["cid"] . "&cmd=" . CMD_LIST . "&eid=" . $objElement->getParentId());
+						$intEid = (is_object($objElement)) ? $objElement->getParentId() : 0;
+						header("Location: " . Request::getUri() . "/?cid=" . $_POST["cid"] . "&cmd=" . CMD_LIST . "&eid=" . $intEid);
 						exit();
 					} else {
 						echo $strMessage;
