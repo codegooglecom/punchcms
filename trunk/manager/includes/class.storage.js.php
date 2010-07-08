@@ -32,7 +32,7 @@ Storage.initField = function(strId, objOptions) {
  */
 function FileField(strId, objOptions) {
 	this.id = strId;
-	this.$trigger = jQuery(strId);
+	this.$trigger = jQuery("#" + strId);
 	this.subFiles = {};
 	this.maxFiles = 1;
 	this.maxChar = 50;
@@ -141,8 +141,8 @@ FileField.prototype.transferField = function() {
 	
 	this.subFiles.toUpload.push($objFilledElement);
 	
-	filledElement.id = this.id + "_" + this.fileCount++;
-	filledElement.name = this.id + "_new[]";
+	$objFilledElement.attr("id", this.id + "_" + this.fileCount++);
+	$objFilledElement.attr("name", this.id + "_new[]");
 	
 	//*** Create empty replacement.
 	var $objElement = jQuery("<input />", {
@@ -190,7 +190,7 @@ FileField.prototype.addUploadRow = function($element) {
 	});
 	$objRow.append($objButton);
 	
-	var objRowValue = jQuery("<p/>", {
+	var $objRowValue = jQuery("<p/>", {
 			html: this.shortName($element.val(), this.maxChar)
 	});
 	$objRow.append($objRowValue);

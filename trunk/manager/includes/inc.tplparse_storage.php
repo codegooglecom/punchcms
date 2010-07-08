@@ -294,9 +294,11 @@ function parseFiles($intElmntId, $strCommand) {
 				}
 				
 				if((!$blnIsFolder) && empty($_FILES['frm_file_new']['name'][0])){
-					$objTpl->setVariable("ERROR_FILE_ON", " error");
-					$objTpl->setVariable("ERROR_FILE", $objLang->get("noFile", "formerror"));
-					$blnError = TRUE;
+					if(empty($_CLEAN_POST['frm_file'])){
+						$objTpl->setVariable("ERROR_FILE_ON", " error");
+						$objTpl->setVariable("ERROR_FILE", $objLang->get("noFile", "formerror"));
+						$blnError = TRUE;
+					}
 				}
 
 				if (is_null($_CLEAN_POST["frm_description"])) {
@@ -474,8 +476,8 @@ function parseFiles($intElmntId, $strCommand) {
 
 					//*** Redirect the page.
 					if (empty($strMessage)) {
-						$intEid = (is_object($objElement)) ? $objElement->getParentId() : 0;
-						header("Location: " . Request::getUri() . "/?cid=" . $_POST["cid"] . "&cmd=" . CMD_LIST . "&eid=" . $intEid);
+						$intElmntId = ($blnIsFolder) ? $intElmntId : $objElement->getParentId();
+						header("Location: " . Request::getUri() . "/?cid=" . $_POST["cid"] . "&cmd=" . CMD_LIST . "&eid=" . $intElmntId);
 						exit();
 					} else {
 						echo $strMessage;

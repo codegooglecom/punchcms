@@ -180,6 +180,10 @@ switch ($strDispatch) {
 				'type' => 'text',
 				'maxlength' => 250,
 			),
+		  	'frm_file'	=> array(
+				'type' => 'text',
+				'maxlength' => 250,
+			),
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
