@@ -26,7 +26,6 @@ img {
 	margin: 80px auto 0 auto;
 	background: #F6F8FC url(../images/login-bg.gif) left top repeat-y;
 	padding: 0;
-	text-align: center;
 }
 
 #login #canvas-top {
@@ -181,12 +180,6 @@ img {
 #login #canvas a.forgot:visited 
 {
 	font: normal 10px Verdana;
-}
-
-#login #canvas p {
-	font: bold 18px Arial;
-	padding: 10px 0 30px 0;
-	color: #444;
 }
 
 /*** END Login page ***/
