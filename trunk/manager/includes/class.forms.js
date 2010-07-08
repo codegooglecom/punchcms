@@ -21,7 +21,7 @@ Forms.serialize = function (strFormId) {
 			strReturn += jQuery(this).sortable("serialize", {key: jQuery(this).attr("id") + "[]"}) + "&";
 		}
 		catch (e) {
-			jQuery.debug({title: "*** ERROR CAUGHT IN Forms.serialize ***", content: e.message});
+			jQuery.debug({title: "*** ERROR CAUGHT IN Forms.serialize ***", content: e.message, "type":"error"});
 		}
 	});
 	
@@ -56,12 +56,8 @@ Forms.clear = function(strFormId, arrExclude) {
 		});
 	}
 	
-	//*** Debug info.
-	jQuery.debug({title: "** Event **", content: "Form clear triggered"});
-	
 	var objForm = jQuery("#" + strFormId);
 	if (objForm) {
-		jQuery.debug({content: objForm.find(":input")});
 		var objElements = objForm.find(":input");
 
 		for (var n = 0; n < objElements.length; n++) {
@@ -229,7 +225,7 @@ Forms.parseAjaxResponse = function(objResponse) {
 				
 		} catch (e) {
 			//*** Could not find the element.
-			jQuery.debug({title: "*** ERROR CAUGHT IN Forms.parseAjaxResponse ***", content: e.message});
+			jQuery.debug({title: "*** ERROR CAUGHT IN Forms.parseAjaxResponse ***", content: e.message, "type":"error"});
 			blnReturn = false;
 		}
 	});

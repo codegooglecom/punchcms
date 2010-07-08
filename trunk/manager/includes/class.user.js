@@ -45,7 +45,6 @@ User.show = function(objResponse, strHeader) {
  */
 User.sortable = function(){
 	jQuery("#rights, #allrights, #groups, #allgroups").sortable("refresh");
-	jQuery.debug({content: "User.sortable triggered", title: "** EVENT **"});
 }
 
 User.refresh = function(objResponse, strHeader) {

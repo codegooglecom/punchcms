@@ -118,7 +118,6 @@ FileField.prototype.toScreen = function() {
 
 	var strId = this.id;
 	if(jQuery("#filelist_" + this.id).children().length > 1) {
-		jQuery.debug({content: "Experimental update! Check class.storage.js row 121 for debugging."});
 		jQuery("#filelist_" + this.id).sortable({
 			dropOnEmpty: true,
 			update: function(){
@@ -155,7 +154,6 @@ FileField.prototype.transferField = function() {
 		}
 	});
 
-	jQuery.debug({title: "objFilledElement", content: $objFilledElement});
 	$objElement.insertBefore($objFilledElement.next());
 	
 	//*** Add row to the upload list.

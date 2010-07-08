@@ -27,9 +27,8 @@ Application.load = function(intId) {
 }
 
 Application.write = function(strFormId) {
-	var strUrl = "ajax.php";
+	var strUrl 	= "ajax.php";
 	var strPost = Forms.serialize(strFormId) + "&cmd=Application::add";
-	jQuery.debug({title: "Application.write strPost", content: strPost});
 	
 	jQuery("#userProgress").fadeIn("fast");
 	var request = jQuery.post(strUrl, strPost, Application.refresh, "xml");

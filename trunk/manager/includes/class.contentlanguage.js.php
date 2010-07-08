@@ -875,7 +875,7 @@ FileField.prototype.toScreen = function() {
 		
 		var strId = this.id;
 		
-		$.debug({content: $("#" + this.id + "_widget h3").next()});
+		jQuery.debug({content: $("#" + this.id + "_widget h3").next()});
 		$("#" + this.id + "_widget h3").next().each(function(){
 			if($(this).children().length < 0){
 				jQuery.debug("Niet zichtbaar");
