@@ -78,11 +78,12 @@ ValidForms.prototype.form = function(strFormId) {
 };	
 
 ValidForms.prototype.validate = function(strFormId) {
-	if (this.forms[strFormId]) {
-		return validateForm(strFormId);
-	} else {
-		return true;
-	}
+//	if (this.forms[strFormId]) {
+//		return validateForm(strFormId);
+//	} else {
+//		return true;
+//	}
+	return true; // TODO: ValidForm Builder javascript validation
 };
 
 ValidForm.prototype.addElement = function(strElementName, intValidType) {
