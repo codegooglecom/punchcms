@@ -37,7 +37,7 @@
 						<fieldset>
 							<div class="optional{ERROR_ACTIVE_ON}">
 								<!-- BEGIN error-active -->
-								<p class="error">{ERROR_ACTIVE}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_ACTIVE}</p>
 								<!-- END error-active -->
 								<label for="frm_active">{LABEL_ACTIVE}</label>
 								<input type="checkbox" id="frm_active" name="frm_active" class="check" {FORM_ACTIVE_VALUE} />
@@ -45,21 +45,21 @@
 							<!-- BEGIN elementispage -->
 							<div class="optional{ERROR_ISPAGE_ON}">
 								<!-- BEGIN error-element-ispage -->
-								<p class="error">{ERROR_ISPAGE}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_ISPAGE}</p>
 								<!-- END error-element-ispage -->
 								<label for="frm_ispage" class="check"><input type="checkbox" id="frm_ispage" name="frm_ispage" class="check" {FORM_ISPAGE_VALUE} /> {LABEL_ISPAGE}</label>
 							</div>
 							<!-- END elementispage -->
 							<div class="required{ERROR_NAME_ON}">
 								<!-- BEGIN error-element-name -->
-								<p class="error">{ERROR_NAME}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_NAME}</p>
 								<!-- END error-element-name -->
 								<label for="frm_name">* {LABEL_ELEMENTNAME}</label>
 								<input type="text" id="frm_name" name="frm_name" class="input-textlarge" value="{FORM_NAME_VALUE}" />
 							</div>
 							<div class="optional{ERROR_APINAME_ON}">
 								<!-- BEGIN error-element-apiname -->
-								<p class="error">{ERROR_APINAME}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_APINAME}</p>
 								<!-- END error-element-apiname -->
 								<label for="frm_apiname"><a href="#" title="{APINAME_DESCRIPTION}" rel="internal">API</a> {LABEL_NAME}</label>
 								<input type="text" id="frm_apiname" name="frm_apiname" class="input-textlarge" value="{FORM_APINAME_VALUE}" />
@@ -67,7 +67,7 @@
 							</div>
 							<div class="optional{ERROR_ALIAS_ON}">
 								<!-- BEGIN error-element-alias -->
-								<p class="error">{ERROR_ALIAS}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_ALIAS}</p>
 								<!-- END error-element-alias -->
 								<label for="frm_alias">{LABEL_ALIAS}</label>
 								<input type="text" id="frm_alias" name="frm_alias" class="input-textlarge" value="{FORM_ALIAS_VALUE}" />
@@ -76,7 +76,7 @@
 							<!-- BEGIN elementtemplate -->
 							<div class="required{ERROR_TEMPLATE_ON}">
 								<!-- BEGIN error-templatename -->
-								<p class="error">{ERROR_TEMPLATE}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_TEMPLATE}</p>
 								<!-- END error-templatename -->
 								<label for="frm_template">* {LABEL_TEMPLATENAME}</label>
 								<select id="frm_template" name="frm_template" class="select-one">
@@ -90,7 +90,7 @@
 								<!-- BEGIN elementfeed.feed -->
 							<div class="required{ERROR_FEED_ON}">
 								<!-- BEGIN error-feedname -->
-								<p class="error">{ERROR_FEED}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_FEED}</p>
 								<!-- END error-feedname -->
 								<label for="frm_feed">* {LABEL_FEEDNAME}</label>
 								<select id="frm_feed" name="frm_feed" class="select-one">
@@ -103,7 +103,7 @@
 								<!-- BEGIN elementfeed.path -->
 							<div class="required{ERROR_FEEDPATH_ON}">
 								<!-- BEGIN error-feedpath -->
-								<p class="error">{ERROR_FEEDPATH}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_FEEDPATH}</p>
 								<!-- END error-feedpath -->
 								<label for="frm_feedpath">* {LABEL_FEEDPATH}</label>
 								<select id="frm_feedpath" name="frm_feedpath" class="select-one">
@@ -115,7 +115,7 @@
 								<!-- END elementfeed.path -->
 							<div class="required{ERROR_MAXITEMS_ON}">
 								<!-- BEGIN error-maxitems -->
-								<p class="error">{ERROR_MAXITEMS}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_MAXITEMS}</p>
 								<!-- END error-maxitems -->
 								<label for="frm_maxitems">{LABEL_MAXITEMS}</label>
 								<input type="text" id="frm_maxitems" name="frm_maxitems" class="input-textsmall" value="{FORM_MAXITEMS_VALUE}" />
@@ -123,7 +123,7 @@
 							<!-- END elementfeed -->
 							<div class="optional{ERROR_NOTES_ON}">
 								<!-- BEGIN error-element-notes -->
-								<p class="error">{ERROR_NOTES}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_NOTES}</p>
 								<!-- END error-element-notes -->
 								<label for="frm_description">{LABEL_NOTES}</label>
 								<textarea id="frm_description" name="frm_description" class="input-textmedium" cols="32" rows="6">{FORM_NOTES_VALUE}</textarea>
@@ -149,7 +149,7 @@
 							<!-- BEGIN elementlanguage -->
 							<div class="optional{ERROR_LANGUAGE_ON}">
 								<!-- BEGIN error-language -->
-								<p class="error">{ERROR_LANGUAGE}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_LANGUAGE}</p>
 								<!-- END error-language -->
 								<label for="frm_language">
 									<a href="javascript:;" rel="internal" class="fieldButton"><img id="language_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
@@ -188,7 +188,7 @@
 							<!-- BEGIN feedlanguage -->
 							<div class="optional{ERROR_LANGUAGE_ON}">
 								<!-- BEGIN feed.error-language -->
-								<p class="error">{ERROR_LANGUAGE}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_LANGUAGE}</p>
 								<!-- END feed.error-language -->
 								<label for="frm_language">
 									<a href="javascript:;" rel="internal" class="fieldButton"><img id="language_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
@@ -319,7 +319,7 @@
 										<input type="checkbox" id="publish_end" name="publish_end" class="check" {END_DATE_ACTIVE} />
 									</div>
 									<div class="required __temp" style="display: block">
-										<label for="publish_now">
+										<label>
 											{LABEL_DATE}
 										</label>
 										<div class="input-textdate disabled">Direct</div>
@@ -366,9 +366,6 @@
 									var $temp 		= jQuery(".widget", "#section-publish").eq(i).find(".required:first");
 									var $elements 	= jQuery(".widget", "#section-publish").eq(i).find(".required:gt(0)");
 
-									jQuery.debug($elements);
-									jQuery.debug($temp);
-									
 									if(jQuery(this).is(":checked")) {
 										$elements.show();
 										$temp.hide();
@@ -409,7 +406,7 @@
 							<!-- BEGIN meta-language -->
 							<div class="optional{ERROR_META_LANGUAGE_ON}">
 								<!-- BEGIN error-meta-language -->
-								<p class="error">{ERROR_META_LANGUAGE}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_META_LANGUAGE}</p>
 								<!-- END error-meta-language -->
 								<label for="frm_meta_language">
 									<a href="javascript:;" rel="internal" class="fieldButton"><img id="meta_language_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
@@ -438,7 +435,7 @@
 						<fieldset>
 							<div class="optional{ERROR_META_TITLE_ON}">
 								<!-- BEGIN error-meta-title -->
-								<p class="error">{ERROR_META_TITLE}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_META_TITLE}</p>
 								<!-- END error-meta-title -->
 								<label for="frm_meta_title"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_title_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_TITLE}</label>
 								<input type="text" id="frm_meta_title" name="frm_meta_title" class="input-textlarge" value="{FORM_META_TITLE_VALUE}" onblur="objMetaLanguage.toTemp(this.id);" />
@@ -449,7 +446,7 @@
 							</div>
 							<div class="optional{ERROR_META_KEYWORDS_ON}">
 								<!-- BEGIN error-meta-keywords -->
-								<p class="error">{ERROR_META_KEYWORDS}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_META_KEYWORDS}</p>
 								<!-- END error-meta-keywords -->
 								<label for="frm_meta_keywords"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_keywords_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_KEYWORDS}</label>
 								<textarea id="frm_meta_keywords" name="frm_meta_keywords" class="input-textmedium" cols="32" rows="6" onblur="objMetaLanguage.toTemp(this.id);">{FORM_META_KEYWORDS_VALUE}</textarea>
@@ -461,7 +458,7 @@
 							</div>
 							<div class="optional{ERROR_META_DESCRIPTION_ON}">
 								<!-- BEGIN error-meta-description -->
-								<p class="error">{ERROR_META_DESCRIPTION}</p>
+								<p class="ui-state-error ui-corner-all">{ERROR_META_DESCRIPTION}</p>
 								<!-- END error-meta-description -->
 								<label for="frm_meta_description"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_description_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_DESCRIPTION}</label>
 								<textarea id="frm_meta_description" name="frm_meta_description" class="input-textmedium" cols="32" rows="6" onblur="objMetaLanguage.toTemp(this.id);">{FORM_META_DESCRIPTION_VALUE}</textarea>
