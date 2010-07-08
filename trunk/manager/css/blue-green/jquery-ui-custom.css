@@ -80,7 +80,9 @@
 	color: #2C457C !important;
 	font-weight: normal !important;
 	}
-	.tabs .ui-state-active a {
+	.tabs .ui-state-active a,
+	.tabs .ui-state-active a:hover {
+		background: url("images/ui-bg_flat_100_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF !important;
 		color: #2C457C !important;
 	}
 .tabs .ui-state-hover {
