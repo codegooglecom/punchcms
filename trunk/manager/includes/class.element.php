@@ -325,6 +325,32 @@ class Element extends DBA_Element {
 		return $objReturn;
 	}
 
+	public function getFeedValueByTemplateField($intFieldId, $intLanguageId = 0) {
+		$strReturn = NULL;
+		
+		if ($this->id > 0) {
+			if ($intLanguageId == 0) $intLanguageId = ContentLanguage::getDefault()->getId();
+
+			$objField = $this->getFeedFieldByTemplateField($intFieldId, $intLanguageId);
+			if (is_object($objField)) {
+				$strReturn = str_replace("/", "----", $objField->getFeedPath());
+			}
+		}
+
+		return $strReturn;
+	}
+
+	public function getFeedFieldByTemplateField($intFieldId, $intLanguageId = 0) {
+		$objReturn = NULL;
+
+		if ($this->id > 0) {
+			if ($intLanguageId == 0) $intLanguageId = ContentLanguage::getDefault()->getId();
+			$objReturn = ElementFieldFeed::selectByTemplateField($intFieldId, $intLanguageId);
+		}
+
+		return $objReturn;
+	}
+
 	public function getField($strName) {
 		$objReturn = NULL;
 
@@ -568,8 +594,10 @@ class Element extends DBA_Element {
 		if ($this->id > 0) {
 			$objAliases = Alias::selectByUrl($this->id, TRUE);
 
-			foreach ($objAliases as $objAlias) {
-				$objAlias->delete();
+			if (is_object($objAliases)) {
+				foreach ($objAliases as $objAlias) {
+					$objAlias->delete();
+				}
 			}
 		}
 	}

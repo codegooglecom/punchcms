@@ -518,7 +518,7 @@ function parsePages($intElmntId, $strCommand) {
 					
 					if ($blnIsDynamic) {
 						$intFeedId = $_CLEAN_POST["frm_feed"];
-						if (empty($intFeedId)) $intFeedId = $objParent->getFeed()->getId();
+						if (empty($intFeedId)) $intFeedId = $objParent->getFeed()->getFeedId();
 						
 						$objElementFeed = new ElementFeed();
 						$objElementFeed->setFeedId($intFeedId);
@@ -840,8 +840,8 @@ function parsePages($intElmntId, $strCommand) {
 										$objFeedField = new ElementFieldFeed();
 										$objFeedField->setElementId($objElement->getId());
 										$objFeedField->setTemplateFieldId($intTemplateFieldId);
-										$objFeedField->setFeedPath($strValue);
-										$objFeedField->setXpath($strValue);
+										$objFeedField->setFeedPath(str_replace("----", "/", $strValue));
+										$objFeedField->setXpath(str_replace("----", "/", $strValue));
 										$objFeedField->setLanguageId($objContentLanguage->getId());
 										$objFeedField->setCascade(($blnCascade) ? 1 : 0);
 										$objFeedField->save();
@@ -899,7 +899,7 @@ function parsePages($intElmntId, $strCommand) {
 							$objElement->setLanguageActive($objContentLanguage->getId(), TRUE);
 						}
 					}
-					
+										
 					//*** Redirect the page.
 					if (empty($strMessage)) {
 						header("Location: " . Request::getUri() . "/?cid=" . $_POST["cid"] . "&cmd=" . CMD_LIST . "&eid=" . $objElement->getParentId());
@@ -1710,6 +1710,16 @@ function parsePages($intElmntId, $strCommand) {
 					if (isset($objParent) && $objParent->getTypeId() == ELM_TYPE_DYNAMIC) {
 						$objNodes = $objParent->getFeed()->getStructuredNodes();
 						
+						$objTpl->setCurrentBlock("list_feedpath");
+						$objTpl->setVariable("VALUE", "");
+						$objTpl->setVariable("TEXT", "Basepath");
+						$objTpl->parseCurrentBlock();
+						
+						$objTpl->setCurrentBlock("list_feedpath");
+						$objTpl->setVariable("VALUE", "");
+						$objTpl->setVariable("TEXT", "-------------");
+						$objTpl->parseCurrentBlock();
+						
 						if (count($objNodes) > 0) {
 							foreach ($objNodes as $objSubElement) {
 								$objTpl->setCurrentBlock("list_feedpath");
@@ -1739,7 +1749,6 @@ function parsePages($intElmntId, $strCommand) {
 								$objTpl->setVariable("FIELD_LANGUAGE_ID", "tpf_{$objField->getId()}_{$objContentLanguage->getId()}");
 
 								if (is_object($objElement)) {
-									echo "sdffsd";
 									$strValue = htmlspecialchars($objElement->getFeedValueByTemplateField($objField->getId(), $objContentLanguage->getId()));
 								} else {
 									$strValue = "";
@@ -1756,7 +1765,7 @@ function parsePages($intElmntId, $strCommand) {
 							if (is_object($objElement)) {
 								$objFeedField = $objElement->getFeedFieldByTemplateField($objField->getId());
 								if (is_object($objFeedField)) {
-									$objTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+									$objTpl->setVariable("FIELD_CASCADES", implode(",", $objFeedField->getCascades()));
 								}
 							}
 								
@@ -1765,12 +1774,10 @@ function parsePages($intElmntId, $strCommand) {
 						
 						//*** Feed fields.
 						$objFeedFields = $objElementFeed->getStructuredNodes();
-						foreach ($objFeedFields as $objFeedField) {
-							$objTpl->setCurrentBlock("feed.tag");
-							$objTpl->setVariable("ID", "ff_" . $objFeedField->getName());
-							$objTpl->setVariable("TAG", $objFeedField->getName());
-							$objTpl->parseCurrentBlock();							
-						}			
+						$strFields = renderRecursiveFeedFields($objFeedFields);
+						$objTpl->setCurrentBlock("feed.tag");
+						$objTpl->setVariable("FEEDFIELDS", $strFields);
+						$objTpl->parseCurrentBlock();
 					}
 				}
 			}
@@ -1965,6 +1972,22 @@ function parsePages($intElmntId, $strCommand) {
 	}
 
 	return $objTpl->get();
+}
+
+function renderRecursiveFeedFields($objFeedFields, $strXPath = "") {
+	foreach ($objFeedFields as $objFeedField) {
+		$strPath = (empty($strXPath)) ? $objFeedField->getName() : $strXPath . "----" . $objFeedField->getName();
+		$strReturn .= "<li id=\"ff_" . $strPath . "\">" . $objFeedField->getName();
+		$objChildren = $objFeedField->children();
+		if (count($objChildren) > 0) {
+			$strReturn .= "<ul>";
+			$strReturn .= renderRecursiveFeedFields($objChildren, $strPath);
+			$strReturn .= "</ul>";
+		}
+		$strReturn .= "</li>";
+	}
+
+	return $strReturn;
 }
 
 ?>

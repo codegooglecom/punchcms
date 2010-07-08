@@ -17,7 +17,7 @@
  */
 
 //*** Enable the debugger:
-window.debug = true;
+window.debug = false;
 
 /*
  * Debug function

@@ -514,7 +514,12 @@ div.center-wrap form {
 }
 
 #templatefields li {
-	cursor: default;
+	cursor: text;
+}
+
+#templatefields textarea.disabled {
+	background: #eee;
+	color: #999;
 }
 
 #feed-wrapper {

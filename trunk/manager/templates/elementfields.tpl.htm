@@ -232,6 +232,7 @@
 										<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
 										<!-- END feed.field.value -->
 										<input type="hidden" name="{FIELD_ID}" value="" />
+										<textarea id="{FIELD_ID}_alt" class="input-feed" rows="2" cols="20" ></textarea>
 										<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
 										<script type="text/javascript">
 										// <![CDATA[
@@ -243,7 +244,7 @@
 								</ul>
 								<ul id="feedfields" class="sortable">
 									<!-- BEGIN feed.tag -->
-									<li id="{ID}">{TAG}</li>
+									{FEEDFIELDS}
 									<!-- END feed.tag -->
 								</ul>
 							</div>

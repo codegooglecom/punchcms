@@ -84,7 +84,7 @@ function xhtmlsave($strInput) {
 	return str_replace("&", "&amp;", $strInput);
 }
 
-function getShortValue($strInput, $intCharLength = 200, $blnPreserveWord = TRUE, $strAppend = " ...", $blnHtml = TRUE) {
+function getShortValue($strInput, $intCharLength = 200, $blnPreserveWord = TRUE, $strAppend = " ...") {
 	//*** Get a short version of the value.
 	$strReturn = $strInput; // Set the default return value.
 

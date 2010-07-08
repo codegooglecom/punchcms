@@ -28,6 +28,7 @@ var FeedLanguage = function() {
 	this.fields = {};
 	this.fieldsWrapper = "#feedfields-wrapper";
 	this.feedsWrapper = "#feedfields li";
+	this.templateWrapper = "#templatefields li";
 	this.svgWrapper = "#svgbasics";
 }
 
@@ -48,9 +49,22 @@ FeedLanguage.load = function() {
 }
 
 FeedLanguage.prototype.init = function() {
+	var __this = this;
+	
 	$(this.svgWrapper)
 		.css( "height", $(this.fieldsWrapper).height())
 		.css( "width", $(this.fieldsWrapper).width());
+	
+	//*** Fix IE draggable bug.		
+	$.extend($.ui.draggable.prototype, (function (orig) {
+	  return {
+	    _mouseCapture: function (event) {
+	      var result = orig.call(this, event);
+	      if (result && $.browser.msie) event.stopPropagation();
+	      return result;
+	    }
+	  };
+	})($.ui.draggable.prototype["_mouseCapture"]));
 								
 	$(this.feedsWrapper)
 		.draggable({ revert: true, revertDuration: 0, containment: this.fieldsWrapper, opacity: 0.50 })
@@ -58,6 +72,26 @@ FeedLanguage.prototype.init = function() {
 			function(){ $(this).addClass("hover"); }, 
 			function(){ $(this).removeClass("hover"); }
 		);
+		
+	for (var count in this.fields) {
+		this.toScreen(this.fields[count].id);
+	}	
+	
+	$(this.templateWrapper).bind("click", function(){
+		$(".input-feed", this).removeClass("disabled").show().focus();
+		__this.svgDrawLines();
+	});
+	$(this.templateWrapper + " .input-feed").bind("blur", function(){
+		if ($(this).val() != "") {
+			$(this).addClass("disabled");
+			var arrId = $(this).attr("id").split("_");
+			arrId.pop();
+			$("#" + arrId.join("_") + "_" + __this.currentLanguage).val("");
+		} else {
+			$(this).hide();
+		}
+		__this.svgDrawLines();
+	});
 }
 
 FeedLanguage.prototype.swap = function(languageId) {
@@ -109,7 +143,6 @@ FeedLanguage.prototype.addField = function(fieldId, strCascades) {
 	var objField = new TemplateFeedField(fieldId, this, strCascades);
 		
 	this.fields[fieldId] = objField;
-	this.toScreen(fieldId);
 }
 
 FeedLanguage.prototype.toScreen = function(fieldId) {
@@ -261,10 +294,10 @@ FeedLanguage.prototype.svgDrawLine = function(eTarget, eSource) {
 
 		// origin -> ending ... from left to right
 		var originX = $source.positionAncestor(__this.fieldsWrapper).left;
-		var originY = $source.position().top + 15;
+		var originY = $source.positionAncestor(__this.fieldsWrapper).top + 14;
 		
 		var endingX = $target.positionAncestor(__this.fieldsWrapper).left + $target.width() + 10;
-		var endingY = $target.position().top + 15;
+		var endingY = $target.positionAncestor(__this.fieldsWrapper).top + 14;
 
 		// draw lines
 		var svg = $(__this.svgWrapper);

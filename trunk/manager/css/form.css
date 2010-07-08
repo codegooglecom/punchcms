@@ -77,6 +77,12 @@ form.ui-tabs div.ui-tabs-panel fieldset div input {
 	form.ui-tabs div.ui-tabs-panel fieldset div input.input-textsmall {
 		width: 108px;
 	}
+	form.ui-tabs div.ui-tabs-panel fieldset div textarea.input-feed {
+		width: 210px;
+		height: 28px;
+		margin: 8px 0 4px;
+		display: none;
+	}
 	form.ui-tabs div.ui-tabs-panel fieldset div input.check {
 		display: inline;
 		width: 14px;

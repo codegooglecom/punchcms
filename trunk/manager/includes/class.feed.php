@@ -42,6 +42,16 @@ class Feed extends DBA_Feed {
 		return parent::select($strSql);
 	}
 
+	public static function selectActive() {
+		global $_CONF;
+		parent::$__object = "Feed";
+		parent::$__table = "pcms_feed";
+
+		$strSql = sprintf("SELECT * FROM " . parent::$__table . " WHERE accountId = '%s' AND active = '1' ORDER BY sort", $_CONF['app']['account']->getId());
+
+		return parent::select($strSql);
+	}
+
 	public static function selectSorted() {
 		global $_CONF;
 		parent::$__object = "Feed";
@@ -55,15 +65,13 @@ class Feed extends DBA_Feed {
 	public function cache() {
 		global $_PATHS;
 		
-		$strHash = md5($this->getFeed());	
-		@file_put_contents($_PATHS['upload'] . $strHash, file_get_contents($this->getFeed()));
+		@file_put_contents($_PATHS['upload'] . $this->getHash(), file_get_contents($this->getFeed()));
 	}
 	
 	public function getRawBody() {
 		global $_PATHS;
 		
-		$strHash = md5($this->getFeed());	
-		$strReturn = @file_get_contents($_PATHS['upload'] . $strHash);
+		$strReturn = @file_get_contents($_PATHS['upload'] . $this->getHash());
 		
 		return $strReturn;
 	}
@@ -88,6 +96,12 @@ class Feed extends DBA_Feed {
 		}
 		
 		return $arrReturn;
+	}
+	
+	public function getHash() {
+		global $_CONF;
+		
+		return md5($_CONF['app']['account']->getId() . $this->getFeed() . $this->getBasePath());
 	}
 	
 }
