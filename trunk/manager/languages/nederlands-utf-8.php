@@ -322,6 +322,7 @@ $_LANG['formerror']['commonTypePassword'] = "U heeft ongeldige karakters ingevul
 $_LANG['formerror']['templateName'] = "Vul een naam voor het sjabloon in.";
 $_LANG['formerror']['elementName'] = "Vul een naam voor het element in.";
 $_LANG['formerror']['formName'] = "Vul een naam voor het formulier in.";
+$_LANG['formerror']['noFile'] = "Selecteer een bestand om te uploaden.";
 $_LANG['formerror']['fieldName'] = "Vul een naam voor het veld in.";
 $_LANG['formerror']['fieldType'] = "Kies het veld type.";
 $_LANG['formerror']['profileName'] = "Vul uw naam in.";

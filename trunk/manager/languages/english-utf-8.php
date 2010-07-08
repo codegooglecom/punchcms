@@ -322,6 +322,7 @@ $_LANG['formerror']['commonTypePassword'] = "You have entered invalid characters
 $_LANG['formerror']['templateName'] = "Enter a name for the template.";
 $_LANG['formerror']['elementName'] = "Enter a name for the element.";
 $_LANG['formerror']['formName'] = "Enter a name for the form.";
+$_LANG['formerror']['noFile'] = "Select a file to upload.";
 $_LANG['formerror']['fieldName'] = "Enter a name for the field.";
 $_LANG['formerror']['fieldType'] = "Choose a field type.";
 $_LANG['formerror']['profileName'] = "Enter your name.";
