@@ -367,8 +367,6 @@ function parseFiles($intElmntId, $strCommand) {
 								//*** Everything is cool.
 								$localValues = $objMultiUpload->getLocalNames();
 								$arrCleanup = array();
-								print_r($objMultiUpload->getOriginalNames());
-								exit;
 								foreach ($objMultiUpload->getOriginalNames() as $subkey => $subvalue) {
 									$blnSkipData = FALSE;
 									
