@@ -101,63 +101,64 @@ class ContentLanguage extends DBA_ContentLanguage {
 		$objLanguages = self::select($strSql);
 		
 		$objDefaultLang = ContentLanguage::getDefault();
-		
-		$strSql = "SELECT pcms_element_field.* FROM 
-				`pcms_element`,
-				`pcms_element_field`,
-				`pcms_element_field_bigtext`
-			WHERE pcms_element_field.id = pcms_element_field_bigtext.fieldId
-			AND pcms_element_field_bigtext.cascade = '1'
-			AND pcms_element.id = pcms_element_field.elementId
-			AND pcms_element.accountId = '%s'
-			UNION 
-			SELECT pcms_element_field.* FROM 
-				`pcms_element`,
-				`pcms_element_field`,
-				`pcms_element_field_date`
-			WHERE pcms_element_field.id = pcms_element_field_date.fieldId
-			AND pcms_element_field_date.cascade = '1'
-			AND pcms_element.id = pcms_element_field.elementId
-			AND pcms_element.accountId = '%s'
-			UNION 
-			SELECT pcms_element_field.* FROM 
-				`pcms_element`,
-				`pcms_element_field`,
-				`pcms_element_field_number`
-			WHERE pcms_element_field.id = pcms_element_field_number.fieldId
-			AND pcms_element_field_number.cascade = '1'
-			AND pcms_element.id = pcms_element_field.elementId
-			AND pcms_element.accountId = '%s'
-			UNION 
-			SELECT pcms_element_field.* FROM 
-				`pcms_element`,
-				`pcms_element_field`,
-				`pcms_element_field_text`
-			WHERE pcms_element_field.id = pcms_element_field_text.fieldId
-			AND pcms_element_field_text.cascade = '1'
-			AND pcms_element.id = pcms_element_field.elementId
-			AND pcms_element.accountId = '%s'";
-		$strSql = sprintf($strSql, $_CONF['app']['account']->getId(), $_CONF['app']['account']->getId(), $_CONF['app']['account']->getId(), $_CONF['app']['account']->getId());
-		$objFields = ElementField::select($strSql);
-		foreach ($objFields as $objField) {
-			$strDefaultValue = $objField->getRawValue($objDefaultLang->getId());
-			foreach ($objLanguages as $objLanguage) {
-				$objValue = $objField->getValueObject($objLanguage->getId());
-				if (is_object($objValue)) {
-					$objValue->delete(FALSE);
+		if (is_object($objDefaultLang)) {
+			$strSql = "SELECT pcms_element_field.* FROM 
+					`pcms_element`,
+					`pcms_element_field`,
+					`pcms_element_field_bigtext`
+				WHERE pcms_element_field.id = pcms_element_field_bigtext.fieldId
+				AND pcms_element_field_bigtext.cascade = '1'
+				AND pcms_element.id = pcms_element_field.elementId
+				AND pcms_element.accountId = '%s'
+				UNION 
+				SELECT pcms_element_field.* FROM 
+					`pcms_element`,
+					`pcms_element_field`,
+					`pcms_element_field_date`
+				WHERE pcms_element_field.id = pcms_element_field_date.fieldId
+				AND pcms_element_field_date.cascade = '1'
+				AND pcms_element.id = pcms_element_field.elementId
+				AND pcms_element.accountId = '%s'
+				UNION 
+				SELECT pcms_element_field.* FROM 
+					`pcms_element`,
+					`pcms_element_field`,
+					`pcms_element_field_number`
+				WHERE pcms_element_field.id = pcms_element_field_number.fieldId
+				AND pcms_element_field_number.cascade = '1'
+				AND pcms_element.id = pcms_element_field.elementId
+				AND pcms_element.accountId = '%s'
+				UNION 
+				SELECT pcms_element_field.* FROM 
+					`pcms_element`,
+					`pcms_element_field`,
+					`pcms_element_field_text`
+				WHERE pcms_element_field.id = pcms_element_field_text.fieldId
+				AND pcms_element_field_text.cascade = '1'
+				AND pcms_element.id = pcms_element_field.elementId
+				AND pcms_element.accountId = '%s'";
+			$strSql = sprintf($strSql, $_CONF['app']['account']->getId(), $_CONF['app']['account']->getId(), $_CONF['app']['account']->getId(), $_CONF['app']['account']->getId());
+			$objFields = ElementField::select($strSql);
+			foreach ($objFields as $objField) {
+				$strDefaultValue = $objField->getRawValue($objDefaultLang->getId());
+				foreach ($objLanguages as $objLanguage) {
+					$objValue = $objField->getValueObject($objLanguage->getId());
+					if (is_object($objValue)) {
+						$objValue->delete(FALSE);
+					}
+					
+					$objValue = $objField->getNewValueObject();
+					$objValue->setValue($strDefaultValue);
+					$objValue->setLanguageId($objLanguage->getId());
+					$objValue->setCascade(FALSE);
+					$objField->setValueObject($objValue);
 				}
-				
-				$objValue = $objField->getNewValueObject();
-				$objValue->setValue($strDefaultValue);
-				$objValue->setLanguageId($objLanguage->getId());
-				$objValue->setCascade(FALSE);
-				$objField->setValueObject($objValue);
 			}
+			
+			//*** Set the new default language.
+			$objDefaultLang->default = 0;
+			$objDefaultLang->save();	
 		}
-		
-		//*** Set the new default language.
-		$objDefaultLang->default = 0;
-		$objDefaultLang->save();
 		
 		$objLanguage = self::selectByPK($intId);
 		$objLanguage->default = 1;		
