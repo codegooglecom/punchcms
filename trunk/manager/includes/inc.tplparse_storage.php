@@ -291,11 +291,11 @@ function parseFiles($intElmntId, $strCommand) {
 				//*** Check sanitized input.
 				if (is_null($_CLEAN_POST["frm_name"]) && $strCommand != CMD_ADD) {
 					$objTpl->setVariable("ERROR_NAME_ON", " error");
-					$objTpl->setVariable("ERROR_NAME", $objLang->get("templateName", "formerror"));
+					$objTpl->setVariable("ERROR_NAME", $objLang->get("elementName", "formerror"));
 					$blnError = TRUE;
 				}
 				
-				if(empty($_FILES['frm_file_new']['name'][0])){
+				if((!$blnIsFolder) && empty($_FILES['frm_file_new']['name'][0])){
 					$objTpl->setVariable("ERROR_FILE_ON", " error");
 					$objTpl->setVariable("ERROR_FILE", $objLang->get("noFile", "formerror"));
 					$blnError = TRUE;
