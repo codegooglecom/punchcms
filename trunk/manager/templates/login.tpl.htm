@@ -17,7 +17,11 @@
 			<p class="event-warning">{TEXT}</p>
 			<!-- END warning -->
 			<!-- BEGIN error -->
-			<p class="event-error">{TEXT}</p>
+			<div class="ui-widget">
+				<div class="ui-state-error ui-corner-all">
+					<p><span style="float: left; margin-right: 0.3em; margin-bottom: 0.3em" class="ui-icon ui-icon-alert"></span>{TEXT}</p>
+				</div>
+			</div>
 			<!-- END error -->
 			<form id="loginForm" method="post" action="index.php">
 				<dl>
