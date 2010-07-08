@@ -33,6 +33,7 @@ function parseHeader($intCatId, $strCommand, $intElmntId) {
 			switch ($strCommand) {
 				case CMD_ADD:
 				case CMD_ADD_DYNAMIC:
+				case CMD_ADD_FOLDER:
 				case CMD_EDIT:
 					$objTpl->touchBlock("calendar");
 					$objTpl->touchBlock("cms.languages");
