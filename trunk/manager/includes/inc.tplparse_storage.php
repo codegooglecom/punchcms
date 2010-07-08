@@ -169,8 +169,6 @@ function parseFiles($intElmntId, $strCommand) {
 				$objTpl->setVariable("BUTTON_EDIT_HREF", "?cid=" . NAV_PCMS_STORAGE . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_EDIT);
 			}
 
-			$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("removeFolder", "button"));
-			$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:StorageItem.remove({$intElmntId});");
 			$objTpl->setVariable("LABEL_SUBJECT", $objLang->get("mediaIn", "label") . " ");
 			$objTpl->setVariable("SUBJECT_NAME", $strFolderName);
 
