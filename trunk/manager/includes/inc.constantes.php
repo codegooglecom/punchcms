@@ -1,7 +1,7 @@
 <?php
 
 define("APP_NAME", "PunchCMS");
-define("APP_VERSION", "2.3.1");
+define("APP_VERSION", "2.5.0");
 define("APP_DEFAULT_STARTDATE", "0000-00-00 00:00:00");
 define("APP_DEFAULT_ENDDATE", "2100-01-01 01:00:00");
 

@@ -116,6 +116,92 @@ class Feed extends DBA_Feed {
 		return md5($_CONF['app']['account']->getId() . $this->getFeed() . $this->getBasePath());
 	}
 	
+	public function updateElements() {
+		global $_CONF;
+		
+		$this->cache();
+		
+		$objLangs = ContentLanguage::select();
+		$objElementFeeds = ElementFeed::selectByFeed($this->getId());
+		foreach ($objElementFeeds as $objElementFeed) {
+			$objElement = Element::selectByPK($objElementFeed->getElementId());
+			$objParent = Element::selectByPK($objElement->getParentId());
+			if (is_object($objElement) && is_object($objParent) && $objParent->getTypeId() != ELM_TYPE_DYNAMIC) {
+				//*** Remove old elements.
+				$objOldElements = $objParent->getElements(FALSE, ELM_TYPE_LOCKED, $_CONF['app']['account']->getId());
+				foreach ($objOldElements as $objOldElement) {
+					$objOldElement->delete();
+				}
+				
+				$this->recursiveFeedInsert($objElement, $objParent, NULL, $objLangs);
+			}
+		}
+	}
+	
+	private function recursiveFeedInsert($objElement, $objParent, $objNode, $objLangs) {
+		global $objLiveUser, $_CONF;
+		
+		$objElementFeed = $objElement->getFeed();
+		$objTemplate = Template::selectByPK($objElement->getTemplateId());
+		
+		if (is_null($objNode)) {
+			$objNodes = $objElementFeed->getBody();
+		} else {
+			$strFeedPath = $objElementFeed->getFeedPath();
+			if (empty($strFeedPath)) {
+				$objNodes = array($objNode);
+			} else {
+				$objNodes = $objNode->xpath($objElementFeed->getFeedPath());
+			}
+		}
+		
+		$intMaxItems = $objElementFeed->getMaxItems();
+		if (empty($intMaxItems)) $intMaxItems = 0;
+		$intCount = 1;
+		
+		foreach ($objNodes as $objNode) {
+			//*** Create elements.
+			$strName = "";
+			$objInsertElement = new InsertFeedElement($objParent);
+			$objInsertElement->setTemplate($objElement->getTemplateId());
+			
+			foreach ($objLangs as $objLang) {
+				$objFeedFields = ElementFieldFeed::selectByElement($objElement->getId(), $objLang->getId());
+				foreach ($objFeedFields as $objFeedField) {
+					$strPath = $objFeedField->getXPath();
+					if (stripos($strPath, "user->") !== FALSE) {
+						$strValue = str_replace("user->", "", $strPath);
+						$objInsertElement->addField($objFeedField->getTemplateFieldId(), $strValue, $objLang->getId(), $objFeedField->getCascade());
+					} else {
+						$objValue = (!empty($strPath)) ? $objNode->xpath($strPath) : NULL;
+						if (!is_object($objValue) && count($objValue) > 0) {
+							$strValue = (string) current($objValue);
+							$objInsertElement->addField($objFeedField->getTemplateFieldId(), $strValue, $objLang->getId(), $objFeedField->getCascade());
+							
+							if (!is_numeric($strValue) && empty($strName)) {
+								$strName = getShortValue($strValue, 40, TRUE, "");
+							} 
+						}
+					}
+				}	
+			}
+			
+			$strName = (empty($strName)) ? "Dynamic" : $strName;
+			$objInsertElement->setName($strName);
+			$objInsertElement->setUsername($objLiveUser->getProperty('handle'));
+			$objInsertElement->setActive(TRUE);
+			$objInsertedElement = $objInsertElement->save();
+						
+			//*** Sub elements.
+			$objSubElements = $objElement->getElements(FALSE, ELM_TYPE_DYNAMIC, $_CONF['app']['account']->getId());
+			foreach ($objSubElements as $objSubElement) {
+				$this->recursiveFeedInsert($objSubElement, $objInsertedElement, $objNode, $objLangs);
+			}
+			
+			if ($intMaxItems > 0 && $intCount >= $intMaxItems) break;
+			$intCount++;
+		}
+	}
 }
 
 ?>
