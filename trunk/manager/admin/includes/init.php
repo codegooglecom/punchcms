@@ -78,6 +78,22 @@ try {
 require_once('inc.session.php');
 
 /******************************
+* Load Upload libraries.
+***/
+require_once('MultiUpload/singleupload.php');
+require_once('MultiUpload/multiupload.php');
+$objMultiUpload = new MultiUpload;
+$objMultiUpload->setUploadFolder($_PATHS['upload']);
+$objMultiUpload->setRename(TRUE);
+$objMultiUpload->setCheckFilename(TRUE);
+
+/******************************
+* Load Image libraries.
+***/
+require_once('ImageResizer/ImageEditor.php');
+require_once('ImageResizer/lib.imageresizer.php');
+
+/******************************
 * Load LiveUser classes.
 ***/
 require_once("LiveUser.php");

@@ -20,4 +20,15 @@ foreach ($objAccounts as $objAccount) {
 	$objAccount->makeBackup($_CONF['app']['maxBackups']);
 }
 
+//*** Render Dynamic elements.
+$objAccounts = Account::select();
+foreach ($objAccounts as $objAccount) {
+	$_CONF['app']['account'] = $objAccount;
+	
+	$objFeeds = Feed::selectActive();
+	foreach ($objFeeds as $objFeed) {
+		$objFeed->updateElements();
+	}
+}
+
 ?>

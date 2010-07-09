@@ -54,12 +54,16 @@ class Feed extends DBA_Feed {
 		return parent::select($strSql);
 	}
 
-	public static function selectActive() {
+	public static function selectActive($blnAllAccounts = FALSE) {
 		global $_CONF;
 		parent::$__object = "Feed";
 		parent::$__table = "pcms_feed";
 
-		$strSql = sprintf("SELECT * FROM " . parent::$__table . " WHERE accountId = '%s' AND active = '1' ORDER BY sort", $_CONF['app']['account']->getId());
+		if ($blnAllAccounts) {
+			$strSql = "SELECT * FROM " . parent::$__table . " WHERE active = '1' ORDER BY sort";
+		} else {
+			$strSql = sprintf("SELECT * FROM " . parent::$__table . " WHERE accountId = '%s' AND active = '1' ORDER BY sort", $_CONF['app']['account']->getId());
+		}
 
 		return parent::select($strSql);
 	}
@@ -110,15 +114,11 @@ class Feed extends DBA_Feed {
 		return $arrReturn;
 	}
 	
-	public function getHash() {
-		global $_CONF;
-		
-		return md5($_CONF['app']['account']->getId() . $this->getFeed() . $this->getBasePath());
+	public function getHash() {		
+		return md5($this->getAccountId() . $this->getFeed() . $this->getBasePath());
 	}
 	
-	public function updateElements() {
-		global $_CONF;
-		
+	public function updateElements() {		
 		$this->cache();
 		
 		$objLangs = ContentLanguage::select();
@@ -128,7 +128,7 @@ class Feed extends DBA_Feed {
 			$objParent = Element::selectByPK($objElement->getParentId());
 			if (is_object($objElement) && is_object($objParent) && $objParent->getTypeId() != ELM_TYPE_DYNAMIC) {
 				//*** Remove old elements.
-				$objOldElements = $objParent->getElements(FALSE, ELM_TYPE_LOCKED, $_CONF['app']['account']->getId());
+				$objOldElements = $objParent->getElements(FALSE, ELM_TYPE_LOCKED, $this->getAccountId());
 				foreach ($objOldElements as $objOldElement) {
 					$objOldElement->delete();
 				}
@@ -139,7 +139,7 @@ class Feed extends DBA_Feed {
 	}
 	
 	private function recursiveFeedInsert($objElement, $objParent, $objNode, $objLangs) {
-		global $objLiveUser, $_CONF;
+		global $objLiveUser;
 		
 		$objElementFeed = $objElement->getFeed();
 		$objTemplate = Template::selectByPK($objElement->getTemplateId());
@@ -193,7 +193,7 @@ class Feed extends DBA_Feed {
 			$objInsertedElement = $objInsertElement->save();
 						
 			//*** Sub elements.
-			$objSubElements = $objElement->getElements(FALSE, ELM_TYPE_DYNAMIC, $_CONF['app']['account']->getId());
+			$objSubElements = $objElement->getElements(FALSE, ELM_TYPE_DYNAMIC, $this->getAccountId());
 			foreach ($objSubElements as $objSubElement) {
 				$this->recursiveFeedInsert($objSubElement, $objInsertedElement, $objNode, $objLangs);
 			}
