@@ -23,8 +23,20 @@ class Feed extends DBA_Feed {
 	}
 
 	public function delete() {
+		global $_CONF, $_PATHS;
 		parent::$__object = "Feed";
 		parent::$__table = "pcms_feed";
+			
+		$objElementFeeds = ElementFeed::selectByFeed($this->getId());
+		foreach ($objElementFeeds as $objElementFeed) {
+			$objElement = Element::selectByPK($objElementFeed->getElementId());
+			
+			//*** Remove dynamic element.
+			$objElement->delete();
+		}
+		
+		//*** Remove cached feed.
+		@unlink($_PATHS['upload'] . $this->getHash());
 		
 		AuditLog::addLog(AUDIT_TYPE_FEED, $this->getId(), $this->getFeed(), "delete");
 		return parent::delete();

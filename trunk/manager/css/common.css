@@ -700,6 +700,7 @@ div.center-wrap form {
 
 #left-wrap div.itemheader {
 	margin: 6px 0 20px;
+	min-height: 16px;
 }
 
 #left-wrap div.itemheader div.itemcount {
@@ -786,6 +787,14 @@ div.center-wrap form {
 	background: url("../images/ico_element.gif") 42px top no-repeat;
 }
 
+#left-wrap div.itembox div.element-locked {
+	background: url("../images/ico_element_locked.gif") 42px top no-repeat;
+}
+
+#left-wrap div.itembox div.element-dynamic {
+	background: url("../images/ico_element_dynamic.gif") 42px top no-repeat;
+}
+
 #left-wrap div.itembox div.language {
 	background: url("../images/ico_language.gif") 6px top no-repeat;
 }
@@ -796,6 +805,14 @@ div.center-wrap form {
 
 #left-wrap div.itembox div.widget {
 	background: url("../images/ico_widget.gif") 42px top no-repeat;
+}
+
+#left-wrap div.itembox div.widget-locked {
+	background: url("../images/ico_widget_locked.gif") 42px top no-repeat;
+}
+
+#left-wrap div.itembox div.widget-dynamic {
+	background: url("../images/ico_widget_dynamic.gif") 42px top no-repeat;
 }
 
 #left-wrap div.itembox div.template {

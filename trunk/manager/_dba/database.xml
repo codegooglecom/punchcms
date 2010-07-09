@@ -147,6 +147,7 @@
 		<column name="feed" type="varchar" />
 		<column name="basepath" type="varchar" />
 		<column name="refresh" type="integer" />
+		<column name="lastUpdate" type="datetime" />
 		<column name="active" type="integer" default="1" />
 	</table>
 	<table name="pcms_storage_item" phpName="StorageItem">

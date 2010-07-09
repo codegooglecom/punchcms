@@ -52,10 +52,12 @@ function parsePages($intElmntId, $strCommand) {
 							$strMeta = $objLang->get("editedBy", "label") . " " . $objSubElement->getUsername() . ", " . Date::fromMysql($objLang->get("datefmt"), $objSubElement->getModified());
 
 							$objTpl->setCurrentBlock("multiview-item");
-							$objTpl->setVariable("BUTTON_DUPLICATE", $objLang->get("duplicate", "button"));
-							$objTpl->setVariable("BUTTON_DUPLICATE_HREF", "javascript:PElement.duplicate({$objSubElement->getId()});");
-							$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("delete", "button"));
-							$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:PElement.remove({$objSubElement->getId()});");
+							if ($objSubElement->getTypeId() != ELM_TYPE_LOCKED) {
+								$objTpl->setVariable("BUTTON_DUPLICATE", $objLang->get("duplicate", "button"));
+								$objTpl->setVariable("BUTTON_DUPLICATE_HREF", "javascript:PElement.duplicate({$objSubElement->getId()});");
+								$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("delete", "button"));
+								$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:PElement.remove({$objSubElement->getId()});");
+							}
 
 							$objTpl->setVariable("MULTIITEM_VALUE", $objSubElement->getId());
 							//if (Permissions::hasElementPermission(SPINCMS_ELEMENTS_WRITE, $objSubElement)) {
@@ -78,9 +80,27 @@ function parsePages($intElmntId, $strCommand) {
 							} else {
 								$objChildElements = $objSubElement->getElements();
 								if (is_object($objChildElements) && $objChildElements->count() > 0) {
-									$strTypeClass = "widget";
+									switch ($objSubElement->getTypeId()) {
+										case ELM_TYPE_DYNAMIC:
+											$strTypeClass = "widget-dynamic";
+											break;
+										case ELM_TYPE_LOCKED:
+											$strTypeClass = "widget-locked";
+											break;
+										default:
+											$strTypeClass = "widget";												
+									}
 								} else {
-									$strTypeClass = "element";
+									switch ($objSubElement->getTypeId()) {
+										case ELM_TYPE_DYNAMIC:
+											$strTypeClass = "element-dynamic";
+											break;
+										case ELM_TYPE_LOCKED:
+											$strTypeClass = "element-locked";
+											break;
+										default:
+											$strTypeClass = "element";													
+									}									
 								}
 							}
 							$objTpl->setVariable("MULTIITEM_TYPE_CLASS", $strTypeClass);
@@ -136,16 +156,18 @@ function parsePages($intElmntId, $strCommand) {
 			}
 
 			//*** Render list action pulldown.
-			$arrActions[$objLang->get("choose", "button")] = 0;
-			$arrActions[$objLang->get("delete", "button") . "&nbsp;&nbsp;"] = "delete";
-			$arrActions[$objLang->get("duplicate", "button") . "&nbsp;&nbsp;"] = "duplicate";
-			$arrActions[$objLang->get("activate", "button") . "&nbsp;&nbsp;"] = "activate";
-			$arrActions[$objLang->get("deactivate", "button") . "&nbsp;&nbsp;"] = "deactivate";
-			foreach ($arrActions as $key => $value) {
-				$objTpl->setCurrentBlock("multiview-listactionitem");
-				$objTpl->setVariable("LIST_ACTION_TEXT", $key);
-				$objTpl->setVariable("LIST_ACTION_VALUE", $value);
-				$objTpl->parseCurrentBlock();
+			if (!is_object($objElement) || $objElement->getTypeId() != ELM_TYPE_LOCKED) {
+				$arrActions[$objLang->get("choose", "button")] = 0;
+				$arrActions[$objLang->get("delete", "button") . "&nbsp;&nbsp;"] = "delete";
+				$arrActions[$objLang->get("duplicate", "button") . "&nbsp;&nbsp;"] = "duplicate";
+				$arrActions[$objLang->get("activate", "button") . "&nbsp;&nbsp;"] = "activate";
+				$arrActions[$objLang->get("deactivate", "button") . "&nbsp;&nbsp;"] = "deactivate";
+				foreach ($arrActions as $key => $value) {
+					$objTpl->setCurrentBlock("multiview-listactionitem");
+					$objTpl->setVariable("LIST_ACTION_TEXT", $key);
+					$objTpl->setVariable("LIST_ACTION_VALUE", $value);
+					$objTpl->parseCurrentBlock();
+				}
 			}
 
 			//*** Render the rest of the page.
@@ -173,31 +195,37 @@ function parsePages($intElmntId, $strCommand) {
 			}
 
 			$objTpl->setVariable("LIST_LENGTH_HREF", "&amp;cid=" . NAV_PCMS_ELEMENTS . "&amp;eid=$intElmntId");
-			$objTpl->setVariable("LIST_WITH_SELECTED", $objLang->get("withSelected", "label"));
-			$objTpl->setVariable("LIST_ACTION_ONCHANGE", "PElement.multiDo(this, this[this.selectedIndex].value)");
-			$objTpl->setVariable("LIST_ITEMS_PER_PAGE", $objLang->get("itemsPerPage", "label"));
-			$objTpl->setVariable("BUTTON_LIST_SELECT", $objLang->get("selectAll", "button"));
-			$objTpl->setVariable("BUTTON_LIST_SELECT_HREF", "javascript:PElement.multiSelect()");
-			
-			$objTpl->setVariable("BUTTON_NEWSUBJECT", $objLang->get("newElement", "button"));
-
-			$objDefaultLang = ContentLanguage::getDefault();
-			if (!is_object($objDefaultLang)) {
-				$objTpl->setVariable("BUTTON_NEWSUBJECT_HREF", "javascript:alert('" . $objLang->get("elementBeforeLanguage", "alert") . "')");
-			} else {
-				$objTpl->setVariable("BUTTON_NEWSUBJECT_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD);
+			if (!is_object($objElement) || $objElement->getTypeId() != ELM_TYPE_LOCKED) {
+				$objTpl->setVariable("LIST_WITH_SELECTED", $objLang->get("withSelected", "label"));
+				$objTpl->setVariable("BUTTON_LIST_SELECT", $objLang->get("selectAll", "button"));
+				$objTpl->setVariable("BUTTON_LIST_SELECT_HREF", "javascript:PElement.multiSelect()");
+				$objTpl->setVariable("LIST_ACTION_ONCHANGE", "PElement.multiDo(this, this[this.selectedIndex].value)");
 			}
-
-			$objTpl->setVariable("BUTTON_NEWFOLDER", $objLang->get("newFolder", "button"));
-			$objTpl->setVariable("BUTTON_NEWFOLDER_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD_FOLDER);
+			$objTpl->setVariable("LIST_ITEMS_PER_PAGE", $objLang->get("itemsPerPage", "label"));
 			
-			$objTpl->setVariable("BUTTON_NEWDYNAMIC", $objLang->get("newDynamic", "button"));
-			$objTpl->setVariable("BUTTON_NEWDYNAMIC_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD_DYNAMIC);
-
-			if ($intElmntId > 0) {
-				$objElement = Element::selectByPK($intElmntId);
-				$objTpl->setVariable("BUTTON_EDIT", $objLang->get("edit", "button"));
-				$objTpl->setVariable("BUTTON_EDIT_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_EDIT);
+			if (!isset($objElement) || ($objElement->getTypeId() != ELM_TYPE_DYNAMIC && $objElement->getTypeId() != ELM_TYPE_LOCKED)) {
+				$objTpl->setVariable("BUTTON_NEWSUBJECT", $objLang->get("newElement", "button"));
+	
+				$objDefaultLang = ContentLanguage::getDefault();
+				if (!is_object($objDefaultLang)) {
+					$objTpl->setVariable("BUTTON_NEWSUBJECT_HREF", "javascript:alert('" . $objLang->get("elementBeforeLanguage", "alert") . "')");
+				} else {
+					$objTpl->setVariable("BUTTON_NEWSUBJECT_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD);
+				}
+				
+				$objTpl->setVariable("BUTTON_NEWFOLDER", $objLang->get("newFolder", "button"));
+				$objTpl->setVariable("BUTTON_NEWFOLDER_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD_FOLDER);
+			}
+			
+			if (!isset($objElement) || $objElement->getTypeId() != ELM_TYPE_LOCKED) {
+				$objTpl->setVariable("BUTTON_NEWDYNAMIC", $objLang->get("newDynamic", "button"));
+				$objTpl->setVariable("BUTTON_NEWDYNAMIC_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD_DYNAMIC);
+	
+				if ($intElmntId > 0) {
+					$objElement = Element::selectByPK($intElmntId);
+					$objTpl->setVariable("BUTTON_EDIT", $objLang->get("edit", "button"));
+					$objTpl->setVariable("BUTTON_EDIT_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_EDIT);
+				}
 			}
 
 			$objTpl->setVariable("LABEL_SUBJECT", $objLang->get("elementsIn", "label") . " ");
@@ -1618,7 +1646,6 @@ function parsePages($intElmntId, $strCommand) {
 						$objTpl->setVariable("LABEL_LANGUAGE", $objLang->get("language", "form"));
 						$objTpl->setVariable("ACTIVE_LANGUAGE", $intDefaultLanguage);
 						$objTpl->setVariable("DEFAULT_LANGUAGE", $intDefaultLanguage);
-						$objTpl->setVariable("ACTIVES_LANGUAGE", $intDefaultLanguage);
 					} else {
 						$objTpl->setCurrentBlock("feedlanguage");
 						$objTpl->setVariable("LABEL_LANGUAGE", $objLang->get("language", "form"));
@@ -1795,6 +1822,9 @@ function parsePages($intElmntId, $strCommand) {
 			$objTpl->setVariable("APINAME_NOTE", $objLang->get("apiNameNote", "tip"));
 			$objTpl->setVariable("ALIAS_NOTE", $objLang->get("alias", "tip"));
 			$objTpl->setVariable("LABEL_SAVE", $objLang->get("save", "button"));
+			if (isset($objElement) && $objElement->getTypeId() == ELM_TYPE_LOCKED) {
+				$objTpl->setVariable("DISABLED_SAVE", "disabled=\"disabled\"");
+			}
 
 			if ($blnIsFolder) {
 				$objTpl->setVariable("LABEL_ELEMENTNAME", $objLang->get("folderName", "form"));
@@ -1833,8 +1863,8 @@ function parsePages($intElmntId, $strCommand) {
 				}
 				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$objElement->getParentId()}&amp;cmd=" . CMD_LIST);
 				$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$objElement->getParentId()}&amp;cmd=" . CMD_LIST);
-				if (!$blnIsFolder) {					
-					//$objTpl->setVariable("ACTIVES_LANGUAGE", implode(",", $objElement->getLanguageActives()));
+				if (!$blnIsFolder && $objElement->getTypeId() != ELM_TYPE_DYNAMIC) {					
+					$objTpl->setVariable("ACTIVES_LANGUAGE", implode(",", $objElement->getLanguageActives()));
 				}
 				
 				//*** Publish specific values.

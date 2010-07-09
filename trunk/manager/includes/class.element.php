@@ -76,6 +76,15 @@ class Element extends DBA_Element {
 		
 		//*** Delete feed.
 		$this->clearFeed();
+							
+		//*** Remove locked elements.
+		$objParent = Element::selectByPK($this->getParentId());
+		if (is_object($objParent) && $objParent->getTypeId() != ELM_TYPE_DYNAMIC && $this->getTypeId() != ELM_TYPE_LOCKED) {
+			$objOldElements = $objParent->getElements(FALSE, ELM_TYPE_LOCKED, $_CONF['app']['account']->getId());
+			foreach ($objOldElements as $objOldElement) {
+				$objOldElement->delete();
+			}		
+		}
 		
 		//*** Delete child elements.
 		$objElements = $this->getElements();
@@ -581,6 +590,8 @@ class Element extends DBA_Element {
 	}
 		
 	public function clearFeed() {
+		global $_CONF;
+		
 		if ($this->id > 0) {
 			$objFeeds = ElementFeed::selectByElement($this->id);
 

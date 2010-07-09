@@ -13,6 +13,7 @@ class DBA_Feed extends DBA__Object {
 	protected $feed = "";
 	protected $basepath = "";
 	protected $refresh = 0;
+	protected $lastupdate = "0000-00-00 00:00:00";
 	protected $active = 1;
 
 	//*** Constructor.

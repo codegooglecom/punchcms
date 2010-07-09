@@ -67,7 +67,7 @@ FeedLanguage.prototype.init = function() {
 	})($.ui.draggable.prototype["_mouseCapture"]));
 								
 	$(this.feedsWrapper)
-		.draggable({ revert: true, revertDuration: 0, containment: this.fieldsWrapper, opacity: 0.50 })
+		.draggable({ revert: true, scroll: true, revertDuration: 0, containment: this.fieldsWrapper, opacity: 0.50 })
 		.hover(
 			function(){ $(this).addClass("hover"); }, 
 			function(){ $(this).removeClass("hover"); }
@@ -79,16 +79,16 @@ FeedLanguage.prototype.init = function() {
 	
 	$(this.templateWrapper).bind("click", function(){
 		$(".input-feed", this).removeClass("disabled").show().focus();
-		__this.svgDrawLines();
 	});
 	$(this.templateWrapper + " .input-feed").bind("blur", function(){
+		var arrId = $(this).attr("id").split("_");
+		arrId.pop();
 		if ($(this).val() != "") {
 			$(this).addClass("disabled");
-			var arrId = $(this).attr("id").split("_");
-			arrId.pop();
-			$("#" + arrId.join("_") + "_" + __this.currentLanguage).val("");
+			$("#" + arrId.join("_") + "_" + __this.currentLanguage).val("user->" + $(this).val());
 		} else {
 			$(this).hide();
+			$("#" + arrId.join("_") + "_" + __this.currentLanguage).val("");
 		}
 		__this.svgDrawLines();
 	});
@@ -134,7 +134,7 @@ FeedLanguage.prototype.swap = function(languageId) {
 	
 	for (var count in this.fields) {
 		this.toggleCascadeState(this.fields[count].id, this.fields[count].cascades[this.currentLanguage]);
-		this.toScreen(this.fields[count].id);
+		this.toScreen(this.fields[count].id, true);
 	}
 }
 
@@ -145,8 +145,8 @@ FeedLanguage.prototype.addField = function(fieldId, strCascades) {
 	this.fields[fieldId] = objField;
 }
 
-FeedLanguage.prototype.toScreen = function(fieldId) {
-	this.fields[fieldId].toScreen();
+FeedLanguage.prototype.toScreen = function(fieldId, blnAuto) {
+	this.fields[fieldId].toScreen(blnAuto);
 }
 
 FeedLanguage.prototype.toTemp = function(fieldId) {
@@ -315,7 +315,7 @@ FeedLanguage.prototype.svgDrawLine = function(eTarget, eSource) {
 FeedLanguage.prototype.svgDrawLines = function() {
 	$(this.svgWrapper).empty();
 	for (var count in this.fields) {
-		this.toScreen(this.fields[count].id);
+		this.toScreen(this.fields[count].id, true);
 	}
 }		
 
@@ -336,8 +336,10 @@ function TemplateFeedField(strId, objParent, strCascades) {
 		hoverClass: 'ui-state-highlight',
 		drop: function(event, ui) {
 			var arrId = $(ui.draggable).attr("id").split("_");
-			jQuery("#" + this.id + "_" + __this.parent.currentLanguage).val(arrId.pop());
-			__this.parent.svgDrawLines();
+			if (jQuery("#" + this.id + "_alt").val() == "") {
+				jQuery("#" + this.id + "_" + __this.parent.currentLanguage).val(arrId.pop());
+				__this.parent.svgDrawLines();
+			}
 		}
 	});
 }
@@ -366,7 +368,7 @@ TemplateFeedField.prototype.setCascades = function(strCascades) {
 	jQuery("#" + this.id + "_cascades").val(this.getCascades());
 }
 
-TemplateFeedField.prototype.toScreen = function() {
+TemplateFeedField.prototype.toScreen = function(blnAuto) {
 	var __this = this;
 	
 	//*** Insert value into the field.
@@ -381,9 +383,22 @@ TemplateFeedField.prototype.toScreen = function() {
 		$(this.parent.feedsWrapper).draggable("disable");
 	} else {
 		//*** The field needs no special treatment.
-		var $source = jQuery("#ff_" + jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
-		if ($source.length > 0) {
-			this.svgDrawLine($source);
+		var value = jQuery("#" + this.id + "_" + this.parent.currentLanguage).val();
+		if (value.indexOf("user->") > -1) {
+			value = value.replace("user->", "");
+			if (value != "") {
+				if (blnAuto) {
+					$("#" + this.id + "_alt").addClass("disabled").show().val(value);
+				} else {
+					$("#" + this.id + "_alt").removeClass("disabled").show().val(value);
+				}
+			}
+		} else {
+			if (blnAuto) $("#" + this.id + "_alt").removeClass("disabled").hide().val("");
+			var $source = jQuery("#ff_" + jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
+			if ($source.length > 0) {
+				this.svgDrawLine($source);
+			}
 		}
 		
 		jQuery("#" + this.id).droppable('enable');

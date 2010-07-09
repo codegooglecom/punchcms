@@ -42,14 +42,19 @@ class ElementFeed extends DBA_ElementFeed {
 		return $objReturn;
 	}
 	
-	public function getBody() {
+	public function getBody($intIndex = NULL) {
 		$arrReturn = array();
 
 		$strPath = $this->getFeedPath();
-		if (!empty($strPath)) $strPath = "/" . $strPath;
+		if (!empty($strPath)) {
+			$strPath = "/" . $strPath;
+			if (!is_null($intIndex)) {
+				$strPath .= "[" . $intIndex . "]";
+			}
+		}
 		$objFeed = Feed::selectByPK($this->getFeedId());
 		$arrReturn = $objFeed->getBody($strPath);
-		
+				
 		return $arrReturn;
 	}	
 	

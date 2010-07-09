@@ -52,13 +52,17 @@ function showElement($objElement) {
 $objDoc = new DOMDocument();
 //$objDoc->load($_PATHS['upload'] . "bluebay-koop-test.xml");
 $objDoc->load("http://www.nu.nl/feeds/rss/internet.rss");
-$strOutput = showElement($objDoc);
+//$strOutput = showElement($objDoc);
 
 //*** Load from path.
 $objXml = simplexml_load_file($_PATHS['upload'] . "bluebay-koop-test.xml");
-$objElements = $objXml->xpath("/bluebay/item/badkamers");
-foreach ($objElements as $objElement) {
-	//echo "Value: " . $objElement . "<br />";
+$objNodes = $objXml->xpath("/bluebay/item");
+foreach ($objNodes as $objNode) {
+	echo "Value: " . $objNode . "<br />";
+	$objSubNodes = $objNode->xpath("foto/foto1/full");
+	foreach ($objSubNodes as $objSubNode) {
+		echo "SubValue: " . $objSubNode . "<br />";
+	}
 }
 
 ?>

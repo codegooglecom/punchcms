@@ -67,6 +67,7 @@ function parseFeeds($intFeedId, $strCommand) {
 					$objFeed->setFeed($_CLEAN_POST["frm_feed"]);
 					$objFeed->setBasepath($_CLEAN_POST["frm_basepath"]);
 					$objFeed->setRefresh($_CLEAN_POST["frm_refresh"]);
+					$objFeed->setLastUpdate(Date::toMysql());
 					$objFeed->save();
 					
 					//*** Cache feed.
