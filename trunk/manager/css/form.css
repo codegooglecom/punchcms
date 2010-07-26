@@ -250,7 +250,22 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile p, 
 	form.ui-tabs div.ui-tabs-panel fieldset div .multifile p { 
 		margin-left: 25px;
-		float: left;
+		xfloat: left;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile div.progressWrapper,
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile div.progressWrapper {
+		border: 1px solid #666;
+		margin: 5px 80px 3px 20px;
+		padding: 0;
+		width: auto;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile div.progressBar,
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile div.progressBar {
+		height: 4px;
+		background-color: #999;
+		width: 0;
+		padding: 0;
+		margin: 0;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser {
 		background: none repeat scroll 0 0 #EAEAEA;

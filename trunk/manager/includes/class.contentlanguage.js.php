@@ -805,7 +805,8 @@ FileField.prototype.toScreen = function() {
 			strValue += this.shortName(arrValue[0], 40) + "<br />";
 		}
 		for (var intCount = 0; intCount < this.subFiles[this.parent.defaultLanguage].toUpload.length; intCount++) {
-			strValue += this.shortName(this.subFiles[this.parent.defaultLanguage].toUpload[intCount].value, 40) + "<br />";
+			var arrValue = this.subFiles[this.parent.defaultLanguage].toUpload[intCount].val().split(":");
+			strValue += this.shortName(arrValue[0], 40) + "<br />";
 		}
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id + "_widget").hide();
@@ -977,8 +978,11 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 			return false;
 		});
 	$objRow.append($objButton);
+	
+	var arrValue = $element.val().split(":");
+	var strValue = this.shortName(arrValue[0], this.maxChar);
 	$objRowValue
-		.html(this.shortName($element.attr("value"), this.maxChar))
+		.html(strValue)
 	$objRow
 		.append($objRowValue);
 
@@ -1177,8 +1181,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 					return nd(); 
 				}
 			});
-	} else {
-		
+	} else {		
 		if (__this.thumbPath != "") {
 			if (__this.isImage(tempFile.name)) {
 				$objThumb

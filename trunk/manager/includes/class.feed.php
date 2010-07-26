@@ -188,7 +188,7 @@ class Feed extends DBA_Feed {
 			
 			$strName = (empty($strName)) ? "Dynamic" : $strName;
 			$objInsertElement->setName($strName);
-			$objInsertElement->setUsername($objLiveUser->getProperty('handle'));
+			$objInsertElement->setUsername("PunchCMS");
 			$objInsertElement->setActive(TRUE);
 			$objInsertedElement = $objInsertElement->save();
 						

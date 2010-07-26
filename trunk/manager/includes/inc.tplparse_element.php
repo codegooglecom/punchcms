@@ -1319,7 +1319,7 @@ function parsePages($intElmntId, $strCommand) {
 										$intMaxFileCount = (is_object($objValue)) ? $objValue->getValue() : 10000;
 										$strCurrentTitle = $objLang->get("filesCurrent", "label");
 										$strNewTitle = $objLang->get("filesNew", "label");
-										$strThumbPath = "";
+										$strThumbPath = Setting::getValueByName("web_server") . Setting::getValueByName("file_folder");
 										$strUploadPath = Request::getURI() . $_CONF['app']['baseUri'] . "files/";
 									}
 									
