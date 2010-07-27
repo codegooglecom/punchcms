@@ -29,6 +29,14 @@ class com.felixit.pcms.PCMSField {
 		return __objField.value._value;
 	}
 	
+	public function getWidth():Number {
+		return __objField.value.attributes.width;
+	}
+	
+	public function getHeight():Number {
+		return __objField.value.attributes.height;
+	}
+	
 	public function getFileValue():String {
 		var objCms = PCMSClient.getInstance();
 		
