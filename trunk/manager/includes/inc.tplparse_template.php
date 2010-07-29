@@ -341,56 +341,58 @@ function parseTemplates($intElmntId, $strCommand) {
 			//*** Parse the template.
 			$objTemplate = Template::selectByPK($intElmntId);
 
-			//*** Set section title.
-			if ($strCommand == CMD_EDIT) {
-				$objTpl->setVariable("MAINTITLE", $objLang->get("templateDetailsFor", "label"));
-				$objTpl->setVariable("MAINSUB", $objTemplate->getName());
-			} else {
-				$objTpl->setVariable("MAINTITLE", $objLang->get("templateDetails", "label"));
+			if (is_object($objTemplate)) { 
+				//*** Set section title.
+				if ($strCommand == CMD_EDIT) {
+					$objTpl->setVariable("MAINTITLE", $objLang->get("templateDetailsFor", "label"));
+					$objTpl->setVariable("MAINSUB", $objTemplate->getName());
+				} else {
+					$objTpl->setVariable("MAINTITLE", $objLang->get("templateDetails", "label"));
+				}
+				
+				//*** Set tab title.
+				$objTpl->setCurrentBlock("headertitel_simple");
+				$objTpl->setVariable("HEADER_TITLE", $objLang->get("details", "label"));
+				$objTpl->parseCurrentBlock();
+	
+				$objTpl->setCurrentBlock("templateadd");
+	
+				//*** Insert values if action is edit.
+				if ($strCommand == CMD_EDIT) {
+					$objTpl->setVariable("FORM_ISPAGE_VALUE", ($objTemplate->getIsPage()) ? "checked=\"checked\"" : "");
+					$objTpl->setVariable("FORM_ISCONTAINER_VALUE", ($objTemplate->getIsContainer()) ? "checked=\"checked\"" : "");
+					$objTpl->setVariable("FORM_FORCECREATION_VALUE", ($objTemplate->getForceCreation()) ? "checked=\"checked\"" : "");
+					$objTpl->setVariable("FORM_NAME_VALUE", $objTemplate->getName());
+					$objTpl->setVariable("FORM_APINAME_VALUE", $objTemplate->getApiname());
+					$objTpl->setVariable("FORM_NOTES_VALUE", $objTemplate->getDescription());
+					$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objTemplate->getParentId()}&amp;cmd=" . CMD_LIST);
+					$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objTemplate->getParentId()}&amp;cmd=" . CMD_LIST);
+				} else {
+					$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
+					$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
+				}
+	
+				$objTpl->setVariable("LABEL_REQUIRED", $objLang->get("requiredFields", "form"));
+				$objTpl->setVariable("LABEL_PAGECONTAINER", $objLang->get("pageContainer", "form"));
+				$objTpl->setVariable("LABEL_ISCONTAINER", $objLang->get("container", "form"));
+				$objTpl->setVariable("ISCONTAINER_NOTE", $objLang->get("containerNote", "tip"));
+				$objTpl->setVariable("LABEL_FORCECREATION", $objLang->get("forceCreation", "form"));
+				$objTpl->setVariable("FORCECREATION_NOTE", $objLang->get("forceCreationNote", "tip"));
+				$objTpl->setVariable("LABEL_TEMPLATENAME", $objLang->get("templateName", "form"));
+				$objTpl->setVariable("LABEL_NAME", $objLang->get("name", "form"));
+				$objTpl->setVariable("APINAME_NOTE", $objLang->get("apiNameNote", "tip"));
+				$objTpl->setVariable("LABEL_NOTES", $objLang->get("notes", "form"));
+				$objTpl->parseCurrentBlock();
+	
+				$objTpl->setCurrentBlock("singleview");
+				$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));
+				$objTpl->setVariable("BUTTON_FORMCANCEL", $objLang->get("cancel", "button"));
+				$objTpl->setVariable("LABEL_SAVE", $objLang->get("save", "button"));
+				$objTpl->setVariable("CID", NAV_PCMS_TEMPLATES);
+				$objTpl->setVariable("CMD", $strCommand);
+				$objTpl->setVariable("EID", $intElmntId);
+				$objTpl->parseCurrentBlock();
 			}
-			
-			//*** Set tab title.
-			$objTpl->setCurrentBlock("headertitel_simple");
-			$objTpl->setVariable("HEADER_TITLE", $objLang->get("details", "label"));
-			$objTpl->parseCurrentBlock();
-
-			$objTpl->setCurrentBlock("templateadd");
-
-			//*** Insert values if action is edit.
-			if ($strCommand == CMD_EDIT) {
-				$objTpl->setVariable("FORM_ISPAGE_VALUE", ($objTemplate->getIsPage()) ? "checked=\"checked\"" : "");
-				$objTpl->setVariable("FORM_ISCONTAINER_VALUE", ($objTemplate->getIsContainer()) ? "checked=\"checked\"" : "");
-				$objTpl->setVariable("FORM_FORCECREATION_VALUE", ($objTemplate->getForceCreation()) ? "checked=\"checked\"" : "");
-				$objTpl->setVariable("FORM_NAME_VALUE", $objTemplate->getName());
-				$objTpl->setVariable("FORM_APINAME_VALUE", $objTemplate->getApiname());
-				$objTpl->setVariable("FORM_NOTES_VALUE", $objTemplate->getDescription());
-				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objTemplate->getParentId()}&amp;cmd=" . CMD_LIST);
-				$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objTemplate->getParentId()}&amp;cmd=" . CMD_LIST);
-			} else {
-				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
-				$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
-			}
-
-			$objTpl->setVariable("LABEL_REQUIRED", $objLang->get("requiredFields", "form"));
-			$objTpl->setVariable("LABEL_PAGECONTAINER", $objLang->get("pageContainer", "form"));
-			$objTpl->setVariable("LABEL_ISCONTAINER", $objLang->get("container", "form"));
-			$objTpl->setVariable("ISCONTAINER_NOTE", $objLang->get("containerNote", "tip"));
-			$objTpl->setVariable("LABEL_FORCECREATION", $objLang->get("forceCreation", "form"));
-			$objTpl->setVariable("FORCECREATION_NOTE", $objLang->get("forceCreationNote", "tip"));
-			$objTpl->setVariable("LABEL_TEMPLATENAME", $objLang->get("templateName", "form"));
-			$objTpl->setVariable("LABEL_NAME", $objLang->get("name", "form"));
-			$objTpl->setVariable("APINAME_NOTE", $objLang->get("apiNameNote", "tip"));
-			$objTpl->setVariable("LABEL_NOTES", $objLang->get("notes", "form"));
-			$objTpl->parseCurrentBlock();
-
-			$objTpl->setCurrentBlock("singleview");
-			$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));
-			$objTpl->setVariable("BUTTON_FORMCANCEL", $objLang->get("cancel", "button"));
-			$objTpl->setVariable("LABEL_SAVE", $objLang->get("save", "button"));
-			$objTpl->setVariable("CID", NAV_PCMS_TEMPLATES);
-			$objTpl->setVariable("CMD", $strCommand);
-			$objTpl->setVariable("EID", $intElmntId);
-			$objTpl->parseCurrentBlock();
 
 			break;
 
