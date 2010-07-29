@@ -38,6 +38,7 @@ function FileField(strId, objOptions) {
 	this.maxChar = 50;
 	this.fileCount = 1;
 	this.thumbPath = "";
+	this.removeLabel = "";
 	var __this = this;
 	
 	//*** Parse the options.
@@ -220,7 +221,7 @@ FileField.prototype.addCurrentRow = function($element) {
 			},
 			data: {
 				"element": $element
-			},
+			}
 	});
 	var $objButton = jQuery("<a/>", {
 			"class": "button",
@@ -282,12 +283,14 @@ FileField.prototype.addCurrentRow = function($element) {
 }
 
 FileField.prototype.removeUploadField = function(objTrigger) {
+	var varCache = jQuery(objTrigger).parent().data("element").val();
+	
 	jQuery(objTrigger).parent().data("element").remove();
 	jQuery(objTrigger).parent().remove();
 	
 	var arrTemp = [];
 	for (var intCount = 0; intCount < this.subFiles.toUpload.length; intCount++) {
-		if (this.subFiles.toUpload[intCount].val() != jQuery(objTrigger).parent().data("element").val()) {
+		if (this.subFiles.toUpload[intCount].val() != varCache) {
 			arrTemp.push(this.subFiles.toUpload[intCount]);
 		}
 	}
@@ -358,7 +361,7 @@ FileField.prototype.sort = function() {
 		var strTemp = arrFields[intCount].replace("filelist_" + this.id + "[]=", "");
 		var objTemp = jQuery("#" + this.id + "_" + strTemp);
 		if (objTemp) {
-			objTemp.remove();
+			//objTemp.remove();
 			$objParent.append(objTemp);
 		}
 	}
