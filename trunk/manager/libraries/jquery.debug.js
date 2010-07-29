@@ -7,7 +7,7 @@
  *   This library is dependant on the "jQuery" library.
  *   
  * Changelog: 
- * 	07/07	- Faster debugging allowed for jQuery objects.
+ * 	07/07	- Faster debugging for jQuery objects.
  *  24/06	- For faster debugging, no more need for an object of arguments. Also introduced multiline debug messages. 
  *  22/06	- Both "warn" and "warning" are allowed debug types now.
  * 	16/06	- Implemented all Firebug's logging methods: info, error, warn, debug and log.
