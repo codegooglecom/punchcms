@@ -1818,7 +1818,6 @@ function parsePages($intElmntId, $strCommand) {
 			$objTpl->setVariable("LABEL_NAME", $objLang->get("name", "form"));
 			$objTpl->setVariable("LABEL_NOTES", $objLang->get("notes", "form"));
 			$objTpl->setVariable("LABEL_ALIAS", $objLang->get("alias", "form"));
-			$objTpl->setVariable("APINAME_DESCRIPTION", $objLang->get("apiNameShort", "tip"));
 			$objTpl->setVariable("APINAME_NOTE", $objLang->get("apiNameNote", "tip"));
 			$objTpl->setVariable("ALIAS_NOTE", $objLang->get("alias", "tip"));
 			$objTpl->setVariable("LABEL_SAVE", $objLang->get("save", "button"));

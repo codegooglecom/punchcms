@@ -332,7 +332,6 @@ $_LANG['formerror']['passwordNotMatch'] = "Het nieuwe wachtwoord komt niet overe
 $_LANG['formerror']['structure'] = "Kies een structuur.";
 
 //*** Tool tip definitions.
-$_LANG['tip']['apiNameShort'] = "API: Application Programming Interface.";
 $_LANG['tip']['apiNameNote'] = "Dit veld wordt alleen gebruikt door de ontwikkelaar van de website. Veranderen van de waarde kan de werking van de website verstoren.";
 $_LANG['tip']['containerNote'] = "Elementen gebaseerd op deze sjabloon kunnen ook elementen bevatten die gebruik maken van bovenliggende sjablonen. Standaard zal dat alleen met onderliggende sjablonen mogelijk zijn.";
 $_LANG['tip']['forceCreationNote'] = "Een element gebaseerd op dit sjabloon wordt automatisch aangemaakt door het bovenliggende sjabloon.";

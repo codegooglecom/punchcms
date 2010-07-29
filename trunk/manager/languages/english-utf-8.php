@@ -332,7 +332,6 @@ $_LANG['formerror']['passwordNotMatch'] = "The new password does not match.";
 $_LANG['formerror']['structure'] = "Choose a structure.";
 
 //*** Tool tip definitions.
-$_LANG['tip']['apiNameShort'] = "API: Application Programming Interface.";
 $_LANG['tip']['apiNameNote'] = "This field is used by the web developer. Changing this value can badly invluence the way your website works.";
 $_LANG['tip']['containerNote'] = "Elements based on this template can also contain elements based on parent templates. This is by default only possible with child templates.";
 $_LANG['tip']['forceCreationNote'] = "An element based on this template will be created by the parent automatically.";

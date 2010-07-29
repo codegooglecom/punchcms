@@ -379,7 +379,6 @@ function parseTemplates($intElmntId, $strCommand) {
 			$objTpl->setVariable("FORCECREATION_NOTE", $objLang->get("forceCreationNote", "tip"));
 			$objTpl->setVariable("LABEL_TEMPLATENAME", $objLang->get("templateName", "form"));
 			$objTpl->setVariable("LABEL_NAME", $objLang->get("name", "form"));
-			$objTpl->setVariable("APINAME_DESCRIPTION", $objLang->get("apiNameShort", "tip"));
 			$objTpl->setVariable("APINAME_NOTE", $objLang->get("apiNameNote", "tip"));
 			$objTpl->setVariable("LABEL_NOTES", $objLang->get("notes", "form"));
 			$objTpl->parseCurrentBlock();
@@ -604,7 +603,6 @@ function parseTemplates($intElmntId, $strCommand) {
 			$objTpl->setVariable("LABEL_REQUIREDFIELD", $objLang->get("requiredField", "form"));
 			$objTpl->setVariable("LABEL_FIELDNAME", $objLang->get("fieldName", "form"));
 			$objTpl->setVariable("LABEL_NAME", $objLang->get("name", "form"));
-			$objTpl->setVariable("APINAME_DESCRIPTION", $objLang->get("apiNameShort", "tip"));
 			$objTpl->setVariable("APINAME_NOTE", $objLang->get("apiNameNote", "tip"));
 			$objTpl->setVariable("LABEL_NOTES", $objLang->get("notes", "form"));
 			$objTpl->setVariable("LABEL_FIELDTYPE", $objLang->get("fieldType", "form"));
