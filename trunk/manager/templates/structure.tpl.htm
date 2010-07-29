@@ -81,7 +81,7 @@
 								jQuery(function(){
 									jQuery("#frm_structure").bind("change", function(){
 										jQuery("small.structureDescr").hide();
-										jQuery("#descr_" + jQuery(this).find("option:selected").val()).show();
+										jQuery("#descr_" + jQuery(this).find("option:selected").val()).css("display","block");
 									});
 								});
 								</script>
