@@ -2004,6 +2004,8 @@ function parsePages($intElmntId, $strCommand) {
 }
 
 function renderRecursiveFeedFields($objFeedFields, $strXPath = "") {
+	$strReturn = "";
+	
 	foreach ($objFeedFields as $objFeedField) {
 		$strPath = (empty($strXPath)) ? $objFeedField->getName() : $strXPath . "----" . $objFeedField->getName();
 		$strReturn .= "<li id=\"ff_" . $strPath . "\">" . $objFeedField->getName();

@@ -354,7 +354,7 @@ class Element extends DBA_Element {
 
 		if ($this->id > 0) {
 			if ($intLanguageId == 0) $intLanguageId = ContentLanguage::getDefault()->getId();
-			$objReturn = ElementFieldFeed::selectByTemplateField($intFieldId, $intLanguageId);
+			$objReturn = ElementFieldFeed::selectByTemplateField($this->getId(), $intFieldId, $intLanguageId);
 		}
 
 		return $objReturn;

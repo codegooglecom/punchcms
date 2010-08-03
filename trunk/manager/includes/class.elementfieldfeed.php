@@ -25,14 +25,14 @@ class ElementFieldFeed extends DBA_ElementFieldFeed {
 		return $objReturn;
 	}
 
-	public static function selectByTemplateField($intTemplateFieldId, $intLanguageId) {
+	public static function selectByTemplateField($intElementId, $intTemplateFieldId, $intLanguageId) {
 		self::$__object = "ElementFieldFeed";
 		self::$__table = "pcms_element_field_feed";
 	
 		$objReturn = NULL;
 	
-		$strSql = "SELECT * FROM pcms_element_field_feed WHERE templateFieldId = '%s' AND languageId = '%s'";
-		$strSql = sprintf($strSql, quote_smart($intTemplateFieldId), quote_smart($intLanguageId));
+		$strSql = "SELECT * FROM pcms_element_field_feed WHERE elementId = '%s' AND templateFieldId = '%s' AND languageId = '%s'";
+		$strSql = sprintf($strSql, quote_smart($intElementId), quote_smart($intTemplateFieldId), quote_smart($intLanguageId));
 		$objFields = self::select($strSql);
 		
 		if ($objFields->count() > 0) $objReturn = $objFields->current();

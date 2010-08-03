@@ -2,6 +2,8 @@
 
 require_once('includes/init.php');
 
+set_time_limit(60 * 60 * 5); //*** 5 hours max execution time.
+
 //*** Clear stale files from the files folder.
 $intNow = time();
 $arrFiles = scandir($_PATHS['upload']);
@@ -30,5 +32,7 @@ foreach ($objAccounts as $objAccount) {
 		$objFeed->updateElements();
 	}
 }
+
+echo "Schedule finished.";
 
 ?>

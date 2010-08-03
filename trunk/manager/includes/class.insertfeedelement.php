@@ -139,7 +139,7 @@ class InsertFeedElement {
 													//*** Move file to remote server.
 													$objUpload = new SingleUpload();																		
 													if (!$objUpload->moveToFTP($strFileName, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
-														Log::handleError("File could not be moved to remote server. " . $objUpload->errorMessage());
+														Log::handleError("File {$strFileName} could not be moved to remote server. " . $objUpload->errorMessage());
 													}
 												}						
 											}			
@@ -148,7 +148,7 @@ class InsertFeedElement {
 											if (rename($_PATHS['upload'] . $strOriginalName, $_PATHS['upload'] . $strLocalValue)) {	
 												$objUpload = new SingleUpload();																	
 												if (!$objUpload->moveToFTP($strLocalValue, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
-													Log::handleError("File could not be moved to remote server. " . $objUpload->errorMessage());
+													Log::handleError("File {$strLocalValue} could not be moved to remote server. " . $objUpload->errorMessage());
 												}
 											}
 											
@@ -178,7 +178,7 @@ class InsertFeedElement {
 													//*** Move file to remote server.
 													$objUpload = new SingleUpload();
 													if (!$objUpload->moveToFTP($strFileName, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
-														Log::handleError("File could not be moved to remote server.");
+														Log::handleError("File {$strFileName} could not be moved to remote server.");
 													}
 												}																
 											}
@@ -188,7 +188,7 @@ class InsertFeedElement {
 												//*** Move file to remote server.
 												$objUpload = new SingleUpload();
 												if (!$objUpload->moveToFTP($strLocalValue, $_PATHS['upload'], $strServer, $strUsername, $strPassword, $strRemoteFolder)) {
-													Log::handleError("File could not be moved to remote server.");
+													Log::handleError("File {$strLocalValue} could not be moved to remote server.");
 												}
 											}
 											
