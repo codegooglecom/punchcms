@@ -112,6 +112,16 @@ switch ($strDispatch) {
 				'type' => 'string',
 				'required' => FALSE,
 			),
+		  	'frm_dynamic_alias_check'	=> array(
+				'type' => 'string',
+				'maxlength' => 2,
+				'required' => FALSE,
+			),
+		  	'frm_dynamic_alias'	=> array(
+				'type' => 'string',
+				'maxlength' => 250,
+				'required' => FALSE,
+			),
 		  	'frm_feedpath'	=> array(
 				'type' => 'string',
 				'required' => FALSE,
@@ -122,7 +132,7 @@ switch ($strDispatch) {
 			),
 		  	'frm_description'	=> array(
 				'type' => 'text',
-				'maxlength' => 250,
+				'maxlength' => 250
 			),
 		  	'publish_start'	=> array(
 				'type' => 'word',

@@ -51,6 +51,7 @@
 		<column name="feedPath" type="varchar" />
 		<column name="maxItems" type="varchar" />
 		<column name="sortBy" type="varchar" />
+		<column name="aliasField" type="varchar" />
 	</table>
 	<table name="pcms_element_field" phpName="ElementField">
 		<column name="id" primaryKey="true" />

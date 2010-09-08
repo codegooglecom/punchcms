@@ -9,6 +9,7 @@ class InsertFeedElement {
 	private $active = FALSE;
 	private $name = "";
 	private $username = "";
+	private $alias = "";
 	private $sort = 0;
 
 	public function __construct($objParent) {
@@ -81,6 +82,9 @@ class InsertFeedElement {
 			$objElement->setTypeId(ELM_TYPE_LOCKED);
 			$objElement->setTemplateId($this->__template->getId());
 			$objElement->save(TRUE, FALSE);
+			
+			//*** Alias.
+			if (!empty($this->alias)) $objElement->setAlias($this->alias);
 
 			//*** Activate default schedule.
 			$objSchedule = new ElementSchedule();
@@ -106,7 +110,7 @@ class InsertFeedElement {
 							//*** Upload file.
 							$arrPath = parse_url($arrValue['value']);
 							if ($arrPath !== FALSE) {
-								$strFile = file_get_contents($arrValue['value']);
+								$strFile = @file_get_contents(str_replace(" ", "%20", $arrValue['value']));
 								if ($strFile !== FALSE) {
 									$strOriginalName = array_pop(explode("/", $arrPath['path']));
 									$strLocalValue = ImageField::filename2LocalName($strOriginalName);

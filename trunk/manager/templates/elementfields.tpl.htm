@@ -47,7 +47,8 @@
 								<!-- BEGIN error-element-ispage -->
 								<p class="ui-state-error ui-corner-all">{ERROR_ISPAGE}</p>
 								<!-- END error-element-ispage -->
-								<label for="frm_ispage" class="check"><input type="checkbox" id="frm_ispage" name="frm_ispage" class="check" {FORM_ISPAGE_VALUE} /> {LABEL_ISPAGE}</label>
+								<label for="frm_ispage">{LABEL_ISPAGE}</label>
+								<input type="checkbox" id="frm_ispage" name="frm_ispage" class="check" {FORM_ISPAGE_VALUE} />
 							</div>
 							<!-- END elementispage -->
 							<div class="required{ERROR_NAME_ON}">
@@ -73,6 +74,20 @@
 								<input type="text" id="frm_alias" name="frm_alias" class="input-textlarge" value="{FORM_ALIAS_VALUE}" />
 								<small>{ALIAS_NOTE}</small>
 							</div>
+							<!-- BEGIN dynamic.alias -->
+							<div class="optional{ERROR_DYNAMIC_ALIAS_ON}">
+								<!-- BEGIN error-element-dynamicalias -->
+								<p class="ui-state-error ui-corner-all">{ERROR_DYNAMIC_ALIAS}</p>
+								<!-- END error-element-dynamicalias -->
+								<label for="frm_dynamic_alias_check">Dynamische snelkoppeling</label>
+								<input type="checkbox" id="frm_dynamic_alias_check" name="frm_dynamic_alias_check" class="check" {FORM_DYNAMIC_ALIAS_VALUE} />
+								<select id="frm_dynamic_alias" name="frm_dynamic_alias" class="select-one break">
+									<!-- BEGIN list_feed_field -->
+									<option value="{FEEDLIST_VALUE}" {FEEDLIST_SELECTED}>{FEEDLIST_TEXT}</option>
+									<!-- END list_feed_field -->
+								</select>
+							</div>
+							<!-- END dynamic.alias -->
 							<!-- BEGIN elementtemplate -->
 							<div class="required{ERROR_TEMPLATE_ON}">
 								<!-- BEGIN error-templatename -->

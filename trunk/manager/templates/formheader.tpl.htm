@@ -37,6 +37,14 @@ function resizeTree() {
 	 $objTree.css({ height: treeHeight + "px"});
 }
 
+function checkDynamicAlias() {
+	if ($("#frm_dynamic_alias_check:checked").length > 0) {
+		$("#frm_dynamic_alias").removeAttr("disabled");
+	} else {
+		$("#frm_dynamic_alias").attr("disabled", "disabled");
+	}
+}
+
 //*** Onload action.
 jQuery(function(){
 	if(typeof $tabs == "undefined"){
@@ -54,6 +62,11 @@ jQuery(function(){
 	}
 
 	jQuery(".input-button").button();
+
+	$("#frm_dynamic_alias_check").bind("click", function(){
+		checkDynamicAlias();
+	});	
+	checkDynamicAlias();
 	
 });
 

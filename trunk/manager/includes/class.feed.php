@@ -93,10 +93,13 @@ class Feed extends DBA_Feed {
 	}
 	
 	public function getBody($strXpath = "") {
+		$objReturn = array();
 		$strBody = $this->getRawBody();
 		
 		$objXml = simplexml_load_string($strBody);
-		$objReturn = $objXml->xpath($this->getBasepath() . $strXpath);
+		if (is_object($objXml)) {
+			$objReturn = $objXml->xpath($this->getBasepath() . $strXpath);
+		}
 		
 		return $objReturn;
 	}
@@ -173,21 +176,40 @@ class Feed extends DBA_Feed {
 						$strValue = str_replace("user->", "", $strPath);
 						$objInsertElement->addField($objFeedField->getTemplateFieldId(), $strValue, $objLang->getId(), $objFeedField->getCascade());
 					} else {
-						$objValue = (!empty($strPath)) ? $objNode->xpath($strPath) : NULL;
-						if (!is_object($objValue) && count($objValue) > 0) {
-							$strValue = (string) current($objValue);
+						$strValue = $this->valueByPath($objNode, $strPath);
+						if (!empty($strValue)) {
 							$objInsertElement->addField($objFeedField->getTemplateFieldId(), $strValue, $objLang->getId(), $objFeedField->getCascade());
 							
 							if (!is_numeric($strValue) && empty($strName)) {
-								$strName = getShortValue($strValue, 40, TRUE, "");
-							} 
+								$strName = getShortValue(strip_tags($strValue), 40, TRUE, "");
+							}
 						}
 					}
 				}	
 			}
 			
+			$strAlias = "";
+			$strAliasField = $objElementFeed->getAliasField();
+			if (!empty($strAliasField)) {
+				//*** Get the alias field value.
+				$strValue = $this->valueByPath($objNode, $objElementFeed->getAliasField());
+				$strAlias = $objElement->getAlias();
+				if (!empty($strAlias) && stripos($strAlias, "%s") !== false) {
+					//*** Merge value with the flat alias.
+					$strAlias = sprintf($strAlias, $strValue);
+				} else {
+					//*** Use just the value.
+					$strAlias = $strValue;
+				}
+			} else {
+				//*** Use the flat alias.
+				$strAlias = $objElement->getAlias();
+			}
+			
 			$strName = (empty($strName)) ? "Dynamic" : $strName;
+			
 			$objInsertElement->setName($strName);
+			$objInsertElement->setAlias($strAlias);
 			$objInsertElement->setUsername("PunchCMS");
 			$objInsertElement->setActive(TRUE);
 			$objInsertedElement = $objInsertElement->save();
@@ -201,6 +223,17 @@ class Feed extends DBA_Feed {
 			if ($intMaxItems > 0 && $intCount >= $intMaxItems) break;
 			$intCount++;
 		}
+	}
+	
+	private function valueByPath($objNode, $strPath) {
+		$strReturn = "";
+		
+		$objValue = (!empty($strPath)) ? $objNode->xpath($strPath) : NULL;
+		if (!is_object($objValue) && count($objValue) > 0) {
+			$strReturn = (string) current($objValue);
+		}
+		
+		return $strReturn;
 	}
 }
 

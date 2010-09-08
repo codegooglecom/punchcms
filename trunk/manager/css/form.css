@@ -65,6 +65,10 @@ form.ui-tabs div.ui-tabs-panel fieldset div label {
 	label.ui-button {
 		float: left !important;
 	}
+	select.break {
+		display: block;
+		margin: 10px 0 6px 160px;
+	}
 	
 form.ui-tabs div.ui-tabs-panel fieldset div input {
 	width: 300px;

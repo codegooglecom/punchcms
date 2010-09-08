@@ -70,6 +70,22 @@ class ElementFeed extends DBA_ElementFeed {
 		return $arrReturn;
 	}	
 	
+	public function getBasePath() {
+		$strReturn = "";
+		
+		$objFeed = Feed::selectByPK($this->getFeedId());
+		if (is_object($objFeed)) {
+			$strReturn = $objFeed->getBasePath();
+			
+			$strPath = $this->getFeedPath();
+			if (!empty($strPath)) $strPath = "/" . $strPath;
+			
+			$strReturn .= $strPath;
+		}
+		
+		return $strReturn;
+	}
+	
 	public function delete() {
 		self::$__object = "ElementFeed";
 		self::$__table = "pcms_element_feed";
@@ -81,10 +97,6 @@ class ElementFeed extends DBA_ElementFeed {
 		}
 		
 		return parent::delete();
-	}
-	
-	public function getValueByFeedField() {
-		
 	}
 	
 }

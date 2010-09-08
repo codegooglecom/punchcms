@@ -552,6 +552,11 @@ function parsePages($intElmntId, $strCommand) {
 						$objElementFeed->setFeedId($intFeedId);
 						$objElementFeed->setFeedPath($_CLEAN_POST["frm_feedpath"]);
 						$objElementFeed->setMaxItems($_CLEAN_POST["frm_maxitems"]);
+						if ($_CLEAN_POST["frm_dynamic_alias_check"]) {
+							$objElementFeed->setAliasField($_CLEAN_POST["frm_dynamic_alias"]);
+						} else {
+							$objElementFeed->setAliasField("");
+						}
 												
 						$objElement->setFeed($objElementFeed);
 					}
@@ -1766,7 +1771,24 @@ function parsePages($intElmntId, $strCommand) {
 						}
 					}
 										
-					if ($strCommand == CMD_EDIT) {	
+					if ($strCommand == CMD_EDIT) {								
+						$blnDynamicAlias = false;		
+						$objFeedFields = $objElementFeed->getStructuredNodes();	
+						foreach ($objFeedFields as $objFeedField) {
+							$objTpl->setCurrentBlock("list_feed_field");
+							$objTpl->setVariable("FEEDLIST_VALUE", $objFeedField->getName());
+							$objTpl->setVariable("FEEDLIST_TEXT", $objFeedField->getName());
+							if ($objElementFeed->getAliasField() == $objFeedField->getName()) {
+								$objTpl->setVariable("FEEDLIST_SELECTED", "selected=\"selected\"");
+								$blnDynamicAlias = true;
+							}
+							$objTpl->parseCurrentBlock();
+						}
+						
+						if ($blnDynamicAlias) {
+							$objTpl->setVariable("FORM_DYNAMIC_ALIAS_VALUE", "checked=\"checked\"");
+						}
+						
 						$objTpl->setVariable("FORM_MAXITEMS_VALUE", $objElementFeed->getMaxItems());
 						
 						//*** Template fields.

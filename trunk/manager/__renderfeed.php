@@ -2,9 +2,11 @@
 
 require_once('includes/init.php');
 
-$objFeeds = Feed::selectActive(TRUE);
+$objFeeds = Feed::selectActive();
 foreach ($objFeeds as $objFeed) {
-	$objFeed->updateElements();
+	if ($objFeed->getId() != 1) {
+		$objFeed->updateElements();
+	}
 }
 
 ?>
