@@ -13,6 +13,7 @@ class DBA_ElementFeed extends DBA__Object {
 	protected $feedpath = "";
 	protected $maxitems = "";
 	protected $sortby = "";
+	protected $aliasfield = "";
 
 	//*** Constructor.
 	public function DBA_ElementFeed() {
