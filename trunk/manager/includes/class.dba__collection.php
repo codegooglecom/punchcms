@@ -18,19 +18,24 @@ class DBA__Collection implements Iterator {
 	private $__pageItems = 0;
 	private $__currentPage = 1;
 
+	/**
+	 * Constructor method
+	 * 
+	 * @param array $initArray
+	 */
 	public function __construct($initArray = array()) {
 	   if (is_array($initArray)) {
 		   $this->collection = $initArray;
 	   }
 	}
 
+	/**
+	 * Add object to the collection
+	 * 
+	 * @param object The object
+	 * @param boolean Add object to beginning of array or not
+	 */
 	public function addObject($value, $blnAddToBeginning = FALSE) {
-		/* Add an object to the collection.
-		 *
-		 * Method arguments are:
-		 * - object to add.
-		 */
-
 		if ($blnAddToBeginning) {
 			array_unshift($this->collection, $value);
 		} else {
@@ -38,6 +43,11 @@ class DBA__Collection implements Iterator {
 		}
 	}
 
+	/**
+	 * Advance internal pointer to a specific index
+	 * 
+	 * @param integer $intPosition
+	 */
 	public function seek($intPosition) {
     	//*** advance the internal pointer to a specific index
         if (is_numeric($intPosition) && $intPosition < count($this->collection)) {
@@ -50,17 +60,27 @@ class DBA__Collection implements Iterator {
 		$this->isSeek = TRUE;
 	}
 
+	/**
+	 * Pick a random child element
+	 */
     public function random() {
-    	//*** Pick a random child element.
     	$intIndex = rand(0, (count($this->collection) - 1));
 		return $this->collection[$intIndex];
     }
 
+    /**
+     * Randomize the collection
+     */
     public function randomize() {
-    	//*** Randomize the collection.
 		shuffle($this->collection);
     }
 
+    /**
+     * Order the collection on a given key [asc]ending or [desc]ending
+     * 
+     * @param string $strSubject
+     * @param string $strOrder
+     */
 	public function orderBy($strSubject, $strOrder = "asc") {
     	//*** Order the collection on a given key [asc]ending or [desc]ending.
 
@@ -83,8 +103,13 @@ class DBA__Collection implements Iterator {
 		}
 	}
 
+	/**
+	 * Order the collection on a given field name [asc]ending or [desc]ending.
+	 * 
+	 * @param string $strFieldName
+	 * @param string $strOrder
+	 */
 	public function orderByField($strFieldName, $strOrder = "asc") {
-    	//*** Order the collection on a given field name [asc]ending or [desc]ending.
 
 		for ($i = 0; $i < count($this->collection); $i++) {
 			for ($j = 0; $j < count($this->collection) - $i - 1; $j++) {
@@ -156,6 +181,11 @@ class DBA__Collection implements Iterator {
         return end($this->collection);
     }
     
+    /**
+     * Check if an object is in the collection
+     * 
+     * @param variable $varValue
+     */
     public function inCollection($varValue) {
     	foreach ($this->collection as $object) {
     		if ($object == $varValue) {
@@ -166,6 +196,11 @@ class DBA__Collection implements Iterator {
     	return FALSE;
     }
     	
+    /**
+     * Set items per page.
+     * 
+     * @param integer $intValue
+     */
 	public function setPageItems($intValue) {
 		$this->__pageItems = $intValue;
 	}
@@ -174,6 +209,11 @@ class DBA__Collection implements Iterator {
 		return $this->__pageItems;
 	}
 	
+	/**
+	 * Set the current page
+	 * 
+	 * @param integer $intValue
+	 */
 	public function setCurrentPage($intValue = NULL) {
 		if (is_null($intValue)) {
 			$intPage = Request::get("page", 1);
