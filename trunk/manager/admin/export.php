@@ -5,7 +5,7 @@ $accountId	= Request::get("eid", 0);
 $blnError 	= FALSE;
 
 $objAccount = Account::selectByPk($accountId);
-$strZipFile = ExImport::export($accountId);
+$strZipFile = ImpEx::export($accountId);
 
 if (is_object($objAccount) && $strZipFile !== FALSE) {
 	header("HTTP/1.1 200 OK");

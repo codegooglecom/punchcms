@@ -127,12 +127,12 @@ class Structure extends DBA_Structure {
 
 								case "templates":
 									//*** Add templates to the account.
-									ExImport::importTemplates($childNode, $_CONF['app']['account']->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrLinkFieldIds, $intTemplateParentId);
+									ImpEx::importTemplates($childNode, $_CONF['app']['account']->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrLinkFieldIds, $intTemplateParentId);
 									break;
 
 								case "elements":
 									//*** Add elements to the account.
-									ExImport::importElements($childNode, $_CONF['app']['account']->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $intElementParentId);
+									ImpEx::importElements($childNode, $_CONF['app']['account']->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $intElementParentId);
 									break;
 
 								case "aliases":
@@ -157,10 +157,10 @@ class Structure extends DBA_Structure {
 							}
 							
 							//*** Adjust the links for deeplink fields.
-							ExImport::adjustDeeplinks($arrElementFieldIds["link"], $arrElementIds, $arrLanguageIds);
+							ImpEx::adjustDeeplinks($arrElementFieldIds["link"], $arrElementIds, $arrLanguageIds);
 							
 							//*** Adjust the links in large text fields.
-							ExImport::adjustTextlinks($arrElementFieldIds["largeText"], $arrElementIds, $arrLanguageIds, array(0));
+							ImpEx::adjustTextlinks($arrElementFieldIds["largeText"], $arrElementIds, $arrLanguageIds, array(0));
 							
 						}
 					}

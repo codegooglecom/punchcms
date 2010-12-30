@@ -1034,6 +1034,8 @@ function parsePages($intElmntId, $strCommand) {
 							//*** Get the field type object.
 							$objType = TemplateFieldType::selectByPK($objField->getTypeId());
 	
+							$intMaxFileCount = null;
+							
 							switch ($objField->getTypeId()) {
 								case FIELD_TYPE_DATE:
 									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.date', 'elementfield_date.tpl.htm');

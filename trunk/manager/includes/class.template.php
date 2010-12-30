@@ -15,10 +15,10 @@ class Template extends DBA_Template {
 
 	public static function selectByPK($varValue, $arrFields = array()) {
 		global $_CONF;
-		DBA__Object::$__object = "Template";
-		DBA__Object::$__table = "pcms_template";
+		parent::$__object = "Template";
+		parent::$__table = "pcms_template";
 
-		return DBA__Object::selectByPK($varValue, $arrFields, $_CONF['app']['account']->getId());
+		return parent::selectByPK($varValue, $arrFields, $_CONF['app']['account']->getId());
 	}
 
 	public static function selectByName($varValue) {

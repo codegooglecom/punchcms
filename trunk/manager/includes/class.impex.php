@@ -45,7 +45,7 @@
 */
 
 /*
- * ExImport Class v0.2.18
+ * ImpEx Class v0.2.18
  * Exports and imports account data from the database.
  */
  
@@ -55,7 +55,7 @@ require_once('dzip/dUnzip2.inc.php');
 $intDefaultLanguage = 0;
 set_time_limit(60*60);
 
-class ExImport {
+class ImpEx {
 
 	public static function export($intAccountId = 0) {
 		global $objLiveAdmin,
@@ -111,6 +111,24 @@ class ExImport {
 						$objLanguages->appendChild($objLanguage);
 					}
 
+					//*** External feeds.
+					$objFeeds = $objDoc->createElement('feeds');
+
+					$objDbFeeds = Feed::select();
+					foreach ($objDbFeeds as $objDbFeed) {
+						$objFeed = $objDoc->createElement('feed');
+						$objFeed->setAttribute("name", $objDbFeed->getName());
+						$objFeed->setAttribute("feed", $objDbFeed->getFeed());
+						$objFeed->setAttribute("basepath", $objDbFeed->getBasepath());
+						$objFeed->setAttribute("refresh", $objDbFeed->getRefresh());
+						$objFeed->setAttribute("lastUpdate", $objDbFeed->getLastUpdate());
+						$objFeed->setAttribute("active", $objDbFeed->getActive());
+						$objFeed->setAttribute("sort", $objDbFeed->getSort());
+						$objFeed->setAttribute("created", $objDbFeed->getCreated());
+						$objFeed->setAttribute("modified", $objDbFeed->getModified());
+						$objFeeds->appendChild($objFeed);
+					}
+
 					//*** Storage items.
 					$objStorage = self::exportStorage($objDoc, $intAccountId, 0, $arrFiles);
 
@@ -141,6 +159,7 @@ class ExImport {
 					$objProduct->setAttribute("expires", $objAccountProduct->getExpires());
 					$objProduct->appendChild($objSettings);
 					$objProduct->appendChild($objLanguages);
+					$objProduct->appendChild($objFeeds);
 					$objProduct->appendChild($objStorage);
 					$objProduct->appendChild($objTemplates);
 					$objProduct->appendChild($objElements);
@@ -844,7 +863,7 @@ class ExImport {
 		
 		$objElements = $objDoc->createElement('elements');
 
-		$objDbElements = Elements::getFromParent($intId, FALSE, "'1', '2', '3'", $intAccountId);
+		$objDbElements = Elements::getFromParent($intId, FALSE, "'1', '2', '3', '4', '5'", $intAccountId);
 
 		if ($objDbElements->count() > 0) {
 			foreach ($objDbElements as $objDbElement) {
@@ -951,12 +970,37 @@ class ExImport {
 					if ($objDbLanguages->count() > 0) $objElement->appendChild($objLanguages);
 				}
 				
+				//*** Feed fields.
+				$objDbFeed = $objDbElement->getFeed();
+				if (is_object($objDbFeed) && $objDbFeed->getId() > 0) {
+					$objFeed = $objDoc->createElement('feed');
+					$objFeed->setAttribute("feedId", $objDbFeed->getFeedId());
+					$objFeed->setAttribute("feedPath", $objDbFeed->getFeedPath());
+					$objFeed->setAttribute("maxItems", $objDbFeed->getMaxItems());
+					$objFeed->setAttribute("sortBy", $objDbFeed->getSortBy());
+					$objFeed->setAttribute("aliasField", $objDbFeed->getAliasField());
+					
+					$objDbFields = ElementFieldFeed::selectByElement($objDbElement->getId());
+					foreach ($objDbFields as $objDbField) {
+						$objField = $objDoc->createElement('feedfield');
+						$objField->setAttribute("templateFieldId", $objDbField->getTemplateFieldId());
+						$objField->setAttribute("feedPath", $objDbField->getFeedPath());
+						$objField->setAttribute("xpath", $objDbField->getXpath());
+						$objField->setAttribute("languageId", $objDbField->getLanguageId());
+						$objField->setAttribute("cascade", $objDbField->getCascade());
+						$objField->setAttribute("sort", $objDbField->getSort());
+						$objFeed->appendChild($objField);	
+					}
+					
+					$objElement->appendChild($objFeed);			
+				}
+				
 				//*** Permissions.
 				$objPermissions = $objDoc->createElement('permissions');
 				$objDbPermissions = $objDbElement->getPermissions();
 				$objPermissions->setAttribute("users", implode(",", $objDbPermissions->getUserId()));
 				$objPermissions->setAttribute("groups", implode(",", $objDbPermissions->getGroupId()));
-				$objElement->appendChild($objPermissions);				
+				$objElement->appendChild($objPermissions);		
 
 				//*** Sub elements.
 				$objSubElements = self::exportElement($objDoc, $intAccountId, $objDbElement->getId(), $arrFiles);

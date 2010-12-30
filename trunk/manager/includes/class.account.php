@@ -281,7 +281,7 @@ class Account extends DBA_Account {
 	public function makeBackup($intMax = 5) {
 		global $_PATHS;
 		
-		$strZipFile = ExImport::export($this->id);
+		$strZipFile = ImpEx::export($this->id);
 		copy($strZipFile, $_PATHS['backup'] . $this->punchId . "_" . strftime("%Y%m%d%H%M%S") . ".zip");
 		
 		//*** Remove old backups.
@@ -316,7 +316,7 @@ class Account extends DBA_Account {
 		}
 		
 		if (!empty($strFile) && is_file($strFile)) {
-			ExImport::import($strFile, TRUE, TRUE);
+			ImpEx::import($strFile, TRUE, TRUE);
 			$blnReturn = TRUE;
 		}
 		

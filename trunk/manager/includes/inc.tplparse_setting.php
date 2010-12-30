@@ -61,7 +61,7 @@ function parseSetting($intElmntId, $strCommand) {
 			}
 			
 			//*** Move imported files to the remote server.
-			ExImport::moveImportedFiles($_CONF['app']['account']);
+			ImpEx::moveImportedFiles($_CONF['app']['account']);
 
 			header("Location: " . Request::getURI() . "/?cid=" . $_POST["cid"]);
 			exit();

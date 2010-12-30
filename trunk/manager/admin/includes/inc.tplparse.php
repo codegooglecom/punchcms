@@ -308,7 +308,7 @@ function parseAccount($eId, $cmd) {
 					$strOutput = "<p>Error importing the file. It's empty...</p>";
 				} else {
 					if (is_uploaded_file($_FILES['frm_file']['tmp_name'])) {
-						$objAccount = ExImport::import($_FILES['frm_file']['tmp_name'], $blnOverwrite, $blnKeepSettings);
+						$objAccount = ImpEx::import($_FILES['frm_file']['tmp_name'], $blnOverwrite, $blnKeepSettings);
 						if (is_object($objAccount)) {
 							$strOutput = "<p>Account for <b>{$objAccount->getName()}</b> has been imported successfully with PunchId <b>{$objAccount->PunchId}</b>.</p>\n";
 						} else {
