@@ -57,7 +57,7 @@ set_time_limit(60*60);
 
 class ImpEx {
 
-	public static function export($intAccountId = 0) {
+	public static function export($intAccountId = 0, $exportFiles = true) {
 		global $objLiveAdmin,
 				$_CONF,
 				$_PATHS;
@@ -117,6 +117,7 @@ class ImpEx {
 					$objDbFeeds = Feed::select();
 					foreach ($objDbFeeds as $objDbFeed) {
 						$objFeed = $objDoc->createElement('feed');
+						$objFeed->setAttribute("id", $objDbFeed->getId());
 						$objFeed->setAttribute("name", $objDbFeed->getName());
 						$objFeed->setAttribute("feed", $objDbFeed->getFeed());
 						$objFeed->setAttribute("basepath", $objDbFeed->getBasepath());
@@ -167,10 +168,12 @@ class ImpEx {
 					$objProducts->appendChild($objProduct);
 										
 					//*** Files.
-					$strServer = Setting::getValueByName("ftp_server");
-					if ($strServer != "localhost") {
-						$strLocation = "http://" . Setting::getValueByName("ftp_server") . Setting::getValueByName("file_folder");
-						$objZip = self::exportFilesToZip($objZip, $arrFiles, $strLocation);
+					if ($exportFiles) {
+						$strServer = Setting::getValueByName("ftp_server");
+						if ($strServer != "localhost") {
+							$strLocation = "http://" . Setting::getValueByName("ftp_server") . Setting::getValueByName("file_folder");
+							$objZip = self::exportFilesToZip($objZip, $arrFiles, $strLocation);
+						}
 					}
 					
 					break;
@@ -283,6 +286,7 @@ class ImpEx {
 												$objAccountProduct->save();
 												
 												$arrStorageIds[0] = 0;
+												$arrFeedIds[0] = 0;
 
 												//*** Add PunchCMS data to the account.
 												foreach ($productNode->childNodes as $pcmsNode) {
@@ -328,6 +332,24 @@ class ImpEx {
 															}
 															break;
 
+														case "feeds":
+															//*** Add feeds to the account.
+															$arrFeedIds[0] = 0;
+															foreach ($pcmsNode->childNodes as $feedNode) {
+																$objFeed = new Feed();
+																$objFeed->setAccountId($objAccount->getId());
+																$objFeed->setName($feedNode->getAttribute("name"));
+																$objFeed->setFeed($feedNode->getAttribute("feed"));
+																$objFeed->setBasePath($feedNode->getAttribute("basepath"));
+																$objFeed->setRefresh($feedNode->getAttribute("refresh"));
+																$objFeed->setLastUpdate($feedNode->getAttribute("lastUpdate"));
+																$objFeed->setActive($feedNode->getAttribute("active"));
+																$objFeed->setSort($feedNode->getAttribute("sort"));
+																$objFeed->save();
+																$arrFeedIds[$feedNode->getAttribute("id")] = $objFeed->getId();
+															}
+															break;
+
 														case "storage":
 															//*** Add media items to the account.
 															self::importStorage($pcmsNode, $objAccount->getId(), $arrStorageIds);
@@ -346,7 +368,7 @@ class ImpEx {
 															$arrElementIds[0] = 0;
 															$arrElementFieldIds["link"][0] = 0;
 															$arrElementFieldIds["largeText"][0] = 0;
-															self::importElements($pcmsNode, $objAccount->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds);
+															self::importElements($pcmsNode, $objAccount->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds);
 															break;
 
 														case "aliases":
@@ -524,7 +546,7 @@ class ImpEx {
 		}
 	}
 
-	public static function importElements($objElements, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, &$arrElementIds, &$arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $intParentId = 0) {
+	public static function importElements($objElements, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, &$arrElementIds, &$arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $intParentId = 0) {
 		global $intDefaultLanguage;
 		
 		$strElmntPattern = "/(\?eid=)([0-9]+)/ie";		
@@ -598,6 +620,32 @@ class ImpEx {
 							}
 							break;
 							
+						case "feed":
+							foreach ($subNode->childNodes as $feedFieldNode) {
+								if ($feedFieldNode->nodeName == "feedfield") {
+									$objFeedField = new ElementFieldFeed();
+									$objFeedField->setElementId($objElement->getId());
+									$objFeedField->setTemplateFieldId($arrTemplateFieldIds[$feedFieldNode->getAttribute("templateFieldId")]);
+									$objFeedField->setFeedPath($feedFieldNode->getAttribute("feedPath"));
+									$objFeedField->setXpath($feedFieldNode->getAttribute("xpath"));
+									$objFeedField->setLanguageId($arrLanguageIds[$feedFieldNode->getAttribute("languageId")]);
+									$objFeedField->setCascade($feedFieldNode->getAttribute("cascade"));
+									$objFeedField->setSort($feedFieldNode->getAttribute("sort"));
+									$objFeedField->save();
+								}
+							}
+							
+							$objFeed = new ElementFeed();
+							$objFeed->setElementId($objElement->getId());
+							$objFeed->setFeedId($arrFeedIds[$subNode->getAttribute("feedId")]);
+							$objFeed->setFeedPath($subNode->getAttribute("feedPath"));
+							$objFeed->setMaxItems($subNode->getAttribute("maxItems"));
+							$objFeed->setSortBy($subNode->getAttribute("sortBy"));
+							$objFeed->setAliasField($subNode->getAttribute("aliasField"));
+							$objFeed->save();
+							
+							break;
+							
 						case "languages":
 							foreach ($subNode->childNodes as $languageNode) {
 								$objLanguage = new ElementLanguage();
@@ -630,7 +678,7 @@ class ImpEx {
 							break;
 							
 						case "elements":
-							self::importElements($subNode, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $objElement->getId());
+							self::importElements($subNode, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $objElement->getId());
 							break;
 					}
 				}

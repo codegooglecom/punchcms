@@ -113,6 +113,11 @@ div.required label
 	color: #256ab7;
 }
 
+div.formWrapper div fieldset label {
+	width: 200px;
+	text-align: left;
+}
+
 div.formWrapper div.required label,
 div.required label
 {

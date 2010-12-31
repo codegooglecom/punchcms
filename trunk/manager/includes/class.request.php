@@ -18,6 +18,17 @@ class Request {
 		}
 	}
 
+	public static function redirect($strQuery) {		
+		if (!empty($strQuery)) {
+			if (is_numeric($strQuery)) {
+				header("Location: " . self::getProtocol() . "://" . $_SERVER['HTTP_HOST'] . self::getSubURI() . "?eid=" . $strQuery);
+			} else {
+				header("Location: " . self::getProtocol() . "://" . $_SERVER['HTTP_HOST'] . self::getSubURI() . $strQuery);
+			}
+			exit();
+		}
+	}
+
 	public static function getURI($strProtocol = "") {
 		return self::getRootURI($strProtocol) . self::getSubURI();
 	}

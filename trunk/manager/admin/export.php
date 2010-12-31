@@ -1,11 +1,12 @@
 <?php require_once('includes/init.php'); ?>
 <?php
 
-$accountId	= Request::get("eid", 0);
-$blnError 	= FALSE;
+$accountId		= Request::get("eid", 0);
+$exportFiles	= Request::get("files", true);
+$blnError 		= FALSE;
 
 $objAccount = Account::selectByPk($accountId);
-$strZipFile = ImpEx::export($accountId);
+$strZipFile = ImpEx::export($accountId, $exportFiles);
 
 if (is_object($objAccount) && $strZipFile !== FALSE) {
 	header("HTTP/1.1 200 OK");

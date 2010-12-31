@@ -74,6 +74,26 @@
 		</form>
 	</div>
 	<!-- END form.import -->
+	<!-- BEGIN form.export -->
+	<div class="formWrapper">
+		<form id="accountForm" method="post" action="?" enctype="multipart/form-data">
+			<div class="required">
+				<label for="frm_export_files">Export options</label>				
+				<fieldset>
+					<label for="frm_export_files" class="check"><input type="checkbox" id="frm_export_files" name="frm_export_files" value="true" checked="checked" /> Include uploaded files</label>
+				</fieldset>
+			</div>
+			<div class="navigation">
+				<input type="hidden" name="eid" value="{EID}" />
+				<input type="hidden" name="cid" value="{CID}" />
+				<input type="hidden" name="cmd" value="{CMD}" />
+				<input type="hidden" name="dispatch" value="exportAccount" />
+				<input type="button" value="Cancel" onclick="Account.cancel()" />
+				<input type="submit" value="Export" />
+			</div>
+		</form>
+	</div>
+	<!-- END form.export -->
 	<!-- BEGIN form.restore -->
 	<div class="formWrapper">
 		<form id="restoreForm" method="post" action="?">

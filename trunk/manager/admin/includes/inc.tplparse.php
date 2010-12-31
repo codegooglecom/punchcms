@@ -106,7 +106,7 @@ function parseBrowse($cId, $eId, $cmd) {
 				$objTpl->setCurrentBlock("list-item");
 				$objTpl->setVariable('ITEM_LINK', "http://" . $objTempAccount->getUri() . "." . $strRootDomain);
 				$objTpl->setVariable('ITEM_LABEL', htmlentities($objTempAccount->getName()));
-				$objTpl->setVariable('ITEM_EXPORT', "export.php?eid=" . $objTempAccount->getId());
+				$objTpl->setVariable('ITEM_EXPORT', "?cid=" . NAV_ACCOUNT . "&amp;cmd=" . CMD_EXPORT . "&amp;eid=" . $objTempAccount->getId());
 				$objTpl->setVariable('ITEM_RESTORE', "?cid=" . NAV_ACCOUNT . "&amp;cmd=" . CMD_RESTORE . "&amp;eid=" . $objTempAccount->getId());
 				$objTpl->setVariable('ITEM_EDIT', "?cid=" . NAV_ACCOUNT . "&amp;cmd=" . CMD_EDIT . "&amp;eid=" . $objTempAccount->getId());
 				$objTpl->setVariable('ITEM_TYPE', "Account");
@@ -324,6 +324,21 @@ function parseAccount($eId, $cmd) {
 				$objTpl->setCurrentBlock("form.import");
 				$objTpl->setVariable('CID', NAV_ACCOUNT);
 				$objTpl->setVariable('CMD', $cmd);
+				$objTpl->parseCurrentBlock();
+			}
+			
+			break;
+		case CMD_EXPORT:
+			$strDispatch	= Request::get('dispatch');
+			$blnFiles		= (Request::get('frm_export_files') == "true") ? "1" : "0";
+						
+			if ($strDispatch == "exportAccount" && $eId > 0) {
+				Request::redirect("/export.php?eid=" . $eId . "&files=" . $blnFiles);
+			} else {
+				$objTpl->setCurrentBlock("form.export");
+				$objTpl->setVariable('CID', NAV_ACCOUNT);
+				$objTpl->setVariable('CMD', $cmd);
+				$objTpl->setVariable('EID', $eId);
 				$objTpl->parseCurrentBlock();
 			}
 			
