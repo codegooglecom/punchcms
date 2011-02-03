@@ -1,14 +1,16 @@
 <?php
 
 /**************************************************************************
-* PunchCMS Export2Html script v.0.2.0
+* PunchCMS Export2Html script v.0.2.1
 * Exports an entire site to plain HTML files, including the used folders.
 **************************************************************************/
 
 require_once('includes/init.php');
+require_once('dzip/dZip.inc.php');
+require_once('dzip/dUnzip2.inc.php');
 
 $strBaseFolder 		= $_CONF['app']['basePath'];
-$strZipFolder 		= $_CONF['app']['basePath'] . "../cache/";
+$strZipFolder 		= $_CONF['app']['basePath'] . "cache/";
 $strZipName 		= $strZipFolder . "exportZip_" . rand() . ".zip";
 $objZip 			= new dZip($strZipName, TRUE);
 $blnDebug			= FALSE;
@@ -101,7 +103,7 @@ function fixLinks($strInput) {
 	}
 
 	//*** Transform aliases to .html files.
-	$strOutput = ereg_replace("href=\"(/[a-zA-Z0-9_/-]+)\"", "href=\"\\1.html\"", $strOutput);
+	$strOutput = preg_replace("/(href=\")([a-zA-Z0-9_\/-]+)(\")/", "\\1\\2.html\\3", $strOutput);
 
 	return $strOutput;
 }
@@ -113,7 +115,7 @@ function exportIndexPage($objLanguage) {
 	$strBasename = "index.html";
 
 	$strFile = file_get_contents(Request::getRootURI() . "/language/" . $objLanguage->getAbbr());
-	$objZip->addFile($strDirname . "/" . $strBasename, '', '', fixLinks($strFile));
+	$objZip->addFile('', $strDirname . "/" . $strBasename, '', fixLinks($strFile));
 
 	logExport($strDirname . "/" . $strBasename);
 }
@@ -129,7 +131,7 @@ function exportPage($objPageElement, $objLanguage) {
 	if ($strDirname == "/") $strDirname = "";
 
 	$strFile = file_get_contents(Request::getRootURI() . $objPageElement->getLink());
-	$objZip->addFile($strDirname . "/" . $strBasename . ".html", '', '', fixLinks($strFile));
+	$objZip->addFile('', $strDirname . "/" . $strBasename . ".html", '', fixLinks($strFile));
 
 	logExport($strDirname . "/" . $strBasename);
 }
@@ -145,6 +147,7 @@ function exportSite() {
 
 	//*** Get a collection of Languages.
 	$objLanguages = $objCms->getLanguages();
+
 	foreach ($objLanguages as $objLanguage) {
 		//*** Export the entry page.
 		exportIndexPage($objLanguage);
@@ -167,9 +170,9 @@ function exportSite() {
 	copyr($strBaseFolder . "robots.txt", "robots.txt");
 
 	//*** Close zip file.
-    $objZip->save();
+	$objZip->save();
 
-    //*** Return the zip file to the user.
+	//*** Return the zip file to the user.
 	header("HTTP/1.1 200 OK");
 	header("Pragma: public");
 	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");

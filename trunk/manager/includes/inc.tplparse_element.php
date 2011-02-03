@@ -380,6 +380,13 @@ function parsePages($intElmntId, $strCommand) {
 				header("Location: " . Request::getURI() . "/?cid=" . request("cid") . "&cmd=" . CMD_LIST . "&eid=" . $intElmntId);
 				exit();
 			}
+
+			//*** Check if an invalid element has been submitted.
+			if ($strCommand == CMD_EDIT && !is_object($objElement)) {
+				//*** Redirect to list mode.
+				header("Location: " . Request::getURI() . "/?cid=" . request("cid") . "&cmd=" . CMD_LIST . "&eid=0");
+				exit();
+			}
 			
 			//*** Set section title.
 			if ($blnIsFolder) {
