@@ -49,14 +49,13 @@ class DBA__Collection implements Iterator {
 	 * @param integer $intPosition
 	 */
 	public function seek($intPosition) {
-    	//*** advance the internal pointer to a specific index
         if (is_numeric($intPosition) && $intPosition < count($this->collection)) {
         	reset($this->collection);
 			while($intPosition > key($this->collection)) {
 				next($this->collection);
 			}
         }
-        
+
 		$this->isSeek = TRUE;
 	}
 
@@ -76,14 +75,48 @@ class DBA__Collection implements Iterator {
     }
 
     /**
+     * Get an element of the collection selected by property value.
+     */
+    public function getByPropertyValue($strSearchProperty, $strSearchValue) {
+    	$objReturn = null;
+    	
+    	foreach ($this->collection as $objElement) {
+    		$strProperty = "get{$strSearchProperty}";
+    		if (is_callable(array($objElement, $strProperty))) {
+    			if ($objElement->$strProperty() == $strSearchValue) {
+    				$objReturn = $objElement;
+    				break;
+    			}
+    		}
+    	}
+    	
+    	return $objReturn;
+    }
+
+    /**
+     * Get the value of a property of a specific element, selected by property value. 
+     */
+    public function getValueByValue($strSearchProperty, $strSearchValue, $strResultProperty = "value") {
+    	$strReturn = "";
+    	
+    	$objElement = $this->getByPropertyValue($strSearchProperty, $strSearchValue);
+    	if (is_object($objElement)) {
+    		$strProperty = "get{$strResultProperty}";
+    		if (is_callable(array($objElement, $strProperty))) {
+    			$strReturn = $objElement->$strProperty();
+    		}
+    	}
+    	
+    	return $strReturn;
+    }
+
+    /**
      * Order the collection on a given key [asc]ending or [desc]ending
      * 
      * @param string $strSubject
      * @param string $strOrder
      */
 	public function orderBy($strSubject, $strOrder = "asc") {
-    	//*** Order the collection on a given key [asc]ending or [desc]ending.
-
 		for ($i = 0; $i < count($this->collection); $i++) {
 			for ($j = 0; $j < count($this->collection) - $i - 1; $j++) {
 				if ($strOrder == "asc") {

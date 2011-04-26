@@ -23,7 +23,17 @@
 								<label for="frm_alias">* {FRM_LABEL_ALIAS}</label>
 								<input type="text" id="frm_alias" name="frm_alias" class="input-textlarge" value="{FORM_ALIAS_VALUE}" />
 								<small>{FRM_DESCR_ALIAS}</small>
-							</div>					
+							</div>
+							<div class="required">
+								<label for="frm_language">* {FRM_LABEL_LANGUAGE}</label>
+								<select class="select-one" id="frm_language" name="frm_language">
+									<option value="0">{FRM_LABEL_ALL_LANGUAGES}</option>
+									<!-- BEGIN language.item -->
+									<option value="{ID}"{SELECTED}>{LABEL}</option>
+									<!-- END language.item -->
+								</select>
+								<small>{FRM_DESCR_LANGUAGE}</small>
+							</div>
 						</fieldset>
 						<fieldset class="traverse">
 							<div class="required traverse">
@@ -79,7 +89,7 @@
 							</div>
 							<input type="checkbox" id="item_{MULTIITEM_VALUE}" name="item_{MULTIITEM_VALUE}" style="margin-top:2px" class="multiitem" />
 							<div class="{MULTIITEM_TYPE_CLASS}">
-								<p class="title"><a href="{MULTIITEM_HREF}"{MULTIITEM_ACTIVE} rel="internal">{MULTIITEM_ALIAS}</a> {MULTIITEM_POINTS_TO} <a href="{MULTIITEM_URL_HREF}" rel="internal" class="meta">{MULTIITEM_URL}</a></p>
+								<p class="title"><a href="{MULTIITEM_HREF}"{MULTIITEM_ACTIVE} rel="internal">{MULTIITEM_ALIAS}</a> {MULTIITEM_POINTS_TO} <a href="{MULTIITEM_URL_HREF}" rel="internal" class="meta">{MULTIITEM_URL}</a> {MULTIITEM_LANGUAGE}</p>
 							</div>
 						</div>
 						<!-- END multiview-item -->

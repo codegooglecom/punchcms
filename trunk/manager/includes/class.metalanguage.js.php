@@ -20,67 +20,71 @@ if (!is_object($objLang)) {
  * MetaLanguage object.
  */
 var MetaLanguage = function() {
-	this.version = '1.1.2';
+	this.version = '1.2.0';
 	this.currentLanguage = 0;
 	this.hover = false;
+	this.buttonType = "";
 	this.defaultLanguage = 0;
 	this.cascades = {};
 	this.fields = {};
 }
 
 MetaLanguage.require = function(libraryName) {
-	var objScript = document.createElement('script');
-	objScript.setAttribute('type', 'text/javascript');
-	objScript.setAttribute('src', libraryName);		
-	var objHead = document.getElementsByTagName("head");
-	objHead[0].appendChild(objScript);
-
-	//*** Inserting via DOM fails in Safari 2.0, so brute force approach.
-	//document.write('<script type="text/javascript" src="'+libraryName+'"></script>');
+	var $objScript = jQuery("<script></script>");
+	
+	objScript.attr({
+		type: "text/javascript",
+		src: libraryName
+	});
+	jQuery("head").append($objScript);
 }
 
 MetaLanguage.load = function() {
-	if((typeof Prototype=='undefined') || 
-			(typeof Element == 'undefined') || 
-			(typeof Element.Methods=='undefined') ||
-			parseFloat(Prototype.Version.split(".")[0] + "." +
-			Prototype.Version.split(".")[1]) < 1.5)
-		throw("MetaLanguage class requires the Prototype JavaScript framework >= 1.5.0");
+	if(typeof jQuery == "undefined")
+		throw("ContentLanguage class requires the jQuery library >= 1.4.2");
 
-	$A(document.getElementsByTagName("script")).findAll( function(s) {
-		return (s.src && s.src.match(/pcms\.js(\?.*)?$/))
-	}).each( function(s) {
-		var path = s.src.replace(/pcms\.js(\?.*)?$/,'');
-		var includes = s.src.match(/\?.*load=([a-z,]*)/);
-		(includes ? includes[1] : 'ptemplate,pfield').split(',').each(
-			function(include) { MetaLanguage.require(path+include+'.js') });
-	});
+	alert("Old loading code in class.metalanguage.js.php on line 46");
 }
 
 MetaLanguage.prototype.init = function() {
-	// Nothing.
+ 	jQuery("#frm_meta_language option[value="+ this.defaultLanguage +"]").attr("selected","selected");
 }
 
 MetaLanguage.prototype.swap = function(languageId) {
+	var $objImage 		= jQuery("#meta_language_cascade"),
+		$objButton		= $objImage.parent();
+		
 	this.toTemp();
 	this.currentLanguage = languageId;
 	
 	//*** Check is current and default language is equal.
 	if (this.currentLanguage == this.defaultLanguage) {
-		$('meta_language_cascade').src = "images/lang_unlocked_disabled.gif";
- 		$('meta_language_cascade').onmouseover = null;
- 		$('meta_language_cascade').onmouseout = null;
- 		$('meta_language_cascade').onmousedown = null;
+		$objImage.attr("src", "images/lang_unlocked_disabled.gif");
+ 		$objButton.unbind("mouseover mouseout click");
 	} else {
 		if (this.cascades[this.currentLanguage] !== true) {
-			$('meta_language_cascade').src = "images/lang_unlocked.gif";
+			$objImage.attr("src", "images/lang_unlocked.gif");
 		} else {
-			$('meta_language_cascade').src = "images/lang_locked.gif";
+			$objImage.attr("src", "images/lang_locked.gif");
 		}
- 		$('meta_language_cascade').onmouseover = function() { return objMetaLanguage.buttonOver('cascadeElement', this); };
- 		$('meta_language_cascade').onmouseout = function() { return objMetaLanguage.buttonOut('cascadeElement', this); };
- 		$('meta_language_cascade').onmousedown = function() { return objMetaLanguage.toggleCascadeElement(); };
-	}
+		$objButton.bind("mouseover mouseout click", function(event){
+			var objReturn;
+			
+			switch(event.type){
+				case "mouseover":
+					objReturn = objMetaLanguage.buttonOver("cascadeElement", this);
+					break;
+				case "mouseout":
+					objReturn = objMetaLanguage.buttonOut("cascadeElement", this);
+					break;
+				case "click":
+					objReturn = objMetaLanguage.toggleCascadeElement();
+					break;
+			}
+			
+			return objReturn;
+		});
+	}		
 		
 	for (var count in this.fields) {
 		this.toggleCascadeState(this.fields[count].id, this.fields[count].cascades[this.currentLanguage]);
@@ -110,52 +114,58 @@ MetaLanguage.prototype.toTemp = function(fieldId) {
 	}
 }
 
-MetaLanguage.prototype.buttonOver = function(strButtonType, objButton, fieldId) {
+MetaLanguage.prototype.buttonOver = function(strButtonType, objImage, fieldId) {
+	var $objImage 	= (objImage instanceof jQuery) ? objImage : jQuery(objImage), // Make sure it's a jQuery object
+		$objButton	= $objImage.parent();
+		
 	this.hover = true;
 	this.buttonType = strButtonType;
 	
 	switch (strButtonType) {
 		case "cascadeElement":
 			if (this.cascades[this.currentLanguage] !== true) {
-				objButton.src = "images/lang_locked.gif";
+				$objImage.attr("src", "images/lang_locked.gif");
 				overlib("<?php echo $objLang->get("langElementCascade", "tip") ?>");
 			} else {
-				objButton.src = "images/lang_unlocked.gif";
+				$objImage.attr("src", "images/lang_unlocked.gif");
 				overlib("<?php echo $objLang->get("langElementUnlock", "tip") ?>");
 			}
 			break;
 			
 		case "cascadeField":
 			if (this.fields[fieldId].cascades[this.currentLanguage] !== true) {
-				objButton.src = "images/lang_locked.gif";
+				$objImage.attr("src", "images/lang_locked.gif");
 				overlib("<?php echo $objLang->get("langFieldCascade", "tip") ?>");
 			} else {
-				objButton.src = "images/lang_unlocked.gif";
+				$objImage.attr("src", "images/lang_unlocked.gif");
 				overlib("<?php echo $objLang->get("langFieldUnlock", "tip") ?>");
 			}
 			break;			
 	}
 }
 
-MetaLanguage.prototype.buttonOut = function(strButtonType, objButton, fieldId) {
+MetaLanguage.prototype.buttonOut = function(strButtonType, objImage, fieldId) {
+	var $objImage 	= (objImage instanceof jQuery) ? objImage : jQuery(objImage), // Make sure it's a jQuery object
+		$objButton	= $objImage.parent();
+		
 	this.hover = false;
 	this.buttonType = strButtonType;
 	
 	switch (strButtonType) {
 		case "cascadeElement":
 			if (this.cascades[this.currentLanguage] !== true) {
-				objButton.src = "images/lang_unlocked.gif";
+				$objImage.attr("src", "images/lang_unlocked.gif");
 			} else {
-				objButton.src = "images/lang_locked.gif";
+				$objImage.attr("src", "images/lang_locked.gif");
 			}
 			nd();
 			break;
 			
 		case "cascadeField":
 			if (this.fields[fieldId].cascades[this.currentLanguage] !== true) {
-				objButton.src = "images/lang_unlocked.gif";
+				$objImage.attr("src", "images/lang_unlocked.gif");
 			} else {
-				objButton.src = "images/lang_locked.gif";
+				$objImage.attr("src", "images/lang_locked.gif");
 			}
 			nd();
 			break;
@@ -177,10 +187,10 @@ MetaLanguage.prototype.toggleCascadeElement = function() {
 	//*** Toggle button image.  
 	if (this.cascades[this.currentLanguage] == true) {
 		if (this.hover) overlib("<?php echo $objLang->get("langElementUnlock", "tip") ?>");
-		$('meta_language_cascade').src = "images/lang_unlocked.gif";
+		jQuery("#meta_language_cascade").attr("src", "images/lang_unlocked.gif");
 	} else {
 		if (this.hover) overlib("<?php echo $objLang->get("langElementCascade", "tip") ?>");
-		$('meta_language_cascade').src = "images/lang_locked.gif";
+		jQuery("#meta_language_cascade").attr("src", "images/lang_locked.gif");
 	}
 
 	//*** Take action according to the state.
@@ -204,7 +214,7 @@ MetaLanguage.prototype.toggleCascadeField = function(fieldId) {
 	
 	//*** Reset global cascade state.
 	this.cascades[this.currentLanguage] = false;
-	$('meta_language_cascade').src = "images/lang_unlocked.gif";
+	jQuery("#meta_language_cascade").attr("src", "images/lang_unlocked.gif");
 
 	//*** Take action according to the state.
 	this.toggleCascadeState(this.fields[fieldId].id, this.fields[fieldId].cascades[this.currentLanguage]);
@@ -217,11 +227,11 @@ MetaLanguage.prototype.toggleCascadeState = function(fieldId, state) {
 	
 	//*** Set the cascade input field.
 	var strValue = this.fields[fieldId].getCascades();
-	$(fieldId + "_cascades").value = strValue;
+	jQuery("#" + fieldId + "_cascades").val(strValue);
 }
 
 MetaLanguage.prototype.setFieldValue = function(fieldId, strValue) {
-	$(fieldId + "_" + this.currentLanguage).value = strValue;
+	jQuery("#" + fieldId + "_" + this.currentLanguage).val(strValue);
 }
 
 /*** 
@@ -256,18 +266,69 @@ MetaField.prototype.setCascades = function(strCascades) {
 	for (var count = 0; count < arrCascades.length; count++) {
 		this.cascades[arrCascades[count]] = true;
 	}
-	$(this.id + "_cascades").value = this.getCascades();
+	jQuery("#" + this.id + "_cascades").val(this.getCascades());
+}
+
+MetaField.prototype.setIconCascade = function() {
+	var $objImage 	= jQuery("#" + this.id + "_cascade"),
+		$objButton	= $objImage.parent(),
+		strId 		= this.id;
+
+	//*** Attach mouse events to the cascade button.
+	if (this.parent.currentLanguage == this.parent.defaultLanguage) {
+		$objButton.unbind("mouseover mouseout click");
+
+		//*** Set the cascade icon.
+		if (this.cascades[this.parent.currentLanguage] == true) {
+			var strImageSrc = "images/lang_locked_disabled.gif";
+		} else {
+			var strImageSrc = "images/lang_unlocked_disabled.gif";
+			$objButton.bind("click", function(){ return false; }); // No need to be clickable
+		}
+		$objImage.attr("src", strImageSrc);
+	
+	} else {
+		$objButton.unbind("mouseover mouseout click"); // Clear all events before binding new ones
+		$objButton.bind("mouseover mouseout click", function(event){
+			var objReturn;
+			
+			switch(event.type){
+				case "mouseover":
+					objMetaLanguage.buttonOver('cascadeField', this, strId);
+					break;
+				case "mouseout":
+					objMetaLanguage.buttonOut('cascadeField', this, strId);
+					break;
+				case "click":
+					objMetaLanguage.toggleCascadeField(strId);
+					break;
+			}
+			
+			return false;
+		});
+
+		//*** Set the cascade icon.
+		if (this.cascades[this.parent.currentLanguage] == true) {
+			if (this.parent.hover && this.parent.buttonType == "cascadeField") overlib("<?php echo $objLang->get("langFieldUnlock", "tip") ?>");
+			$objImage.attr("src", "images/lang_locked.gif");
+		} else {
+			if (this.parent.hover && this.parent.buttonType == "cascadeField") overlib("<?php echo $objLang->get("langFieldCascade", "tip") ?>");
+			$objImage.attr("src", "images/lang_unlocked.gif");
+		}
+	}
 }
 
 MetaField.prototype.toScreen = function() {
-	$(this.id).value = $(this.id + "_" + this.parent.currentLanguage).value;
+	this.setIconCascade();
+	jQuery("#" + this.id).val(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
 	
 	return true;
 }
 
 MetaField.prototype.toTemp = function() {
-	$(this.id + "_" + this.parent.currentLanguage).value = $(this.id).value;
+	var strValue = jQuery("#" + this.id).val();
 	
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(strValue);
 	return true;
 }
 
@@ -282,21 +343,24 @@ function MetaTextField(strId, objParent, strCascades) {
 MetaTextField.prototype = new MetaField();
 
 MetaTextField.prototype.toScreen = function() {
+	//*** Attach mouse events to the cascade button.
+	this.setIconCascade();
+
 	//*** Insert value into the field.
 	if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
-		var strValue = $(this.id + "_" + this.parent.defaultLanguage).value;
-		$(this.id + "_alt").innerHTML = (strValue == "") ? "&nbsp;" : strValue;
-		Element.hide(this.id);
-		Element.show(this.id + "_alt");
+		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
+		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
+		jQuery("#" + this.id).hide();
+		jQuery("#" + this.id + "_alt").show();
 	} else {
 		//*** The field needs no special treatment.
-		Element.hide(this.id + "_alt");
-		Element.show(this.id);
-		$(this.id).value = $(this.id + "_" + this.parent.currentLanguage).value;
+		jQuery("#" + this.id + "_alt").hide();
+		jQuery("#" + this.id).show();
+		jQuery("#" + this.id).val(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
 	}
 }
 
 MetaTextField.prototype.toTemp = function() {
-	$(this.id + "_" + this.parent.currentLanguage).value = $(this.id).value;
+	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).val());
 }

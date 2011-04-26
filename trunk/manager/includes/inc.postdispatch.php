@@ -349,10 +349,14 @@ switch ($strDispatch) {
 				'type' => 'word',
 				'maxlength' => 5,
 			),
-		  	'frm_alias' 			=> array(
+		  	'frm_alias' 		=> array(
 				'type' => 'word',
 				'maxlength' => 250,
 				'required' => TRUE,
+			),
+		  	'frm_language' 		=> array(
+				'type' => 'int',
+				'maxlength' => 150,
 			),
 		  	'frm_element'		=> array(
 				'type' => 'int',

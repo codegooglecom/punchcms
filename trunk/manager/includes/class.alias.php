@@ -16,6 +16,9 @@ class Alias extends DBA_Alias {
 		
 		$intId = $this->getId();
 		
+		//*** Remove empty aliasses if this one is not empty.
+		$this->clearByLanguage();
+		
 		$blnReturn = parent::save($blnSaveModifiedDate);
 		AuditLog::addLog(AUDIT_TYPE_ALIAS, $this->getId(), $this->getAlias(), (empty($intId)) ? "create" : "edit", ($this->getActive()) ? "active" : "inactive");
 
@@ -28,6 +31,17 @@ class Alias extends DBA_Alias {
 		
 		AuditLog::addLog(AUDIT_TYPE_ALIAS, $this->getId(), $this->getAlias(), "delete");
 		return parent::delete();
+	}
+	
+	private function clearByLanguage() {
+		parent::$__object = "Alias";
+		parent::$__table = "pcms_alias";
+	
+		if (!empty($this->alias) && !empty($this->languageId)) {
+			$strSql = sprintf("DELETE FROM " . parent::$__table . " WHERE accountId = '%s' AND languageId = '%s' AND url = '%s' AND alias = '' ORDER BY sort", $_CONF['app']['account']->getId(), $this->getLanguageId(), $this->getUrl());
+			
+			return parent::select($strSql);
+		}
 	}
 
 	public static function select($strSql = "") {
@@ -47,27 +61,23 @@ class Alias extends DBA_Alias {
 		parent::$__object = "Alias";
 		parent::$__table = "pcms_alias";
 
-		if (empty($strSql)) {
-			$strSql = sprintf("SELECT * FROM " . parent::$__table . " WHERE accountId = '%s' ORDER BY alias", $_CONF['app']['account']->getId());
-		}
+		$strSql = sprintf("SELECT * FROM " . parent::$__table . " WHERE accountId = '%s' ORDER BY alias", $_CONF['app']['account']->getId());
 
 		return parent::select($strSql);
 	}
 
-	public static function selectByUrl($strUrl, $blnList = FALSE) {
+	public static function selectByUrl($strUrl, $intLanguageId = NULL) {
 		global $_CONF;
 		parent::$__object = "Alias";
 		parent::$__table = "pcms_alias";
 		$objReturn = NULL;
+		if (is_null($intLanguageId)) $intLanguageId = ContentLanguage::getDefault()->getId();
 
 		if (!empty($strUrl)) {
-			$strSql = sprintf("SELECT * FROM " . parent::$__table . " WHERE accountId = '%s' AND url = %s ORDER BY sort", $_CONF['app']['account']->getId(), parent::quote($strUrl));
+			$strSql = sprintf("SELECT * FROM " . parent::$__table . " WHERE accountId = '%s' AND url = %s AND languageId = %s ORDER BY sort", $_CONF['app']['account']->getId(), parent::quote($strUrl), parent::quote($intLanguageId));
 		}
 
-		$objAliases = parent::select($strSql);
-		if ($objAliases->count() > 0) {
-			$objReturn = ($blnList) ? $objAliases : $objAliases->current();
-		}
+		$objReturn = parent::select($strSql);
 		
 		return $objReturn;
 	}
@@ -86,6 +96,23 @@ class Alias extends DBA_Alias {
 		if ($objAliases->count() > 0) $objReturn = $objAliases->current();
 		
 		return $objReturn;
+	}
+	
+	public static function getCascades($intElementId) {
+		$arrReturn = Array();
+
+		$objContentLangs = ContentLanguage::select();
+		foreach ($objContentLangs as $objContentLanguage) {
+			$objAliases = self::selectByUrl($intElementId, $objContentLanguage->getId());
+			if (is_object($objAliases) && $objAliases->count() > 0) {
+				$strValue = $objAliases->current()->getCascade();
+				if ($strValue == 1) {
+					array_push($arrReturn, $objContentLanguage->getId());
+				}
+			}
+		}
+
+		return $arrReturn;
 	}
 
 }

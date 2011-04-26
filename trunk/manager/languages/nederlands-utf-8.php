@@ -178,6 +178,8 @@ $_LANG['label']['metaTitle'] = "Paginatitel";
 $_LANG['label']['metaKeywords'] = "Sleutelwoorden";
 $_LANG['label']['metaDescription'] = "Omschrijving";
 $_LANG['label']['chooseFolder'] = "Kies een map";
+$_LANG['label']['forLanguage'] = "voor <b>%s</b>";
+$_LANG['label']['forAllLanguages'] = "voor <b>Alle talen</b>";
 
 //*** Settings label definitions.
 $_LANG['settingsLabel']['section_ftp'] = "FTP";
@@ -312,6 +314,7 @@ $_LANG['form']['sSelectLanguage'] = "* Taal";
 $_LANG['form']['sSelectElement'] = "* Element";
 $_LANG['form']['metaInfo'] = "Vul een pagina specifieke titel, sleutelwoorden en omschrijving in. Dit wordt door de meeste zoekmachines gebruikt.";
 $_LANG['form']['loadingFiles'] = "Bestanden worden geladen...";
+$_LANG['form']['allLanguages'] = "Alle talen";
 
 //*** Form error definitions.
 $_LANG['formerror']['main'] = "Er zijn fouten opgetreden bij het bewaren van uw gegevens. Controleer alle gemarkeerde velden en probeer het opnieuw.";
@@ -359,6 +362,7 @@ $_LANG['tip']['structureSelects'] = "Deze structuur heeft een of meer velden die
 $_LANG['tip']['metaKeywords'] = "Maximaal 20 sleutelwoorden voor de pagina.";
 $_LANG['tip']['metaDescription'] = "Omschrijving van de pagina met maximaal 200 letters.";
 $_LANG['tip']['storageName'] = "Als u het veld leeg laat wordt de naam van het bestand gebruikt.";
+$_LANG['tip']['language'] = "U kunt de snelkoppeling aan een specifieke taal koppelen.";
 
 //*** Alert definitions.
 $_LANG['alert']['templateRemoveAlert'] = "Weet u zeker dat u deze sjabloon wilt verwijderen?\\nAlle onderliggende sjablonen en elementen gebaseerd op deze sjabloon worden ook verwijderd!";

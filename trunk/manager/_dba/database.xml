@@ -3,6 +3,8 @@
 	<table name="pcms_alias" phpName="Alias">
 		<column name="id" primaryKey="true" />
 		<column name="accountId" type="integer" />
+		<column name="languageId" type="integer" default="0" />
+		<column name="cascade" type="integer" default="0" />
 		<column name="alias" type="varchar" />
 		<column name="url" type="varchar" />
 		<column name="active" type="integer" default="1" />
@@ -108,9 +110,8 @@
 	<table name="pcms_element_meta" phpName="ElementMeta">
 		<column name="id" primaryKey="true" />
 		<column name="elementId" type="integer" />
-		<column name="title" type="varchar" />
-		<column name="keywords" type="varchar" />
-		<column name="description" type="varchar" />
+		<column name="name" type="varchar" />
+		<column name="value" type="varchar" />
 		<column name="languageId" type="integer" />
 		<column name="cascade" type="integer" />
 	</table>

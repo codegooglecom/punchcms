@@ -463,11 +463,13 @@ function parsePages($intElmntId, $strCommand) {
 					$blnError = TRUE;
 				}
 
+				/*
 				if (is_null($_CLEAN_POST["frm_alias"])) {
 					$objTpl->setVariable("ERROR_ALIAS_ON", " error");
 					$objTpl->setVariable("ERROR_ALIAS", $objLang->get("commonTypeWord", "formerror"));
 					$blnError = TRUE;
 				}
+				*/
 
 				if (is_null($_CLEAN_POST["frm_template"]) && !$blnIsFolder) {
 					$objTpl->setVariable("ERROR_TEMPLATE_ON", " error");
@@ -496,7 +498,7 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setVariable("FORM_ACTIVE_VALUE", (isset($_POST["frm_active"]) && $_POST["frm_active"] == "on") ? "checked=\"checked\"" : "");
 					$objTpl->setVariable("FORM_NAME_VALUE", $_POST["frm_name"]);
 					$objTpl->setVariable("FORM_APINAME_VALUE", $_POST["frm_apiname"]);
-					$objTpl->setVariable("FORM_ALIAS_VALUE", $_POST["frm_alias"]);
+					//$objTpl->setVariable("FORM_ALIAS_VALUE", $_POST["frm_alias"]);
 					
 					if ($blnIsDynamic) {
 						$objTpl->setVariable("FORM_MAXITEMS_VALUE", $_POST["frm_maxitems"]);
@@ -569,7 +571,7 @@ function parsePages($intElmntId, $strCommand) {
 					}
 										
 					//*** Handle the Alias value.
-					$objElement->setAlias($_CLEAN_POST["frm_alias"]);
+					//$objElement->setAlias($_CLEAN_POST["frm_alias"]);
 					
 					//*** Handle the publish values.
 					$objElement->clearSchedule();
@@ -606,6 +608,35 @@ function parsePages($intElmntId, $strCommand) {
 						$objSchedule->setEndDate(APP_DEFAULT_ENDDATE);
 					}
 					$objElement->setSchedule($objSchedule);
+					
+					//*** Handle the meta values.
+					if ($objElement->isPage()) {
+						$objElement->clearMeta();
+						$objElement->clearAliases();
+						$arrFields = array("title", "keywords", "description");
+						$objContentLangs = ContentLanguage::select();
+						foreach ($objContentLangs as $objContentLanguage) {
+							//*** Insert the value by language.
+							foreach ($arrFields as $value) {
+								$objMeta = new ElementMeta();
+								$arrCascades = explode(",", request("frm_meta_{$value}_cascades"));
+								$blnCascade = (in_array($objContentLanguage->getId(), $arrCascades)) ? 1 : 0;
+								$objMeta->setName($value);
+								$objMeta->setValue(request("frm_meta_{$value}_{$objContentLanguage->getId()}"));
+								$objMeta->setLanguageId($objContentLanguage->getId());
+								$objMeta->setCascade($blnCascade);
+								$objElement->setMeta($objMeta);
+							}
+							
+							$objAlias = new Alias();
+							$arrCascades = explode(",", request("frm_meta_alias_cascades"));
+							$blnCascade = (in_array($objContentLanguage->getId(), $arrCascades)) ? 1 : 0;
+							$objAlias->setAlias(request("frm_meta_alias_{$objContentLanguage->getId()}"));
+							$objAlias->setLanguageId($objContentLanguage->getId());
+							$objAlias->setCascade($blnCascade);
+							$objElement->setAlias($objAlias);
+						}
+					}
 
 					//*** Handle element values.
 					if (!$blnIsFolder) {
@@ -1670,66 +1701,75 @@ function parsePages($intElmntId, $strCommand) {
 					
 					
 					//*** Meta tab.
-//					$objTpl->setCurrentBlock("meta-title");
-//					$objTpl->setVariable("HEADER", $objLang->get("meta", "label"));
-//					$objTpl->parseCurrentBlock();
-//					$objTpl->setCurrentBlock("description-meta");
-//					$objTpl->setVariable("LABEL", $objLang->get("metaInfo", "form"));
-//					$objTpl->parseCurrentBlock();
-
-					//*** Meta specific labels
-//					$objTpl->setVariable("LABEL_META_TITLE", $objLang->get("metaTitle", "label"));
-//					$objTpl->setVariable("LABEL_META_KEYWORDS", $objLang->get("metaKeywords", "label"));
-//					$objTpl->setVariable("LABEL_META_DESCRIPTION", $objLang->get("metaDescription", "label"));
-//					$objTpl->setVariable("META_KEYWORDS_NOTE", $objLang->get("metaKeywords", "tip"));
-//					$objTpl->setVariable("META_DESCRIPTION_NOTE", $objLang->get("metaDescription", "tip"));		
-//					$objTpl->setVariable("ACTIVE_META_LANGUAGE", $intSelectLanguage);
-//					$objTpl->setVariable("DEFAULT_META_LANGUAGE", $intDefaultLanguage);			
-//					$objTpl->setVariable("LABEL_META_LANGUAGE", $objLang->get("language", "form"));
-//					$objTpl->setVariable("ACTIVES_META_LANGUAGE", $intDefaultLanguage);
-
-					//*** Meta languages					
-//					$objContentLangs = ContentLanguage::select();
-//					foreach ($objContentLangs as $objContentLanguage) {
-//						$objTpl->setCurrentBlock("list_meta-language");
-//						$objTpl->setVariable("LANGUAGELIST_VALUE", $objContentLanguage->getId());
-//						if ($intDefaultLanguage == $objContentLanguage->getId()) {
-//							$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName() . " (" . $objLang->get("default", "label") . ")");
-//						} else {
-//							$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName());
-//						}
-//						if ($intSelectLanguage == $objContentLanguage->getId()) $objTpl->setVariable("LANGUAGELIST_SELECTED", " selected=\"selected\"");
-//						$objTpl->parseCurrentBlock();
-//					}
-					
-					//*** Meta language values.
-//					foreach ($objContentLangs as $objContentLanguage) {
-//						$objMeta = (is_object($objElement)) ? $objElement->getMeta() : NULL;
-//						
-//						$objTpl->setCurrentBlock("field.meta_title.value");
-//						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_title_{$objContentLanguage->getId()}");
-//						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getTitle($objContentLanguage->getId()) : "");
-//						$objTpl->parseCurrentBlock();
-//						
-//						$objTpl->setCurrentBlock("field.meta_keywords.value");
-//						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_keywords_{$objContentLanguage->getId()}");
-//						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getKeywords($objContentLanguage->getId()) : "");
-//						$objTpl->parseCurrentBlock();
-//						
-//						$objTpl->setCurrentBlock("field.meta_description.value");
-//						$objTpl->setVariable("FIELD_LANGUAGE_ID", "efv_meta_description_{$objContentLanguage->getId()}");
-//						$objTpl->setVariable("FIELD_LANGUAGE_VALUE", (is_object($objMeta)) ? $objMeta->getDescription($objContentLanguage->getId()) : "");
-//						$objTpl->parseCurrentBlock();
-//					}
-					
-					//*** Meta language cascades.
-//					if (is_object($objElement)) {
-//						$objMeta = $objElement->getMeta();
-//					
-//						$objTpl->setVariable("META_TITLE_CASCADES", implode(",", $objMeta->getCascades("title")));
-//						$objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", $objMeta->getCascades("keywords")));
-//						$objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", $objMeta->getCascades("description")));
-//					}
+					if (is_object($objElement) && $objElement->isPage()) {
+						$objTpl->setCurrentBlock("meta-title");
+						$objTpl->setVariable("HEADER", $objLang->get("meta", "label"));
+						$objTpl->parseCurrentBlock();
+						$objTpl->setCurrentBlock("description-meta");
+						$objTpl->setVariable("LABEL", $objLang->get("metaInfo", "form"));
+						$objTpl->parseCurrentBlock();
+	
+						//*** Meta specific labels
+						$objTpl->setVariable("LABEL_META_ALIAS", $objLang->get("alias", "form"));
+						$objTpl->setVariable("LABEL_META_TITLE", $objLang->get("metaTitle", "label"));
+						$objTpl->setVariable("LABEL_META_KEYWORDS", $objLang->get("metaKeywords", "label"));
+						$objTpl->setVariable("LABEL_META_DESCRIPTION", $objLang->get("metaDescription", "label"));
+						$objTpl->setVariable("META_KEYWORDS_NOTE", $objLang->get("metaKeywords", "tip"));
+						$objTpl->setVariable("META_DESCRIPTION_NOTE", $objLang->get("metaDescription", "tip"));	
+						$objTpl->setVariable("META_ALIAS_NOTE", $objLang->get("alias", "tip"));	
+						$objTpl->setVariable("ACTIVE_META_LANGUAGE", $intSelectLanguage);
+						$objTpl->setVariable("DEFAULT_META_LANGUAGE", $intDefaultLanguage);			
+						$objTpl->setVariable("LABEL_META_LANGUAGE", $objLang->get("language", "form"));
+	
+						//*** Meta languages					
+						$objContentLangs = ContentLanguage::select();
+						foreach ($objContentLangs as $objContentLanguage) {
+							$objTpl->setCurrentBlock("list_meta-language");
+							$objTpl->setVariable("LANGUAGELIST_VALUE", $objContentLanguage->getId());
+							if ($intDefaultLanguage == $objContentLanguage->getId()) {
+								$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName() . " (" . $objLang->get("default", "label") . ")");
+							} else {
+								$objTpl->setVariable("LANGUAGELIST_TEXT", $objContentLanguage->getName());
+							}
+							if ($intSelectLanguage == $objContentLanguage->getId()) $objTpl->setVariable("LANGUAGELIST_SELECTED", " selected=\"selected\"");
+							$objTpl->parseCurrentBlock();
+						}
+						
+						//*** Meta language values.
+						foreach ($objContentLangs as $objContentLanguage) {
+							$strValue = $objElement->getAlias($objContentLanguage->getId());
+							$objTpl->setCurrentBlock("field.meta_alias.value");
+							$objTpl->setVariable("FIELD_ALIAS_ID", "frm_meta_alias_{$objContentLanguage->getId()}");
+							$objTpl->setVariable("FIELD_ALIAS_VALUE", $strValue);
+							$objTpl->parseCurrentBlock();
+							
+							$objMeta = (is_object($objElement)) ? $objElement->getMeta($objContentLanguage->getId()) : NULL;
+														
+							$strValue = (is_object($objMeta)) ? $objMeta->getValueByValue("name", "title") : "";
+							$objTpl->setCurrentBlock("field.meta_title.value");
+							$objTpl->setVariable("FIELD_LANGUAGE_ID", "frm_meta_title_{$objContentLanguage->getId()}");
+							$objTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
+							$objTpl->parseCurrentBlock();
+							
+							$strValue = (is_object($objMeta)) ? $objMeta->getValueByValue("name", "keywords") : "";
+							$objTpl->setCurrentBlock("field.meta_keywords.value");
+							$objTpl->setVariable("FIELD_LANGUAGE_ID", "frm_meta_keywords_{$objContentLanguage->getId()}");
+							$objTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
+							$objTpl->parseCurrentBlock();
+							
+							$strValue = (is_object($objMeta)) ? $objMeta->getValueByValue("name", "description") : "";
+							$objTpl->setCurrentBlock("field.meta_description.value");
+							$objTpl->setVariable("FIELD_LANGUAGE_ID", "frm_meta_description_{$objContentLanguage->getId()}");
+							$objTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
+							$objTpl->parseCurrentBlock();
+						}
+						
+						//*** Meta language cascades.
+						$objTpl->setVariable("META_ALIAS_CASCADES", implode(",", Alias::getCascades($objElement->getId())));
+						$objTpl->setVariable("META_TITLE_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "title")));
+						$objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "keywords")));
+						$objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "description")));
+					}
 				}
 											
 				//*** Feeds if dynamic.
@@ -1848,9 +1888,9 @@ function parsePages($intElmntId, $strCommand) {
 			$objTpl->setVariable("LABEL_ACTIVE", $objLang->get("active", "form"));
 			$objTpl->setVariable("LABEL_NAME", $objLang->get("name", "form"));
 			$objTpl->setVariable("LABEL_NOTES", $objLang->get("notes", "form"));
-			$objTpl->setVariable("LABEL_ALIAS", $objLang->get("alias", "form"));
+			//$objTpl->setVariable("LABEL_ALIAS", $objLang->get("alias", "form"));
 			$objTpl->setVariable("APINAME_NOTE", $objLang->get("apiNameNote", "tip"));
-			$objTpl->setVariable("ALIAS_NOTE", $objLang->get("alias", "tip"));
+			//$objTpl->setVariable("ALIAS_NOTE", $objLang->get("alias", "tip"));
 			$objTpl->setVariable("LABEL_SAVE", $objLang->get("save", "button"));
 			if (isset($objElement) && $objElement->getTypeId() == ELM_TYPE_LOCKED) {
 				$objTpl->setVariable("DISABLED_SAVE", "disabled=\"disabled\"");
@@ -1888,7 +1928,7 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setVariable("FORM_ACTIVE_VALUE", ($objElement->getActive()) ? "checked=\"checked\"" : "");
 					$objTpl->setVariable("FORM_NAME_VALUE", str_replace("\"", "&quot;", $objElement->getName()));
 					$objTpl->setVariable("FORM_APINAME_VALUE", $objElement->getApiname());
-					$objTpl->setVariable("FORM_ALIAS_VALUE", $objElement->getAlias());
+					//$objTpl->setVariable("FORM_ALIAS_VALUE", $objElement->getAlias());
 					$objTpl->setVariable("FORM_NOTES_VALUE", $objElement->getDescription());
 				}
 				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$objElement->getParentId()}&amp;cmd=" . CMD_LIST);
@@ -1958,7 +1998,6 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setVariable("LABEL", $objLang->get("requiredFields", "form"));
 					$objTpl->parseCurrentBlock();
 				}
-
 				
 				//*** Permissions tab.
 //				$objTpl->setCurrentBlock("permission-title");
@@ -1970,8 +2009,7 @@ function parsePages($intElmntId, $strCommand) {
 				
 			}
 
-			//*** Publish tab.
-			
+			//*** Publish tab.			
 			$objTpl->setCurrentBlock("publish-title");
 			$objTpl->setVariable("HEADER", $objLang->get("publish", "label"));
 			$objTpl->parseCurrentBlock();

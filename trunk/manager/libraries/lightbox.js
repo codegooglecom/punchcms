@@ -142,7 +142,7 @@ lightbox.prototype = {
 	
 	// Search through new links within the lightbox, and attach click event
 	actions: function(){
-		lbActions = document.getElementsByClassName('lbAction');
+		lbActions = $(".lbAction").get();
 
 		for(i = 0; i < lbActions.length; i++) {
 			Event.observe(lbActions[i], 'click', this[lbActions[i].rel].bindAsEventListener(this), false);
@@ -182,7 +182,7 @@ lightbox.prototype = {
 // Onload, make all links that need to trigger a lightbox active
 function initialize(){
 	addLightboxMarkup();
-	lbox = document.getElementsByClassName('lbOn');
+	lbox = $(".lbOn").get();
 	for(i = 0; i < lbox.length; i++) {
 		valid = new lightbox(lbox[i]);
 	}

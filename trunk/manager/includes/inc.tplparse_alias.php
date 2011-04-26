@@ -28,6 +28,10 @@ function parseAlias($intAliasId, $strCommand) {
 				if (is_null($_CLEAN_POST["frm_alias"])) {
 					$blnError = TRUE;
 				}
+				
+				if (is_null($_CLEAN_POST["frm_language"])) {
+					$blnError = TRUE;
+				}
 
 				if (is_null($_CLEAN_POST["frm_element"])) {
 					$blnError = TRUE;
@@ -52,6 +56,7 @@ function parseAlias($intAliasId, $strCommand) {
 					
 					$objAlias->setAccountId($_CONF['app']['account']->getId());
 					$objAlias->setActive(($_POST["frm_active"] == "on") ? 1 : 0);
+					$objAlias->setLanguageId($_CLEAN_POST["frm_language"]);
 					$objAlias->setAlias($_CLEAN_POST["frm_alias"]);
 					$objAlias->setUrl($_CLEAN_POST["frm_element"]);
 					$objAlias->save();
@@ -63,48 +68,72 @@ function parseAlias($intAliasId, $strCommand) {
 			
 			//*** Initiate child element loop.
 			$objAliases = Alias::selectSorted();
+			$totalCount = 0;
 			$listCount = 0;
 			$intPosition = request("pos");
 			$intPosition = (!empty($intPosition) && is_numeric($intPosition)) ? $intPosition : 0;
 			$intPosition = floor($intPosition / $_SESSION["listCount"]) * $_SESSION["listCount"];
+			
+			//*** Find total count.
+			foreach ($objAliases as $objAlias) {
+				$strAlias = $objAlias->getAlias();
+				if (!empty($strAlias)) {
+					$totalCount++;
+				}
+			}
+			
 			$objAliases->seek($intPosition);
+			$objLanguages = ContentLanguage::select();
 			
 			foreach ($objAliases as $objAlias) {
-				$strUrl = $objAlias->getUrl();
-				if (is_numeric($strUrl)) {
-					$objElement = Element::selectByPk($strUrl);
-					if (is_object($objElement)) {
-						$strUrlHref = "?eid={$strUrl}&amp;cmd=" . CMD_EDIT . "&amp;cid=" . NAV_PCMS_ELEMENTS;
-						$strUrl = Element::recursivePath($strUrl);
-					} else {
-						$strUrlHref = "?cid=" . NAV_PCMS_ALIASES;
-						$strUrl = "<b>" . $objLang->get("aliasUnavailable", "label") . "</b>";
+				$strAlias = $objAlias->getAlias();
+				if (!empty($strAlias)) {
+					$strUrl = $objAlias->getUrl();
+					if (is_numeric($strUrl)) {
+						$objElement = Element::selectByPk($strUrl);
+						if (is_object($objElement)) {
+							$strUrlHref = "?eid={$strUrl}&amp;cmd=" . CMD_EDIT . "&amp;cid=" . NAV_PCMS_ELEMENTS;
+							$strUrl = Element::recursivePath($strUrl);
+						} else {
+							$strUrlHref = "?cid=" . NAV_PCMS_ALIASES;
+							$strUrl = "<b>" . $objLang->get("aliasUnavailable", "label") . "</b>";
+						}
 					}
-				}
-			
-				$objTpl->setCurrentBlock("multiview-item");
-				$objTpl->setVariable("MULTIITEM_VALUE", $objAlias->getId());
-				$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:Alias.remove({$objAlias->getId()});");
-				$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("delete", "button"));
-				$objTpl->setVariable("MULTIITEM_HREF", "?cid=" . NAV_PCMS_ALIASES . "&amp;eid={$objAlias->getId()}&amp;cmd=" . CMD_EDIT);
-				$objTpl->setVariable("MULTIITEM_TYPE_CLASS", "alias");
-				$objTpl->setVariable("MULTIITEM_ALIAS", $objAlias->getAlias());
-				$objTpl->setVariable("MULTIITEM_POINTS_TO", $objLang->get("pointsTo", "label"));
-				$objTpl->setVariable("MULTIITEM_URL", $strUrl);
-				$objTpl->setVariable("MULTIITEM_URL_HREF", $strUrlHref);
-				if (!$objAlias->getActive()) $objTpl->setVariable("MULTIITEM_ACTIVE", " class=\"inactive\"");
-				$objTpl->parseCurrentBlock();
 				
-				$listCount++;
-				if ($listCount >= $_SESSION["listCount"]) break;
+					$objTpl->setCurrentBlock("multiview-item");
+					$objTpl->setVariable("MULTIITEM_VALUE", $objAlias->getId());
+					$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:Alias.remove({$objAlias->getId()});");
+					$objTpl->setVariable("BUTTON_REMOVE", $objLang->get("delete", "button"));
+					$objTpl->setVariable("MULTIITEM_HREF", "?cid=" . NAV_PCMS_ALIASES . "&amp;eid={$objAlias->getId()}&amp;cmd=" . CMD_EDIT);
+					$objTpl->setVariable("MULTIITEM_TYPE_CLASS", "alias");
+					$objTpl->setVariable("MULTIITEM_ALIAS", $objAlias->getAlias());
+					$objTpl->setVariable("MULTIITEM_POINTS_TO", $objLang->get("pointsTo", "label"));
+					$objTpl->setVariable("MULTIITEM_URL", $strUrl);
+					$objTpl->setVariable("MULTIITEM_URL_HREF", $strUrlHref);
+					if ($objLanguages->count() > 1) {
+						if ($objAlias->getLanguageId() > 0) {							
+							$strLanguage = ContentLanguage::selectByPK($objAlias->getLanguageId())->getName();
+							$objTpl->setVariable("MULTIITEM_LANGUAGE", sprintf($objLang->get("forLanguage", "label"), $strLanguage));
+						} else {
+							$objTpl->setVariable("MULTIITEM_LANGUAGE", $objLang->get("forAllLanguages", "label"));
+						}
+					} else {
+						$objTpl->setVariable("MULTIITEM_LANGUAGE", "");
+					}
+					if (!$objAlias->getActive()) $objTpl->setVariable("MULTIITEM_ACTIVE", " class=\"inactive\"");
+					$objTpl->parseCurrentBlock();
+					
+					$listCount++;
+					if ($listCount >= $_SESSION["listCount"]) break;
+				}
 			}
 
 			//*** Render page navigation.
-			$pageCount = ceil($objAliases->count() / $_SESSION["listCount"]);
+			$pageCount = ceil($totalCount / $_SESSION["listCount"]);
 			if ($pageCount > 0) {
 				$currentPage = ceil(($intPosition + 1) / $_SESSION["listCount"]);
 				$previousPos = (($intPosition - $_SESSION["listCount"]) > 0) ? ($intPosition - $_SESSION["listCount"]) : 0;
-				$nextPos = (($intPosition + $_SESSION["listCount"]) < $objAliases->count()) ? ($intPosition + $_SESSION["listCount"]) : $intPosition;
+				$nextPos = (($intPosition + $_SESSION["listCount"]) < $totalCount) ? ($intPosition + $_SESSION["listCount"]) : $intPosition;
 
 				$objTpl->setVariable("PAGENAV_PAGE", sprintf($objLang->get("pageNavigation", "label"), $currentPage, $pageCount));
 				$objTpl->setVariable("PAGENAV_PREVIOUS", $objLang->get("previous", "button"));
@@ -176,12 +205,21 @@ function parseAlias($intAliasId, $strCommand) {
 			$objTpl->setVariable("BUTTON_LIST_SELECT_HREF", "javascript:Alias.multiSelect()");
 			$objTpl->parseCurrentBlock();
 			
-			$objTpl->setVariable("ALIASES", $objLang->get("aliases", "label"));
-			$objTpl->setVariable("BUTTON_ADD", $objLang->get("aliasAdd", "button"));
-			
 			//*** Form variables.
+			
+			//*** Languages.				
+			$objLanguages = ContentLanguage::select();
+			foreach ($objLanguages as $objLanguage) {
+				$objTpl->setCurrentBlock("language.item");
+				$objTpl->setVariable("ID", $objLanguage->getId());
+				$objTpl->setVariable("LABEL", $objLanguage->getName());
+				$objTpl->setVariable("SELECTED", ($objAlias->getLanguageId() == $objLanguage->getId()) ? " selected=\"selected\"" : "");
+				$objTpl->parseCurrentBlock();
+			}
+			
 			if ($strCommand == CMD_EDIT) {
 				$objAlias = Alias::selectByPK($intAliasId);
+				
 				$objTpl->setVariable("FORM_ACTIVE_VALUE", ($objAlias->getActive()) ? "checked=\"checked\"" : "");
 				$objTpl->setVariable("FORM_ALIAS_VALUE", $objAlias->getAlias());
 				$objTpl->setVariable("FORM_URL_VALUE", $objAlias->getUrl());
@@ -196,19 +234,18 @@ function parseAlias($intAliasId, $strCommand) {
 				if (!$blnError) $objTpl->setVariable("FRM_STYLE", " style=\"display:none\"");
 				$objTpl->setVariable("CMD", CMD_ADD);
 				
-				$objElements = Elements::getFromParent(0);
-				foreach ($objElements as $objElement) {
-					$objTpl->setCurrentBlock("elements.item");				
-					$objTpl->setVariable("VALUE", $objElement->getId());
-					$objTpl->setVariable("LABEL", $objElement->getName());
-					$objTpl->parseCurrentBlock();
-				}
-				
 				$objTpl->touchBlock("alias.add");
 			}
+			
+			$objTpl->setVariable("ALIASES", $objLang->get("aliases", "label"));
+			$objTpl->setVariable("BUTTON_ADD", $objLang->get("aliasAdd", "button"));
+			
 			$objTpl->setVariable("FRM_LABEL_ACTIVE", $objLang->get("active", "form"));
 			$objTpl->setVariable("FRM_LABEL_ALIAS", $objLang->get("alias", "form"));
 			$objTpl->setVariable("FRM_DESCR_ALIAS", $objLang->get("alias", "tip"));
+			$objTpl->setVariable("FRM_LABEL_LANGUAGE", $objLang->get("language", "form"));
+			$objTpl->setVariable("FRM_DESCR_LANGUAGE", $objLang->get("language", "tip"));
+			$objTpl->setVariable("FRM_LABEL_ALL_LANGUAGES", $objLang->get("allLanguages", "form"));
 			$objTpl->setVariable("FRM_LABEL_URL", $objLang->get("element", "form"));
 			$objTpl->setVariable("FRM_LABEL_SAVE", $objLang->get("save", "button"));
 			

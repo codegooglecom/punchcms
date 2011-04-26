@@ -191,36 +191,32 @@ class Element extends DBA_Element {
 		}
 	}
 	
-	public function getAlias() {
+	public function getAlias($intLanguageId = NULL) {
 		$strReturn = "";
 		
 		if ($this->id > 0) {
-			$objAlias = Alias::selectByUrl($this->id);
-			if (is_object($objAlias)) {
-				$strReturn = $objAlias->getAlias();
+			$objAliases = Alias::selectByUrl($this->getId(), $intLanguageId);
+			if ($objAliases->count() > 0) {
+				$strReturn = $objAliases->current()->getAlias();
+			} else if ($intLanguageId > 0) {
+				$objAliases = Alias::selectByUrl($this->getId(), 0);
+				if ($objAliases->count() > 0) {	
+					$strReturn = $objAliases->current()->getAlias();
+				}
 			}
 		}
 		
 		return $strReturn;
 	}
 	
-	public function setAlias($strValue) {
+	public function setAlias($objAlias) {
 		global $_CONF;
 		
 		if ($this->id > 0) {
-			$objAlias = Alias::selectByUrl($this->id);
-			if (empty($strValue) && is_object($objAlias)) {
-				$objAlias->delete();
-			} else if (!empty($strValue)) {
-				if (!is_object($objAlias)) {
-					$objAlias = new Alias();
-					$objAlias->setAccountId($_CONF['app']['account']->getId());
-					$objAlias->setActive(1);
-				}
-				$objAlias->setUrl($this->id);
-				$objAlias->setAlias($strValue);
-				$objAlias->save();
-			}
+			$objAlias->setAccountId($_CONF['app']['account']->getId());
+			$objAlias->setActive(1);
+			$objAlias->setUrl($this->id);
+			$objAlias->save();
 		}
 	}
 
@@ -479,24 +475,29 @@ class Element extends DBA_Element {
 			if ($objElement->getParentId() > 0) {
 				$strReturn .= self::recursivePath($objElement->getParentId()) . " -> ";
 			}
-			$strReturn .= $objElement->getName();
+			$strReturn .= str_replace("&", "&amp;", $objElement->getName());
 		}
 
 		return $strReturn;
 	}
+	
+	public function isPage() {
+		$blnReturn = FALSE;
+		
+		$objTemplate = Template::selectByPK($this->getTemplateId());
+		if (is_object($objTemplate)) {
+			$blnReturn = $objTemplate->getIsPage();
+		} else {
+			$blnReturn = $this->getIsPage();
+		}
+		
+		return $blnReturn;	
+	}
 
 	public function getPageId() {
 		$intReturn = 0;
-		$blnIsPage = 0;
-
-		$objTemplate = Template::selectByPK($this->getTemplateId());
-		if (is_object($objTemplate)) {
-			$blnIsPage = $objTemplate->getIsPage();
-		} else {
-			$blnIsPage = $this->getIsPage();
-		}
-
-		if ($blnIsPage == 1) {
+		
+		if ($this->isPage()) {
 			$intReturn = $this->getId();
 		} elseif ($this->getParentId() > 0) {
 			$objParent = Element::selectByPk($this->getParentId());
@@ -603,11 +604,14 @@ class Element extends DBA_Element {
 		
 	public function clearAliases() {
 		if ($this->id > 0) {
-			$objAliases = Alias::selectByUrl($this->id, TRUE);
+			$objContentLangs = ContentLanguage::select();
+			foreach ($objContentLangs as $objContentLanguage) {
+				$objAliases = Alias::selectByUrl($this->id, $objContentLanguage->getId());
 
-			if (is_object($objAliases)) {
-				foreach ($objAliases as $objAlias) {
-					$objAlias->delete();
+				if (is_object($objAliases)) {
+					foreach ($objAliases as $objAlias) {
+						$objAlias->delete();
+					}
 				}
 			}
 		}
@@ -635,6 +639,25 @@ class Element extends DBA_Element {
 				$objFtp->pasv(TRUE);
 			}
 			$objFtp->delete(Setting::getValueByName('caching_ftp_folder') . "/*_0_*");
+		}
+	}
+	
+	public function getMeta($intLanguageId = NULL) {
+		$objReturn = ElementMeta::selectByElement($this->getId(), $intLanguageId);
+		
+		return $objReturn;
+	}
+	
+	public function setMeta($objMeta) {
+		if ($this->id > 0) {			
+			$objMeta->setElementId($this->id);
+			$objMeta->save();
+		}
+	}
+		
+	public function clearMeta() {
+		if ($this->id > 0) {
+			ElementMeta::deleteByElement($this->id);
 		}
 	}
 	

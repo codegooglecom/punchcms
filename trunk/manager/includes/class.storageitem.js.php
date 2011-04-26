@@ -35,7 +35,7 @@ StorageItem.multiSelect = function() {
 	(this.checked) ? this.checked = false : this.checked = true;
 
 	//*** Get all checkbox fields.
-	arrCheckbox = document.getElementsByClassName("multiitem");
+	arrCheckbox = $(".multiitem").get();
 
 	//*** Loop through the fields to check or uncheck.
 	for (i = 0; i < arrCheckbox.length; i++) {
@@ -47,7 +47,7 @@ StorageItem.multiDo = function(objField, strAction) {
 	var arrChecked = new Array();
 
 	//*** Get all checkbox fields.
-	arrCheckbox = document.getElementsByClassName("multiitem");
+	arrCheckbox = $(".multiitem").get();
 
 	//*** Loop through the fields to find the checked ones.
 	for (i = 0; i < arrCheckbox.length; i++) {

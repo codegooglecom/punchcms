@@ -312,6 +312,7 @@ $_LANG['form']['sSelectLanguage'] = "* Language";
 $_LANG['form']['sSelectElement'] = "* Element";
 $_LANG['form']['metaInfo'] = "Set page specific title, keywords and description. Used by most search engines.";
 $_LANG['form']['loadingFiles'] = "Loading files...";
+$_LANG['form']['allLanguages'] = "All languages";
 
 //*** Form error definitions.
 $_LANG['formerror']['main'] = "Errors occured while saving your data. Check all marked fields and try again.";
@@ -359,6 +360,7 @@ $_LANG['tip']['structureSelects'] = "This structure has one or more fields that 
 $_LANG['tip']['metaKeywords'] = "A maximum of 20 keywords describing the page.";
 $_LANG['tip']['metaDescription'] = "Description of the page using a maximum of 200 characters.";
 $_LANG['tip']['storageName'] = "Leave this field empty to use the name of the uploaded file.";
+$_LANG['tip']['language'] = "You can associate the alias with a specific language.";
 
 //*** Alert definitions.
 $_LANG['alert']['templateRemoveAlert'] = "Are you sure you want to remove this template?\\nAll nested templates and elements based on this template will also be removed!";

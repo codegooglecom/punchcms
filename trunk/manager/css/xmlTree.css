@@ -64,6 +64,12 @@
 	padding:0;
 	margin:0;
 	cursor: pointer;
+	lineheight: 1px;
+	font-size: 1px;
+}
+
+.standartTreeImage img {
+	display: block;
 }
 
 .hiddenRow {

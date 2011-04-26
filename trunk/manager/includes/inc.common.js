@@ -145,7 +145,7 @@ function focusLogin() {
 
 function obtrudeItemBox() {
 	if (document.getElementsByTagName) {
-		var objElmnts = document.getElementsByClassName("itembox");
+		var objElmnts = $(".itembox").get();
 		for (var intCount = 0; intCount < objElmnts.length; intCount++) {
 			objElmnts[intCount].onclick = function(event){return toggleItemBox(this, event);};
 			objElmnts[intCount].onmousedown = pauseUpdateSort;
@@ -160,6 +160,7 @@ function obtrudeForm() {
 		for (var i = 0; i < document.forms.length; i++) {
 			document.forms[i].onsubmit = function() {
 				if (typeof objContentLanguage != "undefined") objContentLanguage.toTemp();
+				if (typeof objMetaLanguage != "undefined") objMetaLanguage.toTemp();
 				return objValidForms.validate(this.id);
 			};
 		}
@@ -202,14 +203,14 @@ function toggleItemBox(objItem, objEvent) {
 			if (objCheckBox[0].checked) {
 				objCheckBox[0].checked = false;
 				objCheckBox[0].defaultChecked = false;
-				var objElmnts = document.getElementsByClassName("on", objItem);
+				var objElmnts = $(".on", objItem).get();
 				for (var intCount = 0; intCount < objElmnts.length; intCount++) {
 					objElmnts[intCount].className = "off";
 				}
 			} else {
 				objCheckBox[0].checked = true;
 				objCheckBox[0].defaultChecked = true;
-				var objElmnts = document.getElementsByClassName("off", objItem);
+				var objElmnts = $(".off", objItem).get();
 				for (var intCount = 0; intCount < objElmnts.length; intCount++) {
 					objElmnts[intCount].className = "on";
 				}

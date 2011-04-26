@@ -9,9 +9,8 @@
 class DBA_ElementMeta extends DBA__Object {
 	protected $id = NULL;
 	protected $elementid = 0;
-	protected $title = "";
-	protected $keywords = "";
-	protected $description = "";
+	protected $name = "";
+	protected $value = "";
 	protected $languageid = 0;
 	protected $cascade = 0;
 

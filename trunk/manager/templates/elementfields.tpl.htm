@@ -66,14 +66,6 @@
 								<input type="text" id="frm_apiname" name="frm_apiname" class="input-textlarge" value="{FORM_APINAME_VALUE}" />
 								<small>{APINAME_NOTE}</small>
 							</div>
-							<div class="optional{ERROR_ALIAS_ON}">
-								<!-- BEGIN error-element-alias -->
-								<p class="ui-state-error ui-corner-all">{ERROR_ALIAS}</p>
-								<!-- END error-element-alias -->
-								<label for="frm_alias">{LABEL_ALIAS}</label>
-								<input type="text" id="frm_alias" name="frm_alias" class="input-textlarge" value="{FORM_ALIAS_VALUE}" />
-								<small>{ALIAS_NOTE}</small>
-							</div>
 							<!-- BEGIN dynamic.alias -->
 							<div class="optional{ERROR_DYNAMIC_ALIAS_ON}">
 								<!-- BEGIN error-element-dynamicalias -->
@@ -290,7 +282,7 @@
 										<input type="checkbox" id="publish_start" name="publish_start" class="check" {START_DATE_ACTIVE} />
 									</div>
 									<div class="required __temp">
-										<label for="publish_now">
+										<label>
 											{LABEL_DATE}
 										</label>
 										<div class="input-textdate disabled">Direct</div>
@@ -436,11 +428,10 @@
 							</div>
 							<script type="text/javascript">
 							// <![CDATA[
-								//var objMetaLanguage = new MetaLanguage();
-								//objMetaLanguage.currentLanguage = {ACTIVE_META_LANGUAGE};
-								//objMetaLanguage.defaultLanguage = {DEFAULT_META_LANGUAGE};
-								//objMetaLanguage.setActives('{ACTIVES_META_LANGUAGE}');
-								//objMetaLanguage.init();
+								var objMetaLanguage = new MetaLanguage();
+								objMetaLanguage.currentLanguage = {ACTIVE_META_LANGUAGE};
+								objMetaLanguage.defaultLanguage = {DEFAULT_META_LANGUAGE};
+								objMetaLanguage.init();
 							// ]]>
 							</script>
 							<!-- END meta-language -->
@@ -448,11 +439,25 @@
 
 						<div class="divider"></div>
 						<fieldset>
+							<div class="optional{ERROR_META_ALIAS_ON}">
+								<!-- BEGIN error-meta-alias -->
+								<p class="ui-state-error ui-corner-all">{ERROR_META_ALIAS}</p>
+								<!-- END error-meta-alias -->
+								<label for="frm_meta_alias"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_alias_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_ALIAS}</label>
+								<div id="frm_meta_alias_alt" class="input-textlarge disabled" style="display:none"></div>
+								<input type="text" id="frm_meta_alias" name="frm_meta_alias" class="input-textlarge" value="{FORM_META_ALIAS_VALUE}" onblur="objMetaLanguage.toTemp(this.id);" />
+								<!-- BEGIN field.meta_alias.value -->
+								<input type="hidden" id="{FIELD_ALIAS_ID}" name="{FIELD_ALIAS_ID}" value="{FIELD_ALIAS_VALUE}" />
+								<!-- END field.meta_alias.value -->
+								<input type="hidden" id="frm_meta_alias_cascades" name="frm_meta_alias_cascades" value="" />
+								<small>{META_ALIAS_NOTE}</small>
+							</div>
 							<div class="optional{ERROR_META_TITLE_ON}">
 								<!-- BEGIN error-meta-title -->
 								<p class="ui-state-error ui-corner-all">{ERROR_META_TITLE}</p>
 								<!-- END error-meta-title -->
 								<label for="frm_meta_title"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_title_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_TITLE}</label>
+								<div id="frm_meta_title_alt" class="input-textlarge disabled" style="display:none"></div>
 								<input type="text" id="frm_meta_title" name="frm_meta_title" class="input-textlarge" value="{FORM_META_TITLE_VALUE}" onblur="objMetaLanguage.toTemp(this.id);" />
 								<!-- BEGIN field.meta_title.value -->
 								<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
@@ -464,6 +469,7 @@
 								<p class="ui-state-error ui-corner-all">{ERROR_META_KEYWORDS}</p>
 								<!-- END error-meta-keywords -->
 								<label for="frm_meta_keywords"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_keywords_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_KEYWORDS}</label>
+								<div id="frm_meta_keywords_alt" class="input-textbig disabled" style="display:none"></div>
 								<textarea id="frm_meta_keywords" name="frm_meta_keywords" class="input-textmedium" cols="32" rows="6" onblur="objMetaLanguage.toTemp(this.id);">{FORM_META_KEYWORDS_VALUE}</textarea>
 								<!-- BEGIN field.meta_keywords.value -->
 								<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
@@ -476,6 +482,7 @@
 								<p class="ui-state-error ui-corner-all">{ERROR_META_DESCRIPTION}</p>
 								<!-- END error-meta-description -->
 								<label for="frm_meta_description"><a href="javascript:;" rel="internal" class="fieldButton"><img id="frm_meta_description_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a> {LABEL_META_DESCRIPTION}</label>
+								<div id="frm_meta_description_alt" class="input-textbig disabled" style="display:none"></div>
 								<textarea id="frm_meta_description" name="frm_meta_description" class="input-textmedium" cols="32" rows="6" onblur="objMetaLanguage.toTemp(this.id);">{FORM_META_DESCRIPTION_VALUE}</textarea>
 								<!-- BEGIN field.meta_description.value -->
 								<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
@@ -485,9 +492,10 @@
 							</div>
 							<script type="text/javascript">
 							// <![CDATA[
-								//objMetaLanguage.addField('frm_meta_title', '{META_TITLE_CASCADES}');
-								//objMetaLanguage.addField('frm_meta_keywords', '{META_KEYWORDS_CASCADES}');
-								//objMetaLanguage.addField('frm_meta_description', '{META_DESCRIPTION_CASCADES}');
+								objMetaLanguage.addField('frm_meta_alias', '{META_ALIAS_CASCADES}');
+								objMetaLanguage.addField('frm_meta_title', '{META_TITLE_CASCADES}');
+								objMetaLanguage.addField('frm_meta_keywords', '{META_KEYWORDS_CASCADES}');
+								objMetaLanguage.addField('frm_meta_description', '{META_DESCRIPTION_CASCADES}');
 							// ]]>
 							</script>
 						</fieldset>

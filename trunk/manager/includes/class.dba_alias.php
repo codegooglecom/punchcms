@@ -9,6 +9,8 @@
 class DBA_Alias extends DBA__Object {
 	protected $id = NULL;
 	protected $accountid = 0;
+	protected $languageid = 0;
+	protected $cascade = 0;
 	protected $alias = "";
 	protected $url = "";
 	protected $active = 1;

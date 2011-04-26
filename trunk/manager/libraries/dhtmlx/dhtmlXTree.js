@@ -1273,7 +1273,7 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){
  inp.onclick=this.onCheckBoxClick;
  inp.treeNod=this;
  inp.parentObject=itemObject;
- td11.width="20px";
+ //td11.width="20px"; //*** Removed by PtC
 
  var td12=document.createElement('td');
  td12.className="standartTreeImage";
