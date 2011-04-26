@@ -16,6 +16,12 @@ $_CONF['app']['menu'] 			= array(
 													'2' => 'Create',
 													'6' => 'Import'
 												)
+											),
+										'3' => array(
+												'Tools',
+												array(
+													'9' => 'Run SQL'
+												)
 											)
 									);
 

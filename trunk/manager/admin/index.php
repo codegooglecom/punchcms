@@ -50,6 +50,10 @@ if ($objLiveUser->isLoggedIn()) {
 			case NAV_ACCOUNT:
 				$strOutput .= parseAccount($eId, $cmd);
 				break;
+				
+			case NAV_TOOLS:
+				$strOutput .= parseTools($eId, $cmd);
+				break;
 		}
 	}
 } else {

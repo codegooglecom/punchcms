@@ -42,6 +42,10 @@ h2 {
 	padding-left: 150px;
 }
 
+h3 {
+	margin-top: 15px;
+}
+
 p {
 	margin-bottom: 15px;
 }
@@ -245,4 +249,21 @@ p {
 	font-size: 9px;
 	line-height: 9px;
 	color: #777;
+}
+
+table {
+	border: none;
+	border-collapse: collapse;
+	margin-top: 5px;
+}
+
+td,
+th
+{
+	border: 1px solid #999;
+	padding: 3px 4px;
+}
+
+th {
+	font-weight: bold;
 }

@@ -387,6 +387,79 @@ function parseAccount($eId, $cmd) {
 	return $objTpl->get();
 }
 
+function parseTools($eId, $cmd) {
+	global $_PATHS,
+		$_CONF,
+		$DBAConn;
+
+	$objTpl = new HTML_Template_IT($_PATHS['templates']);
+	$objTpl->loadTemplatefile("tools.tpl.htm");
+
+	switch ($cmd) {
+		case CMD_RUNSQL:
+			$strDispatch	= Request::get('dispatch');
+			$strSql			= Request::get('frm_sql');
+			$strOutput		= "";
+			
+			if ($strDispatch == "runQuery") {
+				if (PEAR::isError($DBAConn)) {
+					die("Database connection failed: " . $objConn->getMessage());
+				}
+
+				$strSql = stripslashes($strSql);
+				$strSql = mysql_real_escape_string($strSql);
+			
+				$objResult = $DBAConn->query($strSql);
+			
+				if (PEAR::isError($objResult)) {
+					die("Query failed: " . $objResult->getMessage() . "<br />Using query: " . $strSql);
+				}
+			
+				$strOutput .= "<h3>Results</h3>";
+				$strOutput .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">";
+				$strOutput .= "<tr>";
+			
+				$arrColumns = $objResult->getColumnNames();
+				foreach ($arrColumns as $key => $value) {
+					$strOutput .= "<th>{$key}</th>";
+				}
+				$strOutput .= "</tr>";
+			
+				while ($objRow = $objResult->fetchRow()) {
+					$strOutput .= "<tr>";
+					foreach ($objRow as $key => $value) {
+						$strOutput .= "<td>{$value}</td>";
+					}
+					$strOutput .= "</tr>";
+				}
+			
+				$strOutput .= "</table>";
+				
+				$objTpl->setCurrentBlock("form.sql");
+				$objTpl->setVariable('QUERY_VALUE', Request::get('frm_sql'));
+				$objTpl->setVariable('CID', NAV_TOOLS);
+				$objTpl->setVariable('EID', $eId);
+				$objTpl->setVariable('CMD', $cmd);
+				$objTpl->parseCurrentBlock();
+
+				$objTpl->setCurrentBlock("text");
+				$objTpl->setVariable('BODY', $strOutput);
+				$objTpl->parseCurrentBlock();
+			} else {
+				$objTpl->setCurrentBlock("form.sql");
+				$objTpl->setVariable('CID', NAV_TOOLS);
+				$objTpl->setVariable('EID', $eId);
+				$objTpl->setVariable('CMD', $cmd);
+				$objTpl->parseCurrentBlock();
+			}
+			
+			break;
+	}
+
+	//*** Return the output.
+	return $objTpl->get();
+}
+
 function parseAdmin($eId, $cmd) {
 	global $_PATHS,
 		$_CONF,

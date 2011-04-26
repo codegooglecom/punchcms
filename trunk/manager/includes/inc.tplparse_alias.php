@@ -56,7 +56,7 @@ function parseAlias($intAliasId, $strCommand) {
 					
 					$objAlias->setAccountId($_CONF['app']['account']->getId());
 					$objAlias->setActive(($_POST["frm_active"] == "on") ? 1 : 0);
-					$objAlias->setLanguageId($_CLEAN_POST["frm_language"]);
+					$objAlias->setLanguageId((empty($_CLEAN_POST["frm_language"])) ? 0 : $_CLEAN_POST["frm_language"]);
 					$objAlias->setAlias($_CLEAN_POST["frm_alias"]);
 					$objAlias->setUrl($_CLEAN_POST["frm_element"]);
 					$objAlias->save();
