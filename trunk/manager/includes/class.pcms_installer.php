@@ -270,7 +270,7 @@ class PCMS_Installer {
 
 				foreach ($arrLines as $strLine) {
 					$strLine = trim($strLine, " ");
-					if (!empty($strLine)) {
+					if (!empty($strLine) && strlen($strLine) > 5) {
 						$objResult = $objConn->exec($strLine);		
 
 						if (PEAR::isError($objResult) && $objResult->code != -18) {
