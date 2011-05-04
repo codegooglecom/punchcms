@@ -60,11 +60,14 @@ class Structure extends DBA_Structure {
 		
 		$arrUserIds = array();
 		$arrGroupIds = array();
+		$arrStorageIds = array();
+		$arrFeedIds = array();
 		$arrLanguageIds[0] = 0;
 		$arrTemplateIds[0] = 0;
 		$arrTemplateFieldIds[0] = 0;
 		$arrLinkFieldIds = array();
 		$arrElementIds[0] = 0;
+		$arrElementFieldIds = array();
 		$arrElementFieldIds["link"][0] = 0;
 		$arrElementFieldIds["largeText"][0] = 0;
 		$intTemplateParentId = 0;
@@ -132,7 +135,7 @@ class Structure extends DBA_Structure {
 
 								case "elements":
 									//*** Add elements to the account.
-									ImpEx::importElements($childNode, $_CONF['app']['account']->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $intElementParentId);
+									ImpEx::importElements($childNode, $_CONF['app']['account']->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $intElementParentId);
 									break;
 
 								case "aliases":
