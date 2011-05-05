@@ -563,14 +563,12 @@ function parseTemplates($intElmntId, $strCommand) {
 							foreach ($objValue as $setting => $value) {
 								switch (strtoupper($setting)) {
 									case "TFV_IMAGE_SCALE":								
-										if ($objField->getTypeId() == FIELD_TYPE_IMAGE) {
-											$strValue = "";
-											foreach ($arrValues as $settingKey => $settingValue) {
-												$selected = ($settingValue == $value) ? " selected=\"selected\"" : "";
-												$strValue .= "<option value=\"$arrValues[$settingKey]\"{$selected}>{$arrLabels[$settingKey]}</option>\n";
-											}
-											$objTpl->setVariable(strtoupper($setting), $strValue);
+										$strValue = "";
+										foreach ($arrValues as $settingKey => $settingValue) {
+											$selected = ($settingValue == $value) ? " selected=\"selected\"" : "";
+											$strValue .= "<option value=\"$arrValues[$settingKey]\"{$selected}>{$arrLabels[$settingKey]}</option>\n";
 										}
+										$objTpl->setVariable(strtoupper($setting), $strValue);
 										
 										break;
 									case "TFV_IMAGE_GRAYSCALE":
