@@ -178,7 +178,8 @@ class Search {
 	}
 
 	private function getWords($strPhrase, $intWeight) {
-	  	$strRaw = str_repeat(' ' . strip_tags($strPhrase), $intWeight);
+		$strRaw = str_replace("><", "> <", $strPhrase);
+	  	$strRaw = str_repeat(' ' . strip_tags($strRaw), $intWeight);
 
 		//*** Stemming.
 		$arrStemmedWords = $this->stemPhrase($strRaw);
