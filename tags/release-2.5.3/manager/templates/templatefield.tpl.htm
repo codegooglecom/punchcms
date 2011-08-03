@@ -1,0 +1,262 @@
+		<div id="left-wrap">
+			<h2>{MAINTITLE}<!-- BEGIN title.sub --> <span class="name">&lsquo;{MAINSUB}&rsquo;</span><!-- END title.sub --></h2>
+			<div id="treeContainer"></div>
+			<!-- BEGIN singleview -->
+			<div id="content" class="hollyhacked">
+				<form id="{FORM_NAME}" enctype="multipart/form-data" method="post" action="?" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+						<!-- BEGIN headertitel_simple -->
+						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#section-details">{HEADER_TITLE}</a></li>
+						<!-- END headertitel_simple -->
+					</ul>
+					<div id="section-details" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+						<!-- BEGIN error-main -->
+						<div class="ui-widget">
+							<div class="ui-state-error ui-corner-all">
+								<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>{ERROR_MAIN}</p>
+							</div>
+						</div>
+						<!-- END error-main -->
+	
+						<div class="description">
+							<p>{LABEL_REQUIRED}</p>
+						</div>
+	
+						<!-- BEGIN templatefieldadd -->
+						<fieldset>
+							<div class="optional{ERROR_REQUIRED_ON}">
+								<!-- BEGIN error-required -->
+								<p class="ui-state-error ui-corner-all">{ERROR_REQUIRED}</p>
+								<!-- END error-required -->
+								<label for="frm_required">{LABEL_REQUIREDFIELD}</label>
+								<input type="checkbox" id="frm_required" name="frm_required" class="check" {FORM_REQUIRED_VALUE} />
+							</div>
+							<div class="required{ERROR_NAME_ON}">
+								<!-- BEGIN error-field-name -->
+								<p class="ui-state-error ui-corner-all">{ERROR_NAME}</p>
+								<!-- END error-field-name -->
+								<label for="frm_name">* {LABEL_FIELDNAME}</label>
+								<input type="text" id="frm_name" name="frm_name" class="input-textlarge" value="{FORM_NAME_VALUE}" />
+							</div>
+							<div class="optional{ERROR_APINAME_ON}">
+								<!-- BEGIN error-field-apiname -->
+								<p class="ui-state-error ui-corner-all">{ERROR_APINAME}</p>
+								<!-- END error-field-apiname -->
+								<label for="frm_apiname">API {LABEL_NAME}</label>
+								<input type="text" id="frm_apiname" name="frm_apiname" class="input-textlarge" value="{FORM_APINAME_VALUE}" />
+								<small>{APINAME_NOTE}</small>
+							</div>
+							<div class="optional{ERROR_NOTES_ON}">
+								<!-- BEGIN error-field-notes -->
+								<p class="ui-state-error ui-corner-all">{ERROR_NOTES}</p>
+								<!-- END error-field-notes -->
+								<label for="frm_description">{LABEL_NOTES}</label>
+								<textarea id="frm_description" name="frm_description" class="input-textmedium" cols="32" rows="6">{FORM_NOTES_VALUE}</textarea>
+							</div>
+							<div class="required{ERROR_FIELDTYPE_ON}">
+								<!-- BEGIN error-fieldtype -->
+								<p class="ui-state-error ui-corner-all">{ERROR_FIELDTYPE}</p>
+								<!-- END error-fieldtype -->
+								<label for="frm_field_type">* {LABEL_FIELDTYPE}</label>
+								<select id="frm_field_type" name="frm_field_type" class="select-one" size="1">
+									<!-- BEGIN list_fieldtype -->
+									<option value="{FIELDTYPE_VALUE}" {FIELDTYPE_SELECTED}>{FIELDTYPE_TEXT}</option>
+									<!-- END list_fieldtype -->
+								</select>
+							</div>
+							<input type="hidden" name="dispatch" value="addTemplateField" />
+						</fieldset>
+	
+						<div id="subSingleList" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_list_value">Values</label>
+									<textarea id="tfv_list_value" name="tfv_list_value" class="input-textlarge" cols="60" rows="8">{TFV_LIST_VALUE}</textarea>
+									<!-- BEGIN list.notes -->
+									<small>{TFV_LIST_NOTES}</small>
+									<!-- END list.notes -->
+								</div>
+								<div class="optional">
+									<label for="tfv_list_default">Default Value</label>
+									<input type="text" id="tfv_list_default" name="tfv_list_default" class="input-textlarge" value="{TFV_LIST_DEFAULT}" />
+								</div>
+							</fieldset>
+						</div>
+	
+						<div id="subMultiList" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_multilist_value">Values</label>
+									<textarea id="tfv_multilist_value" name="tfv_multilist_value" class="input-textlarge" cols="60" rows="8">{TFV_MULTILIST_VALUE}</textarea>
+									<!-- BEGIN multilist.notes -->
+									<small>{TFV_MULTILIST_NOTES}</small>
+									<!-- END multilist.notes -->
+								</div>
+								<div class="optional">
+									<label for="tfv_multilist_default">Default Value(s)</label>
+									<textarea id="tfv_multilist_default" name="tfv_multilist_default" class="input-textlarge" cols="60" rows="4">{TFV_MULTILIST_DEFAULT}</textarea>
+								</div>
+							</fieldset>
+						</div>
+	
+						<div id="subBoolean" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_boolean_default">Default Value</label>		
+									<input type="checkbox" id="tfv_boolean_default" name="tfv_boolean_default" class="check" {TFV_BOOLEAN_DEFAULT} value="true" />								
+								</div>
+							</fieldset>
+						</div>
+	
+						<div id="subImage" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_image_count">Maximum images</label>
+									<input type="text" id="tfv_image_count" name="tfv_image_count" class="input-textsmall" value="{TFV_IMAGE_COUNT}" />
+									<input type="hidden" id="tfv_image_settings_count" name="tfv_image_settings_count" value="{TFV_IMAGE_SETTINGS_COUNT}" />
+								</div>
+							</fieldset>
+							<!-- BEGIN image.settings -->
+							<fieldset>
+								<h5>Image Size settings <a href="#" class="imgtpl-remove removeButton" style="{REMOVE_STYLE};" rel="internal">[-]</a><a href="#" class="imgtpl-add addButton" rel="internal">[+] Add another template</a></h5>
+								<div class="required" style="{API_STYLE};">
+									<label for="tfv_image_setting_name">* API Name</label>
+									<input type="text" id="tfv_image_setting_name" name="tfv_image_setting_name[]" class="input-textlarge" value="{TFV_IMAGE_SETTING_NAME}" />
+									<small>Used by the developer to select the image based on these settings.</small>
+								</div>
+								<div class="optional">
+									<label for="tfv_field_width">Image size (W x H)</label>
+									<input type="text" id="tfv_field_width" name="tfv_field_width[]" class="inline" value="{TFV_FIELD_WIDTH}" /> x
+									<input type="text" id="tfv_field_height" name="tfv_field_height[]" class="inline" value="{TFV_FIELD_HEIGHT}" /> px
+								</div>
+								<div class="optional">
+									<label for="tfv_image_scale">Scale method</label>								
+									<select id="tfv_image_scale" name="tfv_image_scale[]" class="select-one">
+										{TFV_IMAGE_SCALE}
+									</select>	
+								</div>
+								<div class="optional">
+									<label for="tfv_image_quality">Image quality</label>
+									<input type="text" id="tfv_image_quality" name="tfv_image_quality[]" class="inline" value="{TFV_IMAGE_QUALITY}" /> %
+									<small style="display: none;">100% is the maximum image quality.</small>
+								</div>
+								<div class="optional">
+									<label for="tfv_image_grayscale">Convert to grayscale</label>
+									<input type="checkbox" id="tfv_image_grayscale" name="tfv_image_grayscale[]" class="check" {TFV_IMAGE_GRAYSCALE} />
+								</div>
+							</fieldset>
+							<!-- END image.settings -->
+						</div>
+	
+						<div id="subFile" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_file_count">Maximum files</label>
+									<input type="text" id="tfv_file_count" name="tfv_file_count" class="input-textsmall" value="{TFV_FILE_COUNT}" />
+								</div>
+								<div class="optional">
+									<label for="tfv_file_extension">File extensions</label>
+									<input type="text" id="tfv_file_extension" name="tfv_file_extension" class="input-textlarge" value="{TFV_FILE_EXTENSION}" />
+									<small>{TFV_EXTENSION_NOTES}</small>
+								</div>
+							</fieldset>
+						</div>
+	
+						<div id="subMaxCharacters" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_field_min_characters">Minimum Characters</label>
+									<input type="text" id="tfv_field_min_characters" name="tfv_field_min_characters" class="input-textsmall" value="{TFV_FIELD_MIN_CHARACTERS}" />
+								</div>
+								<div class="optional">
+									<label for="tfv_field_max_characters">Maximum Characters</label>
+									<input type="text" id="tfv_field_max_characters" name="tfv_field_max_characters" class="input-textsmall" value="{TFV_FIELD_MAX_CHARACTERS}" />
+								</div>
+							</fieldset>
+						</div>
+	
+						<div id="subMinMaxValue" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_field_min_value">Lowest value</label>
+									<input type="text" id="tfv_field_min_value" name="tfv_field_min_value" class="input-textsmall" value="{TFV_FIELD_MIN_VALUE}" />
+								</div>
+								<div class="optional">
+									<label for="tfv_field_max_value">Highest value</label>
+									<input type="text" id="tfv_field_max_value" name="tfv_field_max_value" class="input-textsmall" value="{TFV_FIELD_MAX_VALUE}" />
+								</div>
+							</fieldset>
+						</div>
+	
+						<div id="subFormat" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_field_format">Format</label>
+									<input type="text" id="tfv_field_format" name="tfv_field_format" class="input-textlarge" value="{TFV_FIELD_FORMAT}" />
+									<!-- BEGIN format.notes -->
+									<small>{TFV_FORMAT_NOTES}</small>
+									<!-- END format.notes -->
+								</div>
+							</fieldset>
+						</div>
+	
+						<div id="subMovableCanvas" class="field-types" style="display:none">
+							<h4>{LABEL_FIELDTYPE_OPTIONS}</h4>
+							<fieldset>
+								<div class="optional">
+									<label for="tfv_field_api_key">API key</label>
+									<input type="text" id="tfv_field_api_key" name="tfv_field_api_key" class="input-text" value="{TFV_FIELD_API_KEY}" />
+								</div>
+								<div class="optional">
+									<label for="tfv_field_map_key">Map Key</label>
+									<input type="text" id="tfv_field_map_key" name="tfv_field_map_key" class="input-textsmall" value="{TFV_FIELD_MAP_KEY}" />
+								</div>
+							</fieldset>
+						</div>
+						<!-- END templatefieldadd -->
+						<div class="form-navigation">
+							<input type="hidden" name="cid" value="{CID}" />
+							<input type="hidden" name="cmd" value="{CMD}" />
+							<input type="hidden" name="eid" value="{EID}" />
+							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<!-- END singleview -->
+			<div id="footer">
+				&nbsp;
+			</div>
+			<script type="text/javascript">
+				jQuery(function(){
+					jQuery(".imgtpl-remove").live("click", function(){
+						PTemplateField.removeSetting("image", this);
+						return false;
+					});
+					jQuery(".imgtpl-add").live("click", function(){
+						PTemplateField.addSetting("image", this);
+						return false;
+					});
+					jQuery("#tfv_image_quality").live("keyup", function(){
+						
+						if(jQuery(this).val() >= 100){
+							jQuery(this).val("100");
+							if(!jQuery(this).parent().find("small").is(":visible")){
+								jQuery(this).parent().find("small").fadeIn("fast").animate({color: "red"}).animate({color: "#333"});
+							}
+						}
+						
+					});
+				});
+			</script>
+		</div>
+	</div>
+</div>

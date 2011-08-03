@@ -1,0 +1,77 @@
+
+<script type="text/javascript">
+// <![CDATA[
+
+function DragDropLink(){
+
+	//*** Action occures on drag.
+	this._drag = function(sourceHtmlObject, dhtmlObject, targetHtmlObject) {
+		targetHtmlObject.style.backgroundColor = "";
+		targetHtmlObject.value = sourceHtmlObject.parentObject.id;
+		
+		//*** Trigger the language module.
+		objContentLanguage.toTemp(targetHtmlObject.id);
+	}
+
+	//*** Action occures on drag moved in landing zone.
+	this._dragIn = function(htmlObject, shtmlObject) {
+		htmlObject.style.backgroundColor = "#fffacd";
+		return htmlObject;
+	}
+
+	//*** Action occures on drag moved out landing zone.
+	this._dragOut = function(htmlObject) {
+		htmlObject.style.backgroundColor = "";
+		return this;
+	}
+}
+
+//*** Resize tree container.
+function resizeTree() {
+	 var $objTree 		= jQuery("#treeContainer"),
+	 	 windowHeight 	= jQuery(window).height(),
+	 	 offsetY 		= $objTree.offset().left,
+	 	 headerHeight	= 180,
+	 	 treeHeight 	= windowHeight - offsetY - headerHeight;
+ 	 
+	 $objTree.css({ height: treeHeight + "px"});
+}
+
+function checkDynamicAlias() {
+	if ($("#frm_dynamic_alias_check:checked").length > 0) {
+		$("#frm_dynamic_alias").removeAttr("disabled");
+	} else {
+		$("#frm_dynamic_alias").attr("disabled", "disabled");
+	}
+}
+
+//*** Onload action.
+jQuery(function(){
+	if(typeof $tabs == "undefined"){
+		$tabs = jQuery("#elementForm").tabs({
+			selected: {SELECTED_TAB}
+		});
+	}
+	
+	if (jQuery("#treeContainer").length > 0) {
+		//*** On resize, recalculate the size of the treeview module.
+		jQuery(window).bind("resize", function(){
+			resizeTree();
+		});
+		resizeTree();
+	}
+
+	jQuery(".input-button").button();
+
+	$("#frm_dynamic_alias_check").bind("click", function(){
+		checkDynamicAlias();
+	});	
+	checkDynamicAlias();
+	
+});
+
+{SCRIPT}
+
+// ]]>
+</script>
+</head>
