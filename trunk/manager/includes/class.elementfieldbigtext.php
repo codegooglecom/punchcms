@@ -1,13 +1,12 @@
 <?php
 
-/* ElementFieldBigText Class v0.1.0
+/**
+ * 
  * Handles ElementFieldBigText properties and methods.
+ * @author felix
+ * @version 0.1.0
  *
- * CHANGELOG
- * version 0.1.0, 04 Apr 2006
- *   NEW: Created class.
  */
-
 class ElementFieldBigText extends DBA_ElementFieldBigText {
 
 	public static function getByFieldId($intFieldId, $intLanguageId = 0) {

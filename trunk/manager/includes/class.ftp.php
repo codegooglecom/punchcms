@@ -53,8 +53,10 @@ class FTP {
    	}
    	
 	public function is_dir($strPath) {
+		$origin = @ftp_pwd($this->objFTP); 
+		
 		if (@ftp_chdir($this->objFTP, $strPath)) {
-			ftp_chdir($this->objFTP, '..');
+			ftp_chdir($this->objFTP, $origin);
 			return true;
 		} else {
 			return false;

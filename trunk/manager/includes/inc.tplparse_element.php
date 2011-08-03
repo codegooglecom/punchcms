@@ -1536,6 +1536,43 @@ function parsePages($intElmntId, $strCommand) {
 									
 									$objFieldTpl->parseCurrentBlock();
 									break;
+									
+								case FIELD_TYPE_MOVABLECANVAS_COORDINATES:
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.mccoordinates', 'elementfield_mccoordinates.tpl.htm');
+									
+									foreach ($objContentLangs as $objContentLanguage) {
+										$objFieldTpl->setCurrentBlock("field.mccoordinates.value");
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
+	
+										if (is_object($objElement)) {
+											$strValue = htmlspecialchars($objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId()));
+										} else {
+											$strValue = "";
+										}
+	
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
+	
+										$objFieldTpl->parseCurrentBlock();
+									}
+	
+									$objFieldTpl->setCurrentBlock("field.mccoordinates");
+									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
+									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
+									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
+										
+									$objFieldTpl->setVariable("MC-API-ID", $objField->getValueByName("tfv_field_api_key")->getValue());
+									$objFieldTpl->setVariable("MC-MAP-ID", $objField->getValueByName("tfv_field_map_key")->getValue());
+									
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
+									}
+									
+									$objFieldTpl->parseCurrentBlock();
+									break;
 	
 								case FIELD_TYPE_SIMPLETEXT:
 									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.simpletext', 'elementfield_simpletext.tpl.htm');

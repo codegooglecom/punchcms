@@ -1,10 +1,12 @@
 <?php
 
-/*
- * Account Class v0.1.2
- * Retrieves account data from the database.
+/**
+ * 
+ * Account operations. Retrieves account data from the database.
+ * @author felix
+ * @version 0.1.2
+ *
  */
-
 class Account extends DBA_Account {
 
 	public static function getByUri($strUri) {

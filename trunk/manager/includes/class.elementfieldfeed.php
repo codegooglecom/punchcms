@@ -1,13 +1,12 @@
 <?php
 
-/* ElementFieldFeed Class v0.1.0
+/**
+ * 
  * Handles ElementFieldFeed properties and methods.
+ * @author felix
+ * @version 0.1.0
  *
- * CHANGELOG
- * version 0.1.0, 04 Apr 2006
- *   NEW: Created class.
  */
-
 class ElementFieldFeed extends DBA_ElementFieldFeed {
 
 	public static function selectByElement($intElementId, $intLanguageId = NULL) {

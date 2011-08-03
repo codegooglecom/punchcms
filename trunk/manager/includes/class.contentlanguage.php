@@ -1,13 +1,12 @@
 <?php
 
-/* ContentLanguage Class v0.1.0
+/**
+ * 
  * Handles content language properties and methods.
+ * @author felix
+ * @version 0.1.0
  *
- * CHANGELOG
- * version 0.1.0, 04 Apr 2006
- *   NEW: Created class.
  */
-
 class ContentLanguage extends DBA_ContentLanguage {
 	
 	public function save($blnSaveModifiedDate = TRUE) {

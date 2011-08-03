@@ -1,13 +1,12 @@
 <?php
 
-/* Alias Class v0.1.0
+/**
+ * 
  * Handles alias properties and methods.
+ * @author felix
+ * @version 0.1.0
  *
- * CHANGELOG
- * version 0.1.0, 04 Apr 2006
- *   NEW: Created class.
  */
-
 class Alias extends DBA_Alias {
 	
 	public function save($blnSaveModifiedDate = TRUE) {
@@ -20,7 +19,7 @@ class Alias extends DBA_Alias {
 		$this->clearByLanguage();
 		
 		$blnReturn = parent::save($blnSaveModifiedDate);
-		AuditLog::addLog(AUDIT_TYPE_ALIAS, $this->getId(), $this->getAlias(), (empty($intId)) ? "create" : "edit", ($this->getActive()) ? "active" : "inactive");
+		if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_ALIAS, $this->getId(), $this->getAlias(), (empty($intId)) ? "create" : "edit", ($this->getActive()) ? "active" : "inactive");
 
 		return $blnReturn;
 	}
@@ -29,7 +28,7 @@ class Alias extends DBA_Alias {
 		parent::$__object = "Alias";
 		parent::$__table = "pcms_alias";
 		
-		AuditLog::addLog(AUDIT_TYPE_ALIAS, $this->getId(), $this->getAlias(), "delete");
+		if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_ALIAS, $this->getId(), $this->getAlias(), "delete");
 		return parent::delete();
 	}
 	
@@ -68,10 +67,10 @@ class Alias extends DBA_Alias {
 
 	public static function selectByUrl($strUrl, $intLanguageId = NULL) {
 		global $_CONF;
+		if (is_null($intLanguageId)) $intLanguageId = ContentLanguage::getDefault()->getId();
 		parent::$__object = "Alias";
 		parent::$__table = "pcms_alias";
 		$objReturn = NULL;
-		if (is_null($intLanguageId)) $intLanguageId = ContentLanguage::getDefault()->getId();
 
 		if (!empty($strUrl)) {
 			$strSql = sprintf("SELECT * FROM " . parent::$__table . " WHERE accountId = '%s' AND url = %s AND languageId = %s ORDER BY sort", $_CONF['app']['account']->getId(), parent::quote($strUrl), parent::quote($intLanguageId));

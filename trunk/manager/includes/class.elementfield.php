@@ -1,13 +1,12 @@
 <?php
 
-/* ElementField Class v0.3.0
+/**
+ * 
  * Handles ElementField properties and methods.
+ * @author felix
+ * @version 0.3.0
  *
- * CHANGELOG
- * version 0.3.0, 04 Apr 2006
- *   NEW: Created class.
  */
-
 class ElementField extends DBA_ElementField {
 	public $value = "";
 	public $typeId = NULL;

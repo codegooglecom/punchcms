@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * 
+ * Holds a Setting row.
+ * @author felix
+ * @version 0.1.0
+ *
+ */
 class Setting extends DBA_Setting {
 
 	public function save($blnSaveModifiedDate = TRUE) {

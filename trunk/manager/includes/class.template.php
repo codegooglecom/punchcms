@@ -1,15 +1,18 @@
 <?php
 
-/* Template Class v0.1.0
+/**
+ * 
  * Handles Template properties and methods.
- *
+ * @author felix
+ * @version 0.2.0
+ * 
  * CHANGELOG
  * version 0.2.0, 20 Nov 2007
  *   NEW: Added selectByName and getFieldByName methods.
  * version 0.1.0, 04 Apr 2006
  *   NEW: Created class.
+ *
  */
-
 class Template extends DBA_Template {
 	private $objTemplateCollection;
 

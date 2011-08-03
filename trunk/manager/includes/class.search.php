@@ -1,18 +1,23 @@
 <?php
 
-/* Search Class v0.2.0
+/**
+ * 
  * Searches for strings in the elements.
- *
+ * @author felix
+ * @version 0.2.1
+ * 
  * CHANGELOG
- * version 0.2.0, 03 Aug 2009
- *   BUG: Fixed multibyte (UTF-8) bug in the word_count method.
+ * version 0.2.1, 30 May 2008
+ *   CHG: Refined the wildcard seach.
+ * version 0.2.0, 18 Apr 2008
+ *   CHG: Added wildcard seach to the find method.
  * version 0.1.0, 04 Apr 2006
  *   NEW: Created class.
+ *
  */
-
 class Search {
 	const SEARCH_WEIGHT = 1;
-    const WORD_COUNT_MASK = "/\p{L}[\p{L}\p{Mn}\p{Pd}'\x{2019}]*/u";
+    const WORD_COUNT_MASK = "/\p{L}[\p{L}\p{Mn}\p{Pd}'\x{2019}]*|\%/u";
 
 	//*** Public Methods.
 	public function updateIndex($intId = 0) {
@@ -57,14 +62,17 @@ class Search {
 	public function find($strQuery, $blnExact = false) {
 		global $_CONF;
 
+		//*** Set query property.
+		$objReturn		= new SearchResults();
+		$objReturn->setQuery($strQuery);
+		$strQuery		= str_replace("*", "%", $strQuery);
+
 		//*** Convert query to stem.
 		$arrWords		= array_values($this->stemPhrase($strQuery));
 		$intWordCount	= count($arrWords);
-		$objReturn		= new SearchResults();
 
 		//*** Query does not validate.
 		if (!$arrWords) {
-			$objReturn->setQuery($strQuery);
 			return $objReturn;
 		}
 
@@ -75,7 +83,7 @@ class Search {
 					SUM(pcms_search_index.count) as count FROM pcms_search_index, pcms_element WHERE
 					pcms_search_index.elementId = pcms_element.id AND
 					pcms_element.accountId = '%s' AND ", quote_smart($_CONF['app']['account']->getId()));
-		$strSql .= '(' . implode(' OR ', array_fill(0, $intWordCount, 'word = ?')) . ')
+		$strSql .= '(' . implode(' OR ', array_fill(0, $intWordCount, '?')) . ')
 					GROUP BY pcms_search_index.elementId';
 
 		//*** AND query?
@@ -89,7 +97,8 @@ class Search {
 		$arrSql = explode('?', $strSql);
 		$strTempSql = "";
 		for ($i = 0; $i < $intWordCount; $i++) {
-			$strTempSql .= $arrSql[$i] . "'" . $arrWords[$i] . "'";
+			$equal = (stripos($arrWords[$i], "%") !== FALSE) ? "LIKE" : "=";
+			$strTempSql .= $arrSql[$i] . "word {$equal} '" . $arrWords[$i] . "'";
 		}
 		$strTempSql .= $arrSql[$i];
 
@@ -156,30 +165,41 @@ class Search {
 	}
 
 	private function stemPhrase($strPhrase) {
-		//*** Split into words.
-		$arrWords = $this->mb_str_word_count(str_replace('-', ' ', mb_strtolower($strPhrase)), 1);
+		if ($strPhrase == "%") {
+			//*** Wildcard only search.
+			return array($strPhrase);
+		} else {
+			//*** Split into words.
+			$arrWords = $this->mb_str_word_count(str_replace('-', ' ', mb_strtolower($strPhrase)), 1);
 
-		//*** Ignore stop words.
-		$arrWords = $this->removeStopWordsFromArray($arrWords);
+			//*** Ignore stop words.
+			$arrWords = $this->removeStopWordsFromArray($arrWords);
 
-		//*** Stem words.
-		$arrStemmedWords = array();
+			//*** Stem words.
+			$arrStemmedWords = array();
 
-		foreach ($arrWords as $strWord) {
-		  	//*** Ignore 1 and 2 letter words.
-		  	if (mb_strlen($strWord) <= 2) {
-				continue;
-		  	}
+			foreach ($arrWords as $strWord) {
+				//*** Ignore 1 and 2 letter words.
+				if (mb_strlen($strWord) <= 2) {
+					continue;
+				}
+		  	
+				//*** Don't stem wildcards.
+				if (stripos($strWord, "%") !== FALSE) {
+					$arrStemmedWords[] = $strWord;
+					continue;
+				}
 
-		  	$arrStemmedWords[] = PorterStemmer::stem($strWord, true);
+				$arrStemmedWords[] = PorterStemmer::stem($strWord, true);
+			}
+
+			return $arrStemmedWords;
 		}
-
-		return $arrStemmedWords;
 	}
 
 	private function getWords($strPhrase, $intWeight) {
 		$strRaw = str_replace("><", "> <", $strPhrase);
-	  	$strRaw = str_repeat(' ' . strip_tags($strRaw), $intWeight);
+	  	$strRaw = str_repeat(' ' . strip_tags($strPhrase), $intWeight);
 
 		//*** Stemming.
 		$arrStemmedWords = $this->stemPhrase($strRaw);

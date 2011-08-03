@@ -27,7 +27,8 @@ PTemplate = {
 	FIELD_TYPE_SELECT_LIST_SINGLE: 11,
 	FIELD_TYPE_CHECK_LIST_MULTI: 12,
 	FIELD_TYPE_CHECK_LIST_SINGLE: 13,
-	FIELD_TYPE_SIMPLETEXT: 14
+	FIELD_TYPE_SIMPLETEXT: 14,
+	FIELD_TYPE_MOVABLECANVAS_COORDINATES: 15
 }
 
 PTemplate.remove = function(intId) {
@@ -44,52 +45,56 @@ PTemplate.duplicate = function(intId, strRedirect) {
 }
 
 PTemplate.fieldTypeChange = function(objList) {
-	var arrObjects = ["subSingleList","subImage","subMaxCharacters","subFormat","subMinMaxValue","subFile","subMultiList", "subBoolean"];
+	var arrObjects = ["subSingleList","subImage","subMaxCharacters","subFormat","subMinMaxValue","subFile","subMultiList", "subBoolean", "subMovableCanvas"];
 	var arrSelect = [];
 
 	switch (parseInt(objList[objList.selectedIndex].value)) {
 		case this.FIELD_TYPE_DATE:
-			arrSelect = new Array(0,0,0,1,0,0,0,0);
+			arrSelect = new Array(0,0,0,1,0,0,0,0,0);
 			break;
 
 		case this.FIELD_TYPE_FILE:
-			arrSelect = new Array(0,0,0,0,0,1,0,0);
+			arrSelect = new Array(0,0,0,0,0,1,0,0,0);
 			break;
 
 		case this.FIELD_TYPE_IMAGE:
-			arrSelect = new Array(0,1,0,0,0,0,0,0);
+			arrSelect = new Array(0,1,0,0,0,0,0,0,0);
 			break;
 
 		case this.FIELD_TYPE_SMALLTEXT:
 		case this.FIELD_TYPE_LARGETEXT:
 		case this.FIELD_TYPE_SIMPLETEXT:
-			arrSelect = new Array(0,0,1,0,0,0,0,0);
+			arrSelect = new Array(0,0,1,0,0,0,0,0,0);
 			break;
 
 		case this.FIELD_TYPE_NUMBER:
-			arrSelect = new Array(0,0,0,0,1,0,0,0);
+			arrSelect = new Array(0,0,0,0,1,0,0,0,0);
 			break;
 
 		case this.FIELD_TYPE_SELECT_LIST_SINGLE:
 		case this.FIELD_TYPE_CHECK_LIST_SINGLE:
-			arrSelect = new Array(1,0,0,0,0,0,0,0);
+			arrSelect = new Array(1,0,0,0,0,0,0,0,0);
 			break;
 
 		case this.FIELD_TYPE_SELECT_LIST_MULTI:
 		case this.FIELD_TYPE_CHECK_LIST_MULTI:
-			arrSelect = new Array(0,0,0,0,0,0,1,0);
+			arrSelect = new Array(0,0,0,0,0,0,1,0,0);
 			break;
 
 		case this.FIELD_TYPE_LINK:
-			arrSelect = new Array(0,0,0,0,0,0,0,0);
+			arrSelect = new Array(0,0,0,0,0,0,0,0,0);
 			break;
 
 		case this.FIELD_TYPE_USER:
-			arrSelect = new Array(0,0,0,0,0,0,0,0);
+			arrSelect = new Array(0,0,0,0,0,0,0,0,0);
 			break;
 
 		case this.FIELD_TYPE_BOOLEAN:
-			arrSelect = new Array(0,0,0,0,0,0,0,1);
+			arrSelect = new Array(0,0,0,0,0,0,0,1,0);
+			break;
+
+		case this.FIELD_TYPE_MOVABLECANVAS_COORDINATES:
+			arrSelect = new Array(0,0,0,0,0,0,0,0,1);
 			break;
 
 	}

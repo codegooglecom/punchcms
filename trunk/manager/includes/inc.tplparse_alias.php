@@ -207,18 +207,10 @@ function parseAlias($intAliasId, $strCommand) {
 			
 			//*** Form variables.
 			
-			//*** Languages.				
-			$objLanguages = ContentLanguage::select();
-			foreach ($objLanguages as $objLanguage) {
-				$objTpl->setCurrentBlock("language.item");
-				$objTpl->setVariable("ID", $objLanguage->getId());
-				$objTpl->setVariable("LABEL", $objLanguage->getName());
-				$objTpl->setVariable("SELECTED", ($objAlias->getLanguageId() == $objLanguage->getId()) ? " selected=\"selected\"" : "");
-				$objTpl->parseCurrentBlock();
-			}
-			
+			$intActiveLanguage = 0;
 			if ($strCommand == CMD_EDIT) {
 				$objAlias = Alias::selectByPK($intAliasId);
+				$intActiveLanguage = $objAlias->getLanguageId();
 				
 				$objTpl->setVariable("FORM_ACTIVE_VALUE", ($objAlias->getActive()) ? "checked=\"checked\"" : "");
 				$objTpl->setVariable("FORM_ALIAS_VALUE", $objAlias->getAlias());
@@ -235,6 +227,16 @@ function parseAlias($intAliasId, $strCommand) {
 				$objTpl->setVariable("CMD", CMD_ADD);
 				
 				$objTpl->touchBlock("alias.add");
+			}
+			
+			//*** Languages.				
+			$objLanguages = ContentLanguage::select();
+			foreach ($objLanguages as $objLanguage) {
+				$objTpl->setCurrentBlock("language.item");
+				$objTpl->setVariable("ID", $objLanguage->getId());
+				$objTpl->setVariable("LABEL", $objLanguage->getName());
+				$objTpl->setVariable("SELECTED", ($intActiveLanguage == $objLanguage->getId()) ? " selected=\"selected\"" : "");
+				$objTpl->parseCurrentBlock();
 			}
 			
 			$objTpl->setVariable("ALIASES", $objLang->get("aliases", "label"));

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * 
+ * File IO operations.
+ * @author felix
+ * @version 1.0
+ *
+ */
 class FileIO {
 
 	public static function extension($filename) {

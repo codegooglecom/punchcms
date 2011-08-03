@@ -1,13 +1,12 @@
 <?php
 
-/* StorageItem Class v0.1.0
+/**
+ * 
  * Handles StorageItem properties and methods.
+ * @author felix
+ * @version 0.1.0
  *
- * CHANGELOG
- * version 0.1.0, 04 Apr 2006
- *   NEW: Created class.
  */
-
 class StorageItem extends DBA_StorageItem {
 	private $data;
 
