@@ -178,6 +178,8 @@ $_LANG['label']['metaTitle'] = "Page title";
 $_LANG['label']['metaKeywords'] = "Keywords";
 $_LANG['label']['metaDescription'] = "Page description";
 $_LANG['label']['chooseFolder'] = "Choose a folder";
+$_LANG['label']['forLanguage'] = "for <b>%s</b>";
+$_LANG['label']['forAllLanguages'] = "for <b>All languages</b>";
 
 //*** Settings label definitions.
 $_LANG['settingsLabel']['section_ftp'] = "FTP";
