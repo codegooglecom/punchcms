@@ -17,7 +17,7 @@ class Feed extends DBA_Feed {
 		$intId = $this->getId();
 		
 		$blnReturn = parent::save($blnSaveModifiedDate);
-		AuditLog::addLog(AUDIT_TYPE_FEED, $this->getId(), $this->getFeed(), (empty($intId)) ? "create" : "edit", ($this->getActive()) ? "active" : "inactive");
+		if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_FEED, $this->getId(), $this->getFeed(), (empty($intId)) ? "create" : "edit", ($this->getActive()) ? "active" : "inactive");
 
 		return $blnReturn;
 	}
@@ -38,7 +38,7 @@ class Feed extends DBA_Feed {
 		//*** Remove cached feed.
 		@unlink($_PATHS['upload'] . $this->getHash());
 		
-		AuditLog::addLog(AUDIT_TYPE_FEED, $this->getId(), $this->getFeed(), "delete");
+		if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_FEED, $this->getId(), $this->getFeed(), "delete");
 		return parent::delete();
 	}
 
