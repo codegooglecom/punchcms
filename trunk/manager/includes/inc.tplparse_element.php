@@ -569,9 +569,6 @@ function parsePages($intElmntId, $strCommand) {
 												
 						$objElement->setFeed($objElementFeed);
 					}
-										
-					//*** Handle the Alias value.
-					//$objElement->setAlias($_CLEAN_POST["frm_alias"]);
 					
 					//*** Handle the publish values.
 					$objElement->clearSchedule();

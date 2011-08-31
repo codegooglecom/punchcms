@@ -377,11 +377,20 @@ class ImpEx {
 																$objAlias = new Alias();
 																$objAlias->setAccountId($objAccount->getId());
 																$objAlias->setAlias($aliasNode->getAttribute("alias"));
+																
 																if (array_key_exists($aliasNode->getAttribute("url"), $arrElementIds)) {
 																	$objAlias->setUrl($arrElementIds[$aliasNode->getAttribute("url")]);
 																} else {
 																	$objAlias->setUrl(0);
 																}
+																
+																if (array_key_exists($aliasNode->getAttribute("language"), $arrLanguageIds)) {
+																	$objAlias->setLanguageId($arrLanguageIds[$aliasNode->getAttribute("language")]);
+																} else {
+																	$objAlias->setLanguageId(0);
+																}
+																
+																$objAlias->setCascade($aliasNode->getAttribute("cascade"));
 																$objAlias->setActive($aliasNode->getAttribute("active"));
 																$objAlias->setSort($aliasNode->getAttribute("sort"));
 																$objAlias->setCreated($aliasNode->getAttribute("created"));

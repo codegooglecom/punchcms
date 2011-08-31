@@ -83,9 +83,6 @@ class InsertFeedElement {
 			$objElement->setTemplateId($this->__template->getId());
 			$objElement->save(TRUE, FALSE);
 			
-			//*** Alias.
-			if (!empty($this->alias)) $objElement->setAlias($this->alias);
-
 			//*** Activate default schedule.
 			$objSchedule = new ElementSchedule();
 			$objSchedule->setStartActive(0);
@@ -93,6 +90,13 @@ class InsertFeedElement {
 			$objSchedule->setEndActive(0);
 			$objSchedule->setEndDate(APP_DEFAULT_ENDDATE);
 			$objElement->setSchedule($objSchedule);
+			
+			//*** Alias.
+			if ($objElement->isPage()) {
+				$objAlias = new Alias();
+				$objAlias->setAlias($this->alias);
+				$objElement->setAlias($objAlias);
+			}
 
 			foreach ($this->__fields as $intTemplateFieldId => $arrField) {
 				$objTemplateField = TemplateField::selectByPK($intTemplateFieldId);

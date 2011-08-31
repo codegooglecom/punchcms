@@ -188,6 +188,14 @@ class Feed extends DBA_Feed {
 				}	
 			}
 			
+			$strName = (empty($strName)) ? "Dynamic" : $strName;
+			
+			$objInsertElement->setName($strName);
+			$objInsertElement->setUsername("PunchCMS");
+			$objInsertElement->setActive(TRUE);
+			$objInsertedElement = $objInsertElement->save();
+			
+			//*** Add the alias.
 			$strAlias = "";
 			$strAliasField = $objElementFeed->getAliasField();
 			if (!empty($strAliasField)) {
@@ -206,13 +214,11 @@ class Feed extends DBA_Feed {
 				$strAlias = $objElement->getAlias();
 			}
 			
-			$strName = (empty($strName)) ? "Dynamic" : $strName;
-			
-			$objInsertElement->setName($strName);
-			$objInsertElement->setAlias($strAlias);
-			$objInsertElement->setUsername("PunchCMS");
-			$objInsertElement->setActive(TRUE);
-			$objInsertedElement = $objInsertElement->save();
+			if (!empty($strAlias)) {
+				$objAlias = new Alias();
+				$objAlias->setAlias($strAlias);
+				$objInsertedElement->setAlias($objAlias);
+			}
 						
 			//*** Sub elements.
 			$objSubElements = $objElement->getElements(FALSE, ELM_TYPE_DYNAMIC, $this->getAccountId());
