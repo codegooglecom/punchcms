@@ -721,20 +721,32 @@ function parsePages($intElmntId, $strCommand) {
 																	if (copy($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strFileName)) {							
 																		if ($objTemplateField->getTypeId() == FIELD_TYPE_IMAGE && (
 																				!empty($arrSetting['width']) ||
-																				!empty($arrSetting['height']))) {										
+																				!empty($arrSetting['height']))) {
+
+																			//*** Check if the image has the right size.
+																			$blnResize = true;
+																			$arrSize = getimagesize($_PATHS['upload'] . $strFileName);
+																			if ($arrSize !== FALSE) {
+																				if ($arrSize[0] == $arrSetting['width'] && $arrSize[1] == $arrSetting['height']) {
+																					//*** Skip image resize.
+																					$blnResize = false;
+																				}
+																			}
 																			
 																			//*** Resize the image.
-																			$intQuality = (empty($arrSetting['quality'])) ? 75 : $arrSetting['quality'];
-																			ImageResizer::resize(
-																				$_PATHS['upload'] . $strFileName, 
-																				$arrSetting['width'],
-																				$arrSetting['height'],
-																				$arrSetting['scale'],
-																				$intQuality,
-																				TRUE,
-																				NULL,
-																				FALSE,
-																				$arrSetting['grayscale']);		
+																			if ($blnResize) {
+																				$intQuality = (empty($arrSetting['quality'])) ? 75 : $arrSetting['quality'];
+																				ImageResizer::resize(
+																					$_PATHS['upload'] . $strFileName, 
+																					$arrSetting['width'],
+																					$arrSetting['height'],
+																					$arrSetting['scale'],
+																					$intQuality,
+																					TRUE,
+																					NULL,
+																					FALSE,
+																					$arrSetting['grayscale']);
+																			}
 																		}
 																	
 																		//*** Move file to remote server.
@@ -763,18 +775,30 @@ function parsePages($intElmntId, $strCommand) {
 																	$strFileName = FileIO::add2Base($strLocalValue, $arrSettings[0]['key']);
 																	
 																	//*** Resize the image.
-																	if (rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strFileName)) {	
-																		$intQuality = (empty($arrSettings[0]['quality'])) ? 75 : $arrSettings[0]['quality'];
-																		ImageResizer::resize(
-																			$_PATHS['upload'] . $strFileName, 
-																			$arrSettings[0]['width'],
-																			$arrSettings[0]['height'],
-																			$arrSettings[0]['scale'],
-																			$intQuality,
-																			TRUE,
-																			NULL,
-																			FALSE,
-																			$arrSettings[0]['grayscale']);				
+																	if (rename($_PATHS['upload'] . $arrFile[0], $_PATHS['upload'] . $strFileName)) {
+																		//*** Check if the image has the right size.
+																		$blnResize = true;
+																		$arrSize = getimagesize($_PATHS['upload'] . $strFileName);
+																		if ($arrSize !== FALSE) {
+																			if ($arrSize[0] == $arrSettings[0]['width'] && $arrSize[1] == $arrSettings[0]['height']) {
+																				//*** Skip image resize.
+																				$blnResize = false;
+																			}
+																		}
+																		
+																		if ($blnResize) {
+																			$intQuality = (empty($arrSettings[0]['quality'])) ? 75 : $arrSettings[0]['quality'];
+																			ImageResizer::resize(
+																				$_PATHS['upload'] . $strFileName, 
+																				$arrSettings[0]['width'],
+																				$arrSettings[0]['height'],
+																				$arrSettings[0]['scale'],
+																				$intQuality,
+																				TRUE,
+																				NULL,
+																				FALSE,
+																				$arrSettings[0]['grayscale']);		
+																		}		
 																
 																		//*** Move file to remote server.
 																		$objUpload = new SingleUpload();
@@ -844,18 +868,31 @@ function parsePages($intElmntId, $strCommand) {
 															if (!empty($subvalue)) {
 																$fileValue .= $subvalue . ":" . $localValues[$subkey] . "\n";
 																
+																//*** Check if the image has the right size.
+																if ($blnResize) {
+																	$arrSize = getimagesize($_PATHS['upload'] . $localValues[$subkey]);
+																	if ($arrSize !== FALSE) {
+																		if ($arrSize[0] == $arrSettings[0]['width'] && $arrSize[1] == $arrSettings[0]['height']) {
+																			//*** Skip image resize.
+																			$blnResize = false;
+																		}
+																	}
+																}
+																
 																//*** Resize the image.
-																$intQuality = (empty($arrSettings[0]['quality'])) ? 75 : $arrSettings[0]['quality'];
-																if ($blnResize) ImageResizer::resize(
-																		$_PATHS['upload'] . $localValues[$subkey], 
-																		$arrSettings[0]['width'],
-																		$arrSettings[0]['height'],
-																		$arrSettings[0]['scale'],
-																		$intQuality,
-																		TRUE,
-																		NULL,
-																		FALSE,
-																		$arrSettings[0]['grayscale']);
+																if ($blnResize) {
+																	$intQuality = (empty($arrSettings[0]['quality'])) ? 75 : $arrSettings[0]['quality'];
+																	ImageResizer::resize(
+																			$_PATHS['upload'] . $localValues[$subkey], 
+																			$arrSettings[0]['width'],
+																			$arrSettings[0]['height'],
+																			$arrSettings[0]['scale'],
+																			$intQuality,
+																			TRUE,
+																			NULL,
+																			FALSE,
+																			$arrSettings[0]['grayscale']);
+																}
 															}
 														}
 
