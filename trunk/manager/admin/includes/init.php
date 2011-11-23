@@ -48,6 +48,11 @@ ini_set("include_path", $_PATHS['includes'] .
 require_once('inc.common.php');
 
 /******************************
+* Set default app timezone.
+***/
+date_default_timezone_set($GLOBALS["_CONF"]['app']['timezone']);
+
+/******************************
 * Connect to database.
 ***/
 $DBAConn = null;

@@ -23,6 +23,7 @@ $_CONF['app']['listLength']			= 10;
 $_CONF['app']['secureLogin']		= FALSE;
 $_CONF['app']['singleInstance']		= !!CMS_TYPE!!;
 $_CONF['app']['maxBackups']			= 3;
+$_CONF['app']['timezone'] 			= 'America/La_Paz';
 $_CONF['app']['msMypunch']			= array (
 											"product" => array (
 												"pcms" => NAV_MYPUNCH_PCMS,
