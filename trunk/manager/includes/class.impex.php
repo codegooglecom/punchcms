@@ -145,6 +145,8 @@ class ImpEx {
 					$objDbAliases = Alias::select();
 					foreach ($objDbAliases as $objDbAlias) {
 						$objAlias = $objDoc->createElement('alias');
+						$objAlias->setAttribute("language", $objDbAlias->getLanguageId());
+						$objAlias->setAttribute("cascade", $objDbAlias->getCascade());
 						$objAlias->setAttribute("alias", $objDbAlias->getAlias());
 						$objAlias->setAttribute("url", $objDbAlias->getUrl());
 						$objAlias->setAttribute("active", $objDbAlias->getActive());
@@ -655,6 +657,24 @@ class ImpEx {
 							
 							break;
 							
+						case "meta":
+							$arrMetaFields = array("title", "keywords", "description");
+							foreach ($subNode->childNodes as $metaFieldNode) {
+								if ($metaFieldNode->nodeName == "language") {
+									$intLanguageId = $arrLanguageIds[$metaFieldNode->getAttribute("id")];
+									foreach ($arrMetaFields as $value) {
+										$objMeta = new ElementMeta();
+										$objMeta->setName($value);
+										$objMeta->setValue($metaFieldNode->getAttribute($value));
+										$objMeta->setLanguageId($intLanguageId);
+										$objMeta->setCascade(0);
+										$objElement->setMeta($objMeta);
+									}
+								}
+							}
+							
+							break;
+							
 						case "languages":
 							foreach ($subNode->childNodes as $languageNode) {
 								$objLanguage = new ElementLanguage();
@@ -1052,6 +1072,37 @@ class ImpEx {
 					$objElement->appendChild($objFeed);			
 				}
 				
+				//*** Meta values.
+				if ($objDbElement->isPage()) {
+					$blnHasMeta = false;
+					$objMeta = $objDoc->createElement('meta');
+					foreach ($objContentLangs as $objContentLanguage) {
+						$objDbMeta = $objDbElement->getMeta($objContentLanguage->getId());
+
+						if (is_object($objDbMeta)) {
+							$objLanguage = $objDoc->createElement('language');					
+							$objLanguage->setAttribute("id", $objContentLanguage->getId());
+							
+							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "title"));
+							$objLanguage->setAttribute("title", $strValue);
+							
+							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "keywords"));
+							$objLanguage->setAttribute("keywords", $strValue);
+							
+							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "description"));
+							$objLanguage->setAttribute("description", $strValue);
+							
+							$objMeta->appendChild($objLanguage);
+							
+							$blnHasMeta = true;
+						}
+					}
+					
+					if ($blnHasMeta) {
+						$objElement->appendChild($objMeta);		
+					}
+				}
+					
 				//*** Permissions.
 				$objPermissions = $objDoc->createElement('permissions');
 				$objDbPermissions = $objDbElement->getPermissions();

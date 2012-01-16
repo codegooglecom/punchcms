@@ -487,8 +487,8 @@ class DBA__Object {
 		}
 		
 		//*** Quote if not integer.
-		//$strValue = (empty($strValue) && !is_numeric($strValue)) ? "''" : $DBAConn->quote($strValue);
-		$strValue = (empty($strValue) && !is_numeric($strValue)) ? "''" : "'" . $strValue . "'";
+		$strValue = (empty($strValue) && !is_numeric($strValue)) ? "''" : $DBAConn->quote($strValue);
+		//$strValue = (empty($strValue) && !is_numeric($strValue)) ? "''" : "'" . $strValue . "'";
 		
 		return $strValue;
 	}
