@@ -226,6 +226,9 @@ class ImpEx {
 				$strXml = $objZip->unzip('data.xml');
 				
 				if ($strXml !== FALSE) {
+					//*** Fix a unicode bug. Replace forbidden characters.
+					$strXml = preg_replace('/\x{001f}/u', "", $strXml);
+					
 					$objDoc->loadXML($strXml);
 					$blnZip = TRUE;
 				}
