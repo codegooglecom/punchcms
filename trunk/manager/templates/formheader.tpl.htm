@@ -75,13 +75,12 @@ jQuery(function(){
 					$fields	= $("#section-fields"),
 					$meta	= $("#section-meta")
 				
-				if (!$meta.hasClass("ui-tabs-hide")) {
+				if (!$meta.hasClass("ui-tabs-hide") && $alias.val() == "") {
 					$alias.bind("focus", function () {
 						var $textField = $fields.find("input[type=text]:first")
 						
 						if ($textField.length > 0) {
-							var title = generateSlug($textField.val())
-							$alias.val(title)
+							$alias.val(generateSlug($textField.val()))
 						}
 					})
 				}
