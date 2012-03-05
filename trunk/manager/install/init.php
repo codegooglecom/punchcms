@@ -3,7 +3,10 @@
 /******************************
 * Start session.
 ***/
-session_start();
+$sid = session_id();
+if (empty($sid)) {
+	session_start();
+}
 $_CONF['app']['basePath'] = dirname(__FILE__) . "/../";
 
 /******************************
