@@ -1753,11 +1753,10 @@ SelectListField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").hide();
 		jQuery("#" + this.id).show();
 		var arrDefault = jQuery("#" + this.id + "_" + this.parent.currentLanguage).val().split(",");
+		jQuery("#" + this.id).find("option").removeAttr("selected");
 		for (var intCount = 0; intCount < jQuery("#" + this.id).find("option").length; intCount++) {
 			if (arrDefault.inArray(jQuery("#" + this.id).find("option:eq(" + intCount + ")").val())) {
 				jQuery("#" + this.id).find("option:eq(" + intCount + ")").attr("selected","selected");
-			} else {
-				jQuery("#" + this.id).find("option:eq(" + intCount + ")").removeAttr("selected");
 			}
 		}
 	}
@@ -1820,12 +1819,11 @@ CheckListField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_widget").show();
 		var arrDefault = jQuery("#" + this.id + "_" + this.parent.currentLanguage).val().split(",");
 		var arrFields = jQuery("#" + this.id + "_widget").find("input");
+		arrFields.eq(intCount).removeAttr("checked");
 		for (var intCount = 0; intCount < arrFields.length; intCount++) {
 			if (arrFields.eq(intCount).attr("name") == this.id + "[]") {
 				if (arrDefault.inArray(arrFields.eq(intCount).val())) {
-					arrFields.eq(intCount).attr("checked","checked");
-				} else {
-					arrFields.eq(intCount).removeAttr("checked");
+					arrFields.eq(intCount).attr("checked", "checked");
 				}
 			}
 		}
