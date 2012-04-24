@@ -1,4 +1,5 @@
-
+<script type="text/javascript" src="/libraries/cookie.js"></script>
+<script type="text/javascript" src="/libraries/pintree.js"></script>
 <script type="text/javascript">
 // <![CDATA[
 
@@ -98,38 +99,8 @@ jQuery(function(){
 		/**
 		 * !!! THIS NEEDS SOME CROSS-BROWSER CHECKING !!!
 		 */
-		var $tree = jQuery("#treeContainer");
-		var strStyleCache = "";
-		var leftWrapHeight = $("#left-wrap").height();
-		var scrollWidth = $(".containerTableStyle")[0].scrollWidth + 30;
-		var timer;
-		$tree
-			.bind("mouseenter", function () {
-				clearTimeout(timer); // Stop hiding.
-				if ($(this).outerWidth() < scrollWidth) {
-					strStyleCache = $(this).attr("style"); // Save current custom styles
-					
-					$(this).css({
-						width: $(".containerTableStyle")[0].scrollWidth + 30,
-						position: "absolute",
-						left: $(this).position().left,
-						top: $(this).position().top,
-						"z-index": 9999,
-						background: "#ffffff",
-						"box-shadow":"3px 0px 16px #dedede"
-					})
-					$("#left-wrap").height(leftWrapHeight);
-				}
-			})
-			.bind("mouseleave", function () {
-				var $this = $(this);
-				
-				clearTimeout(timer);
-				timer = setTimeout(function () {
-					$this.removeAttr("style").attr("style", strStyleCache);
-					$("#left-wrap").height("auto");
-				}, 300);
-			});
+		var objPinnableTree = new PinnableTree();
+		
 		/**
 		 * END
 		 */
