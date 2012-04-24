@@ -96,14 +96,46 @@ jQuery(function(){
 		});
 		resizeTree();
 		
-		/**
-		 * !!! THIS NEEDS SOME CROSS-BROWSER CHECKING !!!
-		 */
+		// Make tree pinnable. Works cross browser.
 		var objPinnableTree = new PinnableTree();
+	}
+	
+	// Listen for esc key event
+	var $cancelAnchor 	= $("#section-details .form-navigation a"),
+		$submitBtn		= $("#section-details .form-navigation input[type='submit']")
 		
-		/**
-		 * END
-		 */
+	if ($cancelAnchor.length > 0) {
+		var blnModifier = false,
+			varReturn 	= true
+		
+		$(document)
+			.bind("keydown", function(e) {
+				console.log(e.keyCode)
+				switch (e.keyCode) {
+					case 27:
+						// Esc key
+						window.location = $cancelAnchor.attr("href")
+						varReturn = false
+						break;
+					case 91:
+					case 17:
+						// command (91) or ctrl (17) is pressed
+						blnModifier = true
+						break;
+					case 83:
+						// s is pressed
+						if (blnModifier) {
+							$submitBtn.trigger("click")
+							varReturn = false
+						}
+				}
+				
+				return varReturn
+			})
+			.bind("keyup", function (e) {
+				blnModifier = false
+				varReturn = true
+			})
 	}
 
 	jQuery(".input-button").button();
