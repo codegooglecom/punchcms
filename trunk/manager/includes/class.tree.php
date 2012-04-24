@@ -81,10 +81,11 @@ class Tree {
 		}
 
 		$strReturn .= "var objTree;\n";
-		$strReturn .= "function doOnLoad() { this.openItem({$intElmntId});this.selectItem({$intElmntId}, false, false); }\n";
+		$strReturn .= "function doOnLoad() { this.openItem({$intElmntId});this.selectItem({$intElmntId}, false, false); window._treeLoaded = true; }\n";
 		$strReturn .= "function doOnSelect(itemId) { if (objTree.getSelectedItemId().split(',').length == 1) { document.location.href = '?cid={$intCid}&eid=' + itemId; } }\n";
 		$strReturn .= "function doOnImageSelect(itemId) { if (objTree.getSelectedItemId().split(',').length == 1) { document.location.href = '?cid={$intCid}&eid=' + itemId + '&cmd=3'; } }\n";
 		$strReturn .= "function doOnImageRollOut(itemId) { return nd(); }\n";
+		$strReturn .= "function doOnOpenEnd() { window._treeLoaded = true; }\n";
 		$strReturn .= "function doOnDrag(idSubject, idTarget, idTargetParent, objTreeSubject, objTreeTarget) {\n";
 		$strReturn .= "var objSaver = new dtmlXMLLoaderObject(null, null, false);\n";
 		$strReturn .= "objSaver.loadXML(\"ajax.php?cmd={$strDragMethod}&eid=\" + idSubject + \"&parentId=\" + idTarget);\n";
@@ -112,9 +113,11 @@ class Tree {
 		$strReturn .= "objTree.setImagePath('images/xmltree/');\n";
 		$strReturn .= $strTreeConfig;
 		$strReturn .= "objTree.setOnClickHandler(doOnSelect);\n";
+		$strReturn .= "objTree.setOnOpenEndHandler(doOnOpenEnd);\n";
 		$strReturn .= "objTree.loadXML('ajaxtree.php?cmd=init&type=" .  $strType . "&id=" . $intElmntId . "', doOnLoad);\n";
 		$strReturn .= "objTree.openItem({$intElmntId});\n";
 		$strReturn .= "objTree.selectItem({$intElmntId}, false, false);\n";
+		$strReturn .= "window._treeApi = objTree;\n";
 
 		//*** Add elementfield link field dragzones.
 		if ($strType == "elements") {
