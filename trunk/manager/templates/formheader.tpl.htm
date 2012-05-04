@@ -85,6 +85,8 @@ jQuery(function(){
 						}
 					})
 				}
+				
+				$("#elementForm div:visible:first input[type='text']:first").focus()
 			}
 		});
 	}
@@ -100,43 +102,102 @@ jQuery(function(){
 		var objPinnableTree = new PinnableTree();
 	}
 	
+	// Focus on first form field.
+	// $("#elementForm div:visible:first input[type='text']:first").focus()
+	
 	// Listen for esc key event
-	var $cancelAnchor 	= $("#section-details .form-navigation a"),
-		$submitBtn		= $("#section-details .form-navigation input[type='submit']")
+	var $cancelAnchor 	= $(".form-navigation a"),
+		$submitBtn		= $(".form-navigation input[type='submit']"),
 		
-	if ($cancelAnchor.length > 0) {
-		var blnModifier = false,
-			varReturn 	= true
-		
-		$(document)
-			.bind("keydown", function(e) {
-				console.log(e.keyCode)
-				switch (e.keyCode) {
-					case 27:
-						// Esc key
+		blnModifier 	= false,
+		blnShift		= false,
+		varReturn 		= true,
+		blnEditView		= ($cancelAnchor.length > 0) 
+	
+	$(document)
+		.bind("keydown", function(e) {
+			switch (e.keyCode) {
+				case 27:
+					// Esc key
+					if (blnEditView) {
 						window.location = $cancelAnchor.attr("href")
 						varReturn = false
-						break;
-					case 91:
-					case 17:
-						// command (91) or ctrl (17) is pressed
-						blnModifier = true
-						break;
-					case 83:
-						// s is pressed
-						if (blnModifier) {
-							$submitBtn.trigger("click")
-							varReturn = false
+					}
+					break;
+				case 91:
+				case 17:
+				case 18:
+					// command (91) or ctrl (17) is pressed
+					blnModifier = true
+					break;
+				case 16:
+					blnShift = true
+					break;
+				case 83:
+					// s is pressed
+					if (blnModifier && ($submitBtn.length > 0)) {
+						$submitBtn.trigger("click")
+						varReturn = false
+					}
+					break;
+				case 38:
+					if (blnModifier && (typeof _treeApi == "object")) {
+						_treeApi.selectItem(_treeApi.getParentId(_treeApi.getSelectedItemId()), true)
+					}
+					break;
+				case 49:
+				case 50:
+				case 51:
+				case 52:
+				case 53:
+				case 54:
+					var intIndex = (48 + $(".action-menu a").length) - e.keyCode,
+						$element = $(".action-menu a:eq(" + intIndex + ")")
+
+					if (blnModifier && ($element.length > 0)) {
+						window.location = $element.attr("href")
+						varReturn = false
+					}
+					
+					if (blnModifier && (typeof $tabs !== "undefined")) {
+						var intIndex = Math.abs(46 + $tabs.tabs("length") - e.keyCode)
+						$tabs.tabs("select", intIndex)
+						varReturn = false
+					}
+					break;
+				case 8:
+					var $element = $("#btn-remove")
+					if (blnModifier && ($element.length > 0)) {
+						window.location = $element.attr("href")
+						varReturn = false
+					}
+					break;
+				case 9:
+					if (blnModifier && (typeof $tabs !== "undefined")) {
+						var intIndex = (blnShift) ? $tabs.tabs("option", "selected") - 1 : $tabs.tabs("option", "selected") + 1
+						
+						if (intIndex == $tabs.tabs("length")) {
+							intIndex = 0
+						} else if (intIndex < 0) {
+							intIndex = $tabs.tabs("length") - 1
 						}
-				}
-				
-				return varReturn
-			})
-			.bind("keyup", function (e) {
+						
+						$tabs.tabs("select", intIndex)
+
+						varReturn = false
+					}
+					break;
+			}
+			if (window._logKey == true) console.log(e.keyCode)
+			return varReturn
+		})
+		.bind("keyup", function (e) {
+			if (e.keyCode !== 9) {
 				blnModifier = false
-				varReturn = true
-			})
-	}
+				blnShift 	= false
+				varReturn 	= true
+			}
+		})
 
 	jQuery(".input-button").button();
 
@@ -144,6 +205,12 @@ jQuery(function(){
 		checkDynamicAlias();
 	});	
 	checkDynamicAlias();
+	
+	//*** Fix iframe height
+	setTimeout(function () {
+		var $fixframes = $(".required iframe, .optional iframe");
+		$fixframes.height($fixframes.height() + 50);
+	}, 100);
 	
 });
 
