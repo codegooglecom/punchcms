@@ -171,7 +171,6 @@ var PinnableTree = function (options) {
 	}
 	
 	_addAnchor = function () {
-		console.log("Add anchor")
 		var $anchor = $("<a id='PinnableTree_pin'/>")
 		
 		$anchor

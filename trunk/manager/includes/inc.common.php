@@ -40,10 +40,10 @@ function include_exists($file) {
    if (substr($file, 0, 1) == '/') { //absolute filepath - what about file:///?
 	   return (file_exists($file));
    }
-   
-//   if ((substr($file, 0, 7) == 'http://' || substr($file, 0, 6) == 'ftp://') && ini_get('allow_url_fopen')) {
-//	   return true;
-//   }
+
+   // if ((substr($file, 0, 7) == 'http://' || substr($file, 0, 6) == 'ftp://') && ini_get('allow_url_fopen')) {
+	   // return true;
+   // }
 
    foreach ($include_dirs as $include_dir) {
 	   if (file_exists($include_dir.$file)) {

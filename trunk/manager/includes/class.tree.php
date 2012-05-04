@@ -117,7 +117,7 @@ class Tree {
 		$strReturn .= "objTree.loadXML('ajaxtree.php?cmd=init&type=" .  $strType . "&id=" . $intElmntId . "', doOnLoad);\n";
 		$strReturn .= "objTree.openItem({$intElmntId});\n";
 		$strReturn .= "objTree.selectItem({$intElmntId}, false, false);\n";
-		$strReturn .= "window._treeApi = objTree;\n";
+		$strReturn .= "window._treeApi = objTree;\n"; // new stuff depends on this
 
 		//*** Add elementfield link field dragzones.
 		if ($strType == "elements") {

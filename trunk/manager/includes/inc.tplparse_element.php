@@ -1184,7 +1184,7 @@ function parsePages($intElmntId, $strCommand) {
 									$oFCKeditor->Width = "490";
 	
 									//*** Calculate and set the textarea height.
-									$minHeight = 165;
+									$minHeight = 210;
 									$maxHeight = 400;
 									$intHeight = $minHeight;
 									$objValue = $objField->getValueByName("tfv_field_max_characters");
