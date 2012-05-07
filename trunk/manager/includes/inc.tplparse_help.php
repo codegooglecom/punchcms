@@ -13,6 +13,14 @@ function parseHelp($intElmntId, $strCommand) {
 	$objTpl->setVariable("HEADER", $objLang->get("docHeader", "help"));
 	$objTpl->setVariable("BODY", $objLang->get("docBody", "help"));
 	$objTpl->parseCurrentBlock();
+	
+	$strBody = $objLang->get("hotkeysBody", "help");
+	if (!empty($strBody)) {
+		$objTpl->setCurrentBlock("paragraph");
+		$objTpl->setVariable("HEADER", $objLang->get("hotkeysHeader", "help"));
+		$objTpl->setVariable("BODY", $strBody);
+		$objTpl->parseCurrentBlock();
+	}
 
 	return $objTpl->get();
 }
