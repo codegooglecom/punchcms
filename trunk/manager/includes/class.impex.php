@@ -226,11 +226,12 @@ class ImpEx {
 				$strXml = $objZip->unzip('data.xml');
 				
 				if ($strXml !== FALSE) {
-					//*** Fix a unicode bug. Replace forbidden characters (The first 11).
-					for ($intCount = 1; $intCount < 12; $intCount++) {
+					//*** Fix a unicode bug. Replace forbidden characters (The first 8).
+					for ($intCount = 1; $intCount < 9; $intCount++) {
 						$strHex = str_pad(dechex($intCount), 4, "0", STR_PAD_LEFT);
 						$strXml = preg_replace('/\x{' . $strHex . '}/u', "", $strXml);
 					}
+					$strXml = preg_replace('/\x{001f}/u', "", $strXml);
 					
 					$objDoc->loadXML($strXml);
 					$blnZip = TRUE;
