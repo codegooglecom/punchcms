@@ -108,6 +108,8 @@ jQuery(function(){
 	// Listen for esc key event
 	var $cancelAnchor 	= $(".form-navigation a"),
 		$submitBtn		= $(".form-navigation input[type='submit']"),
+		$activateBtn	= $("#language_active"),
+		$cascadeBtn		= $("#language_cascade"),
 		
 		blnModifier 	= false,
 		blnShift		= false,
@@ -143,6 +145,14 @@ jQuery(function(){
 				case 38:
 					if (blnModifier && (typeof _treeApi == "object")) {
 						_treeApi.selectItem(_treeApi.getParentId(_treeApi.getSelectedItemId()), true)
+					}
+					break;
+				case 68:
+					// d is pressed. Activate the language and cascade all fields.
+					if (blnModifier && $activateBtn.length > 0 && $cascadeBtn.length > 0) {
+						$activateBtn.trigger("mousedown")
+						$cascadeBtn.parent().trigger("click")
+						varReturn = false
 					}
 					break;
 				case 49:
