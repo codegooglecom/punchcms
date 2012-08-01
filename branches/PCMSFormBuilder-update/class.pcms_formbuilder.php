@@ -168,16 +168,18 @@ class PCMS_FormBuilder {
 	}
 	
 	private function renderArea(&$objParent, $objElement) {
-		// Set dynamic meta
-		$meta = array();
-		$strDynamic = $objElement->getField("DynamicLabel")->getHtmlValue();
-		if ($objElement->getField("Dynamic")->getHtmlValue() && !empty($strDynamic)) {
-			$meta["dynamic"] = true;
-			$meta["dynamicLabel"] = $strDynamic;
-		}
-
-		// Add area to VFB
-		$objReturn = $objParent->addArea($objElement->getField("Label")->getHtmlValue(), $objElement->getField("Active")->getValue(), $this->generateId($objElement), $objElement->getField("Selected")->getValue(), $meta);
+		$blnDynamic = ($objElement->getField("DynamicLabel")->getHtmlValue() != "") ? true : false;
+		
+		$objReturn = $objParent->addArea(
+			$objElement->getField("Label")->getHtmlValue(), 
+			$objElement->getField("Active")->getValue(), 
+			$this->generateId($objElement), 
+			$objElement->getField("Selected")->getValue(),
+			array(
+				"dynamic" => $blnDynamic,
+				"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
+			)
+		);
 		
 		$objFields = $objElement->getElementsByTemplate(array("Field", "ListField", "MultiField"));
 		foreach ($objFields as $objField) {									
