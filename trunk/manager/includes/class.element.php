@@ -619,16 +619,24 @@ class Element extends DBA_Element {
 		
 	public function clearAliases() {
 		if ($this->id > 0) {
+			//*** Also delete the aliases with language 0 (All languages).
+			$arrLanguageIds = array(0);
+
+			//*** Get the rest of the languages.
 			$objContentLangs = ContentLanguage::select();
 			foreach ($objContentLangs as $objContentLanguage) {
-				$objAliases = Alias::selectByUrl($this->id, $objContentLanguage->getId());
+				array_push($arrLanguageIds, $objContentLanguage->getId());
+			}
+
+			foreach ($arrLanguageIds as $intLanguageId) {
+				$objAliases = Alias::selectByUrl($this->id, $intLanguageId);
 
 				if (is_object($objAliases)) {
 					foreach ($objAliases as $objAlias) {
 						$objAlias->delete();
 					}
 				}
-			}
+			}			
 		}
 	}
 	
