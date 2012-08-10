@@ -3,6 +3,8 @@
 /******************************
 * Start session.
 ***/
+session_save_path($_SERVER["DOCUMENT_ROOT"] . "/sessions");
+
 $sid = session_id();
 if (empty($sid)) {
 	session_start();

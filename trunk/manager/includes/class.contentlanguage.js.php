@@ -1,5 +1,7 @@
 <?php
+session_save_path($_SERVER["DOCUMENT_ROOT"] . "/sessions");
 session_start();
+
 require_once('./inc.constantes.php');
 require_once('../libraries/lib.language.php');
 
