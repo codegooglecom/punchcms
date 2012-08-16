@@ -155,19 +155,19 @@ class PCMS_FormBuilder {
 		return $strReturn;
 	}
 	
-	private function renderParagraph(&$objParent, $objElement) {
+	protected function renderParagraph(&$objParent, $objElement) {
 		$objReturn = $objParent->addParagraph($objElement->getField("Body")->getHtmlValue(), $objElement->getField("Title")->getHtmlValue());
 		
 		return $objReturn;
 	}
 	
-	private function renderFieldset(&$objParent, $objElement) {
+	protected function renderFieldset(&$objParent, $objElement) {
 		$objReturn = $objParent->addFieldset($objElement->getField("Title")->getHtmlValue(), $objElement->getField("TipTitle")->getHtmlValue(), $objElement->getField("TipBody")->getHtmlValue());
 		
 		return $objReturn;
 	}
 	
-	private function renderArea(&$objParent, $objElement) {
+	protected function renderArea(&$objParent, $objElement) {
 		$blnDynamic = ($objElement->getField("DynamicLabel")->getHtmlValue() != "") ? true : false;
 		
 		$objReturn = $objParent->addArea(
@@ -201,7 +201,7 @@ class PCMS_FormBuilder {
 		return $objReturn;
 	}
 	
-	private function renderMultiField(&$objParent, $objElement) {
+	protected function renderMultiField(&$objParent, $objElement) {
 		$objReturn = $objParent->addMultiField($objElement->getField("Label")->getHtmlValue());
 		
 		$objFields = $objElement->getElementsByTemplate(array("Field", "ListField"));
@@ -220,7 +220,7 @@ class PCMS_FormBuilder {
 		return $objReturn;
 	}
 	
-	private function renderField(&$objParent, $objElement, $blnJustRender = false) {
+	protected function renderField(&$objParent, $objElement, $blnJustRender = false) {
 		$validationRules = array(
 			"maxLength" => $objElement->getField("MaxLength")->getValue(), 
 			"minLength" => $objElement->getField("MinLength")->getValue(), 
@@ -261,7 +261,7 @@ class PCMS_FormBuilder {
 		return $objReturn;
 	}
 	
-	private function renderListField(&$objParent, $objElement) {
+	protected function renderListField(&$objParent, $objElement) {
 		// Pre loop options for auto generation of options.
 		$blnAutoOptions = FALSE;
 		$objOptions = $objElement->getElementsByTemplate("ListOption");
@@ -327,7 +327,7 @@ class PCMS_FormBuilder {
 		return $objReturn;
 	}
 	
-	private function generateId($objElement) {
+	protected function generateId($objElement) {
 		$strApiName = $objElement->getElement()->getApiName();
 		$strReturn = (empty($strApiName)) ? "formfield_" . $objElement->getId() : "formfield_" . strtolower($strApiName);
 		

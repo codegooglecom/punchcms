@@ -22,7 +22,7 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 		$this->__validForm = new ValidWizard("validwizard_" . $strName, $this->__formElement->getField("RequiredBody")->getHtmlValue(), $strAction);
 	}
 
-	public function buildForm($blnSend = TRUE, $blnClientSide = TRUE) {
+	public function buildForm($blnHandle = TRUE, $blnClientSide = TRUE) {
 		$objCms = PCMS_Client::getInstance();
 	
 		$strReturn = "";
@@ -37,7 +37,9 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 		//*** Form starts here.
 		$objPages = $this->__formElement->getElementsByTemplate(array("Page", "Paragraph"));
 		foreach ($objPages as $objPage) {
-			$this->renderPage($this->__validForm, $objPage);
+			if (get_class($objPage) == "VF_Hidden") continue;
+
+			$objParent = $this->renderPage($this->__validForm, $objPage);
 
 			$objFieldsets = $objPage->getElementsByTemplate(array("Fieldset", "Paragraph"));
 			foreach ($objFieldsets as $objFieldset) {
@@ -46,8 +48,7 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 						$this->renderParagraph($this->__validForm, $objFieldset);
 						break;
 					case "Fieldset":
-						$this->renderFieldset($this->__validForm, $objFieldset);
-
+						$objVfFieldset = $this->renderFieldset($this->__validForm, $objFieldset);
 						$objFields = $objFieldset->getElementsByTemplate(array("Field", "Area", "ListField", "MultiField"));
 						foreach ($objFields as $objField) {
 							switch ($objField->getTemplateName()) {
@@ -75,102 +76,28 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 
 		$this->__validForm->setSubmitLabel($this->__formElement->getField("SendLabel")->getHtmlValue());
 
-		if ($this->__validForm->isSubmitted() && $this->__validForm->isValid()) {
-			if ($blnSend) {
-				$objRecipientEmails = $this->__formElement->getElementsByTemplate("RecipientEmail");	
-				foreach ($objRecipientEmails as $objRecipientEmail) {
-					$strHtmlBody = "<html><head><title></title></head><body>";
-					$strHtmlBody .= sprintf($objRecipientEmail->getField("Body")->getHtmlValue(), $this->__validForm->valuesAsHtml(TRUE));
-					$strHtmlBody .= "</body></html>";
-	
-					//*** Build the e-mail.
-					$strTextBody = str_replace("<br /> ", "<br />", $strHtmlBody);
-					$strTextBody = str_replace("<br />", "\n", $strTextBody);
-					$strTextBody = str_replace("&nbsp;","",$strTextBody);
-					$strTextBody = strip_tags($strTextBody);
-					$strTextBody = html_entity_decode($strTextBody, ENT_COMPAT, "UTF-8");
-	
-					$varEmailId = $objRecipientEmail->getField("SenderEmail")->getValue();
-					$objEmailElement = $objCms->getElementById($varEmailId);
-					$strFrom = "";
-					if (is_object($objEmailElement)) {
-						$varEmailId = $objEmailElement->getElement()->getApiName();
-						if (empty($varEmailId)) $varEmailId = $objEmailElement->getId();
-						$strFrom = $this->__validForm->getValidField("formfield_" . strtolower($varEmailId))->getValue();
-					}
-					
-					//*** Send the email.
-					$objMail = new htmlMimeMail5();
-					$objMail->setHTMLEncoding(new Base64Encoding());
-					$objMail->setTextCharset("utf-8");
-					$objMail->setHTMLCharset("utf-8");
-					$objMail->setHeadCharset("utf-8");
-					$objMail->setFrom($strFrom);
-					$objMail->setSubject($objRecipientEmail->getField("Subject")->getHtmlValue());
-					$objMail->setText($strTextBody);
-					$objMail->setHTML($strHtmlBody);
-					if (!$objMail->send(explode(",", $objRecipientEmail->getField("RecipientEmail")->getHtmlValue()))) {
-						echo $objMail->errors;
-					}
-				}
-	
-				$objSenderEmails = $this->__formElement->getElementsByTemplate("SenderEmail");	
-				foreach ($objSenderEmails as $objSenderEmail) {
-					$strHtmlBody = "<html><head><title></title></head><body>";
-					$strHtmlBody .= sprintf($objSenderEmail->getField("Body")->getHtmlValue(), $this->__validForm->valuesAsHtml(TRUE));
-					$strHtmlBody .= "</body></html>";
-	
-					//*** Build the e-mail.
-					$strTextBody = str_replace("<br /> ", "<br />", $strHtmlBody);
-					$strTextBody = str_replace("<br />", "\n", $strTextBody);
-					$strTextBody = str_replace("&nbsp;", "", $strTextBody);
-					$strTextBody = strip_tags($strTextBody);
-					$strTextBody = html_entity_decode($strTextBody, ENT_COMPAT, "UTF-8");
-	
-					$varEmailId = $objSenderEmail->getField("RecipientEmail")->getValue();
-					$objEmailElement = $objCms->getElementById($varEmailId);
-					if (is_object($objEmailElement)) {
-						$varEmailId = $objEmailElement->getElement()->getApiName();
-						if (empty($varEmailId)) $varEmailId = $objEmailElement->getId();
-					}
-	
-					//*** Send the email.
-					$objMail = new htmlMimeMail5();
-					$objMail->setHTMLEncoding(new Base64Encoding());
-					$objMail->setTextCharset("utf-8");
-					$objMail->setHTMLCharset("utf-8");
-					$objMail->setHeadCharset("utf-8");
-					$objMail->setFrom($objSenderEmail->getField("SenderEmail")->getHtmlValue());
-					$objMail->setSubject($objSenderEmail->getField("Subject")->getHtmlValue());
-					$objMail->setText($strTextBody);
-					$objMail->setHTML($strHtmlBody);
-					if (!$objMail->send(array($this->__validForm->getValidField("formfield_" . strtolower($varEmailId))->getValue()))) {
-						echo $objMail->errors;
-					}
-				}
-	
-				$strReturn = $this->__formElement->getField("ThanksBody")->getHtmlValue();
+		if ($blnHandle) {
+			if ($this->__validForm->isConfirmed()) {
+				$strReturn = "Awesome. You've confirmed it.";
+			} else if ($this->__validForm->isSubmitted() && $this->__validForm->isValid()) {
+				$strReturn = $this->__validForm->confirm();
 			} else {
-				$strReturn = $this->__formElement->getField("ThanksBody")->getHtmlValue();
+				$strReturn = $this->__validForm->toHtml($blnClientSide);
 			}
-		} else {
-			$strReturn = $this->__validForm->toHtml($blnClientSide);
 		}
 
 		return $strReturn;
 	}
 	
 	private function renderPage(&$objParent, $objElement) {
-		$objReturn = $objParent->addPage($this->generateId($objPage), $objElement->getField("Title")->getHtmlValue());
+		$objReturn = $objParent->addPage($this->generatePageId($objElement), $objElement->getField("Title")->getHtmlValue());
 		
 		return $objReturn;
 	}
 	
-	private function generateId($objElement) {
+	private function generatePageId($objElement) {
 		$strApiName = $objElement->getElement()->getApiName();
-		$strPrefix 	= ($objElement->getTemplateName() == "Page") ? "page_" : "formfield_";
-		
-		return (empty($strApiName)) ? "formfield_" . $objElement->getId() : "formfield_" . strtolower($strApiName);;
+		return (empty($strApiName)) ? "page_" . $objElement->getId() : "page_" . strtolower($strApiName);
 	}
 	
 }
