@@ -202,7 +202,15 @@ class PCMS_FormBuilder {
 	}
 	
 	protected function renderMultiField(&$objParent, $objElement) {
-		$objReturn = $objParent->addMultiField($objElement->getField("Label")->getHtmlValue());
+		$blnDynamic = ($objElement->getField("DynamicLabel")->getHtmlValue() != "") ? true : false;
+		
+		$objReturn = $objParent->addMultiField(
+			$objElement->getField("Label")->getHtmlValue(),
+			array(
+				"dynamic" => $blnDynamic,
+				"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
+			)
+		);
 		
 		$objFields = $objElement->getElementsByTemplate(array("Field", "ListField"));
 		foreach ($objFields as $objField) {									
@@ -221,6 +229,8 @@ class PCMS_FormBuilder {
 	}
 	
 	protected function renderField(&$objParent, $objElement, $blnJustRender = false) {
+		$blnDynamic = ($objElement->getField("DynamicLabel")->getHtmlValue() != "") ? true : false;
+
 		$validationRules = array(
 			"maxLength" => $objElement->getField("MaxLength")->getValue(), 
 			"minLength" => $objElement->getField("MinLength")->getValue(), 
@@ -253,7 +263,9 @@ class PCMS_FormBuilder {
 				"style" => $objElement->getField("Style")->getHtmlValue(),
 				"tip" => $objElement->getField("Tip")->getHtmlValue(),
 				"default" => $objElement->getField("DefaultValue")->getHtmlValue(),
-				"hint" => $objElement->getField("HintValue")->getHtmlValue()
+				"hint" => $objElement->getField("HintValue")->getHtmlValue(),
+				"dynamic" => $blnDynamic,
+				"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
 			),
 			$blnJustRender
 		);
@@ -279,12 +291,16 @@ class PCMS_FormBuilder {
 					break 2;
 			}
 		}
+		
+		$blnDynamic = ($objElement->getField("DynamicLabel")->getHtmlValue() != "") ? true : false;
 
 		$arrMeta = array(
 			"class" => $objElement->getField("Class")->getHtmlValue(),
 			"style" => $objElement->getField("Style")->getHtmlValue(),
 			"tip" => $objElement->getField("Tip")->getHtmlValue(),
-			"hint" => $objElement->getField("HintValue")->getHtmlValue()
+			"hint" => $objElement->getField("HintValue")->getHtmlValue(),
+			"dynamic" => $blnDynamic,
+			"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
 		);
 		if ($blnAutoOptions && isset($intStart) && isset($intEnd)) {
 			$arrMeta["start"] = $intStart;
