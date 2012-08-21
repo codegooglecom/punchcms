@@ -246,29 +246,55 @@ class PCMS_FormBuilder {
 		} else {
 			throw new Exception("Field type is empty in element " . $objElement->getId(), E_ERROR);
 		}
-		
-		$objReturn = $objParent->addField(
-			$this->generateId($objElement), 
-			$objElement->getField("Label")->getHtmlValue(), 
-			constant($objElement->getField("Type")->getValue()), 
-			$validationRules,
-			array(
-				"maxLength" => $this->__maxLengthAlert, 
-				"minLength" => $this->__minLengthAlert, 
-				"required" => $this->__requiredAlert, 
-				"type" => $objElement->getField("TypeAlert")->getHtmlValue()
-			), 
-			array(
-				"class" => $objElement->getField("Class")->getHtmlValue(),
-				"style" => $objElement->getField("Style")->getHtmlValue(),
-				"tip" => $objElement->getField("Tip")->getHtmlValue(),
-				"default" => $objElement->getField("DefaultValue")->getHtmlValue(),
-				"hint" => $objElement->getField("HintValue")->getHtmlValue(),
-				"dynamic" => $blnDynamic,
-				"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
-			),
-			$blnJustRender
-		);
+
+		if (get_class($objParent) == "VF_MultiField") {
+			// Add field without the label.
+			$objReturn = $objParent->addField(
+				$this->generateId($objElement),
+				constant($objElement->getField("Type")->getValue()), 
+				$validationRules,
+				array(
+					"maxLength" => $this->__maxLengthAlert, 
+					"minLength" => $this->__minLengthAlert, 
+					"required" => $this->__requiredAlert, 
+					"type" => $objElement->getField("TypeAlert")->getHtmlValue()
+				), 
+				array(
+					"class" => $objElement->getField("Class")->getHtmlValue(),
+					"style" => $objElement->getField("Style")->getHtmlValue(),
+					"tip" => $objElement->getField("Tip")->getHtmlValue(),
+					"default" => $objElement->getField("DefaultValue")->getHtmlValue(),
+					"hint" => $objElement->getField("HintValue")->getHtmlValue(),
+					"dynamic" => $blnDynamic,
+					"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
+				),
+				$blnJustRender
+			);
+		} else {
+			// Add field with label.
+			$objReturn = $objParent->addField(
+				$this->generateId($objElement), 
+				$objElement->getField("Label")->getHtmlValue(), 
+				constant($objElement->getField("Type")->getValue()), 
+				$validationRules,
+				array(
+					"maxLength" => $this->__maxLengthAlert, 
+					"minLength" => $this->__minLengthAlert, 
+					"required" => $this->__requiredAlert, 
+					"type" => $objElement->getField("TypeAlert")->getHtmlValue()
+				), 
+				array(
+					"class" => $objElement->getField("Class")->getHtmlValue(),
+					"style" => $objElement->getField("Style")->getHtmlValue(),
+					"tip" => $objElement->getField("Tip")->getHtmlValue(),
+					"default" => $objElement->getField("DefaultValue")->getHtmlValue(),
+					"hint" => $objElement->getField("HintValue")->getHtmlValue(),
+					"dynamic" => $blnDynamic,
+					"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
+				),
+				$blnJustRender
+			);
+		}	
 		
 		return $objReturn;
 	}
