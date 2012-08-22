@@ -1,25 +1,35 @@
 <?php
-
 /**
- * 
  * Holds the PunchCMS Valid Form classes.
- * Depends on ValidForm Builder and htmlMimeMail5.
- * @author felix
- * @version 0.1.7.6
+ * Depends on ValidForm Builder library including the ValidWizard extension and htmlMimeMail5.
+ * 
+ * @author Robin van Baalen <rvanbaalen@felix-it.com>
+ * @version 0.1
  *
  */
 class PCMS_WizardBuilder extends PCMS_FormBuilder {
-	private $__formElement	= FALSE;
-	private $__maxLengthAlert = "";
-	private $__minLengthAlert = "";
-	private $__requiredAlert = "";
-	public $__validForm	= FALSE;
+	private $__formElement		= FALSE;
+	private $__maxLengthAlert 	= "";
+	private $__minLengthAlert 	= "";
+	private $__requiredAlert 	= "";
+	public $__validForm		= FALSE;
 
 	public function __construct($objForm, $strAction = null) {
 		$this->__formElement = $objForm;
 		$strName = $objForm->getName();
 		$strName = (empty($strName)) ? $objForm->getId() : strtolower($strName);
 		$this->__validForm = new ValidWizard("validwizard_" . $strName, $this->__formElement->getField("RequiredBody")->getHtmlValue(), $strAction);
+	}
+
+	public function getValidWizard() {
+		$varReturn = null;
+		if (is_object($this->__validForm)) {
+			$varReturn = $this->__validForm;
+		} else {
+			throw new Exception("ValidForm is not yet initiated. Could not load ValidForm from PCMS_FormBuilder.", E_ERROR);
+		}
+
+		return $varReturn;
 	}
 
 	public function buildForm($blnHandle = TRUE, $blnClientSide = TRUE) {
@@ -78,7 +88,7 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 
 		if ($blnHandle) {
 			if ($this->__validForm->isConfirmed()) {
-				$strReturn = "Awesome. You've confirmed it.";
+				$strReturn = $this->__formElement->getField("ThanksBody")->getHtmlValue();
 			} else if ($this->__validForm->isSubmitted() && $this->__validForm->isValid()) {
 				$strReturn = $this->__validForm->confirm();
 			} else {

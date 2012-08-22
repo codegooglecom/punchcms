@@ -22,6 +22,17 @@ class PCMS_FormBuilder {
 		$this->__validForm = new ValidForm("validform_" . $strName, $this->__formElement->getField("RequiredBody")->getHtmlValue(), $strAction);
 	}
 
+	public function getValidForm() {
+		$varReturn = null;
+		if (is_object($this->__validForm)) {
+			$varReturn = $this->__validForm;
+		} else {
+			throw new Exception("ValidForm is not yet initiated. Could not load ValidForm from PCMS_FormBuilder.", E_ERROR);
+		}
+
+		return $varReturn;
+	}
+
 	public function buildForm($blnSend = TRUE, $blnClientSide = TRUE) {
 		$objCms = PCMS_Client::getInstance();
 	
