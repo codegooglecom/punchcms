@@ -97,7 +97,6 @@ var PinnableTree = function (options) {
 	this.pin = function (blnOnLoad) {
 		if (window._treeApi) {
 			_treeApi.setOnOpenHandler(function () {
-				console.log("openhandler")
 				self.pin()
 				
 				return true
