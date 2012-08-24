@@ -274,11 +274,13 @@ class ImpEx {
 						//*** Create temporary account object.
 						$_CONF['app']['account'] = $objAccount;
 
+						
 						foreach ($accountNode->childNodes as $childNode) {
+							$arrUserIds = array();
+							$arrGroupIds = array();
+							
 							switch ($childNode->nodeName) {
 								case "acl":
-									$arrUserIds = array();
-									$arrGroupIds = array();
 									self::importAcl($childNode, $objAccount->getId(), $arrUserIds, $arrGroupIds);
 									break;
 
