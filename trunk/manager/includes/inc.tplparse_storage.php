@@ -454,7 +454,7 @@ function parseFiles($intElmntId, $strCommand) {
 								
 								//*** Cleanup zip files.
 								foreach ($arrCleanup as $value) {
-									$objFtp = new FTP($strServer);
+									$objFtp = new FTP($strServer, NULL, NULL, TRUE);
 									$objFtp->login($strUsername, $strPassword);
 									$strFile = $strRemoteFolder . $value;
 									$objFtp->delete($strFile);
@@ -467,7 +467,7 @@ function parseFiles($intElmntId, $strCommand) {
 												
 						//*** Remove deleted files.
 						if ($strCommand == CMD_EDIT && !empty($strOldFile)) {
-							$objFtp = new FTP($strServer);
+							$objFtp = new FTP($strServer, NULL, NULL, TRUE);
 							$objFtp->login($strUsername, $strPassword);
 							$strFile = $strRemoteFolder . $strOldFile;
 							$objFtp->delete($strFile);

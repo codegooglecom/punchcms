@@ -75,6 +75,7 @@ function filterInput($input, $whitelist) {
 
     	if (array_key_exists($key, $input)) {
     		$value = $input[$key];
+    		if (is_array($value)) $value = array_pop($value);
 
 			//*** Check input field length.
     		if (isset($whitelist[$key]['maxlength'])

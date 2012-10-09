@@ -46,7 +46,7 @@ if ($strDo == "remove") {
 	$strFile = preg_replace('/[^'.$valid_chars_regex.']|\.+$/i', "", basename($strFile));
 	@unlink($_PATHS['upload'] . $strFile);
 	
-	$objFtp = new FTP($strServer);
+	$objFtp = new FTP($strServer, NULL, NULL, TRUE);
 	$objFtp->login($strUsername, $strPassword);
 	$objFtp->pasv(TRUE);
 	$objFtp->delete($strRemoteFolder . $strFile);

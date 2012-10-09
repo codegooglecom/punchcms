@@ -48,7 +48,7 @@ class ElementFieldBigText extends DBA_ElementFieldBigText {
 						$strRemoteFolder = Setting::getValueByName('ftp_remote_folder');
 
 						//*** Remove deleted files.
-						$objFtp = new FTP($strServer);
+						$objFtp = new FTP($strServer, NULL, NULL, TRUE);
 						$objFtp->login($strUsername, $strPassword);
 						$objFtp->pasv(TRUE);
 						$arrValues = explode("\n", $this->value);
