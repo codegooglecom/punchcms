@@ -956,7 +956,7 @@ function parsePages($intElmntId, $strCommand) {
 						}
 												
 						//*** Remove deleted files.
-						$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+						$objFtp = new FTP($strServer);
 						$objFtp->login($strUsername, $strPassword);
 						$objFtp->pasv(TRUE);
 						foreach ($arrFieldCache as $intTemplateFieldId => $arrLanguage) {

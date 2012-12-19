@@ -1,6 +1,5 @@
 <script type="text/javascript" src="/libraries/cookie.js"></script>
 <script type="text/javascript" src="/libraries/pintree.js"></script>
-<script type="text/javascript" src="/libraries/constantes.js"></script>
 <script type="text/javascript">
 // <![CDATA[
 
@@ -67,77 +66,8 @@ function generateSlug(str) {
 	return str;
 }
 
-// Create a global timeout namespace
-window._timers = window._timers || {}
-
 //*** Onload action.
 jQuery(function(){
-	// Always focus on the first input field
-	var focusFormField = function () {$("#content input[type='text']:first").focus();}
-	$(window).bind("focus", function () {
-		focusFormField();
-	});
-	focusFormField();
-
-	//**** HACKY FUNCTION ****//
-	;(function () {
-		var $select = $("#tfv_image_scale"),
-			blnSelected = false
-		if ($select.length > 0) {
-			blnSelected = ($select.find("option[selected='selected']").length > 0)
-			if (!blnSelected) {
-				// This sets "Resize fit cropped" as default value.
-				$select.find("option[value='2']").attr("selected", "selected");
-			}
-		}
-	})()
-
-	//**** ANOTHER HACKY FUNCTION ****//
-	;(function () {
-		/**
-		 * Automagically set the field type based on the API name. Fully extendable with more regular expressions.
-		 * Just add |yourvalue to an existing regex or create a new one.
-		 **/
-		$("#frm_field_type")
-			.after("<span id='autodetected'>Auto-detected</span>")
-			.next()
-			.css({"color": "green", "padding-left": "10px"})
-			.hide();
-
-		$("#frm_apiname").bind("keyup", function () {
-			var $this = $(this);
-
-			clearTimeout(window._timers["_apiNameKeyup"]);
-			window._timers["_apiNameKeyup"] = setTimeout(function () {
-				var arrRegex = {
-					"date": 1, // Date field
-					"title|label": 2, // Short text
-					"body|paragraph|description": 3, // Large text
-					"file": 4, // File field
-					"image|thumb": 7, // Image
-					"address|code|embed": 14 // Simple text
-				}
-
-				for (regex in arrRegex) {
-					if($this.val().match(new RegExp("(" + regex + ")", "i"))) {
-						var $option = $("#frm_field_type").find("option[value='" + arrRegex[regex] + "']");
-
-						if (!$option.is(":selected")) {
-							$option
-								.attr("selected", "selected")
-								.trigger("change")
-
-							$("#autodetected").fadeIn("fast", function() {
-								$(this).delay(2000).fadeOut("fast");
-							})
-						}
-					}
-				}
-			}, 100)
-		})
-	})()
-
-	// Handle tabs
 	if(typeof $tabs == "undefined"){
 		$tabs = jQuery("#elementForm").tabs({
 			selected: {SELECTED_TAB},
@@ -150,21 +80,17 @@ jQuery(function(){
 					$alias.bind("focus", function () {
 						var $textField = $fields.find("input[type=text]:first")
 						
-						if ($textField.length > 0 && $alias.val().length <= 0) {
+						if ($textField.length > 0) {
 							$alias.val(generateSlug($textField.val()))
 						}
 					})
-				}
-
-				if ($fields.is(":visible") && $("#language_active").length > 0) {
-					objContentLanguage.setActives(new String(objContentLanguage.defaultLanguage))
 				}
 				
 				$("#elementForm div:visible:first input[type='text']:first").focus()
 			}
 		});
 	}
-
+	
 	if (jQuery("#treeContainer").length > 0) {
 		//*** On resize, recalculate the size of the treeview module.
 		jQuery(window).bind("resize", function(){
@@ -213,8 +139,6 @@ jQuery(function(){
 					// s is pressed
 					if (blnModifier && ($submitBtn.length > 0)) {
 						$submitBtn.trigger("click")
-						varReturn = false
-					} else if (blnModifier) {
 						varReturn = false
 					}
 					break;

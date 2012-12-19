@@ -26,7 +26,6 @@ require_once(dirname(__FILE__) . '/../config.php');
 /******************************
 * Start session.
 ***/
-session_save_path($_SERVER["DOCUMENT_ROOT"] . "/sessions");
 session_start();
 
 /******************************

@@ -643,7 +643,7 @@ class Element extends DBA_Element {
 	public function clearCache($objFtp = NULL) {
 		if (Setting::getValueByName('caching_enable')) {
 			if (!is_object($objFtp)) {
-				$objFtp = new FTP(Setting::getValueByName('ftp_server'), NULL, NULL, TRUE);
+				$objFtp = new FTP(Setting::getValueByName('ftp_server'));
 				$objFtp->login(Setting::getValueByName('ftp_username'), Setting::getValueByName('ftp_password'));
 				$objFtp->pasv(TRUE);
 			}
@@ -657,7 +657,7 @@ class Element extends DBA_Element {
 	public function clearZeroCache($objFtp = NULL) {
 		if (Setting::getValueByName('caching_enable')) {
 			if (!is_object($objFtp)) {
-				$objFtp = new FTP(Setting::getValueByName('ftp_server'), NULL, NULL, TRUE);
+				$objFtp = new FTP(Setting::getValueByName('ftp_server'));
 				$objFtp->login(Setting::getValueByName('ftp_username'), Setting::getValueByName('ftp_password'));
 				$objFtp->pasv(TRUE);
 			}

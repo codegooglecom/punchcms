@@ -1414,7 +1414,7 @@ class ImpEx {
 			$strRemoteFolder = Setting::getValueByName('ftp_remote_folder', $objAccount->getId());
 		
 			//*** Try to move the files.
-			$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+			$objFtp = new FTP($strServer);
 			if ($objFtp->login($strUsername, $strPassword) === TRUE) {
 				//*** Passive mode.
 				$objFtp->pasv(TRUE);

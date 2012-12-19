@@ -2,26 +2,10 @@
 
 class FTP {
    	private $objFTP;
-	private $strHost;
-	private $intPort;
-	private $intTimeout;
 
    	/* public Void __construct(): Constructor */
-   	public function __construct($host, $port = 21, $timeout = 90, $blnSecure = FALSE) {
-   		if (is_null($port)) $port = 21;
-   		if (is_null($timeout)) $timeout = 90;
-   		
-   		$this->strHost = $host;
-   		$this->intPort = $port;
-   		$this->intTimeout = $timeout;
-   		
-   		if ($blnSecure && function_exists('ftp_ssl_connect')) {
-   			$this->objFTP = ftp_ssl_connect($host, $port, $timeout);
-   		}
-   		
-   		if (!$this->objFTP) {
-   			$this->objFTP = ftp_connect($host, $port, $timeout);
-   		}
+   	public function __construct($host, $port = 21, $timeout = 90) {
+   		$this->objFTP = ftp_connect($host, $port, $timeout);
    	}
 
    	/* public Void __destruct(): Destructor */
@@ -31,31 +15,15 @@ class FTP {
 
    	/* public Mixed __call(): Re-route all function calls to the PHP-functions */
 	public function __call($function, $arguments) {
-		$varReturn = FALSE;
-		
        	//*** Prepend the ftp resource to the arguments array
        	array_unshift($arguments, $this->objFTP);
 
        	//*** Call the PHP function
        	try {
-       		$varReturn = @call_user_func_array('ftp_' . $function, $arguments);
-       		if ($varReturn === FALSE && $function == "login") {
-       			echo "dfgdfg";
-       			//*** Retry connect unsecured if login fails.
-       			ftp_close($this->objFTP);
-       			$this->objFTP = ftp_connect($this->strHost, $this->intPort, $this->intTimeout);
-       			
-       			//*** Re-call the command.
-       			array_shift($arguments);
-       			array_unshift($arguments, $this->objFTP);
-       			$varReturn = call_user_func_array('ftp_' . $function, $arguments);
-       		}
-       	} catch (Exception $e) {
-       		echo "tyutyu";
+       		return @call_user_func_array('ftp_' . $function, $arguments);
+       	} catch(Exception $e) {
 			echo $e->getMessage();
        	}
-       	
-       	return $varReturn;
    	}
    	
    	public function delete($strPath) {
