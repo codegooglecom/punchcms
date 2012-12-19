@@ -53,7 +53,7 @@ class StorageItem extends DBA_StorageItem {
 				$strRemoteFolder = Setting::getValueByName('ftp_remote_folder');
 
 				//*** Remove deleted files.
-				$objFtp = new FTP($strServer);
+				$objFtp = new FTP($strServer, NULL, NULL, TRUE);
 				$objFtp->login($strUsername, $strPassword);
 				$objFtp->pasv(TRUE);
 				$strFile = $strRemoteFolder . $strValue;

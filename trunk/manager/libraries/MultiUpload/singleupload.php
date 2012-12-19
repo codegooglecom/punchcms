@@ -153,7 +153,7 @@ class SingleUpload {
 		
 		if (!empty($strLocalName)) {
 			//*** Connect to the server.
-			$objFtp = new FTP($strServer);
+			$objFtp = new FTP($strServer, NULL, NULL, TRUE);
 			$objRet = $objFtp->login($strUsername, $strPassword);
 			if (!$objRet) {
 				$this->arrMessages[] = "Login failed. Check credentials.";
