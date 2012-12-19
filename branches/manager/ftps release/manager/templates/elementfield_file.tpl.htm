@@ -1,0 +1,52 @@
+
+								<div class="required">
+									<label for="{FIELD_ID}" class="widget">
+										<a href="#" rel="internal" class="fieldButton"><img id="{FIELD_ID}_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+										{FIELD_REQUIRED}{FIELD_NAME}
+									</label>
+									<div id="{FIELD_ID}_alt" class="input-textbig disabled" style="display:none;"></div>
+									<div id="{FIELD_ID}_widget" class="widget filefield">
+										<div class="header">
+											<!-- BEGIN field.file.select-type.library -->
+											<a href="" id="browseStorage_{FIELD_ID}" class="browseStorage" style="outline:none;float:right;margin-top:2px;">{LABEL_LIBRARY}</a>
+											<!-- END field.file.select-type.library -->
+											<label for="{FIELD_ID}">{FIELD_BROWSE_NAME}</label>
+											<!-- BEGIN field.file.select-type.upload -->
+											<span id="{FIELD_ID}_browse"></span>
+											<input type="file" id="{FIELD_ID}" name="{FIELD_ID}_new" class="input-file" />
+											<!-- END field.file.select-type.upload -->
+											<input type="hidden" name="{FIELD_ID}[]" value="" />
+											<!-- BEGIN field.file.descr -->
+											<small>{FIELD_DESCRIPTION}</small>
+											<!-- END field.file.descr -->
+										</div>
+										<div id="storageBrowser_{FIELD_ID}" class="storageBrowser" style="display:none;">
+											<div class="storageChooser">
+												<label for="frm_storage_{FIELD_ID}">
+													{LABEL_CHOOSE_FOLDER}
+												</label>
+												<select id="frm_storage_{FIELD_ID}" name="frm_sorage" class="select-one storageSelect">
+													{STORAGE_ITEMS}
+												</select>
+											</div>
+											<div class="storageList"></div>
+										</div>
+										<h3>{FIELD_HEADER_CURRENT}</h3>
+										<div id="filelist_current_{FIELD_ID}"></div>
+										<h3>{FIELD_HEADER_NEW}</h3>
+										<div id="filelist_new_{FIELD_ID}"></div>
+										<!-- BEGIN field.file.value -->
+										<input type="hidden" id="{FIELD_LANGUAGE_ID}_current" name="{FIELD_LANGUAGE_ID}_current" value="{FIELD_LANGUAGE_CURRENT_FILES}" />
+											<!-- BEGIN field.file.edit -->
+										<input type="hidden" id="{FIELD_LANGUAGE_ID_COUNT}" name="{FIELD_LANGUAGE_ID}[]" value="{FIELD_LANGUAGE_VALUE}" />
+											<!-- END field.file.edit -->
+										<!-- END field.file.value -->
+										<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
+										<script type="text/javascript">
+										// <![CDATA[
+											objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.FILE, {maxFiles:{FIELD_MAX_FILES}, maxChar:{FIELD_MAX_CHAR}, removeLabel:'{FIELD_LABEL_REMOVE}', cancelLabel:'{FIELD_LABEL_CANCEL}', altLabel:'{FIELD_LABEL_ALT}', thumbPath:'{FIELD_THUMB_PATH}', uploadPath:'{FIELD_UPLOAD_PATH}', selectType:['upload', 'library'], fileType:'{FIELD_FILE_TYPE}'});
+										// ]]>
+										</script>
+									</div>
+									<div class="clear"></div>
+								</div>
