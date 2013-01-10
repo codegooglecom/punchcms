@@ -718,7 +718,8 @@ INSERT INTO `pcms_template_field_type` (`id`, `name`, `input`, `element`, `sort`
 (11, 'Select list (single)', 'select', 'bigtext', 8, '2007-05-14 13:46:40', '2007-05-14 13:46:40'),
 (12, 'Check list (multi)', 'checkbox', 'bigtext', 9, '2007-05-14 13:50:03', '2007-05-14 13:50:03'),
 (13, 'Check list (single)', 'radio', 'bigtext', 10, '2007-05-14 13:50:03', '2007-05-14 13:50:03'),
-(14, 'Simple text', 'textarea', 'bigtext', 11, '2008-05-26 10:04:45', '2008-05-26 10:04:45');
+(14, 'Simple text', 'textarea', 'bigtext', 11, '2008-05-26 10:04:45', '2008-05-26 10:04:45'),
+(15, 'MovableCanvas Coordinates', 'text', 'bigtext', 15, '2011-05-26 10:04:45', '2011-05-26 10:04:45');
 
 -- --------------------------------------------------------
 
@@ -1123,7 +1124,7 @@ CREATE TABLE `punch_liveuser_userrights` (
 
 CREATE TABLE `punch_liveuser_users` (
   `authuserid` char(32) DEFAULT NULL,
-  `handle` char(32) DEFAULT NULL,
+  `handle` char(250) DEFAULT NULL,
   `passwd` char(42) DEFAULT NULL,
   `name` char(250) DEFAULT NULL,
   `email` char(250) DEFAULT NULL,
