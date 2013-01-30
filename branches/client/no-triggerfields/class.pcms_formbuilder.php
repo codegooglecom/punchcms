@@ -13,7 +13,7 @@ class PCMS_FormBuilder {
 	protected $__maxLengthAlert = "";
 	protected $__minLengthAlert = "";
 	protected $__requiredAlert = "";
-	
+
 	/**
 	 * @var ValidForm
 	 */
@@ -415,16 +415,9 @@ class PCMS_FormBuilder {
 		}
 
 		if (!$blnAutoOptions) {
-			$objOptions = $objElement->getElementsByTemplate(array("ListOption", "TargetField"));
+			$objOptions = $objElement->getElementsByTemplate(array("ListOption"));
 			foreach ($objOptions as $objOption) {
-				switch ($objOption->getTemplateName()) {
-					case "ListOption":
-						$objReturn->addField($objOption->getField("Label")->getHtmlValue(), $objOption->getField("Value")->getHtmlValue(), $objOption->getField("Selected")->getValue());
-						break;
-					case "TargetField":
-						$objReturn->addFieldObject($this->renderField($this->__validForm, $objOption, true));
-						break;
-				}
+				$objReturn->addField($objOption->getField("Label")->getHtmlValue(), $objOption->getField("Value")->getHtmlValue(), $objOption->getField("Selected")->getValue());
 			}
 		}
 
