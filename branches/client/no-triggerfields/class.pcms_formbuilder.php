@@ -4,8 +4,8 @@
  *
  * Holds the PunchCMS Valid Form classes.
  * Depends on ValidForm Builder and htmlMimeMail5.
- * @author felix
- * @version 0.1.7.7
+ * @author Felix Langfeldt <felix@neverwoods.com>, Robin van Baalen <robin@neverwoods.com>
+ * @version 1.0.1
  *
  */
 class PCMS_FormBuilder {
