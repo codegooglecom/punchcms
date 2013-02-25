@@ -64,7 +64,8 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 						$this->renderParagraph($this->__validForm, $objFieldset);
 						break;
 					case "Fieldset":
-						$objVfFieldset = $this->renderFieldset($this->__validForm, $objFieldset);
+						$this->renderFieldset($this->__validForm, $objFieldset);
+
 						$objFields = $objFieldset->getElementsByTemplate(array("Field", "Area", "ListField", "MultiField"));
 						foreach ($objFields as $objField) {
 							switch ($objField->getTemplateName()) {
@@ -90,6 +91,21 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 			}
 		}
 
+		//*** Add conditions
+		foreach ($objPages as $objPage) {
+			if (get_class($objPage) == "VF_Hidden") continue;
+
+			$objFieldsets = $objPage->getElementsByTemplate(array("Fieldset", "Paragraph"));
+			foreach ($objFieldsets as $objFieldset) {
+				$this->addConditions($objFieldset);
+
+				$objFields = $objFieldset->getElementsByTemplate(array("Field", "Area", "ListField", "MultiField"));
+				foreach ($objFields as $objField) {
+					$this->addConditions($objField);
+				}
+			}
+		}
+
 		$this->__validForm->setSubmitLabel($this->__formElement->getField("SendLabel")->getHtmlValue());
 
 		if ($blnHandle) {
@@ -106,6 +122,7 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 	private function renderPage(&$objParent, $objElement) {
 		$objReturn = $objParent->addPage($this->generatePageId($objElement), $objElement->getField("Title")->getHtmlValue());
 
+		$this->register($objElement, $objReturn);
 		return $objReturn;
 	}
 

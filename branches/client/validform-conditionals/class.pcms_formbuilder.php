@@ -15,6 +15,12 @@ class PCMS_FormBuilder {
 	protected $__requiredAlert = "";
 
 	/**
+	 * This is a PunchCMS -> ValidForm element lookup array
+	 * @var array
+	 */
+	protected $__lookup = array();
+
+	/**
 	 * @var ValidForm
 	 */
 	public $__validForm	= FALSE;
@@ -86,6 +92,16 @@ class PCMS_FormBuilder {
 
 						}
 					}
+			}
+		}
+
+		//*** Add conditions
+		foreach ($objFieldsets as $objFieldset) {
+			$this->addConditions($objFieldset);
+
+			$objFields = $objFieldset->getElementsByTemplate(array("Field", "Area", "ListField", "MultiField"));
+			foreach ($objFields as $objField) {
+				$this->addConditions($objField);
 			}
 		}
 
@@ -175,15 +191,60 @@ class PCMS_FormBuilder {
 		return $strReturn;
 	}
 
+	public function addConditions(__Element &$objSubject) {
+		$objConditions	= $objSubject->getElementsByTemplate("Condition");
+
+		foreach ($objConditions as $objCondition) {
+			try {
+				$strProperty 	= $objCondition->getField("Property")->getHtmlValue();
+				$strValue 		= $objCondition->getField("Value")->getHtmlValue();
+				$blnValue		= ($strValue == "true") ? true : false;
+				$constType 		= constant($objCondition->getField("Type")->getHtmlValue());
+
+				$arrComparisons = array();
+				$objCmsComparisons = $objCondition->getElementsByTemplate("Comparison");
+				foreach ($objCmsComparisons as $objCmsComparison) {
+					$objSubjectElement = $this->getFormElementById($objCmsComparison->getField("Subject")->getElement()->getId());
+
+					array_push($arrComparisons, new VF_Comparison($objSubjectElement, constant($objCmsComparison->getField("Comparison")->getHtmlValue()), $objCmsComparison->getField("Value")->getHtmlValue()));
+				}
+
+				$objFormSubject = $this->getFormElementById($objSubject->getId());
+				if (is_object($objFormSubject)) {
+					$objFormSubject->addCondition($strProperty, $blnValue, $arrComparisons, $constType);
+				}
+
+			} catch (Exception $e) {
+				throw new Exception("Failed to add condition to field {$objSubject->getId()}. Error: " . $e->getMessage(), 1);
+			}
+		}
+	}
+
+	protected function register($objCmsElement, $objFormElement) {
+		$this->__lookup[$objCmsElement->getId()] = &$objFormElement;
+	}
+
+	protected function getFormElementById($intId = null) {
+		$varReturn = false;
+
+		if (!is_null($intId)) {
+			$varReturn = (isset($this->__lookup[$intId])) ? $this->__lookup[$intId] : $varReturn;
+		}
+
+		return $varReturn;
+	}
+
 	protected function renderParagraph(&$objParent, $objElement) {
 		$objReturn = $objParent->addParagraph($objElement->getField("Body")->getHtmlValue(), $objElement->getField("Title")->getHtmlValue());
 
+		$this->register($objElement, $objReturn);
 		return $objReturn;
 	}
 
 	protected function renderFieldset(&$objParent, $objElement) {
 		$objReturn = $objParent->addFieldset($objElement->getField("Title")->getHtmlValue(), $objElement->getField("TipTitle")->getHtmlValue(), $objElement->getField("TipBody")->getHtmlValue());
 
+		$this->register($objElement, $objReturn);
 		return $objReturn;
 	}
 
@@ -221,6 +282,7 @@ class PCMS_FormBuilder {
 			}
 		}
 
+		$this->register($objElement, $objReturn);
 		return $objReturn;
 	}
 
@@ -251,6 +313,7 @@ class PCMS_FormBuilder {
 			}
 		}
 
+		$this->register($objElement, $objReturn);
 		return $objReturn;
 	}
 
@@ -330,6 +393,7 @@ class PCMS_FormBuilder {
 
 		}
 
+		$this->register($objElement, $objReturn);
 		return $objReturn;
 	}
 
@@ -426,6 +490,7 @@ class PCMS_FormBuilder {
 			}
 		}
 
+		$this->register($objElement, $objReturn);
 		return $objReturn;
 	}
 
