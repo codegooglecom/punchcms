@@ -251,8 +251,14 @@ class PCMS_FormBuilder {
 	protected function renderArea(&$objParent, $objElement) {
 		$blnDynamic = ($objElement->getField("DynamicLabel")->getHtmlValue() != "") ? true : false;
 
+		$strLabel = $objElement->getField("Label")->getHtmlValue();
+		$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
+		if (!empty($strShortLabel)) {
+			$strLabel = $strShortLabel;
+		}
+
 		$objReturn = $objParent->addArea(
-			$objElement->getField("Label")->getHtmlValue(),
+			$strLabel,
 			$objElement->getField("Active")->getValue(),
 			$this->generateId($objElement),
 			$objElement->getField("Selected")->getValue(),
@@ -289,8 +295,14 @@ class PCMS_FormBuilder {
 	protected function renderMultiField(&$objParent, $objElement) {
 		$blnDynamic = ($objElement->getField("DynamicLabel")->getHtmlValue() != "") ? true : false;
 
+		$strLabel = $objElement->getField("Label")->getHtmlValue();
+		$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
+		if (!empty($strShortLabel)) {
+			$strLabel = $strShortLabel;
+		}
+
 		$objReturn = $objParent->addMultiField(
-			$objElement->getField("Label")->getHtmlValue(),
+			$strLabel,
 			array(
 				"dynamic" => $blnDynamic,
 				"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
@@ -365,9 +377,15 @@ class PCMS_FormBuilder {
 
 		} else {
 			// Add field with label.
+			$strLabel = $objElement->getField("Label")->getHtmlValue();
+			$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
+			if (!empty($strShortLabel)) {
+				$strLabel = $strShortLabel;
+			}
+
 			$objReturn = $objParent->addField(
 				$this->generateId($objElement),
-				$objElement->getField("Label")->getHtmlValue(),
+				$strLabel,
 				constant($objElement->getField("Type")->getValue()),
 				$validationRules,
 				array(
@@ -461,9 +479,15 @@ class PCMS_FormBuilder {
 
 		} else {
 			// Add field with the label.
+			$strLabel = $objElement->getField("Label")->getHtmlValue();
+			$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
+			if (!empty($strShortLabel)) {
+				$strLabel = $strShortLabel;
+			}
+
 			$objReturn = $objParent->addField(
 				$this->generateId($objElement),
-				$objElement->getField("Label")->getHtmlValue(),
+				$strLabel,
 				constant($objElement->getField("Type")->getValue()),
 				array(
 					"maxLength" => $objElement->getField("MaxLength")->getValue(),
@@ -486,7 +510,13 @@ class PCMS_FormBuilder {
 		if (!$blnAutoOptions) {
 			$objOptions = $objElement->getElementsByTemplate(array("ListOption"));
 			foreach ($objOptions as $objOption) {
-				$objReturn->addField($objOption->getField("Label")->getHtmlValue(), $objOption->getField("Value")->getHtmlValue(), $objOption->getField("Selected")->getValue());
+				$strLabel = $objOption->getField("Label")->getHtmlValue();
+				$strShortLabel = $objOption->getField("ShortLabel")->getHtmlValue();
+				if (!empty($strShortLabel)) {
+					$strLabel = $strShortLabel;
+				}
+
+				$objReturn->addField($strLabel, $objOption->getField("Value")->getHtmlValue(), $objOption->getField("Selected")->getValue());
 			}
 		}
 
