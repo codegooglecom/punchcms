@@ -287,7 +287,7 @@ class PCMS_FormBuilder {
 				),
 				array(
 					"class" => $objElement->getField("Class")->getHtmlValue(),
-					"style" => $objElement->getField("Style")->getHtmlValue(),
+					"fieldstyle" => $objElement->getField("Style")->getHtmlValue(),
 					"tip" => $objElement->getField("Tip")->getHtmlValue(),
 					"default" => $objElement->getField("DefaultValue")->getHtmlValue(),
 					"hint" => $objElement->getField("HintValue")->getHtmlValue(),
@@ -315,7 +315,7 @@ class PCMS_FormBuilder {
 				),
 				array(
 					"class" => $objElement->getField("Class")->getHtmlValue(),
-					"style" => $objElement->getField("Style")->getHtmlValue(),
+					"fieldstyle" => $objElement->getField("Style")->getHtmlValue(),
 					"tip" => $objElement->getField("Tip")->getHtmlValue(),
 					"default" => $objElement->getField("DefaultValue")->getHtmlValue(),
 					"hint" => $objElement->getField("HintValue")->getHtmlValue(),
@@ -356,7 +356,7 @@ class PCMS_FormBuilder {
 
 		$arrMeta = array(
 			"class" => $objElement->getField("Class")->getHtmlValue(),
-			"style" => $objElement->getField("Style")->getHtmlValue(),
+			"fieldstyle" => $objElement->getField("Style")->getHtmlValue(),
 			"tip" => $objElement->getField("Tip")->getHtmlValue(),
 			"hint" => $objElement->getField("HintValue")->getHtmlValue(),
 			"dynamic" => $blnDynamic,

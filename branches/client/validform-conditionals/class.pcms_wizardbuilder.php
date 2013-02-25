@@ -14,6 +14,11 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 		$strName = $objForm->getName();
 		$strName = (empty($strName)) ? $objForm->getId() : strtolower($strName);
 		$this->__validForm = new ValidWizard("validwizard_" . $strName, $this->__formElement->getField("RequiredBody")->getHtmlValue(), $strAction);
+
+		$blnShowOverview = !!$this->__formElement->getField("ShowOverview")->getHtmlValue();
+		if ($blnShowOverview) {
+			$this->__validForm->addConfirmPage();
+		}
 	}
 
 	/**
