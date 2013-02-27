@@ -120,7 +120,15 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 	}
 
 	private function renderPage(&$objParent, $objElement) {
-		$objReturn = $objParent->addPage($this->generatePageId($objElement), $objElement->getField("Title")->getHtmlValue());
+		$arrFieldMeta = array();
+
+		// Add short label if not empty.
+		$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
+		if (!empty($strShortLabel)) {
+			$arrFieldMeta["shortLabel"] = $strShortLabel;
+		}
+
+		$objReturn = $objParent->addPage($this->generatePageId($objElement), $objElement->getField("Title")->getHtmlValue(), $arrFieldMeta);
 
 		$this->register($objElement, $objReturn);
 		return $objReturn;
