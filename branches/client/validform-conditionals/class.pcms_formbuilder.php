@@ -523,7 +523,10 @@ class PCMS_FormBuilder {
 
 					$objTipField = $objOption->getField("Tip");
 					if (is_object($objTipField)) {
-						$objOptionField->setFieldMeta("data-tip", $objTipField->getHtmlValue());
+						$strTip = $objTipField->getHtmlValue();
+						if (!empty($strTip) || $strTip === 0) {
+							$objOptionField->setFieldMeta("data-tip", $strTip);
+						}
 					}
 				}
 			}
