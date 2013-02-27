@@ -519,7 +519,12 @@ class PCMS_FormBuilder {
 		if (!$blnAutoOptions || ($blnAutoOptions && $objOptions->count() > 2)) {
 			foreach ($objOptions as $objOption) {
 				if ($objOption->getName() != "Start" && $objOption->getName() != "End") {
-					$objReturn->addField($objOption->getField("Label")->getHtmlValue(), $objOption->getField("Value")->getHtmlValue(), $objOption->getField("Selected")->getValue());
+					$objOptionField = $objReturn->addField($objOption->getField("Label")->getHtmlValue(), $objOption->getField("Value")->getHtmlValue(), $objOption->getField("Selected")->getValue());
+
+					$objTipField = $objOption->getField("Tip");
+					if (is_object($objTipField)) {
+						$objOptionField->setFieldMeta("data-tip", $objTipField->getHtmlValue());
+					}
 				}
 			}
 		}
