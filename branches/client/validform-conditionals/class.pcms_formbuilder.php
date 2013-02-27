@@ -253,9 +253,6 @@ class PCMS_FormBuilder {
 
 		$strLabel = $objElement->getField("Label")->getHtmlValue();
 		$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-		if (!empty($strShortLabel)) {
-			$strLabel = $strShortLabel;
-		}
 
 		$objReturn = $objParent->addArea(
 			$strLabel,
@@ -297,9 +294,6 @@ class PCMS_FormBuilder {
 
 		$strLabel = $objElement->getField("Label")->getHtmlValue();
 		$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-		if (!empty($strShortLabel)) {
-			$strLabel = $strShortLabel;
-		}
 
 		$objReturn = $objParent->addMultiField(
 			$strLabel,
@@ -379,9 +373,6 @@ class PCMS_FormBuilder {
 			// Add field with label.
 			$strLabel = $objElement->getField("Label")->getHtmlValue();
 			$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-			if (!empty($strShortLabel)) {
-				$strLabel = $strShortLabel;
-			}
 
 			$objReturn = $objParent->addField(
 				$this->generateId($objElement),
@@ -481,9 +472,6 @@ class PCMS_FormBuilder {
 			// Add field with the label.
 			$strLabel = $objElement->getField("Label")->getHtmlValue();
 			$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-			if (!empty($strShortLabel)) {
-				$strLabel = $strShortLabel;
-			}
 
 			$objReturn = $objParent->addField(
 				$this->generateId($objElement),
@@ -506,17 +494,16 @@ class PCMS_FormBuilder {
 			// Store the PunchCMS ElementID in this field to have a reference for later use.
 			$objReturn->setData("eid", $objElement->getId());
 		}
-
-		if (!$blnAutoOptions) {
-			$objOptions = $objElement->getElementsByTemplate(array("ListOption"));
+		
+		$objOptions = $objElement->getElementsByTemplate(array("ListOption"));
+		if (!$blnAutoOptions || ($blnAutoOptions && $objOptions->count() > 2)) {
 			foreach ($objOptions as $objOption) {
-				$strLabel = $objOption->getField("Label")->getHtmlValue();
-				$strShortLabel = $objOption->getField("ShortLabel")->getHtmlValue();
-				if (!empty($strShortLabel)) {
-					$strLabel = $strShortLabel;
+				if ($objOption->getName() != "Start" && $objOption->getName() != "End") {
+					$strLabel = $objOption->getField("Label")->getHtmlValue();
+					$strShortLabel = $objOption->getField("ShortLabel")->getHtmlValue();
+	
+					$objReturn->addField($strLabel, $objOption->getField("Value")->getHtmlValue(), $objOption->getField("Selected")->getValue());
 				}
-
-				$objReturn->addField($strLabel, $objOption->getField("Value")->getHtmlValue(), $objOption->getField("Selected")->getValue());
 			}
 		}
 
