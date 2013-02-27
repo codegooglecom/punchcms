@@ -123,9 +123,9 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 		$arrFieldMeta = array();
 
 		// Add short label if not empty.
-		$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-		if (!empty($strShortLabel)) {
-			$arrFieldMeta["shortLabel"] = $strShortLabel;
+		$strSummaryLabel = $objElement->getField("SummaryLabel")->getHtmlValue();
+		if (!empty($strSummaryLabel)) {
+			$arrFieldMeta["summaryLabel"] = $strSummaryLabel;
 		}
 
 		$objReturn = $objParent->addPage($this->generatePageId($objElement), $objElement->getField("Title")->getHtmlValue(), $arrFieldMeta);

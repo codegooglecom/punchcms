@@ -258,9 +258,9 @@ class PCMS_FormBuilder {
 		);
 
 		// Add short label if not empty.
-		$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-		if (!empty($strShortLabel)) {
-			$arrFieldMeta["shortLabel"] = $strShortLabel;
+		$strSummaryLabel = $objElement->getField("SummaryLabel")->getHtmlValue();
+		if (!empty($strSummaryLabel)) {
+			$arrFieldMeta["summaryLabel"] = $strSummaryLabel;
 		}
 
 		$objReturn = $objParent->addArea(
@@ -305,9 +305,9 @@ class PCMS_FormBuilder {
 		);
 
 		// Add short label if not empty.
-		$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-		if (!empty($strShortLabel)) {
-			$arrFieldMeta["shortLabel"] = $strShortLabel;
+		$strSummaryLabel = $objElement->getField("SummaryLabel")->getHtmlValue();
+		if (!empty($strSummaryLabel)) {
+			$arrFieldMeta["summaryLabel"] = $strSummaryLabel;
 		}
 
 		$objReturn = $objParent->addMultiField(
@@ -395,9 +395,9 @@ class PCMS_FormBuilder {
 			);
 
 			// Set short label if set.
-			$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-			if (!empty($strShortLabel)) {
-				$arrFieldMeta["shortLabel"] = $strShortLabel;
+			$strSummaryLabel = $objElement->getField("SummaryLabel")->getHtmlValue();
+			if (!empty($strSummaryLabel)) {
+				$arrFieldMeta["summaryLabel"] = $strSummaryLabel;
 			}
 
 			$objReturn = $objParent->addField(
@@ -488,9 +488,9 @@ class PCMS_FormBuilder {
 
 		} else {
 			// Add field with the label.
-			$strShortLabel = $objElement->getField("ShortLabel")->getHtmlValue();
-			if (!empty($strShortLabel)) {
-				$arrMeta["shortLabel"] = $strShortLabel;
+			$strSummaryLabel = $objElement->getField("SummaryLabel")->getHtmlValue();
+			if (!empty($strSummaryLabel)) {
+				$arrMeta["summaryLabel"] = $strSummaryLabel;
 			}
 
 			$objReturn = $objParent->addField(
