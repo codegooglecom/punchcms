@@ -130,6 +130,9 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 
 		$objReturn = $objParent->addPage($this->generatePageId($objElement), $objElement->getField("Title")->getHtmlValue(), $arrFieldMeta);
 
+		// Store the PunchCMS ElementID in this field to have a reference for later use.
+		$objReturn->setData("eid", $objElement->getId());
+
 		$this->register($objElement, $objReturn);
 		return $objReturn;
 	}
