@@ -192,7 +192,7 @@ class PCMS_FormBuilder {
 	}
 
 	public function addConditions(__Element &$objSubject) {
-		$objConditions	= $objSubject->getElementsByTemplate("Condition");
+		$objConditions= $objSubject->getElementsByTemplate("Condition");
 
 		foreach ($objConditions as $objCondition) {
 			try {
@@ -524,7 +524,7 @@ class PCMS_FormBuilder {
 					$objTipField = $objOption->getField("Tip");
 					if (is_object($objTipField)) {
 						$strTip = $objTipField->getHtmlValue();
-						if (!empty($strTip) || $strTip === 0) {
+						if (strlen($strTip) > 0) {
 							$objOptionField->setFieldMeta("data-tip", $strTip);
 						}
 					}
