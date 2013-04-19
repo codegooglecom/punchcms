@@ -215,6 +215,14 @@ function parsePages($intElmntId, $strCommand) {
 				
 				$objTpl->setVariable("BUTTON_NEWFOLDER", $objLang->get("newFolder", "button"));
 				$objTpl->setVariable("BUTTON_NEWFOLDER_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_ADD_FOLDER);
+                
+                if($objLiveUser->checkRight($_CONF['app']['navRights'][NAV_PCMS_TEMPLATES] == true))
+                {
+                    $objTpl->setVariable("BUTTON_EXPORT_ELEMENT",  $objLang->get("export", "button"));
+                    $objTpl->setVariable("BUTTON_EXPORT_ELEMENT_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_EXPORT_ELEMENT);
+                    $objTpl->setVariable("BUTTON_IMPORT_ELEMENT",  $objLang->get("import", "button"));
+                    $objTpl->setVariable("BUTTON_IMPORT_ELEMENT_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_IMPORT_ELEMENT);
+                }      
 			}
 			
 			if (!isset($objElement) || $objElement->getTypeId() != ELM_TYPE_LOCKED) {
@@ -648,9 +656,8 @@ function parsePages($intElmntId, $strCommand) {
 						foreach ($objContentLangs as $objContentLanguage) {
 							$blnActive = (in_array($objContentLanguage->getId(), $arrActives)) ? TRUE : FALSE;
 							$objElement->setLanguageActive($objContentLanguage->getId(), $blnActive);
-						}
-						if ($strCommand == CMD_ADD) $objElement->setLanguageActive(ContentLanguage::getDefault()->getId(), TRUE);
-						
+                            if ($strCommand == CMD_ADD) $objElement->setLanguageActive($objContentLanguage->getId(), TRUE);
+						}						
 						//*** Cache to handsome array.
 						$arrFieldCache = array();
 						foreach ($objCachedFields as $objCacheField) {
@@ -1148,43 +1155,25 @@ function parsePages($intElmntId, $strCommand) {
 									break;
 	
 								case FIELD_TYPE_LARGETEXT:
-									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.textarea', 'elementfield_textarea.tpl.htm');
+									$objFieldTpl->addBlockfile('ELEMENT_FIELD', 'field.simpletext', 'elementfield_textarea.tpl.htm');
 	
 									foreach ($objContentLangs as $objContentLanguage) {
-										$objFieldTpl->setCurrentBlock("field.{$objType->getInput()}.value");
+										$objFieldTpl->setCurrentBlock("field.simpletext.value");
 										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
 	
 										if (is_object($objElement)) {
-											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId());
+											$strValue = htmlspecialchars($objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId()));
 										} else {
 											$strValue = "";
 										}
 																			
-										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", str_replace("$", "&#36;", htmlspecialchars($strValue)));
+										$objFieldTpl->setVariable("FIELD_LANGUAGE_VALUE", $strValue);
 	
 										$objFieldTpl->parseCurrentBlock();
 									}
 	
-									//*** Parse the special FCKeditor oncomplete section.
-									$objTpl->setCurrentBlock("field_{$objType->getInput()}_oncomplete_value");
-									$objTpl->setVariable("ELEMENT_FIELD_ID", "efv_{$objField->getId()}");
-										
-									if (is_object($objElement)) {
-										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
-										if (is_object($objElementField)) {
-											$objTpl->setVariable("ELEMENT_FIELD_CASCADES", implode(",", $objElementField->getCascades()));
-										}
-									}
-									
-									$objTpl->parseCurrentBlock();
-									
-									$oFCKeditor = new FCKeditor("efv_{$objField->getId()}");
-									$oFCKeditor->BasePath = 'libraries/fckeditor/';
-									$oFCKeditor->Config['DefaultLanguage'] = $objLang->get("abbr");
-									$oFCKeditor->Width = "490";
-	
 									//*** Calculate and set the textarea height.
-									$minHeight = 210;
+									$minHeight = 115;
 									$maxHeight = 400;
 									$intHeight = $minHeight;
 									$objValue = $objField->getValueByName("tfv_field_max_characters");
@@ -1194,14 +1183,21 @@ function parsePages($intElmntId, $strCommand) {
 										if ($intHeight < $minHeight) $intHeight = $minHeight;
 										if ($intHeight > $maxHeight) $intHeight = $maxHeight;
 									}
-									$oFCKeditor->Height = "{$intHeight}";
 	
-									$objFieldTpl->setCurrentBlock("field.textarea");
+									$objFieldTpl->setCurrentBlock("field.simpletext");
 									$objFieldTpl->setVariable("FIELD_ID", "efv_{$objField->getId()}");
+									$objFieldTpl->setVariable("FIELD_HEIGHT", "{$intHeight}px");
 									if ($objField->getRequired()) $objFieldTpl->setVariable("FIELD_REQUIRED", "* ");
 									$objFieldTpl->setVariable("FIELD_NAME", html_entity_decode($objField->getName()));
-									$objFieldTpl->setVariable("FIELD_TEXTAREA", $oFCKeditor->CreateHtml());
 									if (!empty($strDescription)) $objFieldTpl->setVariable("FIELD_DESCRIPTION", $objField->getDescription());
+									
+									if (is_object($objElement)) {
+										$objElementField = $objElement->getFieldByTemplateField($objField->getId());
+										if (is_object($objElementField)) {
+											$objFieldTpl->setVariable("FIELD_CASCADES", implode(",", $objElementField->getCascades()));
+										}
+									}
+									
 									$objFieldTpl->parseCurrentBlock();
 									break;
 	
@@ -2137,6 +2133,118 @@ function parsePages($intElmntId, $strCommand) {
 			$objTpl->setVariable("EID", $intElmntId);
 
 			break;
+
+        case CMD_EXPORT_ELEMENT:
+			$objTpl->loadTemplatefile("export.tpl.htm");
+
+            //*** Parse the element.
+            $objElement = Element::selectByPK($intElmntId);
+            
+			//*** Set section title.
+			$objTpl->setVariable("MAINTITLE", $objLang->get("export", "label"));
+			
+			//*** Set tab title.
+			$objTpl->setCurrentBlock("headertitel_simple");
+			$objTpl->setVariable("HEADER_TITLE", $objLang->get("exportOptions", "label"));
+			$objTpl->parseCurrentBlock();
+            
+            $objTpl->setVariable("FORM_NAME", "exportForm");
+            
+            //*** Handle request & create export
+			if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+            {   
+                $arrElementFilters = array();
+                foreach($_POST['elem'] as $id => $val)
+                {
+                    $arrElementFilters[] = intval($id);
+                } 
+                
+                $strZipFile = ImpEx::exportFrom($objElement->getId(), $objElement->getTemplateId(), $arrElementFilters , NULL , $_CONF['app']['account']->getId());
+                
+                //*** Return XML.
+                header("HTTP/1.1 200 OK");
+                header("Pragma: public");
+                header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+                header("Cache-Control: private", false);
+                header('Content-Type: application/octetstream; charset=utf-8');
+                header("Content-Length: " . (string)(filesize($strZipFile)));
+                header('Content-Disposition: attachment; filename="' . date("Y-m-d") . '_exportElements.zip"');
+                header("Content-Transfer-Encoding: binary\n");
+
+                readfile($strZipFile);
+                unlink($strZipFile);
+                exit;
+			}
+            
+            //*** Create element checkboxes
+			$objTpl->setVariable("SELECT_ITEMS", $objLang->get("selectElements", "label"));
+            $objTpl->setVariable("FORM_CHECKBOXES", createElementTree($objElement));
+            
+            //*** Set form buttons
+			$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
+            $objTpl->setCurrentBlock("singleview");
+			$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));
+			$objTpl->setVariable("BUTTON_FORMCANCEL", $objLang->get("cancel", "button"));
+			$objTpl->setVariable("LABEL_SAVE", $objLang->get("export", "button"));
+			$objTpl->setVariable("CID", NAV_PCMS_ELEMENTS);
+			$objTpl->setVariable("CMD", CMD_EXPORT_ELEMENT);
+			$objTpl->setVariable("EID", $intElmntId);
+			$objTpl->parseCurrentBlock();
+			
+            
+            break;
+            
+        case CMD_IMPORT_ELEMENT:
+			$objTpl->loadTemplatefile("import.tpl.htm");
+
+            //*** Parse the template.
+			$objElement = Element::selectByPK($intElmntId);
+            
+			//*** Set section title.
+			$objTpl->setVariable("MAINTITLE", $objLang->get("import", "label"));
+			
+			//*** Set tab title.
+			$objTpl->setCurrentBlock("headertitel_simple");
+			$objTpl->setVariable("HEADER_TITLE", $objLang->get("importOptions", "label"));
+			$objTpl->parseCurrentBlock();
+            
+            
+            //*** Handle request & do import
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES["file"]["name"] )) 
+            {
+                if ($_FILES["file"]["error"] > 0)
+                {
+                    $objTpl->setVariable('ERROR_MAIN','Error: '. $_FILES["file"]["error"]);
+                }
+                else if(end(explode(".", $_FILES["file"]["name"])) !== 'zip')
+                {
+                    $objTpl->setVariable('ERROR_MAIN','Error: Only *.ZIP files allowed');
+                }
+                else
+                {
+                    if(!ImpEx::importIn($_FILES["file"]["tmp_name"],$objElement->getId(),$objElement->getTemplateId(),$_CONF['app']['account']->getId(),false,true,true))
+                    {
+                        $objTpl->setVariable('ERROR_MAIN','Templates and/or fields of templates in file do not match the destination templates');
+                    }
+                }
+            }
+             
+            $objTpl->setVariable('CUR_LOCATION',$objElement->getName());
+			$objTpl->setVariable("IMPORT_FILE", $objLang->get("importFile", "label"));
+			$objTpl->setVariable("IMPORT_FILE_TIP", $objLang->get("importFile", "tip"));
+            
+            //*** Set form buttons
+			$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
+            $objTpl->setCurrentBlock("singleview");
+			$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));
+			$objTpl->setVariable("BUTTON_FORMCANCEL", $objLang->get("cancel", "button"));
+			$objTpl->setVariable("LABEL_SAVE", $objLang->get("import", "button"));
+			$objTpl->setVariable("CID", NAV_PCMS_ELEMENTS);
+			$objTpl->setVariable("CMD", CMD_IMPORT_ELEMENT);
+			$objTpl->setVariable("EID", $intElmntId);
+			$objTpl->parseCurrentBlock();
+            
+            break;     
 
 	}
 

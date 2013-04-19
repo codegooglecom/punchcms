@@ -136,6 +136,26 @@ class StorageItems extends DBA__Collection {
 		
 		return $strReturn;
 	}
+        
+    public static function getMediaArray($obj = NULL){
+        if ($obj === NULL){
+            $obj = StorageItems::getFromParent();
+        }
+        $mediaItems = $obj;
+        foreach($mediaItems as $mediaItem){
+            $mediaArray[] = array(
+                'name' => $mediaItem->getName(),
+                'id' => $mediaItem->getId(),
+                'src' => $mediaItem->getData()->getLocalName(),
+                'extension' => pathinfo($mediaItem->getData()->getLocalName(), PATHINFO_EXTENSION),
+                'children' => StorageItems::getMediaArray($mediaItem->getItems($mediaItem->getId()))
+            );
+        }
+        if (!is_array($mediaArray)){
+            return "none";
+        }
+        return $mediaArray;
+    }
 
 }
 
