@@ -40,7 +40,6 @@ class FTP {
        	try {
        		$varReturn = @call_user_func_array('ftp_' . $function, $arguments);
        		if ($varReturn === FALSE && $function == "login") {
-       			echo "dfgdfg";
        			//*** Retry connect unsecured if login fails.
        			ftp_close($this->objFTP);
        			$this->objFTP = ftp_connect($this->strHost, $this->intPort, $this->intTimeout);
@@ -51,7 +50,6 @@ class FTP {
        			$varReturn = call_user_func_array('ftp_' . $function, $arguments);
        		}
        	} catch (Exception $e) {
-       		echo "tyutyu";
 			echo $e->getMessage();
        	}
        	
