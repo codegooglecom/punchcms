@@ -399,8 +399,3 @@ a#remove:hover span.ui-button-text {
 }
 #folder form.ui-tabs div.ui-tabs-panel a {
 }
-
-/*CKEDITOR */
-.ckeditor_container {
-    margin-left: 160px;
-}

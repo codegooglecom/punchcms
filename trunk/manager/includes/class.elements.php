@@ -104,27 +104,6 @@ class Elements extends DBA__Collection {
 			}
 		}
 	}
-        
-        public static function getPagesArray($obj = NULL){
-            if ($obj === NULL){
-                $obj = Elements::getFromParent(0, FALSE);
-            }
-            $elements = $obj;
-            
-            foreach($elements as $element){
-                $pageArray[] = array(
-                    'name' => $element->getName(),
-                    'id' => $element->getId(),
-                    'children' => Elements::getPagesArray($element->getElements(FALSE))
-                );
-            }
-            
-            if (!is_array($pageArray)){
-                return "none";
-            }
-            
-            return $pageArray;
-        }
 
 }
 

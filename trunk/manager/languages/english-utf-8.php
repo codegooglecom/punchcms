@@ -109,8 +109,6 @@ $_LANG['button']['aliasAdd'] = "Alias";
 $_LANG['button']['feedAdd'] = "Feed";
 $_LANG['button']['insert'] = "Insert";
 $_LANG['button']['alttag'] = "Add description...";
-$_LANG['button']['export'] = "Export";
-$_LANG['button']['import'] = "Import";
 
 //*** Label definitions.
 $_LANG['label']['in'] = "in";
@@ -182,17 +180,6 @@ $_LANG['label']['metaDescription'] = "Page description";
 $_LANG['label']['chooseFolder'] = "Choose a folder";
 $_LANG['label']['forLanguage'] = "for <b>%s</b>";
 $_LANG['label']['forAllLanguages'] = "for <b>All languages</b>";
-$_LANG['label']['export'] = "Export";
-$_LANG['label']['exportOptions'] = "Export options";
-$_LANG['label']['templatesElements'] = "Templates & Elements";
-$_LANG['label']['templates'] = "Templates";
-$_LANG['label']['elements'] = "Elements";
-$_LANG['label']['selectTemplates'] = "Select templates";
-$_LANG['label']['selectElements'] = "Select elements";
-$_LANG['label']['import'] = "Import";
-$_LANG['label']['importFile'] = "Import file:";
-$_LANG['label']['exportOptions'] = "Import options";
-
 
 //*** Settings label definitions.
 $_LANG['settingsLabel']['section_ftp'] = "FTP";
@@ -376,7 +363,6 @@ $_LANG['tip']['metaKeywords'] = "A maximum of 20 keywords describing the page.";
 $_LANG['tip']['metaDescription'] = "Description of the page using a maximum of 200 characters.";
 $_LANG['tip']['storageName'] = "Leave this field empty to use the name of the uploaded file.";
 $_LANG['tip']['language'] = "You can associate the alias with a specific language.";
-$_LANG['tip']['importFile'] = "*.ZIP - The templates and/or elemenents will be imported inside the current location: ";
 
 //*** Alert definitions.
 $_LANG['alert']['templateRemoveAlert'] = "Are you sure you want to remove this template?\\nAll nested templates and elements based on this template will also be removed!";

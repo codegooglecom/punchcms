@@ -607,20 +607,12 @@ TextField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id).hide();
 		jQuery("#" + this.id + "_alt").show();
-        if(jQuery("#" + this.id + "_element").length > 0)
-        {   
-           jQuery("#" + this.id + "_element").text(jQuery("#" + this.id + "_"+ this.parent.defaultLanguage +"_element").val());
-        }
 	} else {
 		//*** The field needs no special treatment.
 		jQuery("#" + this.id + "_alt").hide();
 		jQuery("#" + this.id).show();
 		jQuery("#" + this.id).val(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
-        if(jQuery("#" + this.id + "_element").length > 0)
-        {   
-           jQuery("#" + this.id + "_element").text(jQuery("#" + this.id + "_"+ this.parent.currentLanguage +"_element").val());
 	}
-}
 }
 
 TextField.prototype.toTemp = function() {
@@ -644,34 +636,33 @@ TextAreaField.prototype.toScreen = function() {
 	
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
+		
 		//*** The element is not active.
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
-                jQuery("#" + this.id + "_alt").show();
-		jQuery("#cke_" + this.id).hide();
+		jQuery("#" + this.id + "___Frame").hide();
 	} else if (this.cascades[this.parent.currentLanguage] == true) {
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
 		jQuery("#" + this.id + "_alt").html((strValue == "") ? "&nbsp;" : strValue);
 		jQuery("#" + this.id + "_alt").show();
-		jQuery("#cke_" + this.id).hide();
+		jQuery("#" + this.id + "___Frame").hide();
 	} else {
 		//*** The field needs no special treatment.
 		jQuery("#" + this.id + "_alt").hide();
-		jQuery("#cke_" + this.id).show();
-		if (typeof CKEDITOR != "undefined") {
-                
-                        var objArea = CKEDITOR.instances[this.id];
-			if (typeof objArea == "object"){
-                            objArea.setData(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
-			}else{
-                            $("#" + this.id).html(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
-                        }
-                }
-        }
+		jQuery("#" + this.id + "___Frame").show();
+		if (typeof FCKeditorAPI != "undefined") {
+			var objArea = FCKeditorAPI.GetInstance(this.id);
+			if (typeof objArea == "object") {
+				if (objArea.Status == FCK_STATUS_COMPLETE) {
+					objArea.SetHTML(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
+				}
+			}
+		}
+	}
 }
 
 TextAreaField.prototype.toTemp = function() {
-	var strValue = CKEDITOR.instances[this.id].getData();
+	var strValue = FCKeditorAPI.GetInstance(this.id).GetXHTML();
 	if (strValue == "<p>&nbsp;</p>") strValue = "";
 	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(strValue);
 }

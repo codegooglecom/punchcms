@@ -206,116 +206,6 @@ class ImpEx {
 		return $strZipName;
 	}
 
-    public static function exportFrom($intElementId, $intTemplateId, $arrElementFilters, $arrTemplateFilters, $intAccountId = 0, $exportElements = true, $exportFiles = true) {
-        global $objLiveAdmin,
-				$_CONF,
-				$_PATHS;
-        
-        $arrFiles = array();
-        
-		//*** Init DOM object.
-		$objDoc = new DOMDocument("1.0", "UTF-8");
-		$objDoc->formatOutput = FALSE;
-		$objDoc->preserveWhiteSpace = TRUE;
-		
-		//*** Init Zip archive.
-		$strZipName = $_PATHS['upload'] . "exportZip_" . rand() . ".zip";
-		$objZip = new dZip($strZipName, TRUE);
-        
-        $objStructure = $objDoc->createElement('structure');
-        $objStructure->setAttribute("version", "1.0");
-        $objStructure->setAttribute("type", "element");
-        $objStructure = $objDoc->appendChild($objStructure);
-
-        $objLogic = $objDoc->createElement('logic');
-        $objLogic = $objStructure->appendChild($objLogic);
-        
-        //*** export templates 
-        $includeSelf = ($intElementId == NULL) ? true : false;
-        $objTemplates = self::exportTemplate($objDoc, $intAccountId, $intTemplateId, $arrTemplateFilters, $includeSelf);
-        $objTemplates = $objLogic->appendChild($objTemplates);
-        
-        //*** export elements
-        if($exportElements)
-        {
-            //*** export languages
-            $objLanguages = $objDoc->createElement('languages');
-            $objLanguages = $objLogic->appendChild($objLanguages);
-            $objContentLangs = ContentLanguage::select();
-            foreach ($objContentLangs as $objContentLang) {
-                $objLanguage = $objDoc->createElement('language');
-                $objLanguage->setAttribute("id", $objContentLang->getId());
-                $objLanguage->setAttribute("name", $objContentLang->getName());
-                $objLanguage->setAttribute("abbr", $objContentLang->getAbbr());
-                $objLanguage->setAttribute("default", $objContentLang->default);
-                $objLanguage->setAttribute("active", $objContentLang->getActive());
-                $objLanguage->setAttribute("sort", $objContentLang->getSort());
-                $objLanguage->setAttribute("username", $objContentLang->getUsername());
-                $objLanguages->appendChild($objLanguage);
-            }
-
-            //*** export elements
-            if($intElementId == NULL){
-                // export all elements with given template id
-                $strSql = sprintf("SELECT * FROM pcms_element WHERE templateId = '%s' AND accountId = '%s' ORDER BY sort", $intTemplateId, $_CONF['app']['account']->getId());
-                $objElements = Element::select($strSql);
-                foreach($objElements as $objElement)
-                {
-                    $objElements = self::exportElement($objDoc, $intAccountId, $objElement->getId(), $arrFiles, $arrTemplateFilters, NULL, true);
-                    $objElements = $objLogic->appendChild($objElements);
-                }
-            }
-            else
-            {
-                // export from one element
-                $objElements = self::exportElement($objDoc, $intAccountId, $intElementId, $arrFiles, $arrTemplateFilters, NULL, true);
-                $objElements = $objLogic->appendChild($objElements);
-            }
-
-            //*** export aliases
-            $objAliases = $objDoc->createElement('aliases');
-            $objAliases = $objLogic->appendChild($objAliases);
-            $objDbAliases = Alias::select();
-            foreach ($objDbAliases as $objDbAlias) {
-                if(in_array($objDbAlias->getUrl(),$arrElementFilters))
-                {
-                    $objAlias = $objDoc->createElement('alias');
-                    $objAlias->setAttribute("language", $objDbAlias->getLanguageId());
-                    $objAlias->setAttribute("cascade", $objDbAlias->getCascade());
-                    $objAlias->setAttribute("alias", $objDbAlias->getAlias());
-                    $objAlias->setAttribute("url", $objDbAlias->getUrl());
-                    $objAlias->setAttribute("active", $objDbAlias->getActive());
-                    $objAlias->setAttribute("sort", $objDbAlias->getSort());
-                    $objAlias->setAttribute("created", $objDbAlias->getCreated());
-                    $objAlias->setAttribute("modified", $objDbAlias->getModified());
-                    $objAliases->appendChild($objAlias);
-                }
-            }	
-        }
-        
-        //*** Files.
-        if ($exportFiles) {
-            $strServer = Setting::getValueByName("ftp_server");
-            $webServer = Setting::getValueByName("web_server");
-            if ($strServer != "localhost") {
-                $strLocation = "http://" . $strServer . Setting::getValueByName("file_folder");
-            }
-            else if(!empty($webServer)){
-                $strLocation = $webServer . Setting::getValueByName("file_folder");
-            }
-            $objZip = self::exportFilesToZip($objZip, $arrFiles, $strLocation);
-        }
-        
-		//*** Destroy temporary account object.
-		unset($_CONF['app']['account']);
-		
-		//*** Return XML.
-		$objZip->addFile(NULL, 'data.xml', "", $objDoc->saveXML());
-   		$objZip->save();
-    		
-		return $strZipName;
-    }
-    
 	public static function import($strXml, $blnOverwrite = FALSE, $blnKeepSettings = FALSE) {
 		global $objLiveAdmin,
 				$intDefaultLanguage,
@@ -558,198 +448,6 @@ class ImpEx {
 		return $objReturn;
 	}
 	
-    public static function importIn($strXml, $intElementId, $intTemplateId, $intAccountId, $importTemplates = true, $importElements = true, $validate = true){
-        global $objLiveAdmin,
-				$intDefaultLanguage,
-				$_CONF;
-        
-		$objReturn = NULL;
-		$objSettings = NULL;
-		$blnZip = FALSE;
-        
-        $validTemplateStructure = false;
-
-		//*** Init DOM object.
-		$objDoc = new DOMDocument("1.0", "UTF-8");
-		$objDoc->formatOutput = FALSE;
-		$objDoc->preserveWhiteSpace = TRUE;
-		if (is_file($strXml)) {
-			$objZip = new dUnzip2($strXml);
-			if (is_object($objZip)) {
-				//*** Zip file.
-				$strXml = $objZip->unzip('data.xml');
-				
-				if ($strXml !== FALSE) {
-					//*** Fix a unicode bug. Replace forbidden characters (The first 8).
-					for ($intCount = 1; $intCount < 9; $intCount++) {
-						$strHex = str_pad(dechex($intCount), 4, "0", STR_PAD_LEFT);
-						$strXml = preg_replace('/\x{' . $strHex . '}/u', "", $strXml);
-					}
-					$strXml = preg_replace('/\x{001f}/u', "", $strXml);
-					
-					$objDoc->loadXML($strXml);
-					$blnZip = TRUE;
-				}
-			} else {
-				//*** XML file.
-				$objDoc->load($strXml);
-			}
-		} else {
-			$objDoc->loadXML($strXml);
-		}
-        
-        $arrUserIds = array();
-        $arrGroupIds = array();
-        $arrStorageIds = array();
-        $arrFeedIds = array();
-        $arrLanguageIds[0] = 0;
-        $arrTemplateIds[0] = 0;
-        $arrTemplateFieldIds[0] = 0;
-        $arrLinkFieldIds = array();
-        $arrElementIds[0] = 0;
-        $arrElementFieldIds = array();
-        $arrElementFieldIds["link"][0] = 0;
-        $arrElementFieldIds["largeText"][0] = 0;
-        
-        if($validate)
-        {
-            //*** validate template structure
-            foreach ($objDoc->childNodes as $rootNode) 
-            {
-                foreach ($rootNode->childNodes as $logicNode) {
-                    if ($logicNode->nodeName == "logic") {
-                        foreach ($logicNode->childNodes as $childNode) {
-                            switch ($childNode->nodeName) {
-                                case "templates":
-                                    $validTemplateStructure = ImpEx::validateImportTemplates($childNode, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, $arrLinkFieldIds, $intTemplateId);
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if($validTemplateStructure || !$validate)
-        {
-            //*** Import elements
-            foreach ($objDoc->childNodes as $rootNode) 
-            {
-                foreach ($rootNode->childNodes as $logicNode) {
-                    if ($logicNode->nodeName == "logic") {
-                        foreach ($logicNode->childNodes as $childNode) {
-                            switch ($childNode->nodeName) {
-                                case "languages":
-                                    // Get all languages
-                                    $arrCurrentLangs = array();
-                                    $objContentLangs = ContentLanguage::select();
-                                    $objDefaultLang = NULL;
-                                    foreach ($objContentLangs as $objContentLang) {
-                                        $arrCurrentLangs[$objContentLang->getAbbr()] = $objContentLang->getId();
-                                        if($objContentLang->default == 1) $objDefaultLang = $objContentLang;
-                                    }
-
-                                    $arrLanguageIds[0] = 0;
-                                    // loop trough languages from export
-                                    foreach ($childNode->childNodes as $languageNode) {
-                                        // if abbreviations match, use that language ID 
-                                        if(array_key_exists($languageNode->getAttribute('abbr'), $arrCurrentLangs))
-                                        {
-                                            $arrLanguageIds[$languageNode->getAttribute("id")] = $arrCurrentLangs[$languageNode->getAttribute('abbr')];
-                                        }
-                                        else
-                                        {
-                                            // if no match, use default current language
-                                            $arrLanguageIds[$languageNode->getAttribute("id")] = $arrCurrentLangs[$objDefaultLang->getAbbr()];
-                                        }
-                                    }
-                                    break;
-                                    
-                                case "templates":
-                                    if($importTemplates)
-                                    {
-                                        //*** Add templates to the account.
-                                        self::importTemplates($childNode, $_CONF['app']['account']->getId(), $arrTemplateIds, $arrTemplateFieldIds, $arrLinkFieldIds, $intTemplateId);
-                                    }
-                                    break;
-
-                                case "elements":
-                                    if($importElements)
-                                    {
-                                        if($intElementId == NULL)
-                                        {
-                                            $strSql = sprintf("SELECT * FROM pcms_element WHERE templateId = '%s' AND accountId = '%s' ORDER BY sort LIMIT 1", $intTemplateId, $intAccountId);
-                                            $objElements = Element::select($strSql);
-                                            foreach($objElements as $objElement)
-                                            {
-                                                self::importElements($childNode, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $objElement->getId());
-                                            }
-                                        }
-                                        else
-                                        {
-                                            self::importElements($childNode, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $intElementId);
-                                        }
-                                    }
-                                    break;
-
-                                case "aliases":
-                                    if($importElements)
-                                    {
-                                        //*** Add aliases to the account.
-                                        foreach ($childNode->childNodes as $aliasNode) {
-                                            if(in_array($aliasNode->getAttribute("url"),$arrElementIds))
-                                            {
-                                                $objAlias = new Alias();
-                                                $objAlias->setAccountId($_CONF['app']['account']->getId());
-                                                $objAlias->setAlias($aliasNode->getAttribute("alias"));
-                                                $objAlias->setUrl($arrElementIds[$aliasNode->getAttribute("url")]);
-                                                $objAlias->setLanguageId($arrLanguageIds[$aliasNode->getAttribute("language")]);
-
-                                                // check for existence of alias
-                                                $objTmpAliases = Alias::selectByAlias($aliasNode->getAttribute("alias"));
-                                                $objTmpAlias = $objTmpAliases->current();
-                                                if(!is_object($objTmpAlias))
-                                                {        
-                                                    $objAlias->setCascade($aliasNode->getAttribute("cascade"));
-                                                    $objAlias->setActive($aliasNode->getAttribute("active"));
-                                                    $objAlias->setSort($aliasNode->getAttribute("sort"));
-                                                    $objAlias->setCreated($aliasNode->getAttribute("created"));
-                                                    $objAlias->setModified($aliasNode->getAttribute("modified"));
-                                                    $objAlias->save();
-                                                } 
-                                            }
-                                        }
-                                    }
-                                    break;
-                            }
-                            
-                            if($importElements)
-                            {
-                                //*** Adjust the links for deeplink fields.
-                                self::adjustDeeplinks($arrElementFieldIds["link"], $arrElementIds, $arrLanguageIds);
-
-                                //*** Adjust the links in large text fields.
-                                self::adjustTextlinks($arrElementFieldIds["largeText"], $arrElementIds, $arrLanguageIds, array(0));
-                            }
-                        }
-                    }
-                }
-            }
-            
-            //*** Import files
-            $objAccount = Account::selectByPK($_CONF['app']['account']->getId());
-            if ($blnZip && is_object($objAccount) && $importElements) {
-                self::importFiles($objZip, $objAccount);
-                //*** Move files to remote server.
-                self::moveImportedFiles($objAccount);
-                
-            }
-            
-            return true;
-        }
-        return false;
-    }
-    
 	public static function adjustDeeplinks($arrElementFieldIds, $arrElementIds, $arrLanguageIds) {
 		//*** Adjust the links for deeplink fields.
 		if (is_array($arrElementFieldIds)) {
@@ -808,62 +506,6 @@ class ImpEx {
 		}
 	}
 
-    public static function validateImportTemplates($objTemplates, $intAccountId, &$arrTemplateIds, &$arrTemplateFieldIds, &$arrLinkFieldIds, $intTemplateId = 0){
-        $foundMatch = false;
-        foreach ($objTemplates->childNodes as $templateNode) 
-        {
-            $strSql = sprintf("SELECT * FROM pcms_template WHERE parentId = '%s' AND accountId = '%s' ORDER BY sort", $intTemplateId, $intAccountId);
-            $objExistingTemplates = Template::select($strSql);
-            foreach($objExistingTemplates as $objExistingTemplate)
-            {
-                if($objExistingTemplate->getApiName() == $templateNode->getAttribute("apiName"))
-                {
-                    $foundMatch = true;
-                    $arrTemplateIds[$templateNode->getAttribute("id")] = $objExistingTemplate->getId();
-                    
-                    foreach ($templateNode->childNodes as $fieldsNode) 
-                    {
-                        if($fieldsNode->hasChildNodes())
-                        {
-                            switch ($fieldsNode->nodeName) 
-                            {
-                                case "fields":
-                                    foreach ($fieldsNode->childNodes as $fieldNode) 
-                                    {
-                                        $strSql = sprintf("SELECT * FROM pcms_template_field WHERE templateId = '%s' ORDER BY sort", $objExistingTemplate->getId());
-                                        $objExistingFields = TemplateField::select($strSql);
-                                        $iFields = $objExistingFields->count();
-                                        $countFields = 0;
-                                        foreach($objExistingFields as $objExistingField)
-                                        {
-                                            $countFields++;
-                                            if($objExistingField->getApiName() == $fieldNode->getAttribute("apiName"))
-                                            {
-                                                $arrTemplateFieldIds[$fieldNode->getAttribute("id")] = $objExistingField->getId();
-                                                if ($fieldNode->getAttribute("typeId") == FIELD_TYPE_LINK) array_push($arrLinkFieldIds, $fieldNode->getAttribute("id"));
-                                                break;
-                                            }
-                                            else if($iFields == $countFields)
-                                            {
-                                                return false;
-                                            }
-                                        }
-                                    }
-                                    break;
-
-                                case "templates":
-                                    $foundMatch = self::validateImportTemplates($fieldsNode, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, $arrLinkFieldIds, $objExistingTemplate->getId());
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            if(!$foundMatch) return false;
-        }
-        return $foundMatch;
-    }
-    
 	public static function importTemplates($objTemplates, $intAccountId, &$arrTemplateIds, &$arrTemplateFieldIds, &$arrLinkFieldIds, $intParentId = 0) {
 		foreach ($objTemplates->childNodes as $templateNode) {
 			$objTemplate = new Template();
@@ -924,7 +566,7 @@ class ImpEx {
 		}
 	}
 
-	public static function importElements($objElements, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, &$arrElementIds, &$arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $intParentId = 0, $allLanguages = NULL) {
+	public static function importElements($objElements, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, &$arrElementIds, &$arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $intParentId = 0) {
 		global $intDefaultLanguage;
 		
 		$strElmntPattern = "/(\?eid=)([0-9]+)/ie";		
@@ -966,7 +608,7 @@ class ImpEx {
 						case "fields":
 							$arrActiveLangs = array();
 
-                            foreach ($subNode->childNodes as $fieldNode) {
+							foreach ($subNode->childNodes as $fieldNode) {
 								switch ($fieldNode->nodeName) {
 									case "field":
 										$objField = new ElementField();
@@ -974,20 +616,19 @@ class ImpEx {
 										$objField->setTemplateFieldId($arrTemplateFieldIds[$fieldNode->getAttribute("templateFieldId")]);
 										$objField->setSort($fieldNode->getAttribute("sort"));
 										$objField->save();
-                                        foreach ($fieldNode->childNodes as $languageNode) {
-                                            $objValue = $objField->getNewValueObject();
-                                            $objValue->setValue($languageNode->nodeValue);
-                                            $objValue->setLanguageId($arrLanguageIds[$languageNode->getAttribute("id")]);
-                                            $objValue->setCascade($languageNode->getAttribute("cascade"));
 
-                                            $objField->setValueObject($objValue);
-                                            $arrActiveLangs[$languageNode->getAttribute("id")] = $languageNode->getAttribute("active");
+										foreach ($fieldNode->childNodes as $languageNode) {
+											$objValue = $objField->getNewValueObject();
+											$objValue->setValue($languageNode->nodeValue);
+											$objValue->setLanguageId($arrLanguageIds[$languageNode->getAttribute("id")]);
+											$objValue->setCascade($languageNode->getAttribute("cascade"));
 
-                                            if (preg_match($strElmntPattern, $languageNode->nodeValue) > 0) array_push($arrElementFieldIds["largeText"], $objField->getId());
-                                            if (preg_match($strStoragePattern, $languageNode->nodeValue) > 0) array_push($arrElementFieldIds["largeText"], $objField->getId());
-                                        }
-                                        
-										
+											$objField->setValueObject($objValue);
+											$arrActiveLangs[$languageNode->getAttribute("id")] = $languageNode->getAttribute("active");
+
+											if (preg_match($strElmntPattern, $languageNode->nodeValue) > 0) array_push($arrElementFieldIds["largeText"], $objField->getId());
+											if (preg_match($strStoragePattern, $languageNode->nodeValue) > 0) array_push($arrElementFieldIds["largeText"], $objField->getId());
+										}
 
 										if (in_array($fieldNode->getAttribute("templateFieldId"), $arrLinkFieldIds)) array_push($arrElementFieldIds["link"], $objField->getId());
 										break;
@@ -1247,270 +888,250 @@ class ImpEx {
 		}
 	}
 
-	public static function exportTemplate($objDoc, $intAccountId, $intId, $arrTemplateFilters = NULL, $includeSelf = false) {
+	private static function exportTemplate($objDoc, $intAccountId, $intId) {
 		$objTemplates = $objDoc->createElement('templates');
-        
-        if($includeSelf)
-        {
-			$objTemplate = Template::selectByPK($intId);
-            $intId = $objTemplate->getParentId();
-            
-        }
-        
+
 		$objDbTemplates = Templates::getFromParent($intId, FALSE, $intAccountId);
-        
+
 		if ($objDbTemplates->count() > 0) {
 			foreach ($objDbTemplates as $objDbTemplate) {
-                if($arrTemplateFilters == NULL || in_array($objDbTemplate->getId(),$arrTemplateFilters))
-                {
-                    $objTemplate = $objDoc->createElement('template');
-                    $objTemplate->setAttribute("id", $objDbTemplate->getId());
-                    $objTemplate->setAttribute("name", $objDbTemplate->getName());
-                    $objTemplate->setAttribute("apiName", $objDbTemplate->getApiName());
-                    $objTemplate->setAttribute("description", $objDbTemplate->getDescription());
-                    $objTemplate->setAttribute("sort", $objDbTemplate->getSort());
-                    $objTemplate->setAttribute("isPage", $objDbTemplate->getIsPage());
-                    $objTemplate->setAttribute("forceCreation", $objDbTemplate->getForceCreation());
-                    $objTemplate->setAttribute("isContainer", $objDbTemplate->getIsContainer());
-                    $objTemplate->setAttribute("active", $objDbTemplate->getActive());
+				$objTemplate = $objDoc->createElement('template');
+				$objTemplate->setAttribute("id", $objDbTemplate->getId());
+				$objTemplate->setAttribute("name", $objDbTemplate->getName());
+				$objTemplate->setAttribute("apiName", $objDbTemplate->getApiName());
+				$objTemplate->setAttribute("description", $objDbTemplate->getDescription());
+				$objTemplate->setAttribute("sort", $objDbTemplate->getSort());
+				$objTemplate->setAttribute("isPage", $objDbTemplate->getIsPage());
+				$objTemplate->setAttribute("forceCreation", $objDbTemplate->getForceCreation());
+				$objTemplate->setAttribute("isContainer", $objDbTemplate->getIsContainer());
+				$objTemplate->setAttribute("active", $objDbTemplate->getActive());
 
-                    $objFields = $objDoc->createElement('fields');
-                    foreach ($objDbTemplate->getFields() as $objDbField) {
-                        $objField = $objDoc->createElement('field');
-                        $objField->setAttribute("id", $objDbField->getId());
-                        $objField->setAttribute("required", $objDbField->getRequired());
-                        $objField->setAttribute("typeId", $objDbField->getTypeId());
-                        $objField->setAttribute("name", $objDbField->getName());
-                        $objField->setAttribute("apiName", $objDbField->getApiName());
-                        $objField->setAttribute("description", $objDbField->getDescription());
-                        $objField->setAttribute("username", $objDbField->getUsername());
-                        $objField->setAttribute("sort", $objDbField->getSort());		
+				$objFields = $objDoc->createElement('fields');
+				foreach ($objDbTemplate->getFields() as $objDbField) {
+					$objField = $objDoc->createElement('field');
+					$objField->setAttribute("id", $objDbField->getId());
+					$objField->setAttribute("required", $objDbField->getRequired());
+					$objField->setAttribute("typeId", $objDbField->getTypeId());
+					$objField->setAttribute("name", $objDbField->getName());
+					$objField->setAttribute("apiName", $objDbField->getApiName());
+					$objField->setAttribute("description", $objDbField->getDescription());
+					$objField->setAttribute("username", $objDbField->getUsername());
+					$objField->setAttribute("sort", $objDbField->getSort());		
 
-                        $objValues = $objDoc->createElement('values');
-                        foreach ($objDbField->getValues() as $objDbValue) {
-                            $objValue = $objDoc->createElement('value');
-                            $objValue->setAttribute("name", $objDbValue->getName());
-                            $objValue->setAttribute("value", $objDbValue->getValue());
-                            $objValues->appendChild($objValue);
-                        }
+					$objValues = $objDoc->createElement('values');
+					foreach ($objDbField->getValues() as $objDbValue) {
+						$objValue = $objDoc->createElement('value');
+						$objValue->setAttribute("name", $objDbValue->getName());
+						$objValue->setAttribute("value", $objDbValue->getValue());
+						$objValues->appendChild($objValue);
+					}
 
-                        $objField->appendChild($objValues);
-                        $objFields->appendChild($objField);
-                    }
+					$objField->appendChild($objValues);
+					$objFields->appendChild($objField);
+				}
 
-                    $objTemplate->appendChild($objFields);
+				$objTemplate->appendChild($objFields);
 
-                    $objSubTemplates = self::exportTemplate($objDoc, $intAccountId, $objDbTemplate->getId(),$arrTemplateFilters);
-                    if ($objSubTemplates) {
-                        $objTemplate->appendChild($objSubTemplates);
-                    }
+				$objSubTemplates = self::exportTemplate($objDoc, $intAccountId, $objDbTemplate->getId());
+				if ($objSubTemplates) {
+					$objTemplate->appendChild($objSubTemplates);
+				}
 
-                    $objTemplates->appendChild($objTemplate);
-                }
+				$objTemplates->appendChild($objTemplate);
 			}
 		}
 
 		return $objTemplates;
 	}
-    
-	public static function exportElement($objDoc, $intAccountId, $intId, &$arrFiles, $arrTemplateFilters = NULL, $arrElementFilters = NULL, $includeSelf = false) {
+
+	private static function exportElement($objDoc, $intAccountId, $intId, &$arrFiles) {
 		global $_CONF;
 		
 		$objElements = $objDoc->createElement('elements');
 
-        if($includeSelf)
-        {
-			$objElement = Element::selectByPK($intId);
-            $intId = $objElement->getParentId();
-        }
-        
 		$objDbElements = Elements::getFromParent($intId, FALSE, "'1', '2', '3', '4', '5'", $intAccountId);
 
 		if ($objDbElements->count() > 0) {
 			foreach ($objDbElements as $objDbElement) {
-                if(($arrTemplateFilters == NULL || in_array($objDbElement->getTemplateId(),$arrTemplateFilters))
-                    && (($arrElementFilters == NULL) || in_array($objDbElement->getId(),$arrElementFilters)))
-                {
-                    $objElement = $objDoc->createElement('element');
-                    $objElement->setAttribute("id", $objDbElement->getId());
-                    $objElement->setAttribute("name", $objDbElement->getName());
-                    $objElement->setAttribute("nameCount", $objDbElement->getNameCount());
-                    $objElement->setAttribute("apiName", $objDbElement->getApiName());
-                    $objElement->setAttribute("description", $objDbElement->getDescription());
-                    $objElement->setAttribute("typeId", $objDbElement->getTypeId());
-                    $objElement->setAttribute("templateId", $objDbElement->getTemplateId());
-                    $objElement->setAttribute("isPage", $objDbElement->getIsPage());
-                    $objElement->setAttribute("userId", $objDbElement->getUserId());
-                    $objElement->setAttribute("groupId", $objDbElement->getGroupId());
-                    $objElement->setAttribute("sort", $objDbElement->getSort());
-                    $objElement->setAttribute("active", $objDbElement->getActive());
-                    $objElement->setAttribute("username", $objDbElement->getUsername());
-                    $objElement->setAttribute("created", $objDbElement->getCreated());
-                    $objElement->setAttribute("modified", $objDbElement->getModified());
+				$objElement = $objDoc->createElement('element');
+				$objElement->setAttribute("id", $objDbElement->getId());
+				$objElement->setAttribute("name", $objDbElement->getName());
+				$objElement->setAttribute("nameCount", $objDbElement->getNameCount());
+				$objElement->setAttribute("apiName", $objDbElement->getApiName());
+				$objElement->setAttribute("description", $objDbElement->getDescription());
+				$objElement->setAttribute("typeId", $objDbElement->getTypeId());
+				$objElement->setAttribute("templateId", $objDbElement->getTemplateId());
+				$objElement->setAttribute("isPage", $objDbElement->getIsPage());
+				$objElement->setAttribute("userId", $objDbElement->getUserId());
+				$objElement->setAttribute("groupId", $objDbElement->getGroupId());
+				$objElement->setAttribute("sort", $objDbElement->getSort());
+				$objElement->setAttribute("active", $objDbElement->getActive());
+				$objElement->setAttribute("username", $objDbElement->getUsername());
+				$objElement->setAttribute("created", $objDbElement->getCreated());
+				$objElement->setAttribute("modified", $objDbElement->getModified());
+				
+				//*** Schedule.
+				$objSchedule = $objDbElement->getSchedule();
+				$objElement->setAttribute("scheduleStartActive", $objSchedule->getStartActive());
+				$objElement->setAttribute("scheduleStartDate", $objSchedule->getStartDate());
+				$objElement->setAttribute("scheduleEndActive", $objSchedule->getEndActive());
+				$objElement->setAttribute("scheduleEndDate", $objSchedule->getEndDate());
 
-                    //*** Schedule.
-                    $objSchedule = $objDbElement->getSchedule();
-                    $objElement->setAttribute("scheduleStartActive", $objSchedule->getStartActive());
-                    $objElement->setAttribute("scheduleStartDate", $objSchedule->getStartDate());
-                    $objElement->setAttribute("scheduleEndActive", $objSchedule->getEndActive());
-                    $objElement->setAttribute("scheduleEndDate", $objSchedule->getEndDate());
+				//*** Fields.
+				$arrActiveLangs = $objDbElement->getLanguageActives();
+				$objContentLangs = ContentLanguage::select();
 
-                    //*** Fields.
-                    $arrActiveLangs = $objDbElement->getLanguageActives();
-                    $objContentLangs = ContentLanguage::select();
+				$objFields = $objDoc->createElement('fields');
+				$objDbFields = $objDbElement->getFields();
+				foreach ($objDbFields as $objDbField) {
+					$objField = $objDoc->createElement('field');
+					$objField->setAttribute("templateFieldId", $objDbField->getTemplateFieldId());
+					$objField->setAttribute("sort", $objDbField->getSort());					
+				
+					foreach ($objContentLangs as $objContentLanguage) {
+						$objValue = $objDbField->getValueObject($objContentLanguage->getId());
+						
+						if (is_object($objValue)) {
+							$strValue = str_replace("&", "&amp;", $objValue->getValue());
 
-                    $objFields = $objDoc->createElement('fields');
-                    $objDbFields = $objDbElement->getFields();
-                    foreach ($objDbFields as $objDbField) {
-                        $objField = $objDoc->createElement('field');
-                        $objField->setAttribute("templateFieldId", $objDbField->getTemplateFieldId());
-                        $objField->setAttribute("sort", $objDbField->getSort());					
+							$objLanguage = $objDoc->createElement('language', $strValue);
+							$objLanguage->setAttribute("id", $objContentLanguage->getId());
+							$objLanguage->setAttribute("active", (in_array($objContentLanguage->getId(), $arrActiveLangs)) ? 1 : 0);
+							$objLanguage->setAttribute("cascade", $objValue->getCascade());
+							$objField->appendChild($objLanguage);
+							
+							switch ($objDbField->getTypeId()) {
+								case FIELD_TYPE_FILE:
+									$arrFileTemp = explode("\n", $strValue);
+									foreach ($arrFileTemp as $fileValue) {
+										if (!empty($fileValue)) {
+											$arrTemp = explode(":", $fileValue);
+											$strSrc = (count($arrTemp) > 1) ? $arrTemp[1] : $arrTemp[0];
+											array_push($arrFiles, $strSrc);
+										}
+									}
+									break;
+								case FIELD_TYPE_IMAGE:
+									$arrFileTemp = explode("\n", $strValue);
+									foreach ($arrFileTemp as $fileValue) {
+										if (!empty($fileValue)) {
+											$arrTemp = explode(":", $fileValue);
+											$strSrc = (count($arrTemp) > 1) ? $arrTemp[1] : $arrTemp[0];
 
-                        foreach ($objContentLangs as $objContentLanguage) {
-                            $objValue = $objDbField->getValueObject($objContentLanguage->getId());
+											$objImageField = new ImageField($objDbField->getTemplateFieldId());
+											$arrSettings = $objImageField->getSettings();
+											foreach ($arrSettings as $key => $arrSetting) {
+												if (!empty($arrSetting['width']) ||	!empty($arrSetting['height'])) {
+													//*** Add file.
+													array_push($arrFiles, FileIO::add2Base($strSrc, $arrSetting['key']));
+												}
+											}
+											
+											array_push($arrFiles, $strSrc);
+										}
+									}
+									break;
+							}
+						}
+					}
 
-                            if (is_object($objValue)) {
-                                $strValue = str_replace("&", "&amp;", $objValue->getValue());
+					$objFields->appendChild($objField);
+				}
+				
+				if ($objDbFields->count() > 0) {
+					$objElement->appendChild($objFields);
+				} else {
+					$objDbLanguages = ElementLanguage::selectByElement($objDbElement->getId());
+					$objLanguages = $objDoc->createElement('languages');
+					foreach($objDbLanguages as $objDbLanguage) {
+						if ($objDbLanguage->getActive()) {
+							$objLanguage = $objDoc->createElement('language');
+							$objLanguage->setAttribute("id", $objDbLanguage->getLanguageId());
+							$objLanguage->setAttribute("active", $objDbLanguage->getActive());
+							$objLanguage->setAttribute("cascade", $objDbLanguage->getCascade());
+							$objLanguages->appendChild($objLanguage);
+						}
+					}
+					
+					if ($objDbLanguages->count() > 0) $objElement->appendChild($objLanguages);
+				}
+				
+				//*** Feed fields.
+				$objDbFeed = $objDbElement->getFeed();
+				if (is_object($objDbFeed) && $objDbFeed->getId() > 0) {
+					$objFeed = $objDoc->createElement('feed');
+					$objFeed->setAttribute("feedId", $objDbFeed->getFeedId());
+					$objFeed->setAttribute("feedPath", $objDbFeed->getFeedPath());
+					$objFeed->setAttribute("maxItems", $objDbFeed->getMaxItems());
+					$objFeed->setAttribute("sortBy", $objDbFeed->getSortBy());
+					$objFeed->setAttribute("aliasField", $objDbFeed->getAliasField());
+					
+					$objDbFields = ElementFieldFeed::selectByElement($objDbElement->getId());
+					foreach ($objDbFields as $objDbField) {
+						$objField = $objDoc->createElement('feedfield');
+						$objField->setAttribute("templateFieldId", $objDbField->getTemplateFieldId());
+						$objField->setAttribute("feedPath", $objDbField->getFeedPath());
+						$objField->setAttribute("xpath", $objDbField->getXpath());
+						$objField->setAttribute("languageId", $objDbField->getLanguageId());
+						$objField->setAttribute("cascade", $objDbField->getCascade());
+						$objField->setAttribute("sort", $objDbField->getSort());
+						$objFeed->appendChild($objField);	
+					}
+					
+					$objElement->appendChild($objFeed);			
+				}
+				
+				//*** Meta values.
+				if ($objDbElement->isPage()) {
+					$blnHasMeta = false;
+					$objMeta = $objDoc->createElement('meta');
+					foreach ($objContentLangs as $objContentLanguage) {
+						$objDbMeta = $objDbElement->getMeta($objContentLanguage->getId());
 
-                                $objLanguage = $objDoc->createElement('language', $strValue);
-                                $objLanguage->setAttribute("id", $objContentLanguage->getId());
-                                $objLanguage->setAttribute("active", (in_array($objContentLanguage->getId(), $arrActiveLangs)) ? 1 : 0);
-                                $objLanguage->setAttribute("cascade", $objValue->getCascade());
-                                $objField->appendChild($objLanguage);
+						if (is_object($objDbMeta)) {
+							$objLanguage = $objDoc->createElement('language');					
+							$objLanguage->setAttribute("id", $objContentLanguage->getId());
+							
+							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "title"));
+							$objLanguage->setAttribute("title", $strValue);
+							
+							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "keywords"));
+							$objLanguage->setAttribute("keywords", $strValue);
+							
+							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "description"));
+							$objLanguage->setAttribute("description", $strValue);
+							
+							$objMeta->appendChild($objLanguage);
+							
+							$blnHasMeta = true;
+						}
+					}
+					
+					if ($blnHasMeta) {
+						$objElement->appendChild($objMeta);		
+					}
+				}
+					
+				//*** Permissions.
+				$objPermissions = $objDoc->createElement('permissions');
+				$objDbPermissions = $objDbElement->getPermissions();
+				$objPermissions->setAttribute("users", implode(",", $objDbPermissions->getUserId()));
+				$objPermissions->setAttribute("groups", implode(",", $objDbPermissions->getGroupId()));
+				$objElement->appendChild($objPermissions);		
 
-                                switch ($objDbField->getTypeId()) {
-                                    case FIELD_TYPE_FILE:
-                                        $arrFileTemp = explode("\n", $strValue);
-                                        foreach ($arrFileTemp as $fileValue) {
-                                            if (!empty($fileValue)) {
-                                                $arrTemp = explode(":", $fileValue);
-                                                $strSrc = (count($arrTemp) > 1) ? $arrTemp[1] : $arrTemp[0];
-                                                array_push($arrFiles, $strSrc);
-                                            }
-                                        }
-                                        break;
-                                    case FIELD_TYPE_IMAGE:
-                                        $arrFileTemp = explode("\n", $strValue);
-                                        foreach ($arrFileTemp as $fileValue) {
-                                            if (!empty($fileValue)) {
-                                                $arrTemp = explode(":", $fileValue);
-                                                $strSrc = (count($arrTemp) > 1) ? $arrTemp[1] : $arrTemp[0];
+				//*** Sub elements.
+				$objSubElements = self::exportElement($objDoc, $intAccountId, $objDbElement->getId(), $arrFiles);
+				if ($objSubElements) {
+					$objElement->appendChild($objSubElements);
+				}
 
-                                                $objImageField = new ImageField($objDbField->getTemplateFieldId());
-                                                $arrSettings = $objImageField->getSettings();
-                                                foreach ($arrSettings as $key => $arrSetting) {
-                                                    if (!empty($arrSetting['width']) ||	!empty($arrSetting['height'])) {
-                                                        //*** Add file.
-                                                        array_push($arrFiles, FileIO::add2Base($strSrc, $arrSetting['key']));
-                                                    }
-                                                }
-
-                                                array_push($arrFiles, $strSrc);
-                                            }
-                                        }
-                                        break;
-                                }
-                            }
-                        }
-
-                        $objFields->appendChild($objField);
-                    }
-
-                    if ($objDbFields->count() > 0) {
-                        $objElement->appendChild($objFields);
-                    } else {
-                        $objDbLanguages = ElementLanguage::selectByElement($objDbElement->getId());
-                        $objLanguages = $objDoc->createElement('languages');
-                        foreach($objDbLanguages as $objDbLanguage) {
-                            if ($objDbLanguage->getActive()) {
-                                $objLanguage = $objDoc->createElement('language');
-                                $objLanguage->setAttribute("id", $objDbLanguage->getLanguageId());
-                                $objLanguage->setAttribute("active", $objDbLanguage->getActive());
-                                $objLanguage->setAttribute("cascade", $objDbLanguage->getCascade());
-                                $objLanguages->appendChild($objLanguage);
-                            }
-                        }
-
-                        if ($objDbLanguages->count() > 0) $objElement->appendChild($objLanguages);
-                    }
-
-                    //*** Feed fields.
-                    $objDbFeed = $objDbElement->getFeed();
-                    if (is_object($objDbFeed) && $objDbFeed->getId() > 0) {
-                        $objFeed = $objDoc->createElement('feed');
-                        $objFeed->setAttribute("feedId", $objDbFeed->getFeedId());
-                        $objFeed->setAttribute("feedPath", $objDbFeed->getFeedPath());
-                        $objFeed->setAttribute("maxItems", $objDbFeed->getMaxItems());
-                        $objFeed->setAttribute("sortBy", $objDbFeed->getSortBy());
-                        $objFeed->setAttribute("aliasField", $objDbFeed->getAliasField());
-
-                        $objDbFields = ElementFieldFeed::selectByElement($objDbElement->getId());
-                        foreach ($objDbFields as $objDbField) {
-                            $objField = $objDoc->createElement('feedfield');
-                            $objField->setAttribute("templateFieldId", $objDbField->getTemplateFieldId());
-                            $objField->setAttribute("feedPath", $objDbField->getFeedPath());
-                            $objField->setAttribute("xpath", $objDbField->getXpath());
-                            $objField->setAttribute("languageId", $objDbField->getLanguageId());
-                            $objField->setAttribute("cascade", $objDbField->getCascade());
-                            $objField->setAttribute("sort", $objDbField->getSort());
-                            $objFeed->appendChild($objField);	
-                        }
-
-                        $objElement->appendChild($objFeed);			
-                    }
-
-                    //*** Meta values.
-                    if ($objDbElement->isPage()) {
-                        $blnHasMeta = false;
-                        $objMeta = $objDoc->createElement('meta');
-                        foreach ($objContentLangs as $objContentLanguage) {
-                            $objDbMeta = $objDbElement->getMeta($objContentLanguage->getId());
-
-                            if (is_object($objDbMeta)) {
-                                $objLanguage = $objDoc->createElement('language');					
-                                $objLanguage->setAttribute("id", $objContentLanguage->getId());
-
-                                $strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "title"));
-                                $objLanguage->setAttribute("title", $strValue);
-
-                                $strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "keywords"));
-                                $objLanguage->setAttribute("keywords", $strValue);
-
-                                $strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "description"));
-                                $objLanguage->setAttribute("description", $strValue);
-                                
-                                $objMeta->appendChild($objLanguage);
-
-                                $blnHasMeta = true;
-                            }
-                        }
-
-                        if ($blnHasMeta) {
-                            $objElement->appendChild($objMeta);		
-                        }
-                    }
-
-                    //*** Permissions.
-                    $objPermissions = $objDoc->createElement('permissions');
-                    $objDbPermissions = $objDbElement->getPermissions();
-                    $objPermissions->setAttribute("users", implode(",", $objDbPermissions->getUserId()));
-                    $objPermissions->setAttribute("groups", implode(",", $objDbPermissions->getGroupId()));
-                    $objElement->appendChild($objPermissions);		
-
-                    //*** Sub elements.
-                    $objSubElements = self::exportElement($objDoc, $intAccountId, $objDbElement->getId(), $arrFiles, $arrTemplateFilters, $arrElementFilters);
-                    if ($objSubElements) {
-                        $objElement->appendChild($objSubElements);
-                    }
-
-                    $objElements->appendChild($objElement);
-                }
+				$objElements->appendChild($objElement);
 			}
 		}
 
 		return $objElements;
 	}
-    
+
 	private static function exportStorage($objDoc, $intAccountId, $intId, &$arrFiles) {
 		global $_CONF;
 		

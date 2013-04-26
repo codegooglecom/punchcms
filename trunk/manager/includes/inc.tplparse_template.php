@@ -159,10 +159,6 @@ function parseTemplates($intElmntId, $strCommand) {
 				$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:PTemplate.remove({$intElmntId});");
 				$objTpl->setVariable("BUTTON_MAIN_DUPLICATE", $objLang->get("duplicateTemplate", "button"));
 				$objTpl->setVariable("BUTTON_MAIN_DUPLICATE_HREF", "javascript:PTemplate.duplicate({$intElmntId});");
-				$objTpl->setVariable("BUTTON_EXPORT_TEMPLATE",  $objLang->get("export", "button"));
-				$objTpl->setVariable("BUTTON_EXPORT_TEMPLATE_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_EXPORT_TEMPLATE);
-				$objTpl->setVariable("BUTTON_IMPORT_TEMPLATE",  $objLang->get("import", "button"));
-				$objTpl->setVariable("BUTTON_IMPORT_TEMPLATE_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_IMPORT_TEMPLATE);
 			}
 
 			$objTpl->setVariable("LABEL_SUBJECT", $objLang->get("fieldsFor", "label") . " ");
@@ -805,127 +801,6 @@ function parseTemplates($intElmntId, $strCommand) {
 			}
 
 			break;
-        
-        case CMD_EXPORT_TEMPLATE:
-			$objTpl->loadTemplatefile("export.tpl.htm");
-
-            //*** Parse the template.
-			$objTemplate = Template::selectByPK($intElmntId);
-
-			//*** Set section title.
-			$objTpl->setVariable("MAINTITLE", $objLang->get("export", "label"));
-			
-			//*** Set tab title.
-			$objTpl->setCurrentBlock("headertitel_simple");
-			$objTpl->setVariable("HEADER_TITLE", $objLang->get("exportOptions", "label"));
-			$objTpl->parseCurrentBlock();
-            
-            $objTpl->setVariable("FORM_NAME", "exportForm");
-            
-            //*** Handle request & create export
-			if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['export_type'])) 
-            {
-                //*** The template form has been posted.
-                $arrTemplateFilters = array();
-                foreach($_POST['tmpl'] as $id => $val)
-                {
-                    $arrTemplateFilters[] = intval($id);
-                }
-                $exportElements = ($_POST['export_type'] == 'templates_elements') ? true : false;
-                $strZipFile = ImpEx::exportFrom(NULL, $objTemplate->getId(), NULL, $arrTemplateFilters , $_CONF['app']['account']->getId(), $exportElements);
-                
-                //*** Return XML.
-                header("HTTP/1.1 200 OK");
-                header("Pragma: public");
-                header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-                header("Cache-Control: private", false);
-                header('Content-Type: application/octetstream; charset=utf-8');
-                header("Content-Length: " . (string)(filesize($strZipFile)));
-                header('Content-Disposition: attachment; filename="' . date("Y-m-d") . '_exportTemplates.zip"');
-                header("Content-Transfer-Encoding: binary\n");
-
-                readfile($strZipFile);
-                unlink($strZipFile);
-                exit;
-			}
-            
-            //*** Create template checkboxes
-            $objTpl->setVariable("FORM_CHECKBOXES", createTemplateTree($objTemplate));
-            
-            $objTpl->setVariable("EXPORT", $objLang->get("export", "label"));
-            $objTpl->setVariable("EXPORT_TEMPLATES_ELEMENTS", $objLang->get("templatesElements", "label"));
-            $objTpl->setVariable("EXPORT_TEMPLATES", $objLang->get("templates", "label"));
-			$objTpl->setVariable("SELECT_ITEMS", $objLang->get("selectTemplates", "label"));
-            
-            //*** Set form buttons
-			$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
-            $objTpl->setCurrentBlock("singleview");
-			$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));
-			$objTpl->setVariable("BUTTON_FORMCANCEL", $objLang->get("cancel", "button"));
-			$objTpl->setVariable("LABEL_SAVE", $objLang->get("export", "button"));
-			$objTpl->setVariable("CID", NAV_PCMS_TEMPLATES);
-			$objTpl->setVariable("CMD", CMD_EXPORT_TEMPLATE);
-			$objTpl->setVariable("EID", $intElmntId);
-			$objTpl->parseCurrentBlock();
-			
-            
-            break;
-            
-        case CMD_IMPORT_TEMPLATE:
-			$objTpl->loadTemplatefile("import.tpl.htm");
-
-            //*** Parse the template.
-			$objTemplate = Template::selectByPK($intElmntId);
-
-			//*** Set section title.
-			$objTpl->setVariable("MAINTITLE", $objLang->get("import", "label"));
-			
-			//*** Set tab title.
-			$objTpl->setCurrentBlock("headertitel_simple");
-			$objTpl->setVariable("HEADER_TITLE", $objLang->get("importOptions", "label"));
-			$objTpl->parseCurrentBlock();
-            
-            //*** Handle request & do import
-			if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES["file"]["name"] )) 
-            {
-                if ($_FILES["file"]["error"] > 0)
-                {
-                    $objTpl->setVariable('ERROR_MAIN','Error: '. $_FILES["file"]["error"]);
-                }
-                else if(end(explode(".", $_FILES["file"]["name"])) !== 'zip')
-                {
-                    $objTpl->setVariable('ERROR_MAIN','Error: Only *.ZIP files allowed');
-                }
-                else
-                {
-                    $importElements = ($_POST['import_type'] === 'templates_elements') ? true : false;
-                    if(!ImpEx::importIn($_FILES["file"]["tmp_name"],NULL,$objTemplate->getId(),$_CONF['app']['account']->getId(),true,$importElements,false))
-                    {
-                        $objTpl->setVariable('ERROR_MAIN','Templates and/or fields of templates in file do not match the destination templates');
-                    }
-                }
-            }
-             
-            $objTpl->setVariable("IMPORT", $objLang->get("import", "label"));
-            $objTpl->setVariable("IMPORT_TEMPLATES_ELEMENTS", $objLang->get("templatesElements", "label"));
-            $objTpl->setVariable("IMPORT_TEMPLATES", $objLang->get("templates", "label"));
-            $objTpl->setVariable("IMPORT_ELEMENTS", $objLang->get("elements", "label"));
-            $objTpl->setVariable('CUR_LOCATION',$objTemplate->getName());
-			$objTpl->setVariable("IMPORT_FILE", $objLang->get("importFile", "label"));
-			$objTpl->setVariable("IMPORT_FILE_TIP", $objLang->get("importFile", "tip"));
-            
-            //*** Set form buttons
-			$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
-            $objTpl->setCurrentBlock("singleview");
-			$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));
-			$objTpl->setVariable("BUTTON_FORMCANCEL", $objLang->get("cancel", "button"));
-			$objTpl->setVariable("LABEL_SAVE", $objLang->get("import", "button"));
-			$objTpl->setVariable("CID", NAV_PCMS_TEMPLATES);
-			$objTpl->setVariable("CMD", CMD_IMPORT_TEMPLATE);
-			$objTpl->setVariable("EID", $intElmntId);
-			$objTpl->parseCurrentBlock();
-            
-            break;    
 	}
 
 	return $objTpl->get();

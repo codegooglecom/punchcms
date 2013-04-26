@@ -18,7 +18,7 @@ class ImageField {
 	
 	public function getSettings() {
 		$arrReturn = array();
-        
+		
 		$objValue = $this->__templateField->getValueByName("tfv_image_settings_count");
 		if (is_object($objValue) && $objValue->getValue() > 0) {
 			$intMaxSettings = $objValue->getValue();

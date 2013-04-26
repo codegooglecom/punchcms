@@ -9,48 +9,6 @@ jQuery(function(){
 		.live("click", function(){
 			jQuery(this).fadeOut("slow");
 		});
-                
-        $('.input-ckeditor').each(function(){
-
-            CKEDITOR.replace($(this).attr('id'), {
-                toolbar: [
-                    ['Source'],
-                    ['Cut','Copy','Paste','PasteText','-','Table'],
-                    ['Undo','Redo','-','Find','Replace','-','Link','Unlink','Anchor','-','SpecialChar'],
-                    ['Bold','Italic','-','Subscript','Superscript','-','NumberedList','BulletedList','-', 'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','TextColor','FontSize']
-                ],
-                width: 500,
-                language: 'en',
-                filebrowserWindowWidth: '335',
-                filebrowserWindowHeight: '480'
-
-            });
-            
-            var ckeditorinst = CKEDITOR.instances[$(this).attr('id')];
-            
-            ckeditorinst.on('blur', function(){
-                
-                ckeditorinst.updateElement();
-                
-            });
-            
-        });
-        
-        function invoeren (file){
-	
-            window.opener.CKEDITOR.tools.callFunction(funcnum, file)
-            window.close();
-	
-        }
-
-        $('a.select').live("click", function(e){
-
-            e.preventDefault();
-            invoeren($(this).attr('href'));
-
-        });
-        
-        
 });
 
 function init() {
