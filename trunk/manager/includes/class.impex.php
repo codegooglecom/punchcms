@@ -48,7 +48,7 @@
  * ImpEx Class v0.2.18
  * Exports and imports account data from the database.
  */
- 
+
 require_once('dzip/dZip.inc.php');
 require_once('dzip/dUnzip2.inc.php');
 
@@ -66,14 +66,14 @@ class ImpEx {
 		$objDoc = new DOMDocument("1.0", "UTF-8");
 		$objDoc->formatOutput = FALSE;
 		$objDoc->preserveWhiteSpace = TRUE;
-		
+
 		//*** Init Zip archive.
 		$strZipName = $_PATHS['upload'] . "exportZip_" . rand() . ".zip";
 		$objZip = new dZip($strZipName, TRUE);
-	
+
 		//*** ACL. Users, groups and rights.
 		$objAcl = self::exportAcl($objDoc, $intAccountId);
-		
+
 		//*** Products.
 		$_CONF['app']['account'] = Account::getById($intAccountId);
 		$objAccountProducts = AccountProduct::getByAccountId($intAccountId);
@@ -82,7 +82,7 @@ class ImpEx {
 			switch ($objAccountProduct->getProductId()) {
 				case PRODUCT_PCMS:
 					$arrFiles = array();
-					
+
 					//*** Settings.
 					$objSettings = $objDoc->createElement('settings');
 
@@ -155,7 +155,7 @@ class ImpEx {
 						$objAlias->setAttribute("modified", $objDbAlias->getModified());
 						$objAliases->appendChild($objAlias);
 					}
-					
+
 					//*** Product.
 					$objProduct = $objDoc->createElement('pcms');
 					$objProduct->setAttribute("version", APP_VERSION);
@@ -168,7 +168,7 @@ class ImpEx {
 					$objProduct->appendChild($objElements);
 					$objProduct->appendChild($objAliases);
 					$objProducts->appendChild($objProduct);
-										
+
 					//*** Files.
 					if ($exportFiles) {
 						$strServer = Setting::getValueByName("ftp_server");
@@ -177,11 +177,11 @@ class ImpEx {
 							$objZip = self::exportFilesToZip($objZip, $arrFiles, $strLocation);
 						}
 					}
-					
+
 					break;
 			}
 		}
-		
+
 		//*** Account.
 		$objDbAccount = Account::selectByPk($intAccountId);
 		$objAccount = $objDoc->createElement('account');
@@ -198,11 +198,11 @@ class ImpEx {
 
 		//*** Destroy temporary account object.
 		unset($_CONF['app']['account']);
-		
+
 		//*** Return XML.
 		$objZip->addFile(NULL, 'data.xml', "", $objDoc->saveXML());
    		$objZip->save();
-    		
+
 		return $strZipName;
 	}
 
@@ -224,7 +224,7 @@ class ImpEx {
 			if (is_object($objZip)) {
 				//*** Zip file.
 				$strXml = $objZip->unzip('data.xml');
-				
+
 				if ($strXml !== FALSE) {
 					//*** Fix a unicode bug. Replace forbidden characters (The first 8).
 					for ($intCount = 1; $intCount < 9; $intCount++) {
@@ -232,7 +232,7 @@ class ImpEx {
 						$strXml = preg_replace('/\x{' . $strHex . '}/u', "", $strXml);
 					}
 					$strXml = preg_replace('/\x{001f}/u', "", $strXml);
-					
+
 					$objDoc->loadXML($strXml);
 					$blnZip = TRUE;
 				}
@@ -250,19 +250,19 @@ class ImpEx {
 				//*** Valid Punch XML.
 				foreach ($rootNode->childNodes as $accountNode) {
 					if ($accountNode->nodeName == "account") {
-						//*** Account node. 
+						//*** Account node.
 						if ($blnOverwrite) {
 							$objAccount = Account::getByPunchId($accountNode->getAttribute("punchId"));
-							
+
 							if (is_object($objAccount) && $blnKeepSettings) {
 								//*** Save settings.
 								$objSettings = Settings::getByAccount($objAccount->getId());
 							}
-						
+
 							//*** Remove account.
 							if (is_object($objAccount)) $objAccount->delete();
 						}
-						
+
 						//*** Create account.
 						$objAccount = new Account();
 						$objAccount->setPunchId($accountNode->getAttribute("punchId"));
@@ -270,15 +270,15 @@ class ImpEx {
 						$objAccount->setUri($accountNode->getAttribute("uri"));
 						$objAccount->setTimeZoneId(42);
 						$objAccount->save();
-						
+
 						//*** Create temporary account object.
 						$_CONF['app']['account'] = $objAccount;
 
-						
+
 						foreach ($accountNode->childNodes as $childNode) {
 							$arrUserIds = array();
 							$arrGroupIds = array();
-							
+
 							switch ($childNode->nodeName) {
 								case "acl":
 									self::importAcl($childNode, $objAccount->getId(), $arrUserIds, $arrGroupIds);
@@ -295,7 +295,7 @@ class ImpEx {
 												$objAccountProduct->setProductId(PRODUCT_PCMS);
 												$objAccountProduct->setExpires($productNode->getAttribute("expires"));
 												$objAccountProduct->save();
-												
+
 												$arrStorageIds[0] = 0;
 												$arrFeedIds[0] = 0;
 
@@ -388,19 +388,19 @@ class ImpEx {
 																$objAlias = new Alias();
 																$objAlias->setAccountId($objAccount->getId());
 																$objAlias->setAlias($aliasNode->getAttribute("alias"));
-																
+
 																if (array_key_exists($aliasNode->getAttribute("url"), $arrElementIds)) {
 																	$objAlias->setUrl($arrElementIds[$aliasNode->getAttribute("url")]);
 																} else {
 																	$objAlias->setUrl(0);
 																}
-																
+
 																if (array_key_exists($aliasNode->getAttribute("language"), $arrLanguageIds)) {
 																	$objAlias->setLanguageId($arrLanguageIds[$aliasNode->getAttribute("language")]);
 																} else {
 																	$objAlias->setLanguageId(0);
 																}
-																
+
 																$objAlias->setCascade($aliasNode->getAttribute("cascade"));
 																$objAlias->setActive($aliasNode->getAttribute("active"));
 																$objAlias->setSort($aliasNode->getAttribute("sort"));
@@ -418,14 +418,14 @@ class ImpEx {
 
 												//*** Adjust the links in large text fields.
 												self::adjustTextlinks($arrElementFieldIds["largeText"], $arrElementIds, $arrLanguageIds, $arrStorageIds);
-												
-												break;										
+
+												break;
 										}
 									}
 									break;
 							}
 						}
-										
+
 						//*** Destroy temporary account object.
 						unset($_CONF['app']['account']);
 
@@ -434,11 +434,11 @@ class ImpEx {
 				}
 			}
 		}
-		
+
 		//*** Files.
 		if ($blnZip && is_object($objReturn)) {
 			self::importFiles($objZip, $objReturn);
-			
+
 			if ($blnKeepSettings) {
 				//*** Move files to remote server.
 				self::moveImportedFiles($objReturn);
@@ -447,13 +447,13 @@ class ImpEx {
 
 		return $objReturn;
 	}
-	
+
 	public static function adjustDeeplinks($arrElementFieldIds, $arrElementIds, $arrLanguageIds) {
 		//*** Adjust the links for deeplink fields.
 		if (is_array($arrElementFieldIds)) {
 			foreach ($arrElementFieldIds as $fieldId) {
 				$objField = ElementField::selectByPk($fieldId);
-	
+
 				if (is_object($objField)) {
 					foreach ($arrLanguageIds as $intLanguageId) {
 						$objValue = $objField->getValueObject($intLanguageId);
@@ -468,7 +468,7 @@ class ImpEx {
 			}
 		}
 	}
-	
+
 	public static function adjustTextlinks($arrElementFieldIds, $arrElementIds, $arrLanguageIds, $arrStorageIds) {
 		//*** Adjust the links in large text fields.
 		if (is_array($arrElementFieldIds)) {
@@ -477,24 +477,24 @@ class ImpEx {
 			$arrElementFieldIds = array_unique($arrElementFieldIds);
 			foreach ($arrElementFieldIds as $fieldId) {
 				$objField = ElementField::selectByPk($fieldId);
-	
+
 				if (is_object($objField)) {
 					foreach ($arrLanguageIds as $intLanguageId) {
 						$objValue = $objField->getValueObject($intLanguageId);
 						$strOldValue = $objValue->getValue();
 						if (!empty($strOldValue)) {
 							$blnFound = FALSE;
-							
+
 							if (preg_match($strElmntPattern, $strOldValue) > 0) {
 								$strOldValue = preg_replace($strElmntPattern, "'$1'.\$arrElementIds['$2']", $strOldValue);
 								$blnFound = TRUE;
 							}
-							
+
 							if (preg_match($strStoragePattern, $strOldValue) > 0) {
 								$strOldValue = preg_replace($strStoragePattern, "'$1'.\$arrStorageIds['$2']", $strOldValue);
 								$blnFound = TRUE;
 							}
-							
+
 							if ($blnFound) {
 								$objValue->setValue($strOldValue, $intLanguageId, $objValue->getCascade());
 								$objField->setValueObject($objValue);
@@ -568,10 +568,10 @@ class ImpEx {
 
 	public static function importElements($objElements, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, &$arrElementIds, &$arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $intParentId = 0) {
 		global $intDefaultLanguage;
-		
-		$strElmntPattern = "/(\?eid=)([0-9]+)/ie";		
+
+		$strElmntPattern = "/(\?eid=)([0-9]+)/ie";
 		$strStoragePattern = "/(\?mid=)([0-9]+)/ie";
-		
+
 		foreach ($objElements->childNodes as $elementNode) {
 			if (!is_null($arrTemplateIds[$elementNode->getAttribute("templateId")])) {
 				$objElement = new Element();
@@ -586,14 +586,14 @@ class ImpEx {
 				$objElement->setTypeId($elementNode->getAttribute("typeId"));
 				$objElement->setTemplateId($arrTemplateIds[$elementNode->getAttribute("templateId")]);
 				$objElement->setSort($elementNode->getAttribute("sort"));
-				$objElement->save(FALSE, FALSE);
+				$objElement->save(false, false);
 
 				if ($elementNode->getAttribute("typeId") == 1) {
 					$objElement->setLanguageActive($intDefaultLanguage, 1);
 				}
 
 				$arrElementIds[$elementNode->getAttribute("id")] = $objElement->getId();
-				
+
 				//*** Schedule.
 				$objSchedule = new ElementSchedule();
 				$objSchedule->setStartActive($elementNode->getAttribute("scheduleStartActive"));
@@ -639,7 +639,7 @@ class ImpEx {
 								$objElement->setLanguageActive($arrLanguageIds[$key], $value);
 							}
 							break;
-							
+
 						case "feed":
 							foreach ($subNode->childNodes as $feedFieldNode) {
 								if ($feedFieldNode->nodeName == "feedfield") {
@@ -654,7 +654,7 @@ class ImpEx {
 									$objFeedField->save();
 								}
 							}
-							
+
 							$objFeed = new ElementFeed();
 							$objFeed->setElementId($objElement->getId());
 							$objFeed->setFeedId($arrFeedIds[$subNode->getAttribute("feedId")]);
@@ -663,9 +663,9 @@ class ImpEx {
 							$objFeed->setSortBy($subNode->getAttribute("sortBy"));
 							$objFeed->setAliasField($subNode->getAttribute("aliasField"));
 							$objFeed->save();
-							
+
 							break;
-							
+
 						case "meta":
 							$arrMetaFields = array("title", "keywords", "description");
 							foreach ($subNode->childNodes as $metaFieldNode) {
@@ -681,9 +681,9 @@ class ImpEx {
 									}
 								}
 							}
-							
+
 							break;
-							
+
 						case "languages":
 							foreach ($subNode->childNodes as $languageNode) {
 								$objLanguage = new ElementLanguage();
@@ -694,33 +694,33 @@ class ImpEx {
 								$objLanguage->save();
 							}
 							break;
-							
+
 						case "permissions":
 							$objUsers = array();
 							$objTempUsers = explode(",", $subNode->getAttribute("users"));
 							foreach ($objTempUsers as $value) {
 								if (array_key_exists($value, $arrUserIds)) array_push($objUsers, $arrUserIds[$value]);
 							}
-							
+
 							$objGroups = array();
 							$objTempGroups = explode(",", $subNode->getAttribute("groups"));
 							foreach ($objTempGroups as $value) {
 								if (array_key_exists($value, $arrGroupIds)) array_push($objGroups, $arrGroupIds[$value]);
 							}
-	
+
 							$objPermissions = new ElementPermission();
 							$objPermissions->setUserId($objUsers);
 							$objPermissions->setGroupId($objGroups);
-						
+
 							$objElement->setPermissions($objPermissions, TRUE);
 							break;
-							
+
 						case "elements":
 							self::importElements($subNode, $intAccountId, $arrTemplateIds, $arrTemplateFieldIds, $arrElementIds, $arrElementFieldIds, $arrLinkFieldIds, $arrLanguageIds, $arrUserIds, $arrGroupIds, $arrStorageIds, $arrFeedIds, $objElement->getId());
 							break;
 					}
 				}
-				
+
 				//*** Update the search index.
 				$objSearch = new Search();
 				$objSearch->updateIndex($objElement->getId());
@@ -753,7 +753,7 @@ class ImpEx {
 
 			//*** Add sub media to the media item.
 			foreach ($elementNode->childNodes as $subNode) {
-				switch ($subNode->nodeName) {							
+				switch ($subNode->nodeName) {
 					case "items":
 						self::importStorage($subNode, $intAccountId, $arrStorageIds,  $objElement->getId());
 						break;
@@ -761,10 +761,10 @@ class ImpEx {
 			}
 		}
 	}
-	
+
 	private static function importAcl($objRoot, $intAccountId, &$arrUserIds, &$arrGroupIds) {
 		global $objLiveAdmin;
-		
+
 		$arrRightIds = array();
 		$arrOptions = array('naming' => LIVEUSER_SECTION_APPLICATION, 'filters' => array('account_id' => array(0)));
 		$arrDbRights = $objLiveAdmin->perm->outputRightsConstants('array', $arrOptions, 'direct');
@@ -772,7 +772,7 @@ class ImpEx {
 		foreach ($arrDbRights as $key => $value) {
 			$arrSystemRights[strtoupper($key)] = $value;
 		}
-	
+
 		foreach ($objRoot->childNodes as $childNode) {
 			switch ($childNode->nodeName) {
 				case "applications":
@@ -783,7 +783,7 @@ class ImpEx {
 							'account_id' => $intAccountId
 						);
 						$intAppId = $objLiveAdmin->perm->addApplication($data);
-						
+
 						//*** Add areas to the account.
 						foreach ($appNode->getElementsByTagName("areas")->item(0)->getElementsByTagName("area") as $areaNode) {
 							$data = array(
@@ -792,7 +792,7 @@ class ImpEx {
 								'account_id' => $intAccountId
 							);
 							$intAreaId = $objLiveAdmin->perm->addArea($data);
-						
+
 							//*** Add rights to the account.
 							foreach ($areaNode->getElementsByTagName("rights")->item(0)->getElementsByTagName("right") as $rightNode) {
 								$data = array(
@@ -805,12 +805,12 @@ class ImpEx {
 							}
 						}
 					}
-					
+
 					break;
 				case "implied_rights":
 					//*** Add implied rights to the account.
 					foreach ($childNode->getElementsByTagName("right") as $rightNode) {
-						foreach ($rightNode->getElementsByTagName("right") as $impliedRightNode) {							
+						foreach ($rightNode->getElementsByTagName("right") as $impliedRightNode) {
 							$data = array(
 								'right_id' => self::getRightId($arrRightIds, $arrSystemRights, $rightNode->getAttribute("id")),
 								'implied_right_id' => self::getRightId($arrRightIds, $arrSystemRights, $impliedRightNode->getAttribute("id"))
@@ -818,7 +818,7 @@ class ImpEx {
 							$objLiveAdmin->perm->implyRight($data);
 						}
 					}
-					
+
 					break;
 				case "groups":
 					//*** Add groups to the account.
@@ -830,7 +830,7 @@ class ImpEx {
 						);
 						$intGroupId = $objLiveAdmin->perm->addGroup($data);
 						$arrGroupIds[$groupNode->getAttribute("id")] = $intGroupId;
-						
+
 						//*** Add rights to the group.
 						foreach ($groupNode->getElementsByTagName("rights")->item(0)->getElementsByTagName("right") as $rightNode) {
 							$intLevel = $rightNode->getAttribute("right_level");
@@ -844,7 +844,7 @@ class ImpEx {
 							$objLiveAdmin->perm->grantGroupRight($data);
 						}
 					}
-					
+
 					break;
 				case "users":
 					//*** Add users to the account.
@@ -860,7 +860,7 @@ class ImpEx {
 						);
 						$intPermUserId = $objLiveAdmin->addUser($data, FALSE);
 						$arrUserIds[$userNode->getAttribute("perm_id")] = $intPermUserId;
-						
+
 						//*** Add groups to the user.
 						foreach ($userNode->getElementsByTagName("groups")->item(0)->getElementsByTagName("group") as $groupNode) {
 							$data = array(
@@ -869,7 +869,7 @@ class ImpEx {
 							);
 							$objLiveAdmin->perm->addUserToGroup($data);
 						}
-						
+
 						//*** Add rights to the user.
 						foreach ($userNode->getElementsByTagName("rights")->item(0)->getElementsByTagName("right") as $rightNode) {
 							$intLevel = $rightNode->getAttribute("right_level");
@@ -916,7 +916,7 @@ class ImpEx {
 					$objField->setAttribute("apiName", $objDbField->getApiName());
 					$objField->setAttribute("description", $objDbField->getDescription());
 					$objField->setAttribute("username", $objDbField->getUsername());
-					$objField->setAttribute("sort", $objDbField->getSort());		
+					$objField->setAttribute("sort", $objDbField->getSort());
 
 					$objValues = $objDoc->createElement('values');
 					foreach ($objDbField->getValues() as $objDbValue) {
@@ -946,10 +946,10 @@ class ImpEx {
 
 	private static function exportElement($objDoc, $intAccountId, $intId, &$arrFiles) {
 		global $_CONF;
-		
+
 		$objElements = $objDoc->createElement('elements');
 
-		$objDbElements = Elements::getFromParent($intId, FALSE, "'1', '2', '3', '4', '5'", $intAccountId);
+		$objDbElements = Elements::getFromParent($intId, false, ELM_TYPE_ALL, $intAccountId);
 
 		if ($objDbElements->count() > 0) {
 			foreach ($objDbElements as $objDbElement) {
@@ -969,7 +969,7 @@ class ImpEx {
 				$objElement->setAttribute("username", $objDbElement->getUsername());
 				$objElement->setAttribute("created", $objDbElement->getCreated());
 				$objElement->setAttribute("modified", $objDbElement->getModified());
-				
+
 				//*** Schedule.
 				$objSchedule = $objDbElement->getSchedule();
 				$objElement->setAttribute("scheduleStartActive", $objSchedule->getStartActive());
@@ -986,11 +986,11 @@ class ImpEx {
 				foreach ($objDbFields as $objDbField) {
 					$objField = $objDoc->createElement('field');
 					$objField->setAttribute("templateFieldId", $objDbField->getTemplateFieldId());
-					$objField->setAttribute("sort", $objDbField->getSort());					
-				
+					$objField->setAttribute("sort", $objDbField->getSort());
+
 					foreach ($objContentLangs as $objContentLanguage) {
 						$objValue = $objDbField->getValueObject($objContentLanguage->getId());
-						
+
 						if (is_object($objValue)) {
 							$strValue = str_replace("&", "&amp;", $objValue->getValue());
 
@@ -999,7 +999,7 @@ class ImpEx {
 							$objLanguage->setAttribute("active", (in_array($objContentLanguage->getId(), $arrActiveLangs)) ? 1 : 0);
 							$objLanguage->setAttribute("cascade", $objValue->getCascade());
 							$objField->appendChild($objLanguage);
-							
+
 							switch ($objDbField->getTypeId()) {
 								case FIELD_TYPE_FILE:
 									$arrFileTemp = explode("\n", $strValue);
@@ -1026,7 +1026,7 @@ class ImpEx {
 													array_push($arrFiles, FileIO::add2Base($strSrc, $arrSetting['key']));
 												}
 											}
-											
+
 											array_push($arrFiles, $strSrc);
 										}
 									}
@@ -1037,7 +1037,7 @@ class ImpEx {
 
 					$objFields->appendChild($objField);
 				}
-				
+
 				if ($objDbFields->count() > 0) {
 					$objElement->appendChild($objFields);
 				} else {
@@ -1052,10 +1052,10 @@ class ImpEx {
 							$objLanguages->appendChild($objLanguage);
 						}
 					}
-					
+
 					if ($objDbLanguages->count() > 0) $objElement->appendChild($objLanguages);
 				}
-				
+
 				//*** Feed fields.
 				$objDbFeed = $objDbElement->getFeed();
 				if (is_object($objDbFeed) && $objDbFeed->getId() > 0) {
@@ -1065,7 +1065,7 @@ class ImpEx {
 					$objFeed->setAttribute("maxItems", $objDbFeed->getMaxItems());
 					$objFeed->setAttribute("sortBy", $objDbFeed->getSortBy());
 					$objFeed->setAttribute("aliasField", $objDbFeed->getAliasField());
-					
+
 					$objDbFields = ElementFieldFeed::selectByElement($objDbElement->getId());
 					foreach ($objDbFields as $objDbField) {
 						$objField = $objDoc->createElement('feedfield');
@@ -1075,12 +1075,12 @@ class ImpEx {
 						$objField->setAttribute("languageId", $objDbField->getLanguageId());
 						$objField->setAttribute("cascade", $objDbField->getCascade());
 						$objField->setAttribute("sort", $objDbField->getSort());
-						$objFeed->appendChild($objField);	
+						$objFeed->appendChild($objField);
 					}
-					
-					$objElement->appendChild($objFeed);			
+
+					$objElement->appendChild($objFeed);
 				}
-				
+
 				//*** Meta values.
 				if ($objDbElement->isPage()) {
 					$blnHasMeta = false;
@@ -1089,35 +1089,35 @@ class ImpEx {
 						$objDbMeta = $objDbElement->getMeta($objContentLanguage->getId());
 
 						if (is_object($objDbMeta)) {
-							$objLanguage = $objDoc->createElement('language');					
+							$objLanguage = $objDoc->createElement('language');
 							$objLanguage->setAttribute("id", $objContentLanguage->getId());
-							
+
 							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "title"));
 							$objLanguage->setAttribute("title", $strValue);
-							
+
 							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "keywords"));
 							$objLanguage->setAttribute("keywords", $strValue);
-							
+
 							$strValue = str_replace("&", "&amp;", $objDbMeta->getValueByValue("name", "description"));
 							$objLanguage->setAttribute("description", $strValue);
-							
+
 							$objMeta->appendChild($objLanguage);
-							
+
 							$blnHasMeta = true;
 						}
 					}
-					
+
 					if ($blnHasMeta) {
-						$objElement->appendChild($objMeta);		
+						$objElement->appendChild($objMeta);
 					}
 				}
-					
+
 				//*** Permissions.
 				$objPermissions = $objDoc->createElement('permissions');
 				$objDbPermissions = $objDbElement->getPermissions();
 				$objPermissions->setAttribute("users", implode(",", $objDbPermissions->getUserId()));
 				$objPermissions->setAttribute("groups", implode(",", $objDbPermissions->getGroupId()));
-				$objElement->appendChild($objPermissions);		
+				$objElement->appendChild($objPermissions);
 
 				//*** Sub elements.
 				$objSubElements = self::exportElement($objDoc, $intAccountId, $objDbElement->getId(), $arrFiles);
@@ -1134,7 +1134,7 @@ class ImpEx {
 
 	private static function exportStorage($objDoc, $intAccountId, $intId, &$arrFiles) {
 		global $_CONF;
-		
+
 		$objElements = ($intId == 0) ? $objDoc->createElement('storage') : $objDoc->createElement('items');
 
 		$objDbElements = StorageItems::getFromParent($intId, "'1', '2'", $intAccountId);
@@ -1150,8 +1150,8 @@ class ImpEx {
 				$objElement->setAttribute("sort", $objDbElement->getSort());
 				$objElement->setAttribute("created", $objDbElement->getCreated());
 				$objElement->setAttribute("modified", $objDbElement->getModified());
-				
-				if ($objDbElement->getTypeId() == 2) {				
+
+				if ($objDbElement->getTypeId() == 2) {
 					$objElement->setAttribute("localName", $objDbElement->getData()->getLocalName());
 					$objElement->setAttribute("originalName", $objDbElement->getData()->getOriginalName());
 					array_push($arrFiles, $objDbElement->getData()->getLocalName());
@@ -1169,10 +1169,10 @@ class ImpEx {
 
 		return $objElements;
 	}
-	
+
 	private static function exportAcl($objDoc, $intAccountId) {
 		global $objLiveAdmin;
-		
+
 		$objReturn = $objDoc->createElement('acl');
 		$objImpliedRights = $objDoc->createElement('implied_rights');
 		$arrOptions = array('naming' => LIVEUSER_SECTION_APPLICATION, 'filters' => array('account_id' => array(0)));
@@ -1183,12 +1183,12 @@ class ImpEx {
 				$arrRights[strtoupper($key)] = $value;
 			}
 		}
-		
+
 		//*** ACL applications.
 		$objApps = $objDoc->createElement('applications');
 		$objDbApps = $objLiveAdmin->perm->getApplications(array('filters' => array('account_id' => $intAccountId)));
 		if (is_array($objDbApps)) {
-			foreach ($objDbApps as $objDbApp) {				
+			foreach ($objDbApps as $objDbApp) {
 				$objApp = $objDoc->createElement('application');
 				$objApp->setAttribute("name", $objDbApp['application_define_name']);
 
@@ -1196,7 +1196,7 @@ class ImpEx {
 				$objAreas = $objDoc->createElement('areas');
 				$objDbAreas = $objLiveAdmin->perm->getAreas(array('filters' => array('application_id' => $objDbApp['application_id'], 'account_id' => $intAccountId)));
 				if (is_array($objDbAreas)) {
-					foreach ($objDbAreas as $objDbArea) {	
+					foreach ($objDbAreas as $objDbArea) {
 						$objArea = $objDoc->createElement('area');
 						$objArea->setAttribute("name", $objDbArea['area_define_name']);
 
@@ -1210,7 +1210,7 @@ class ImpEx {
 								$objRight->setAttribute("id", $intRight);
 								$objRight->setAttribute("name", $objDbRight['right_define_name']);
 								$objRights->appendChild($objRight);
-								
+
 								//*** ACL implied rights.
 								$filters = array('fields' => array('implied_right_id'),	'filters' => array('right_id' => $objDbRight['right_id'], 'account_id' => $intAccountId));
 								$objDbImpliedRights = $objLiveAdmin->getRights($filters);
@@ -1223,14 +1223,14 @@ class ImpEx {
 										$objImpliedRight->setAttribute("id", $intRight);
 										$objRight->appendChild($objImpliedRight);
 									}
-									
+
 									$objImpliedRights->appendChild($objRight);
 								}
 							}
-						}		
+						}
 
 						$objArea->appendChild($objRights);
-						$objAreas->appendChild($objArea);					
+						$objAreas->appendChild($objArea);
 					}
 				}
 
@@ -1238,10 +1238,10 @@ class ImpEx {
 				$objApps->appendChild($objApp);
 			}
 		}
-		
-		$objReturn->appendChild($objApps);	
-		$objReturn->appendChild($objImpliedRights);	
-		
+
+		$objReturn->appendChild($objApps);
+		$objReturn->appendChild($objImpliedRights);
+
 		//*** ACL groups.
 		$objGroups = $objDoc->createElement('groups');
 		$objDbGroups = $objLiveAdmin->perm->getGroups(array('filters' => array('account_id' => $intAccountId)));
@@ -1254,7 +1254,7 @@ class ImpEx {
 				$objGroup->setAttribute("is_active", $objDbGroup['is_active']);
 				$objGroup->setAttribute("owner_user_id", $objDbGroup['owner_user_id']);
 				$objGroup->setAttribute("owner_group_id", $objDbGroup['owner_group_id']);
-				
+
 				//*** ACL rights.
 				$objRights = $objDoc->createElement('rights');
 				$filters = array('fields' => array('right_id', 'right_level'), 'filters' => array('group_id' => $objDbGroup['group_id'], 'account_id' => $intAccountId));
@@ -1268,14 +1268,14 @@ class ImpEx {
 						$objRights->appendChild($objRight);
 					}
 				}
-				
+
 				$objGroup->appendChild($objRights);
 				$objGroups->appendChild($objGroup);
 			}
 		}
-		
+
 		$objReturn->appendChild($objGroups);
-		
+
 		//*** ACL users.
 		$objUsers = $objDoc->createElement('users');
 		$objDbUsers = $objLiveAdmin->getUsers(array('container' => 'auth', 'filters' => array('account_id' => $intAccountId)));
@@ -1292,7 +1292,7 @@ class ImpEx {
 				$objUser->setAttribute("name", $objDbUser['name']);
 				$objUser->setAttribute("email", $objDbUser['email']);
 				$objUser->setAttribute("permType", $objDbUser['perm_type']);
-				
+
 				//*** ACL groups.
 				$objGroups = $objDoc->createElement('groups');
 				$objDbGroups = $objLiveAdmin->perm->getGroups(array('filters' => array('perm_user_id' => $objDbUser['perm_user_id'], 'account_id' => $intAccountId)));
@@ -1303,12 +1303,12 @@ class ImpEx {
 						$objGroups->appendChild($objGroup);
 					}
 				}
-				
+
 				//*** ACL rights.
 				$objRights = $objDoc->createElement('rights');
 				$objDbApps = $objLiveAdmin->perm->getApplications(array('filters' => array('account_id' => array(0, $intAccountId))));
 				if (is_array($objDbApps)) {
-					foreach ($objDbApps as $objDbApp) {	
+					foreach ($objDbApps as $objDbApp) {
 						$objDbAreas = $objLiveAdmin->perm->getAreas(array('filters' => array('application_id' => $objDbApp['application_id'], 'account_id' => array(0, $intAccountId))));
 						if (is_array($objDbAreas)) {
 							foreach ($objDbAreas as $objDbArea) {
@@ -1327,7 +1327,7 @@ class ImpEx {
 						}
 					}
 				}
-				
+
 				$objUser->appendChild($objGroups);
 				$objUser->appendChild($objRights);
 				$objUsers->appendChild($objUser);
@@ -1335,13 +1335,13 @@ class ImpEx {
 		}
 
 		$objReturn->appendChild($objUsers);
-		
+
 		return $objReturn;
 	}
 
 	private static function getRightId($arrMatchedRights, $arrSystemRights, $varId) {
 		$intReturn = $varId;
-		
+
 		if (is_numeric($varId)) {
 			if (array_key_exists($varId, $arrMatchedRights)) {
 				$intReturn = $arrMatchedRights[$varId];
@@ -1349,36 +1349,36 @@ class ImpEx {
 		} else if (array_key_exists($varId, $arrSystemRights)) {
 				$intReturn = $arrSystemRights[$varId];
 		}
-		
+
 		return $intReturn;
 	}
-	
+
 	private static function array_normalize($arrInput) {
 		$arrOutput = array();
-		
+
 		foreach ($arrInput as $value) {
 			if (!in_array($value, $arrOutput)) array_push($arrOutput, $value);
 		}
-		
+
 		return $arrOutput;
 	}
-	
+
 	private static function exportFilesToZip($objZip, $arrFiles, $strLocation) {
 		$arrFiles = self::array_normalize($arrFiles);
-		
+
 		foreach ($arrFiles as $value) {
       		$strContents = @file_get_contents($strLocation . $value);
        		if ($strContents !== FALSE) {
         		$objZip->addFile(NULL, "files/" . $value, "", $strContents);
        		}
 		}
-		
+
 		return $objZip;
 	}
-	
+
 	private static function importFiles($objZip, $objAccount) {
 		global $_CONF, $_PATHS;
-		
+
 		$arrFiles = $objZip->getList();
 		foreach ($arrFiles as $name => $arrFile) {
 			$dirname = dirname($name);
@@ -1397,28 +1397,28 @@ class ImpEx {
 					fwrite($objHandle, $objZip->unzip($name));
 					fclose($objHandle);
 					chmod($path, 0755);
-				}							
+				}
 			}
 		}
 		$objZip->close();
 	}
-	
+
 	public static function moveImportedFiles($objAccount) {
 		global $_CONF, $_PATHS;
-		
+
 		$sourceDir = $_PATHS['upload'] . $objAccount->getId() . "/";
 		if (is_dir($sourceDir)) {
 			$strServer = Setting::getValueByName('ftp_server', $objAccount->getId());
 			$strUsername = Setting::getValueByName('ftp_username', $objAccount->getId());
 			$strPassword = Setting::getValueByName('ftp_password', $objAccount->getId());
 			$strRemoteFolder = Setting::getValueByName('ftp_remote_folder', $objAccount->getId());
-		
+
 			//*** Try to move the files.
 			$objFtp = new FTP($strServer, NULL, NULL, TRUE);
 			if ($objFtp->login($strUsername, $strPassword) === TRUE) {
 				//*** Passive mode.
 				$objFtp->pasv(TRUE);
-				
+
 				if ($objHandle = opendir($sourceDir)) {
 					while (FALSE !== ($strFile = readdir($objHandle))) {
 						if ($strFile != "." && $strFile != "..") {
@@ -1430,23 +1430,23 @@ class ImpEx {
 							}
 
 							if ($objRet != FTP_FINISHED) {
-								//*** Something went wrong. Continue without error.							
+								//*** Something went wrong. Continue without error.
 							} else {
 								//*** Remove local file.
 								@unlink($sourceDir . $strFile);
 							}
 						}
 					}
-					
+
 					closedir($objHandle);
 				}
 			}
-			
+
 			//*** Remove dir if empty.
 			if (count(scandir($sourceDir)) <= 2) {
 				rmdir($sourceDir);
 			}
-		}		
+		}
 	}
 
 }
