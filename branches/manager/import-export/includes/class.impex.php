@@ -261,14 +261,14 @@ class ImpEx {
                 $objElements = Element::select($strSql);
                 foreach($objElements as $objElement)
                 {
-                    $objElements = self::exportElement($objDoc, $intAccountId, $objElement->getId(), $arrFiles, $arrTemplateFilters, NULL, true);
+                    $objElements = self::exportElement($objDoc, $intAccountId, $objElement->getId(), $arrFiles, $arrTemplateFilters, NULL, $includeSelf);
                     $objElements = $objLogic->appendChild($objElements);
                 }
             }
             else
             {
                 // export from one element
-                $objElements = self::exportElement($objDoc, $intAccountId, $intElementId, $arrFiles, $arrTemplateFilters, NULL, true);
+                $objElements = self::exportElement($objDoc, $intAccountId, $intElementId, $arrFiles, $arrTemplateFilters, NULL, $includeSelf);
                 $objElements = $objLogic->appendChild($objElements);
             }
 
@@ -931,7 +931,6 @@ class ImpEx {
 		$strStoragePattern = "/(\?mid=)([0-9]+)/ie";
 
 		foreach ($objElements->childNodes as $elementNode) {
-			$elementTemplateId = $elementNode->getAttribute("templateId");
 			if (!is_null($arrTemplateIds[$elementNode->getAttribute("templateId")])) {
 				$objElement = new Element();
 				$objElement->setAccountId($intAccountId);
