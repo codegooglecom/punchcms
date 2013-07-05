@@ -1,5 +1,6 @@
 <?php
 
+
 session_id($_POST["PHPSESSID"]);
 require_once('includes/init.php');
 
