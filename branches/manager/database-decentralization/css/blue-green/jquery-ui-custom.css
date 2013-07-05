@@ -1,0 +1,97 @@
+/*
+* @package: jQuery UI CSS Custom Framework
+* @version: 1.0
+* @author: Robin van Baalen - Felix iT B.V.
+*/
+
+/* Import the PunchCMS style */
+@import url("skin.blue-green.css");
+
+.ui-widget,
+.ui-widget * {
+	font-family: Verdana, Arial, Sans-serif !important;
+}
+
+.ui-widget-content,
+.ui-widget-content * {
+	color: #333;
+}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+	text-decoration: none !important;
+}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+	xcolor: #2C457C !important;
+	text-decoration: none !important;
+}
+.ui-helper-clearfix {
+	overflow: hidden;
+}
+.ui-sortable-helper {
+	cursor: move !important;
+}
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+	font-weight: bolder;
+}
+.ui-state-highlight {
+	color: #363636 !important;
+	background: #FBF9EE !important;
+}
+.ui-state-focus {
+	color: #fff !important;
+}
+.ui-sortable {
+	position: relative;
+}
+.ui-state-highlight,
+.ui-state-error {
+	padding: 12px;
+	margin: 9px;
+}
+.ui-state-error {
+	background: #FEF1EC !important;
+}
+
+/*
+ * Login window
+ */
+#login #canvas .input-button {
+	color: #333;
+	padding: 5px 10px;
+}
+#login #canvas .input-button:hover {
+	color: #fff;
+}
+
+/*
+ * Switch tabs markup - Tabs only
+ */
+.tabs .ui-state-default {
+	background: url("images/ui-bg_flat_100_2c457c_40x100.png") repeat-x scroll 50% 50% #2C457C !important;
+	border: 1px solid #333333 !important;
+	color: #FFFFFF !important;
+	font-weight: normal !important;
+	}
+	.tabs .ui-state-default a {
+		color: #FFFFFF !important;
+	}
+.tabs .ui-state-active {
+	background: url("images/ui-bg_flat_100_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF !important;
+	border: 1px solid #EAEAEA !important;
+	color: #2C457C !important;
+	font-weight: normal !important;
+	}
+	.tabs .ui-state-active a,
+	.tabs .ui-state-active a:hover {
+		background: url("images/ui-bg_flat_100_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF !important;
+		color: #2C457C !important;
+	}
+.tabs .ui-state-hover {
+	background: url("images/ui-bg_flat_100_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF !important;
+	border: 1px solid #EAEAEA !important;
+	color: #2C457C !important;
+	font-weight: normal !important;
+	}
+	.tabs .ui-state-hover a {
+		color: #2C457C !important;
+		background: none !important;
+	}

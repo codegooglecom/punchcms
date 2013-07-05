@@ -1,0 +1,144 @@
+		<div id="left-wrap">
+			<h2>{MAINTITLE}<!-- BEGIN title.sub --> <span class="name">&lsquo;{MAINSUB}&rsquo;</span><!-- END title.sub --></h2>
+			<div id="treeContainer"></div>
+			<div id="content" class="hollyhacked">
+				<form id="storageForm" enctype="multipart/form-data" method="post" action="?" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+						<!-- BEGIN headertitle_simple -->
+						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#section-details">{HEADER_TITLE}</a></li>
+						<!-- END headertitle_simple -->
+					</ul>
+					<!-- BEGIN error-main -->
+					<div class="ui-widget">
+						<div class="ui-state-error ui-corner-all">
+							<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>{ERROR_MAIN}</p>
+						</div>
+					</div>
+					<!-- END error-main -->
+					<div id="section-details" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+						<!-- BEGIN description-details -->
+						<div class="description">
+							<p>{LABEL}</p>
+						</div>
+						<!-- END description-details -->
+	
+						<fieldset>
+							<!-- BEGIN field.name -->
+							<div class="required{ERROR_NAME_ON}">
+								<!-- BEGIN error-element-name -->
+								<p class="ui-state-error ui-corner-all">{ERROR_NAME}</p>
+								<!-- END error-element-name -->
+								<label for="frm_name">* {LABEL_ELEMENTNAME}</label>
+								<input type="text" id="frm_name" name="frm_name" class="input-textlarge" value="{FORM_NAME_VALUE}" />
+								<small>{LABEL_ELEMENTNAME_TIP}</small>
+							</div>
+							<!-- END field.name -->
+							<!-- BEGIN field.file -->
+							<div class="required{ERROR_FILE_ON}">
+								<!-- BEGIN error-file-chooser -->
+								<p class="ui-state-error ui-corner-all">{ERROR_FILE}</p>
+								<!-- END error-file-chooser -->
+								<label for="frm_file" class="widget">* {LABEL_CHOOSER}</label>
+								<div id="frm_file_alt" class="input-textbig disabled" style="display:none;margin-left:146px;"></div>
+								<div id="frm_file_widget" class="widget">
+									<div class="required">
+										<input type="file" id="frm_file" name="frm_file_new[]" class="file" />
+									</div>
+									<div id="filelist_frm_file"></div>
+									<input type="hidden" id="frm_file_current" name="frm_file_current" value="{FIELD_CURRENT_FILES}" />
+									<input type="hidden" id="frm_file_1" name="frm_file[]" value="{FORM_CHOOSER_VALUE}" />
+									<script type="text/javascript">
+									// <![CDATA[
+										Storage.initField('frm_file', {maxFiles:1, maxChar:60, removeLabel:'{FIELD_LABEL_REMOVE}', thumbPath:'{FIELD_THUMB_PATH}'});
+									// ]]>
+									</script>
+								</div>
+							</div>
+							<!-- END field.file -->
+							<div class="optional{ERROR_NOTES_ON}">
+								<!-- BEGIN error-element-notes -->
+								<p class="ui-state-error ui-corner-all">{ERROR_NOTES}</p>
+								<!-- END error-element-notes -->
+								<label for="frm_description">{LABEL_NOTES}</label>
+								<textarea id="frm_description" name="frm_description" class="input-textmedium" cols="32" rows="6">{FORM_NOTES_VALUE}</textarea>
+							</div>
+							<input type="hidden" name="dispatch" value="addStorageItem" />
+						</fieldset>
+	
+						<div class="form-navigation">
+							<input type="hidden" name="cid" value="{CID}" />
+							<input type="hidden" name="cmd" value="{CMD}" />
+							<input type="hidden" name="eid" value="{EID}" />
+							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
+						</div>
+					</div>
+					<div id="section-fields" style="display: none;"><!-- Temp hack to hide this content -->
+						<!-- BEGIN description-fields -->
+						<div class="description">
+							<p>{LABEL}</p>
+						</div>
+						<!-- END description-fields -->
+						<fieldset>
+							<!-- BEGIN elementlanguage -->
+							<div class="optional{ERROR_LANGUAGE_ON}">
+								<!-- BEGIN error-language -->
+								<p class="ui-state-error ui-corner-all">{ERROR_LANGUAGE}</p>
+								<!-- END error-language -->
+								<label for="frm_language">
+									<a href="javascript:;" rel="internal" class="fieldButton"><img id="language_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+									<a href="javascript:;" rel="internal" class="fieldButton"><img id="language_active" src="images/lang_enabled.gif" width="17" height="16" alt="" /></a>
+									{LABEL_LANGUAGE}
+								</label>
+								<select id="frm_language" name="frm_language" class="select-one" onchange="objContentLanguage.swap(this.options[this.selectedIndex].value);">
+									<!-- BEGIN list_language -->
+									<option value="{LANGUAGELIST_VALUE}" {LANGUAGELIST_SELECTED}>{LANGUAGELIST_TEXT}</option>
+									<!-- END list_language -->
+								</select>
+								<input type="hidden" id="language_actives" name="language_actives" value="{ACTIVES_LANGUAGE}" />
+							</div>
+							<script type="text/javascript">
+							// <![CDATA[
+								var objContentLanguage = new ContentLanguage();
+								objContentLanguage.currentLanguage = {ACTIVE_LANGUAGE};
+								objContentLanguage.defaultLanguage = {DEFAULT_LANGUAGE};
+								objContentLanguage.setActives('{ACTIVES_LANGUAGE}');
+								objContentLanguage.init();
+	
+								function FCKeditor_OnComplete(editorInstance) {										
+									editorInstance.Events.AttachEvent('OnBlur', FCKToTemp);
+									editorInstance.Events.AttachEvent('OnAfterLinkedFieldUpdate', FCKToTemp);
+									<!-- BEGIN field_textarea_oncomplete_value -->
+									objContentLanguage.addField('{ELEMENT_FIELD_ID}', '{ELEMENT_FIELD_CASCADES}', objContentLanguage.FIELDTYPE.TEXTAREA);
+									<!-- END field_textarea_oncomplete_value -->
+								}
+	
+								function FCKToTemp(editorInstance) {
+									objContentLanguage.toTemp(editorInstance.Name);
+								}
+							// ]]>
+							</script>
+							<!-- END elementlanguage -->
+							<input type="hidden" name="dispatch" value="addStorageItem" />
+						</fieldset>
+	
+						<div class="divider"></div>
+	
+						<!-- BEGIN elementfields -->
+						<fieldset>
+							{ELEMENT_FIELDS}
+						</fieldset>
+						<!-- END elementfields -->
+	
+						<div class="form-navigation">
+							<a href="{BUTTON_FORMCANCEL_HREF}" rel="internal">{BUTTON_FORMCANCEL}</a>&nbsp;&nbsp;&nbsp;<input type="submit" class="input-button" value="{LABEL_SAVE}" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<div id="footer">
+				&nbsp;
+			</div>
+		</div>
+
+	</div>
+</div>
