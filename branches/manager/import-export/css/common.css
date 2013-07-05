@@ -1261,3 +1261,11 @@ div.progresstext {
 .no-margin {
 	margin: 0 !important;
 }
+
+/* EXPORT OPTIONS */
+.export-select {display:block;}
+.export-select .level {display:block;float:left;clear:left;border-left:1px solid #CCC;}
+.export-select .level.first {clear:none;padding-bottom:0;margin-bottom:0;border-left:0}
+.export-select .level input[type=checkbox] {margin-top:2px;float:left;width:15px;clear:left;}
+.export-select .level label {font-size:10px !important;cursor:pointer;padding:0 0 0 5px !important;}
+.export-select .level > .level {margin-left:5px;padding-left:15px;}

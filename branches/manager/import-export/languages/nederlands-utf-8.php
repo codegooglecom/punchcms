@@ -109,6 +109,8 @@ $_LANG['button']['aliasAdd'] = "Nieuwe Snelkoppeling";
 $_LANG['button']['feedAdd'] = "Nieuwe bron";
 $_LANG['button']['insert'] = "Invoegen";
 $_LANG['button']['alttag'] = "Omschrijving toevoegen...";
+$_LANG['button']['export'] = "Exporteer";
+$_LANG['button']['import'] = "Importeer";
 
 //*** Label definitions.
 $_LANG['label']['in'] = "in";
@@ -180,6 +182,16 @@ $_LANG['label']['metaDescription'] = "Omschrijving";
 $_LANG['label']['chooseFolder'] = "Kies een map";
 $_LANG['label']['forLanguage'] = "voor <b>%s</b>";
 $_LANG['label']['forAllLanguages'] = "voor <b>Alle talen</b>";
+$_LANG['label']['export'] = "Exporteren";
+$_LANG['label']['exportOptions'] = "Exporteer opties";
+$_LANG['label']['templatesElements'] = "Sjablonen & Elementen";
+$_LANG['label']['templates'] = "Sjablonen";
+$_LANG['label']['elements'] = "Elementen";
+$_LANG['label']['selectTemplates'] = "Selecteer sjablonen";
+$_LANG['label']['selectElements'] = "Selecteer elementen";
+$_LANG['label']['import'] = "Importeren";
+$_LANG['label']['importFile'] = "Importeer bestand:";
+$_LANG['label']['importOptions'] = "Importeer opties";
 
 //*** Settings label definitions.
 $_LANG['settingsLabel']['section_ftp'] = "FTP";
@@ -363,6 +375,7 @@ $_LANG['tip']['metaKeywords'] = "Maximaal 20 sleutelwoorden voor de pagina.";
 $_LANG['tip']['metaDescription'] = "Omschrijving van de pagina met maximaal 200 letters.";
 $_LANG['tip']['storageName'] = "Als u het veld leeg laat wordt de naam van het bestand gebruikt.";
 $_LANG['tip']['language'] = "U kunt de snelkoppeling aan een specifieke taal koppelen.";
+$_LANG['tip']['importFile'] = "*.ZIP - De sjablonen en/of elementen worden geimporteerd op de huidige locatie: ";
 
 //*** Alert definitions.
 $_LANG['alert']['templateRemoveAlert'] = "Weet u zeker dat u deze sjabloon wilt verwijderen?\\nAlle onderliggende sjablonen en elementen gebaseerd op deze sjabloon worden ook verwijderd!";
@@ -373,7 +386,7 @@ $_LANG['alert']['storageItemRemoveAlert'] = "Weet u zeker dat u dit media elemen
 $_LANG['alert']['storageItemsRemoveAlert'] = "Weet u zeker dat u deze media elementen wilt verwijderen?";
 $_LANG['alert']['elementsRemoveAlert'] = "Weet u zeker dat u deze elementen wilt verwijderen?\\nAlle onderliggende elementen worden ook verwijderd!";
 $_LANG['alert']['languageRemoveAlert'] = "Weet u zeker dat u deze taal wilt verwijderen?\\nAlle veldwaardes van deze taal worden ook verwijderd!";
-$_LANG['alert']['multiItemEmpty'] = "U heeft geen item(s) geselecteerd waar u deze actie op uit kunt voeren."; 
+$_LANG['alert']['multiItemEmpty'] = "U heeft geen item(s) geselecteerd waar u deze actie op uit kunt voeren.";
 $_LANG['alert']['newsWindowClose'] = "<b>Sluit dit venster niet</b><br />totdat de nieuwsbrief <b>volledig verzonden</b> is.<br />	Als u besluit om het toch te sluiten kunt u op een later tijdstip verder gaan.";
 $_LANG['alert']['undefinedHeader'] = "Oeps!";
 $_LANG['alert']['undefinedBody'] = "De applicatie is niet in staat om uw verzoek te verwerken. Neem contact op met de beheerder van de applicatie als dit vaker voorkomt.";

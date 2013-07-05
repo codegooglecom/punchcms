@@ -50,13 +50,13 @@ function parseTemplates($intElmntId, $strCommand) {
 
 						$objTpl->setVariable("MULTIITEM_VALUE", $objField->getId());
 						$objTpl->setVariable("MULTIITEM_HREF", "href=\"?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objField->getId()}&amp;cmd=" . CMD_EDIT_FIELD . "\"");
-						
+
 						$strValue = htmlspecialchars($objField->getName());
 						$strShortValue = getShortValue($strValue, 50);
 						$intSize = strlen($strValue);
 						$objTpl->setVariable("MULTIITEM_NAME", ($intSize > 50) ? $strShortValue : $strValue);
 						$objTpl->setVariable("MULTIITEM_TITLE", ($intSize > 50) ? $strValue : "");
-						
+
 						$objTpl->setVariable("MULTIITEM_TYPE", ", " . $objFieldType->getName());
 						$objTpl->setVariable("MULTIITEM_TYPE_CLASS", "field");
 						$objTpl->setVariable("MULTIITEM_META", $strMeta);
@@ -117,10 +117,10 @@ function parseTemplates($intElmntId, $strCommand) {
 
 			//*** Render the rest of the page.
 			$objTpl->setCurrentBlock("multiview");
-			
+
 			$objTpl->setVariable("ACTIONS_OPEN", $objLang->get("pcmsOpenActionsMenu", "menu"));
 			$objTpl->setVariable("ACTIONS_CLOSE", $objLang->get("pcmsCloseActionsMenu", "menu"));
-			
+
 			$objTpl->setVariable("LIST_LENGTH_HREF_10", "href=\"?list=10&amp;cid=" . NAV_PCMS_TEMPLATES . "&amp;eid=$intElmntId\"");
 			$objTpl->setVariable("LIST_LENGTH_HREF_25", "href=\"?list=25&amp;cid=" . NAV_PCMS_TEMPLATES . "&amp;eid=$intElmntId\"");
 			$objTpl->setVariable("LIST_LENGTH_HREF_100", "href=\"?list=100&amp;cid=" . NAV_PCMS_TEMPLATES . "&amp;eid=$intElmntId\"");
@@ -159,6 +159,10 @@ function parseTemplates($intElmntId, $strCommand) {
 				$objTpl->setVariable("BUTTON_REMOVE_HREF", "javascript:PTemplate.remove({$intElmntId});");
 				$objTpl->setVariable("BUTTON_MAIN_DUPLICATE", $objLang->get("duplicateTemplate", "button"));
 				$objTpl->setVariable("BUTTON_MAIN_DUPLICATE_HREF", "javascript:PTemplate.duplicate({$intElmntId});");
+				$objTpl->setVariable("BUTTON_EXPORT_TEMPLATE",  $objLang->get("export", "button"));
+				$objTpl->setVariable("BUTTON_EXPORT_TEMPLATE_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_EXPORT_TEMPLATE);
+				$objTpl->setVariable("BUTTON_IMPORT_TEMPLATE",  $objLang->get("import", "button"));
+				$objTpl->setVariable("BUTTON_IMPORT_TEMPLATE_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_IMPORT_TEMPLATE);
 			}
 
 			$objTpl->setVariable("LABEL_SUBJECT", $objLang->get("fieldsFor", "label") . " ");
@@ -185,7 +189,7 @@ function parseTemplates($intElmntId, $strCommand) {
 			$intParent = $objTemplate->getParentId();
 			$objTemplate->setUsername($objLiveUser->getProperty("name"));
 			$objDuplicate = $objTemplate->duplicate($objLang->get("copyOf", "label"));
-			
+
 			//*** Redirect the page.
 			$strReturnTo = request('returnTo');
 			if (empty($strReturnTo)) {
@@ -348,7 +352,7 @@ function parseTemplates($intElmntId, $strCommand) {
 			} else {
 				$objTpl->setVariable("MAINTITLE", $objLang->get("templateDetails", "label"));
 			}
-			
+
 			//*** Set tab title.
 			$objTpl->setCurrentBlock("headertitel_simple");
 			$objTpl->setVariable("HEADER_TITLE", $objLang->get("details", "label"));
@@ -523,24 +527,24 @@ function parseTemplates($intElmntId, $strCommand) {
 			} else {
 				$objTpl->setVariable("MAINTITLE", $objLang->get("templateFieldDetails", "label"));
 			}
-			
+
 			//*** Image crop settings.
 			$arrValues = array(1,2,3,4);
 			$arrLabels = array("Resize cropped","Resize fit cropped","Resize distorted","Resize to fit");
 
 			$arrSettings = array();
 			$arrImageSettings = array();
-					
-			if ($strCommand == CMD_EDIT_FIELD) {			
+
+			if ($strCommand == CMD_EDIT_FIELD) {
 				$objFieldValues = $objField->getValues();
-				if (is_object($objFieldValues)) {					
+				if (is_object($objFieldValues)) {
 					foreach ($objFieldValues as $objFieldValue) {
 						switch (strtoupper($objFieldValue->getName())) {
 							case "TFV_BOOLEAN_DEFAULT":
 								if ($objFieldValue->getValue()) {
 									$arrSettings[$objFieldValue->getName()] = "checked=\"checked\"";
 								}
-								
+
 								break;
 							default:
 								$arrKey = explode("_", $objFieldValue->getName());
@@ -554,7 +558,7 @@ function parseTemplates($intElmntId, $strCommand) {
 								}
 						}
 					}
-					
+
 					if (count($arrImageSettings) > 0) {
 						//*** Image settings.
 						$arrImageSettings = array_reverse($arrImageSettings);
@@ -562,40 +566,40 @@ function parseTemplates($intElmntId, $strCommand) {
 							$objTpl->setCurrentBlock("image.settings");
 							foreach ($objValue as $setting => $value) {
 								switch (strtoupper($setting)) {
-									case "TFV_IMAGE_SCALE":								
+									case "TFV_IMAGE_SCALE":
 										$strValue = "";
 										foreach ($arrValues as $settingKey => $settingValue) {
 											$selected = ($settingValue == $value) ? " selected=\"selected\"" : "";
 											$strValue .= "<option value=\"$arrValues[$settingKey]\"{$selected}>{$arrLabels[$settingKey]}</option>\n";
 										}
 										$objTpl->setVariable(strtoupper($setting), $strValue);
-										
+
 										break;
 									case "TFV_IMAGE_GRAYSCALE":
 										if ($value) {
 											$objTpl->setVariable(strtoupper($setting), "checked=\"checked\"");
 										}
-										
+
 										break;
 									default:
 										$objTpl->setVariable(strtoupper($setting), xhtmlsave($value));
 								}
 							}
-							
+
 							if (count($arrImageSettings) == 1) {
 								$objTpl->setVariable("API_STYLE", "display:none");
 							}
-							
+
 							if ($key == 0) {
 								$objTpl->setVariable("REMOVE_STYLE", "display:none");
 							}
-							
+
 							$objTpl->parseCurrentBlock();
 						}
 					}
 				}
 			}
-			
+
 			$objTpl->setCurrentBlock("templatefieldadd");
 			$objTpl->setVariable("LABEL_REQUIRED", $objLang->get("requiredFields", "form"));
 			$objTpl->setVariable("LABEL_REQUIREDFIELD", $objLang->get("requiredField", "form"));
@@ -609,7 +613,7 @@ function parseTemplates($intElmntId, $strCommand) {
 			$objTpl->setVariable("TFV_FORMAT_NOTES", $objLang->get("templateDateType", "tip"));
 			$objTpl->setVariable("TFV_QUALITY_NOTES", $objLang->get("templateImageType", "tip"));
 			$objTpl->setVariable("TFV_EXTENSION_NOTES", $objLang->get("templateFileType", "tip"));
-			
+
 			//*** Render image scale pulldown.
 			if (count($arrImageSettings) == 0) {
 				$strValue = "";
@@ -636,19 +640,19 @@ function parseTemplates($intElmntId, $strCommand) {
 								if ($value) {
 									$objTpl->setVariable(strtoupper($name), "checked=\"checked\"");
 								}
-								
+
 								break;
 							case "TFV_IMAGE_SCALE":
 								//*** Skip. Already set.
-								
+
 								break;
 							default:
-								$objTpl->setVariable(strtoupper($name), xhtmlsave($value));						
+								$objTpl->setVariable(strtoupper($name), xhtmlsave($value));
 						}
 					}
-				}				
+				}
 			}
-			
+
 			$objTpl->parseCurrentBlock();
 
 			$objTpl->setCurrentBlock("singleview");
@@ -672,7 +676,7 @@ function parseTemplates($intElmntId, $strCommand) {
 		case CMD_ADD_STRUCTURE:
 		case CMD_ADD_STRUCTURE_DETAIL:
 			$objTpl->loadTemplatefile("structure.tpl.htm");
-			
+
 			$blnRenderSelects = FALSE;
 
 			//*** Post the structure form if submitted.
@@ -715,12 +719,12 @@ function parseTemplates($intElmntId, $strCommand) {
 
 			//*** Set section title.
 			$objTpl->setVariable("MAINTITLE", $objLang->get("structureAdd", "label"));
-			
+
 			//*** Set tab title.
 			$objTpl->setCurrentBlock("headertitel_simple");
 			$objTpl->setVariable("HEADER_TITLE", $objLang->get("structureDetails", "label"));
 			$objTpl->parseCurrentBlock();
-			
+
 			if (!$blnRenderSelects) {
 				$objElements = Structure::selectBySection("template");
 				foreach ($objElements as $objElement) {
@@ -740,7 +744,7 @@ function parseTemplates($intElmntId, $strCommand) {
 				$objTpl->setCurrentBlock("structureadd.description");
 				$objTpl->setVariable("LABEL_REQUIRED", $objLang->get("structureAdd", "tip"));
 				$objTpl->parseCurrentBlock();
-				
+
 				$objTpl->setCurrentBlock("structureadd");
 				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
 				$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
@@ -758,7 +762,7 @@ function parseTemplates($intElmntId, $strCommand) {
 								$objTpl->setVariable("VALUE", $objContentLang->getId());
 								$objTpl->parseCurrentBlock();
 							}
-							
+
 							$objTpl->setCurrentBlock("select.language");
 							$objTpl->setVariable("LABEL", $objLang->get("sSelectLanguage", "form"));
 							$objTpl->setVariable("DESCRIPTION", $objSelect->getDescription());
@@ -782,7 +786,7 @@ function parseTemplates($intElmntId, $strCommand) {
 				$objTpl->setCurrentBlock("structureselects");
 				$objTpl->setVariable("FRM_STRUCURE", $_CLEAN_POST["frm_structure"]);
 				$objTpl->parseCurrentBlock();
-				
+
 				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
 				$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
 			}
@@ -795,12 +799,133 @@ function parseTemplates($intElmntId, $strCommand) {
 			$objTpl->setVariable("CMD", (!$blnRenderSelects) ? CMD_ADD_STRUCTURE : CMD_ADD_STRUCTURE_DETAIL);
 			$objTpl->setVariable("EID", $intElmntId);
 			$objTpl->parseCurrentBlock();
-			
+
 			if ($blnRenderSelects) {
 				$objTpl->setVariable("FORM_NAME", "detailsForm");
 			}
 
 			break;
+
+        case CMD_EXPORT_TEMPLATE:
+			$objTpl->loadTemplatefile("export.tpl.htm");
+
+            //*** Parse the template.
+			$objTemplate = Template::selectByPK($intElmntId);
+
+			//*** Set section title.
+			$objTpl->setVariable("MAINTITLE", $objLang->get("export", "label"));
+
+			//*** Set tab title.
+			$objTpl->setCurrentBlock("headertitel_simple");
+			$objTpl->setVariable("HEADER_TITLE", $objLang->get("exportOptions", "label"));
+			$objTpl->parseCurrentBlock();
+
+            $objTpl->setVariable("FORM_NAME", "exportForm");
+
+            //*** Handle request & create export
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['export_type']))
+            {
+                //*** The template form has been posted.
+                $arrTemplateFilters = array();
+                foreach($_POST['tmpl'] as $id => $val)
+                {
+                    $arrTemplateFilters[] = intval($id);
+                }
+                $exportElements = ($_POST['export_type'] == 'templates_elements') ? true : false;
+                $strZipFile = ImpEx::exportFrom(NULL, $objTemplate->getId(), NULL, $arrTemplateFilters , $_CONF['app']['account']->getId(), $exportElements);
+
+                //*** Return XML.
+                header("HTTP/1.1 200 OK");
+                header("Pragma: public");
+                header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+                header("Cache-Control: private", false);
+                header('Content-Type: application/octetstream; charset=utf-8');
+                header("Content-Length: " . (string)(filesize($strZipFile)));
+                header('Content-Disposition: attachment; filename="' . date("Y-m-d") . '_exportTemplates.zip"');
+                header("Content-Transfer-Encoding: binary\n");
+
+                readfile($strZipFile);
+                unlink($strZipFile);
+                exit;
+			}
+
+            //*** Create template checkboxes
+            $objTpl->setVariable("FORM_CHECKBOXES", createTemplateTree($objTemplate));
+
+            $objTpl->setVariable("EXPORT", $objLang->get("export", "label"));
+            $objTpl->setVariable("EXPORT_TEMPLATES_ELEMENTS", $objLang->get("templatesElements", "label"));
+            $objTpl->setVariable("EXPORT_TEMPLATES", $objLang->get("templates", "label"));
+			$objTpl->setVariable("SELECT_ITEMS", $objLang->get("selectTemplates", "label"));
+
+            //*** Set form buttons
+			$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
+            $objTpl->setCurrentBlock("singleview");
+			$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));
+			$objTpl->setVariable("BUTTON_FORMCANCEL", $objLang->get("cancel", "button"));
+			$objTpl->setVariable("LABEL_SAVE", $objLang->get("export", "button"));
+			$objTpl->setVariable("CID", NAV_PCMS_TEMPLATES);
+			$objTpl->setVariable("CMD", CMD_EXPORT_TEMPLATE);
+			$objTpl->setVariable("EID", $intElmntId);
+			$objTpl->parseCurrentBlock();
+
+
+            break;
+
+        case CMD_IMPORT_TEMPLATE:
+			$objTpl->loadTemplatefile("import.tpl.htm");
+
+            //*** Parse the template.
+			$objTemplate = Template::selectByPK($intElmntId);
+
+			//*** Set section title.
+			$objTpl->setVariable("MAINTITLE", $objLang->get("import", "label"));
+
+			//*** Set tab title.
+			$objTpl->setCurrentBlock("headertitel_simple");
+			$objTpl->setVariable("HEADER_TITLE", $objLang->get("importOptions", "label"));
+			$objTpl->parseCurrentBlock();
+
+            //*** Handle request & do import
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_FILES["file"]["name"] ))
+            {
+                if ($_FILES["file"]["error"] > 0)
+                {
+                    $objTpl->setVariable('ERROR_MAIN','Error: '. $_FILES["file"]["error"]);
+                }
+                else if(end(explode(".", $_FILES["file"]["name"])) !== 'zip')
+                {
+                    $objTpl->setVariable('ERROR_MAIN','Error: Only *.ZIP files allowed');
+                }
+                else
+                {
+                    $importElements = ($_POST['import_type'] === 'templates_elements') ? true : false;
+                    if(!ImpEx::importIn($_FILES["file"]["tmp_name"],NULL,$objTemplate->getId(),$_CONF['app']['account']->getId(),true,$importElements,false))
+                    {
+                        $objTpl->setVariable('ERROR_MAIN','Templates and/or fields of templates in file do not match the destination templates');
+                    }
+                }
+            }
+
+            $objTpl->setVariable("IMPORT", $objLang->get("import", "label"));
+            $objTpl->setVariable("IMPORT_TEMPLATES_ELEMENTS", $objLang->get("templatesElements", "label"));
+            $objTpl->setVariable("IMPORT_TEMPLATES", $objLang->get("templates", "label"));
+            $objTpl->setVariable("IMPORT_ELEMENTS", $objLang->get("elements", "label"));
+            $objTpl->setVariable('CUR_LOCATION',$objTemplate->getName());
+			$objTpl->setVariable("IMPORT_FILE", $objLang->get("importFile", "label"));
+			$objTpl->setVariable("IMPORT_FILE_TIP", $objLang->get("importFile", "tip"));
+
+            //*** Set form buttons
+			$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
+            $objTpl->setCurrentBlock("singleview");
+			$objTpl->setVariable("BUTTON_CANCEL", $objLang->get("back", "button"));
+			$objTpl->setVariable("BUTTON_FORMCANCEL", $objLang->get("cancel", "button"));
+			$objTpl->setVariable("LABEL_SAVE", $objLang->get("import", "button"));
+			$objTpl->setVariable("CID", NAV_PCMS_TEMPLATES);
+			$objTpl->setVariable("CMD", CMD_IMPORT_TEMPLATE);
+			$objTpl->setVariable("EID", $intElmntId);
+			$objTpl->parseCurrentBlock();
+
+            break;
 	}
 
 	return $objTpl->get();
