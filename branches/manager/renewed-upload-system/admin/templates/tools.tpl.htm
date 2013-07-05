@@ -1,0 +1,21 @@
+<div id="content">
+	<!-- BEGIN form.sql -->
+	<div class="formWrapper">
+		<form id="sqlForm" method="post" action="?">
+			<div class="required">
+				<label for="frm_sql">SQL Query</label>
+				<textarea id="frm_sql" name="frm_sql" class="input-textbig" rows="10" cols="60">{QUERY_VALUE}</textarea>
+			</div>
+			<div class="navigation">
+				<input type="hidden" name="cid" value="{CID}" />
+				<input type="hidden" name="cmd" value="{CMD}" />
+				<input type="hidden" name="dispatch" value="runQuery" />
+				<input type="submit" value="Run Query" />
+			</div>
+		</form>
+	</div>
+	<!-- END form.sql -->
+	<!-- BEGIN text -->
+	{BODY}
+	<!-- END text -->
+</div>

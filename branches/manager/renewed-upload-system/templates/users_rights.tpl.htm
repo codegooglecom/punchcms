@@ -1,0 +1,107 @@
+					<div class="column">
+						<form id="rightForm" method="post" action="#" class="users ui-tabs ui-widget ui-widget-content ui-corner-all">
+							<div class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+								<h3 class="no-margin"><span id="userProgress"></span>{SUBTITLE}</h3>
+								<fieldset>
+									<div class="required">
+										<label for="right_define_name">{NAME_LABEL}</label>
+										<input type="text" id="right_define_name" name="right_define_name" class="input-textsmall" />
+									</div>
+									<div class="required">
+										<label for="area_id">{AREA_LABEL}</label>
+										<select id="area_id" name="area_id" class="select-singlesmall">
+											<!-- BEGIN right-area -->
+											<option value="{VALUE}">{TEXT}</option>
+											<!-- END right-area -->
+										</select>
+									</div>
+								</fieldset>
+								<h4>{IMPLIED_RIGHTS_LABEL}</h4>
+								<fieldset>
+									<h5>{SELECTED_RIGHTS_LABEL}</h5>
+									<ul class="sortable strong" id="rights"></ul>
+									<h5 class="secondary">{AVAILABLE_RIGHTS_LABEL}</h5>
+									<ul class="sortable" id="allrights">
+										<!-- BEGIN right-allrights -->
+										<li id="right_{VALUE}">{TEXT}</li>
+										<!-- END right-allrights -->
+									</ul>
+								</fieldset>
+								<h4>{GROUPS_LABEL}</h4>
+								<fieldset>
+									<h5>{SELECTED_GROUPS_LABEL}</h5>
+									<ul class="sortable strong" id="groups"></ul>
+									<h5 class="secondary">{AVAILABLE_GROUPS_LABEL}</h5>
+									<ul class="sortable" id="allgroups">
+										<!-- BEGIN right-allgroups -->
+										<li id="group_{VALUE}">{TEXT}</li>
+										<!-- END right-allgroups -->
+									</ul>
+								</fieldset>
+								<h4>{USERS_LABEL}</h4>
+								<fieldset>
+									<h5>{SELECTED_USERS_LABEL}</h5>
+									<div class="scrolllist">
+										<ul class="sortable strong" id="users"></ul>
+									</div>
+									<h5 class="secondary">{AVAILABLE_USERS_LABEL}</h5>
+									<div class="scrolllist">
+										<ul class="sortable" id="allusers">
+											<!-- BEGIN right-allusers -->
+											<li id="user_{VALUE}">{TEXT}</li>
+											<!-- END right-allusers -->
+										</ul>
+									</div>
+								</fieldset>
+								<div>
+									<input type="hidden" id="right_id" name="right_id" />
+								</div>
+								<div class="subnav"><a id="cancel" href="#" rel="internal">{BUTTON_CANCEL}</a> | <input id="save" type="button" class="input-button" value="{BUTTON_SAVE}" /></div>
+							</div>
+						</form>
+						<script type="text/javascript">
+						// <![CDATA[
+						
+							// TODO: VERY IMPORTANT: Add some feedback to the cancel and save buttons!
+							jQuery("#cancel").live("click", function(){
+								Right.load(jQuery('#itemlist option:selected').val());
+								return false;
+							});
+							jQuery("#save").live("click", function(){
+								Right.write('rightForm');
+								return false;
+							});
+							
+							jQuery("#allusers li, #allgroups li, #allrights li").live("mouseover mouseout", function(event){
+								if(event.type == "mouseover"){
+									jQuery(this).addClass("hover");
+								}
+								else {
+									jQuery(this).removeAttr("class"); // remove class the clean way.
+								}
+							});
+							
+							jQuery("#rights, #allrights").sortable({
+								dropOnEmpty: true,
+								connectWith: "#rights, #allrights",
+								axis: "y"
+							});
+							jQuery("#rights, #allrights").disableSelection();
+							
+								jQuery("#groups, #allgroups").sortable({
+								dropOnEmpty: true,
+								connectWith: "#groups, #allgroups",
+								axis: "y"
+							});
+							jQuery("#groups, #allgroups").disableSelection();
+							
+							jQuery("#users, #allusers").sortable({
+								dropOnEmpty: true,
+								connectWith: "#users, #allusers",
+								axis: "y"
+							});
+							jQuery("#users, #allusers").disableSelection();
+						
+						// ]]>
+						</script>
+					</div>
