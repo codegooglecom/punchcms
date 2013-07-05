@@ -1,0 +1,20 @@
+<div id="login">
+	<form id="loginForm" method="post" action="?">
+		<!-- BEGIN error -->
+		<p class="error">{LOGIN_ERROR}</p>
+		<!-- END error -->
+		<h1>{LOGIN_TITLE}</h1>
+		<p>This area is restricted. Please enter your credentials to continue.</p>
+		<fieldset>
+			<div class="required">
+				<label for="handle">Username</label><input id="handle" type="text" class="text-medium" name="handle" />
+			</div>
+			<div class="required">
+				<label for="passwd">Password</label><input id="passwd" type="password" class="text-medium" name="passwd" />
+			</div>
+			<div class="navigation">
+				<input type="submit" class="button" value="Login" />
+			</div>
+		</fieldset>
+	</form>
+</div>
