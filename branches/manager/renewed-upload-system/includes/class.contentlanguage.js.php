@@ -686,12 +686,15 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	this.uploadPath = "";
 	this.selectType = [];
 	this.fileType = "*.*";
-	this.swfUpload = null;
+	this.uploader = null;
 
 	//*** Parse the options.
 	for (var intCount in objOptions) {
 		this[intCount] = objOptions[intCount];
 	}
+
+	//*** Inject custom upload button
+	this.prepareUploader();
 
 	//*** Attach event to the file button.
 	if (this.$objTrigger.is("input") && this.$objTrigger.attr("type") == "file"){
@@ -704,7 +707,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		alert("Error: " + strId + " is not a file input element!");
 	}
 
-	//*** Attach event to the library button.
+	//*** Open / close Media Library button
 	jQuery("#browseStorage_" + strId).toggle(
 		function(){
 			__this.openStorageBrowser();
@@ -738,55 +741,112 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		}
 	}
 
-	//*** Initiate SWFUpload code.
-	var settings = {
-		jsParent : __this,
-		flash_url : "/libraries/swfupload.swf",
-		upload_url: "/upload.php",
-		post_params: {
-			"PHPSESSID" : "<?php echo session_id(); ?>",
-			"fileId" : __this.id
-		},
-		file_size_limit : "100 MB",
-		file_types : __this.fileType,
-		file_types_description : "Files",
-		file_upload_limit : __this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles),
-		file_queue_limit : __this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles),
-		custom_settings : {
-			progressTarget : __this.id + "_uploadProgress",
-			cancelButtonId : __this.id + "_cancel"
-		},
-		debug: false,
-
-		// Button Settings
-		button_image_url : "/images/XPButtonUploadText_61x22.png",
-		button_placeholder_id : __this.id + "_browse",
-		button_window_mode: SWFUpload.WINDOW_MODE.OPAQUE,
-		button_width: 61,
-		button_height: 22,
-
-		// The event handler functions are defined in handlers.js
-		swfupload_loaded_handler : __this.swfUploadLoaded,
-		file_queued_handler : __this.fileQueued,
-		file_queue_error_handler : __this.fileQueueError,
-		file_dialog_complete_handler : __this.fileDialogComplete,
-		upload_start_handler : __this.uploadStart,
-		upload_progress_handler : __this.uploadProgress,
-		upload_error_handler : __this.uploadError,
-		upload_success_handler : __this.uploadSuccess,
-		upload_complete_handler : __this.uploadComplete,
-		queue_complete_handler : __this.queueComplete,	// Queue plugin event
-
-		// SWFObject settings
-		minimum_flash_version : "9.0.28",
-		swfupload_pre_load_handler : __this.swfUploadPreLoad,
-		swfupload_load_failed_handler : __this.swfUploadLoadFailed
+	var settings = 
+	{
+		runtimes : 'html5,flash,silverlight,html4',
+		browse_button : 'upload_' + this.id,
+		container: this.id + '_widget',
+		max_file_size : '100 mb',
+		url : '/pupload.php',
+		flash_swf_url : '/libraries/plupload/plupload.flash.swf',
+		silverlight_xap_url : '/libraries/plupload/plupload.silverlight.xap',
+		multi_selection: true,
+		drop_element: this.id + '_widget'
 	};
 
-	//this.swfUpload = new SWFUpload(settings);
+	//*** Initiate SWFUpload code.
+	// var settings = {
+	// 	jsParent : __this,
+	// 	flash_url : "/libraries/swfupload.swf",
+	// 	upload_url: "/upload.php",
+	// 	post_params: {
+	// 		"PHPSESSID" : "<?php echo session_id(); ?>",
+	// 		"fileId" : __this.id
+	// 	},
+	// 	file_size_limit : "100 MB",
+	// 	file_types : __this.fileType,
+	// 	file_types_description : "Files",
+	// 	file_upload_limit : __this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles),
+	// 	file_queue_limit : __this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles),
+	// 	custom_settings : {
+	// 		progressTarget : __this.id + "_uploadProgress",
+	// 		cancelButtonId : __this.id + "_cancel"
+	// 	},
+	// 	debug: false,
+
+	// 	// Button Settings
+	// 	button_image_url : "/images/XPButtonUploadText_61x22.png",
+	// 	button_placeholder_id : __this.id + "_browse",
+	// 	button_window_mode: SWFUpload.WINDOW_MODE.OPAQUE,
+	// 	button_width: 61,
+	// 	button_height: 22,
+
+	// 	// The event handler functions are defined in handlers.js
+	// 	swfupload_loaded_handler : __this.swfUploadLoaded,
+	// 	file_queued_handler : __this.fileQueued,
+	// 	file_queue_error_handler : __this.fileQueueError,
+	// 	file_dialog_complete_handler : __this.fileDialogComplete,
+	// 	upload_start_handler : __this.uploadStart,
+	// 	upload_progress_handler : __this.uploadProgress,
+	// 	upload_error_handler : __this.uploadError,
+	// 	upload_success_handler : __this.uploadSuccess,
+	// 	upload_complete_handler : __this.uploadComplete,
+	// 	queue_complete_handler : __this.queueComplete,	// Queue plugin event
+
+	// 	// SWFObject settings
+	// 	minimum_flash_version : "9.0.28",
+	// 	swfupload_pre_load_handler : __this.swfUploadPreLoad,
+	// 	swfupload_load_failed_handler : __this.swfUploadLoadFailed
+	// };
+
+	this.uploader = new plupload.Uploader(settings);
+
+	this.uploader.bind("Init", function (up, params) {
+		console.log("Current runtime: " + params.runtime);
+	});
+
+	this.uploader.init();
+
+	this.uploader.bind("FilesAdded", function (up, files) {
+		for (var i in files) {
+			if (files.hasOwnProperty(i)) {
+				console.log("Add file row", up, files);
+			}
+		}
+
+		up.start();
+	});
+
+	this.uploader.bind('UploadProgress', function(up, file) {
+		console.log("Upload progress: ", file.percent);
+	});
+
+	//*** Check if we've got Drag & Drop support
+	if (this.uploader.runtime == "html5") {
+		$("body")
+			.on("dragenter", function () {
+				$(".widget.filefield").each(function () {
+					var $overlay = $("<div class='dropHere' />");
+
+					$(this).addClass("dropable");
+					$(this).prepend($overlay);
+				});
+			})
+			.on("dragleave", function () {
+				$(".dropHere").remove();
+			});
+	}
 };
 
 FileField.prototype = new ContentField();
+
+FileField.prototype.prepareUploader = function () {
+	var self = this;
+
+	this.$objTrigger.parent().prepend($("<a href='#' id='upload_" + this.id + "' class='button'>Upload</a>"));
+	this.$objTrigger.parent().find("label").hide();
+	this.$objTrigger.hide();
+}
 
 FileField.prototype.toScreen = function() {
 	//*** Attach mouse events to the cascade button.

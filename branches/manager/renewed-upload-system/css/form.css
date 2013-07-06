@@ -177,6 +177,16 @@ form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
 /********************************************************************************************************************
  * File field styling
  ********************************************************************************************************************/
+form.ui-tabs div.ui-tabs-panel fieldset div .filefield.dropable {
+}
+.dropHere {
+	z-index: 99;
+	background: rgba(255, 255, 255, 0.7);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
 form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	border: 1px #999 solid;
 	padding-bottom: 10px;
@@ -192,7 +202,7 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .header {
 		background: #E0EEFF;
-		padding: 10px 11px 5px;
+		padding: 10px 11px;
 		border-bottom: 1px #999 solid;
 		margin: 0;
 		overflow: auto;
@@ -200,6 +210,22 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 		-moz-border-radius-topright: 4px;
 		-webkit-border-top-left-radius: 4px;		
 		-webkit-border-top-right-radius: 4px;		
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .header .button {
+		background-color: #FFF;
+		text-decoration: none;
+		padding: 4px 11px;
+		font-size: 14px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .header .button:hover {
+		background-color: #2C457C;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .header .browseStorage {
+		margin-top: 0 !important;
+		float: inherit !important;
+		right: 11px !important;
+		position: absolute !important;
+		top: 6px !important;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .storageBrowser {
 		overflow: auto;
