@@ -3,13 +3,28 @@
 <script type="text/javascript">
 // <![CDATA[
 
+function setLinkTrail(element)
+{
+    $.ajax({
+        url: 'ajax.php?cmd=Element::generateElementTrailXml&params='+ encodeURIComponent(element.value) ,
+        dataType: 'xml',
+        success:  function(data)
+        { 
+            var id = $(element).attr('id');
+            $('#'+ id + '_element').html($(data).find('field').text());
+        }
+    });
+}
+
 function DragDropLink(){
 
 	//*** Action occures on drag.
 	this._drag = function(sourceHtmlObject, dhtmlObject, targetHtmlObject) {
 		targetHtmlObject.style.backgroundColor = "";
 		targetHtmlObject.value = sourceHtmlObject.parentObject.id;
-		
+        		
+        setLinkTrail(targetHtmlObject);        
+                
 		//*** Trigger the language module.
 		objContentLanguage.toTemp(targetHtmlObject.id);
 	}
@@ -68,6 +83,11 @@ function generateSlug(str) {
 
 //*** Onload action.
 jQuery(function(){
+        
+    $('input.deeplink').on('change',function(){
+        setLinkTrail(this);
+    });    
+        
 	if(typeof $tabs == "undefined"){
 		$tabs = jQuery("#elementForm").tabs({
 			selected: {SELECTED_TAB},

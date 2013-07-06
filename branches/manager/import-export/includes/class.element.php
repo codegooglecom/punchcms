@@ -234,6 +234,50 @@ class Element extends DBA_Element {
 			$objAlias->save();
 		}
 	}
+    
+    public static function generateElementTrail($intElementId, $first = true) {
+        $strReturn = "";
+        $link = NULL;
+        if (!empty($intElementId)){
+            if (is_numeric($intElementId)) {
+                $objElement = Element::selectByPk($intElementId);
+                if (is_object($objElement)) {
+                    $strReturn = $objElement->getName();
+                    if ($first) {
+                        $link = '?cid='. NAV_PCMS_ELEMENTS .'&eid='. $objElement->getId() .'&cmd='. CMD_EDIT;
+                    }
+                    $strParentTrail = Element::generateElementTrail($objElement->getParentId(), false);
+                    if (!empty($strParentTrail)) {
+                        $strReturn = $strParentTrail .' &raquo; '. $strReturn;
+                    }
+                } else {
+                    $strReturn .= '[!] Broken link - element id does not exist';
+                }
+            } else if (preg_match('/^(http:\/\/|https:\/\/|mailto:|www)+/',$intElementId)) {
+                $strReturn = 'External link';
+                $link = (!preg_match("~^(?:f|ht)tps?://~i", $intElementId)) ? 'http://'. $intElementId : $intElementId;
+            } else {
+                $strReturn .= '[!] Broken link';
+            }
+        }
+        else
+        {
+            $clickable = false;
+        }
+        return ($link) ? '<a href="'. $link .'">'. $strReturn .'</a>' : $strReturn;
+    }
+    
+    public static function generateElementTrailXml($intElementId) {
+        $strTrail = self::generateElementTrail($intElementId);
+        
+        if (empty($strTrail)) {
+            $intElementId = 0;
+        }
+        
+        $strReturn = "<field id=\"{$intElementId}\"><![CDATA[{$strTrail}]]></field>";
+        
+        return $strReturn;
+    }
 
 	public function duplicate($strNewName = "") {
 		global $objLang,

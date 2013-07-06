@@ -118,15 +118,24 @@ function createTemplateTree($objTemplate) {
     return $str;
 }
 
-function createElementTree($objElement, $first = true) {
-    if(!$first) $str = '<input type="checkbox" name="elem['. $objElement->getId() .']" id="elem_'. $objElement->getId() .'" checked="checked" /><label for="elem_'. $objElement->getId() .'">'. $objElement->getName() .'</label>';
+function createElementTree($objElement, $first = true, $arrElementIds = NULL, $checked = '') {
+    if(($arrElementIds === NULL || in_array($objElement->getId(), $arrElementIds)))
+    {
+        $checked = 'checked="checked"';
+    }
+    else
+    {
+        $style = 'style="display:none"';
+    }
+    
+    if(!$first) $str = '<input type="checkbox" name="elem['. $objElement->getId() .']" id="elem_'. $objElement->getId() .'" '. $checked .' /><label for="elem_'. $objElement->getId() .'">'. $objElement->getName() .'</label>';
 
     $objElements = $objElement->getElements();
     if ($objElements->count() > 0) {
-        if (!$first) $str .= '<div class="level">';
+        if(!$first) $str .= '<div class="level" '. $style .'>';
         foreach($objElements as $objElement)
         {
-            $str .= createElementTree($objElement, false);
+            $str .= createElementTree($objElement, false, $arrElementIds, $checked);
         }
         if(!$first) $str .= '</div>';
     }

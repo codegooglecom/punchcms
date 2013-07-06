@@ -609,7 +609,7 @@ TextField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").show();
         if(jQuery("#" + this.id + "_element").length > 0)
         {
-           jQuery("#" + this.id + "_element").text(jQuery("#" + this.id + "_"+ this.parent.defaultLanguage +"_element").val());
+           jQuery("#" + this.id + "_element").html(jQuery("#" + this.id + "_"+ this.parent.defaultLanguage +"_element").val());
         }
 	} else {
 		//*** The field needs no special treatment.
@@ -618,7 +618,7 @@ TextField.prototype.toScreen = function() {
 		jQuery("#" + this.id).val(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
         if(jQuery("#" + this.id + "_element").length > 0)
         {
-           jQuery("#" + this.id + "_element").text(jQuery("#" + this.id + "_"+ this.parent.currentLanguage +"_element").val());
+           jQuery("#" + this.id + "_element").html(jQuery("#" + this.id + "_"+ this.parent.currentLanguage +"_element").val());
 	}
 }
 }

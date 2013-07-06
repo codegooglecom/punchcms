@@ -162,6 +162,7 @@ function parsePages($intElmntId, $strCommand) {
 				$arrActions[$objLang->get("duplicate", "button") . "&nbsp;&nbsp;"] = "duplicate";
 				$arrActions[$objLang->get("activate", "button") . "&nbsp;&nbsp;"] = "activate";
 				$arrActions[$objLang->get("deactivate", "button") . "&nbsp;&nbsp;"] = "deactivate";
+				$arrActions[$objLang->get("export", "button") . "&nbsp;&nbsp;"] = "export";
 				foreach ($arrActions as $key => $value) {
 					$objTpl->setCurrentBlock("multiview-listactionitem");
 					$objTpl->setVariable("LIST_ACTION_TEXT", $key);
@@ -1555,38 +1556,10 @@ function parsePages($intElmntId, $strCommand) {
                                             $objFieldTpl->setCurrentBlock("field.text.elementvalue");
                                             $objFieldTpl->setVariable("FIELD_ELEMENT_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
                                             $objFieldTpl->setVariable("ELEMENT_FIELD_ID", "efv_{$objField->getId()}");
-
-                                            if(!empty($strValue))
-                                            {
-                                                if(preg_match('/^(http:\/\/|https:\/\/|mailto:|www)+/',$strValue))
-                                                {
-                                                    $objFieldTpl->setVariable("FIELD_ELEMENT_VALUE", 'External link');
-                                                }
-                                                else
-                                                {
-                                                    $el = Element::selectByPk($strValue);
-                                                    if(is_object($el))
-                                                    {
-                                                        $parent         = Element::selectByPk($el->getParentId());
-                                                        $elementTrail   = $el->getName();
-                                                        while(is_object($parent))
-                                                        {
-                                                            $elementTrail = $parent->getName() .' &raquo; '. $elementTrail;
-                                                            $parent = Element::selectByPk($parent->getParentId());
-                                                        }
-
-                                                        $objFieldTpl->setVariable("FIELD_ELEMENT_VALUE", $elementTrail);
-                                                    }
-                                                    else
-                                                    {
-                                                        $objFieldTpl->setVariable("FIELD_ELEMENT_VALUE", '[!] Broken link');
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                $objFieldTpl->setVariable("FIELD_ELEMENT_VALUE", '');
-                                            }
+                                            $objFieldTpl->setVariable("FIELD_CLASS", "deeplink");
+                                            
+                                            $elementTrail = Element::generateElementTrail($strValue);
+                                            $objFieldTpl->setVariable("FIELD_ELEMENT_VALUE", htmlentities($elementTrail));
 
                                             $objFieldTpl->parseCurrentBlock();
                                         }
@@ -2177,10 +2150,24 @@ function parsePages($intElmntId, $strCommand) {
 
         case CMD_EXPORT_ELEMENT:
 			$objTpl->loadTemplatefile("export.tpl.htm");
-
-            //*** Parse the element.
-            $objElement = Element::selectByPK($intElmntId);
-
+            
+            $arrElementIds = NULL;
+            
+            // export via selection of (multiple) elements
+            if(isset($_GET['sel']))
+            {
+                $includeSelf = false;
+                $arrElementIds = explode(',', $intElmntId);
+                $objChild = Element::selectByPK($arrElementIds[0]);
+                $objElement = Element::selectByPK($objChild->getParentId());
+            }
+            // export on one element
+            else
+            {
+                $includeSelf = true;
+                $objElement = Element::selectByPK($intElmntId);
+            }
+            
 			//*** Set section title.
 			$objTpl->setVariable("MAINTITLE", $objLang->get("export", "label"));
 
@@ -2194,13 +2181,18 @@ function parsePages($intElmntId, $strCommand) {
             //*** Handle request & create export
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
             {
+                
                 $arrElementFilters = array();
+                $arrTemplateFilters = array();
                 foreach($_POST['elem'] as $id => $val)
                 {
                     $arrElementFilters[] = intval($id);
+                    $objTmpElement = Element::selectByPK(intval($id));
+                    if(!in_array($objTmpElement->getTemplateId(),$arrTemplateFilters)){
+                        $arrTemplateFilters[] = $objTmpElement->getTemplateId();
+                    }
                 }
-
-                $strZipFile = ImpEx::exportFrom($objElement->getId(), $objElement->getTemplateId(), $arrElementFilters , NULL , $_CONF['app']['account']->getId());
+                $strZipFile = ImpEx::exportFrom($objElement->getId(), $objElement->getTemplateId(), $arrElementFilters , $arrTemplateFilters , $_CONF['app']['account']->getId(), true, true, $includeSelf);
 
                 //*** Return XML.
                 header("HTTP/1.1 200 OK");
@@ -2219,7 +2211,8 @@ function parsePages($intElmntId, $strCommand) {
 
             //*** Create element checkboxes
 			$objTpl->setVariable("SELECT_ITEMS", $objLang->get("selectElements", "label"));
-            $objTpl->setVariable("FORM_CHECKBOXES", createElementTree($objElement));
+            
+            $objTpl->setVariable("FORM_CHECKBOXES", createElementTree($objElement,(isset($_GET['sel'])), $arrElementIds));
 
             //*** Set form buttons
 			$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_ELEMENTS . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
@@ -2231,8 +2224,6 @@ function parsePages($intElmntId, $strCommand) {
 			$objTpl->setVariable("CMD", CMD_EXPORT_ELEMENT);
 			$objTpl->setVariable("EID", $intElmntId);
 			$objTpl->parseCurrentBlock();
-
-
             break;
 
         case CMD_IMPORT_ELEMENT:

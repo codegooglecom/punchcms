@@ -206,7 +206,7 @@ class ImpEx {
 		return $strZipName;
 	}
 
-    public static function exportFrom($intElementId, $intTemplateId, $arrElementFilters, $arrTemplateFilters, $intAccountId = 0, $exportElements = true, $exportFiles = true) {
+    public static function exportFrom($intElementId, $intTemplateId, $arrElementFilters, $arrTemplateFilters, $intAccountId = 0, $exportElements = true, $exportFiles = true, $includeSelf = false) {
         global $objLiveAdmin,
 				$_CONF,
 				$_PATHS;
@@ -231,8 +231,8 @@ class ImpEx {
         $objLogic = $objStructure->appendChild($objLogic);
 
         //*** export templates
-        $includeSelf = ($intElementId == NULL) ? true : false;
-        $objTemplates = self::exportTemplate($objDoc, $intAccountId, $intTemplateId, $arrTemplateFilters, $includeSelf);
+        $includeTemplateSelf = ($intElementId === NULL || $includeSelf);
+        $objTemplates = self::exportTemplate($objDoc, $intAccountId, $intTemplateId, $arrTemplateFilters, $includeTemplateSelf);
         $objTemplates = $objLogic->appendChild($objTemplates);
 
         //*** export elements
@@ -261,14 +261,14 @@ class ImpEx {
                 $objElements = Element::select($strSql);
                 foreach($objElements as $objElement)
                 {
-                    $objElements = self::exportElement($objDoc, $intAccountId, $objElement->getId(), $arrFiles, $arrTemplateFilters, NULL, $includeSelf);
+                    $objElements = self::exportElement($objDoc, $intAccountId, $objElement->getId(), $arrFiles, $arrTemplateFilters, $arrElementFilters, $includeTemplateSelf);
                     $objElements = $objLogic->appendChild($objElements);
                 }
             }
             else
             {
                 // export from one element
-                $objElements = self::exportElement($objDoc, $intAccountId, $intElementId, $arrFiles, $arrTemplateFilters, NULL, $includeSelf);
+                $objElements = self::exportElement($objDoc, $intAccountId, $intElementId, $arrFiles, $arrTemplateFilters, $arrElementFilters, $includeTemplateSelf);
                 $objElements = $objLogic->appendChild($objElements);
             }
 
@@ -1248,17 +1248,18 @@ class ImpEx {
 	}
 
 	public static function exportTemplate($objDoc, $intAccountId, $intId, $arrTemplateFilters = NULL, $includeSelf = false) {
-		$objTemplates = $objDoc->createElement('templates');
-
+		$objTemplates = $objDoc->createElement('templates');    
+        
         if($includeSelf)
         {
 			$objTemplate = Template::selectByPK($intId);
-            $intId = $objTemplate->getParentId();
-
+            $objDbTemplates = new DBA__Collection();
+			$objDbTemplates->addObject($objTemplate);
         }
-
-		$objDbTemplates = Templates::getFromParent($intId, FALSE, $intAccountId);
-
+        else
+        {
+            $objDbTemplates = Templates::getFromParent($intId, FALSE, $intAccountId);
+        }
 		if ($objDbTemplates->count() > 0) {
 			foreach ($objDbTemplates as $objDbTemplate) {
                 if($arrTemplateFilters == NULL || in_array($objDbTemplate->getId(),$arrTemplateFilters))
@@ -1317,15 +1318,18 @@ class ImpEx {
 		global $_CONF;
 
 		$objElements = $objDoc->createElement('elements');
-
+        
         if($includeSelf)
         {
 			$objElement = Element::selectByPK($intId);
-            $intId = $objElement->getParentId();
+            $objDbElements = new DBA__Collection();
+			$objDbElements->addObject($objElement);
         }
-
-		$objDbElements = Elements::getFromParent($intId, FALSE, "'1', '2', '3', '4', '5'", $intAccountId);
-
+        else
+        {
+            //$objDbTemplates = Templates::getFromParent($intId, FALSE, $intAccountId);
+            $objDbElements = Elements::getFromParent($intId, FALSE, "'1', '2', '3', '4', '5'", $intAccountId);
+        }
 		if ($objDbElements->count() > 0) {
 			foreach ($objDbElements as $objDbElement) {
                 if(($arrTemplateFilters == NULL || in_array($objDbElement->getTemplateId(),$arrTemplateFilters))
