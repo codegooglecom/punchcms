@@ -1,75 +1,62 @@
 <?php
+error_reporting(E_ERROR|E_COMPILE_ERROR|E_CORE_ERROR);
+require_once("includes/init.php");
 
-//*** Initialize.
-require_once('includes/init.php');
+$vars['submenuitems']=Array(
+    Array('label'=> 'Browse', 'link'=>'?c=overview'),
+    Array('label'=> 'Create', 'link'=>'?c=create'),
+);
 
-//*** Get global directives.
-$eId 		= request("eid", 0);
-$cId 		= request("cid", key($_CONF['app']['menu']));
-$strOutput 	= "";
 
-if (key_exists($cId, $_CONF['app']['menu'])
-		&& count($_CONF['app']['menu'][$cId]) > 1
-		&& is_array($_CONF['app']['menu'][$cId][1])) {
-	$tmpCmd = key($_CONF['app']['menu'][$cId][1]);
-} else {
-	$tmpCmd = 0;
+$myAccount= new Account();
+$myAccount->setAccountName('Kaboebie');
+
+
+if(isset($_SESSION['logindata']))
+{
+    $user = new User($_SESSION['logindata']['user_id']);
+    
+    $vars['login_username']=$user->getName();
+    $vars['logout_url']='?c=logout';
+    switch($_GET['c'])
+    {
+        case "logout":        
+            $user->logout();
+            System::redirect('?c=overview');
+             break;        
+        case "create": 
+            echo $twig->render('create.twig', $vars);
+            break;
+        case "edit": 
+            echo $twig->render('edit.twig', $vars);
+            break;
+        case "delete": 
+            System::redirect('?c=overview');
+            break;
+
+        default: 
+        $vars['accounts']=Accounts::getAccounts();
+        echo $twig->render('overview.twig', $vars);
+    }
 }
-$cmd 		= request("cmd", $tmpCmd);
-
-//*** Handle login directives.
-require_once('includes/inc.login.php');
-
-//*** Handle command requests.
-switch ($cmd) {
-	case CMD_REMOVE:
-		switch ($cId) {
-			case NAV_ACCOUNT:
-				//*** Delete account.
-				$objAccount = Account::selectByPk($eId);
-				if (is_object($objAccount)) {
-					$objAccount->delete();
-				}
-
-				$cmd = CMD_BROWSE;
-				break;
-		}
-		break;
-}
-
-//*** Load the Template Parse methods.
-require_once('includes/inc.tplparse.php');
-
-$strOutput .= parseHeader($cId, $eId, $cmd);
-
-if ($objLiveUser->isLoggedIn()) {
-	if ($cmd == CMD_BROWSE) {
-		$strOutput .= parseBrowse($cId, $eId, $cmd);
-	} else {
-		switch ($cId) {
-			case NAV_ACCOUNT:
-				$strOutput .= parseAccount($eId, $cmd);
-				break;
-				
-			case NAV_TOOLS:
-				$strOutput .= parseTools($eId, $cmd);
-				break;
-		}
-	}
-} else {
-	switch ($cId) {
-		case NAV_ADMIN:
-			$strOutput .= parseAdmin($eId, $cmd);
-			break;
-			
-		default:
-			$strOutput .= parseLogin();
-	}
+else
+{
+    if(isset($_POST['command']) && $_POST['command']=="login")
+    {
+        $user = new User();
+        if($user->login($_POST['username'], $_POST['password']))
+        {
+            System::redirect('?c=overview');
+        }
+        else
+        {
+            $vars['login']['error']='Login incorrect';
+        }
+    }   
+    echo $twig->render('login.twig', $vars);
+    echo Log::printDebug();
 }
 
-$strOutput .= parseFooter($cId, $eId, $cmd);
 
-echo $strOutput;
 
 ?>
-

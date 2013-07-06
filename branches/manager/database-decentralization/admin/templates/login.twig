@@ -1,0 +1,26 @@
+{% extends "base.twig" %}
+
+
+{% block contents %}
+
+<div id="login">
+	<form id="loginForm" method="post" action="?">
+		<input type="hidden" name="command" value="login">
+		{% if login.error %}<p class="error">{{ login.error }}</p>{% endif %}
+		<h1>Please login</h1>
+		<p>This area is restricted. Please enter your credentials to continue.</p>
+		<fieldset>
+			<div class="required">
+				<label for="username">Username</label><input type="text" class="text-medium" name="username" />
+			</div>
+			<div class="required">
+				<label for="password">Password</label><input type="password" class="text-medium" name="password" />
+			</div>
+			<div class="navigation">
+				<input type="submit" class="button" value="Login" />
+			</div>
+		</fieldset>
+	</form>
+</div>
+
+{% endblock %} 

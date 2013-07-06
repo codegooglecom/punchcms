@@ -114,8 +114,15 @@ jQuery(function(){
 		blnModifier 	= false,
 		blnShift		= false,
 		varReturn 		= true,
-		blnEditView		= ($cancelAnchor.length > 0) 
-	
+		blnIsMac		= /Macintosh/i.test(navigator.userAgent),
+		blnEditView		= ($cancelAnchor.length > 0);
+
+	var strSubmitTitle = (blnIsMac) ? "\u2318 + S" : "CTRL + S";
+	$submitBtn.attr("title", strSubmitTitle);
+
+	var strCancelTitle = (blnIsMac) ? "\u238B (ESC)" : "ESC";
+	$cancelAnchor.attr("title", strCancelTitle);
+
 	$(document)
 		.bind("keydown", function(e) {
 			switch (e.keyCode) {
@@ -129,7 +136,7 @@ jQuery(function(){
 				case 91:
 				case 17:
 				case 18:
-					// command (91) or ctrl (17) is pressed
+					// command (91), ctrl (17) or alt/option (18) is pressed
 					blnModifier = true
 					break;
 				case 16:
@@ -192,9 +199,14 @@ jQuery(function(){
 							intIndex = $tabs.tabs("length") - 1
 						}
 						
-						$tabs.tabs("select", intIndex)
+						$tabs.tabs("select", intIndex);
 
 						varReturn = false
+					}
+					break;
+				case 191:
+					if (blnModifier) {
+						console.log("Show some information about hotkeys...");
 					}
 					break;
 			}

@@ -1,0 +1,49 @@
+{% extends "base.twig" %}
+
+
+{% block contents %}
+<div id="content">
+	
+	<div class="formWrapper">
+		<form id="accountForm" method="post" action="">
+			
+			<div class="required">
+				<label for="account_name">Name</label>
+				<input type="text" name="account_name" id="account_name" class="input-textlarge" value="" />
+			</div>
+			<div class="required">
+				<label for="subdomain">Subdomain</label>
+				<input type="text" name="subdomain" id="subdomain" class="input-textsmall" value="" />
+			</div>
+			<div class="required">
+				<label for="admin_name">Admin Name</label>
+				<input type="text" name="admin_name" id="admin_name" class="input-textsmall" value="" />
+			</div>
+			<div class="required">
+				<label for="admin_password">Admin Password</label>
+				<input type="password" name="admin_password" id="admin_password" class="input-textsmall" value="" />
+			</div>
+			<div class="required">
+				<label for="admin_email">Admin Email</label>
+				<input type="text" name="admin_email" id="admin_email" class="input-textlarge" value="" />
+			</div>
+			
+			<div class="navigation">
+				<input type="hidden" name="eid" value="0" />
+				<input type="hidden" name="cid" value="1" />
+				<input type="hidden" name="cmd" value="2" />
+				<input type="hidden" name="frm_userid" value="" />
+				<input type="hidden" name="dispatch" value="editAccount" />
+				<input type="button" value="Cancel" onclick="Account.cancel()" />
+				<input type="submit" value="Save" />
+			</div>
+		</form>
+	</div>
+	
+	
+	
+	
+</div>
+
+
+{% endblock %} 
