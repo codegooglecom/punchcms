@@ -358,7 +358,7 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 		$strScript .= "objLightbox.activate();";
 	}
 	$strScript .= "}";
-
+    
 	$objTpl->setVariable("SELECTED_TAB", $intSelectedTab);
 	$objTpl->setVariable("SCRIPT", $strScript);
 	

@@ -62,7 +62,7 @@ function connectDB() {
 	if (MDB2::isError($objConnID)) {
 		throw new Exception('Database connection failed: ' . $objConnID->getMessage(), SQL_CONN_ERROR);
 	}
-	
+
 	return($objConnID);
 }
 
@@ -100,6 +100,47 @@ function getShortValue($strInput, $intCharLength = 200, $blnPreserveWord = TRUE,
 	}
 
 	return $strReturn;
+}
+
+function createTemplateTree($objTemplate) {
+    $str = '<input type="checkbox" name="tmpl['. $objTemplate->getId() .']" id="tmpl_'. $objTemplate->getId() .'" checked="checked" /><label for="tmpl_'. $objTemplate->getId() .'">'. $objTemplate->getName() .'</label>';
+
+    $objTemplates = $objTemplate->getTemplates();
+    if ($objTemplates->count() > 0) {
+        $str .= '<div class="level">';
+        foreach($objTemplates as $objTempl)
+        {
+            $str .= createTemplateTree($objTempl);
+        }
+        $str .= '</div>';
+    }
+
+    return $str;
+}
+
+function createElementTree($objElement, $first = true, $arrElementIds = NULL, $checked = '') {
+    if(($arrElementIds === NULL || in_array($objElement->getId(), $arrElementIds)))
+    {
+        $checked = 'checked="checked"';
+    }
+    else
+    {
+        $style = 'style="display:none"';
+    }
+    
+    if(!$first) $str = '<input type="checkbox" name="elem['. $objElement->getId() .']" id="elem_'. $objElement->getId() .'" '. $checked .' /><label for="elem_'. $objElement->getId() .'">'. $objElement->getName() .'</label>';
+
+    $objElements = $objElement->getElements();
+    if ($objElements->count() > 0) {
+        if(!$first) $str .= '<div class="level" '. $style .'>';
+        foreach($objElements as $objElement)
+        {
+            $str .= createElementTree($objElement, false, $arrElementIds, $checked);
+        }
+        if(!$first) $str .= '</div>';
+    }
+
+    return $str;
 }
 
 ?>

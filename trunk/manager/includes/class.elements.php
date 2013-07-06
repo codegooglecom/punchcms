@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ *
  * Collection class for the Element objects.
  * @author felix
  * @version 0.1.0
@@ -12,9 +12,9 @@ class Elements extends DBA__Collection {
 	public static function getParentHTML() {
 		global $_CONF;
 		$strReturn = "";
-		
+
 		$intId = request("eid", 0);
-		
+
 		if ($intId > 0) {
 			$objElement = Element::selectByPK($intId);
 			if ($objElement) {
@@ -23,35 +23,35 @@ class Elements extends DBA__Collection {
 				$strReturn .= self::getChildrenHTML(0, true, $intId);
 			}
 		}
-		
+
 		return $strReturn;
 	}
 
 	public static function getChildrenHTML($intParentId = NULL, $blnRecursive = NULL, $intChildId = NULL) {
 		global $_CONF;
 		$strReturn = "";
-		
+
 		$intParentId = (is_null($intParentId)) ? request("parentId", 0) : $intParentId;
 		$blnRecursive = (is_null($blnRecursive)) ? request("recursive", 0) : $blnRecursive;
 		$intAccountId = $_CONF['app']['account']->getId();
-		
+
 		if ($blnRecursive && $intParentId > 0) {
 			$objElement = Element::selectByPK($intParentId);
 			if ($objElement) {
 				$strReturn .= self::getChildrenHTML($objElement->getParentId(), $blnRecursive, $intParentId);
 			}
 		}
-		
+
 		$strSql = sprintf("SELECT * FROM pcms_element WHERE parentId = '%s' AND typeId IN (%s) AND accountId = '%s' ORDER BY sort", $intParentId, ELM_TYPE_ALL, $intAccountId);
 		$objElements = Element::select($strSql);
-		
+
 		$strReturn .= "<field id=\"{$intParentId}\"><![CDATA[";
 		foreach ($objElements as $objElement) {
 			$strSelected = ($intChildId == $objElement->getId()) ? " selected=\"selected\"" : "";
 			$strReturn .= "<option value=\"{$objElement->getId()}\"{$strSelected}>" . str_replace("&", "&amp;", $objElement->getName()) . "</option>\n";
 		}
 		$strReturn .= "]]></field>";
-		
+
 		return $strReturn;
 	}
 
@@ -103,6 +103,27 @@ class Elements extends DBA__Collection {
 				$objElement->save(FALSE);
 			}
 		}
+	}
+
+    public static function getPagesArray($obj = NULL) {
+    	if ($obj === NULL){
+			$obj = Elements::getFromParent(0, FALSE);
+        }
+        $elements = $obj;
+
+        foreach($elements as $element){
+        	$pageArray[] = array(
+            	'name' => $element->getName(),
+                'id' => $element->getId(),
+                'children' => Elements::getPagesArray($element->getElements(FALSE))
+            );
+       	}
+
+        if (!is_array($pageArray)){
+        	return "none";
+        }
+
+        return $pageArray;
 	}
 
 }

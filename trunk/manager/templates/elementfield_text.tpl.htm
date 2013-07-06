@@ -1,22 +1,28 @@
 
-								<div class="required">
-									<label for="{FIELD_ID}">
-										<a href="#" rel="internal" class="fieldButton"><img id="{FIELD_ID}_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
-										{FIELD_REQUIRED}{FIELD_NAME}
-									</label>
-									<div id="{FIELD_ID}_alt" class="input-textlarge disabled" style="display:none"></div>
-									<input type="text" id="{FIELD_ID}" name="{FIELD_ID}" class="input-textlarge" value="" onblur="objContentLanguage.toTemp(this.id);" />
-									<!-- BEGIN field.text.descr -->
-										<small>{FIELD_DESCRIPTION}</small>
-									<!-- END field.text.descr -->
-									<!-- BEGIN field.text.value -->
-									<input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
-									<!-- END field.text.value -->
-									<input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
-									<script type="text/javascript">
-									// <![CDATA[
-										objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.TEXT);
-									// ]]>
-									</script>
-									<div class="clear"></div>
-								</div>
+                                <div class="required">
+                                    <label for="{FIELD_ID}">
+                                        <a href="#" rel="internal" class="fieldButton"><img id="{FIELD_ID}_cascade" src="images/lang_unlocked_disabled.gif" width="17" height="16" alt="" /></a>
+                                        {FIELD_REQUIRED}{FIELD_NAME}
+                                    </label>
+                                    <div id="{FIELD_ID}_alt" class="input-textlarge disabled" style="display:none"></div>
+                                    <input type="text" id="{FIELD_ID}" name="{FIELD_ID}" class="input-textlarge {FIELD_CLASS}" value="" onblur="objContentLanguage.toTemp(this.id);" />
+                                    <!-- BEGIN field.text.element -->
+                                        <small id="{ELEMENT_FIELD_ID}_element"></small>
+                                    <!-- END field.text.element -->
+                                    <!-- BEGIN field.text.descr -->
+                                        <small>{FIELD_DESCRIPTION}</small>
+                                    <!-- END field.text.descr -->
+                                    <!-- BEGIN field.text.value -->
+                                    <input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
+                                    <!-- END field.text.value -->
+                                    <input type="hidden" id="{FIELD_ID}_cascades" name="{FIELD_ID}_cascades" value="" />
+                                    <!-- BEGIN field.text.elementvalue -->
+                                    <input type="hidden" id="{FIELD_ELEMENT_ID}_element" name="{FIELD_ELEMENT_ID}_element" value="{FIELD_ELEMENT_VALUE}" />
+                                    <!-- END field.text.elementvalue -->
+                                    <script type="text/javascript">
+                                    // <![CDATA[
+                                        objContentLanguage.addField('{FIELD_ID}', '{FIELD_CASCADES}', objContentLanguage.FIELDTYPE.TEXT);
+                                    // ]]>
+                                    </script>
+                                    <div class="clear"></div>
+                                </div>

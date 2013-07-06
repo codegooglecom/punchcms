@@ -1,7 +1,6 @@
 <?php
 session_save_path($_SERVER["DOCUMENT_ROOT"] . "/sessions");
 session_start();
-
 require_once('./inc.constantes.php');
 require_once('../libraries/lib.language.php');
 
@@ -78,6 +77,10 @@ PElement.multiDo = function(objField, strAction) {
 
 			case "deactivate":
 				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DEACTIVATE ?>";
+				break;
+
+			case "export":
+				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_EXPORT_ELEMENT ?>&sel=1";
 				break;
 		}
 	} else {
