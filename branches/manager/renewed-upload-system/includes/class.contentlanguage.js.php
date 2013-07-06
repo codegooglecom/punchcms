@@ -18,7 +18,7 @@ if (!is_object($objLang)) {
  * ContentLanguage Class.
  *************************************************************************/
 
-/*** 
+/***
  * ContentLanguage object.
  */
 var ContentLanguage = function() {
@@ -48,7 +48,7 @@ var ContentLanguage = function() {
 
 ContentLanguage.require = function(libraryName) {
 	var $objScript = jQuery("<script></script>");
-	
+
 	objScript.attr({
 		type: "text/javascript",
 		src: libraryName
@@ -91,7 +91,7 @@ ContentLanguage.prepareAdd = function() {
 }
 
 ContentLanguage.prototype.init = function() {
- 	jQuery("#language_active").bind("mouseover mouseout mousedown", function(event) { 
+ 	jQuery("#language_active").bind("mouseover mouseout mousedown", function(event) {
  		switch(event.type){
  			case "mouseover":
 			 	return objContentLanguage.buttonOver('activeElement', this);
@@ -104,7 +104,7 @@ ContentLanguage.prototype.init = function() {
  				break;
  		}
  	});
- 	
+
  	jQuery("#frm_language option[value="+ this.defaultLanguage +"]").attr("selected","selected");
 }
 
@@ -112,10 +112,10 @@ ContentLanguage.prototype.swap = function(languageId) {
 	var $objImage 		= jQuery("#language_cascade"),
 		$objImageActive	= jQuery("#language_active"),
 		$objButton		= $objImage.parent();
-		
+
 	this.toTemp();
 	this.currentLanguage = languageId;
-	
+
 	//*** Check is current and default language is equal.
 	if (this.currentLanguage == this.defaultLanguage || this.actives[this.currentLanguage] != true || this.actives[this.defaultLanguage] != true) {
 		$objImage.attr("src", "images/lang_unlocked_disabled.gif");
@@ -128,7 +128,7 @@ ContentLanguage.prototype.swap = function(languageId) {
 		}
 		$objButton.bind("mouseover mouseout click", function(event){
 			var objReturn;
-			
+
 			switch(event.type){
 				case "mouseover":
 					objReturn = objContentLanguage.buttonOver("cascadeElement", this);
@@ -140,20 +140,20 @@ ContentLanguage.prototype.swap = function(languageId) {
 					objReturn = objContentLanguage.toggleCascadeElement();
 					break;
 			}
-			
+
 			return objReturn;
 		});
 	}
-	
+
 	//*** Check the active state.
 	if (this.actives[this.currentLanguage] != true) {
 		if (this.hover) overlib("<?php echo $objLang->get("langEnable", "tip") ?>");
 		$objImageActive.attr("src", "images/lang_disabled.gif");
 	} else {
 		if (this.hover) overlib("<?php echo $objLang->get("langDisable", "tip") ?>");
-		$objImageActive.attr("src", "images/lang_enabled.gif");	
+		$objImageActive.attr("src", "images/lang_enabled.gif");
 	}
-	
+
 	for (var count in this.fields) {
 		this.toggleCascadeState(this.fields[count].id, this.fields[count].cascades[this.currentLanguage]);
 		this.toScreen(this.fields[count].id);
@@ -166,35 +166,35 @@ ContentLanguage.prototype.addField = function(fieldId, strCascades, intType, obj
 		case this.FIELDTYPE.DATE:
 			var objField = new DateField(fieldId, this, strCascades);
 			break;
-			
+
 		case this.FIELDTYPE.TEXT:
 		case this.FIELDTYPE.SIMPLETEXT:
 			var objField = new TextField(fieldId, this, strCascades);
 			break;
-			
+
 		case this.FIELDTYPE.CHECKBOX:
 			var objField = new CheckBox(fieldId, this, strCascades);
 			break;
-			
+
 		case this.FIELDTYPE.TEXTAREA:
 			var objField = new TextAreaField(fieldId, this, strCascades);
 			break;
-			
+
 		case this.FIELDTYPE.FILE:
 		case this.FIELDTYPE.IMAGE:
 			var objField = new FileField(fieldId, this, strCascades, objOptions);
 			break;
-			
+
 		case this.FIELDTYPE.SELECT_LIST:
 			var objField = new SelectListField(fieldId, this, strCascades);
 			break;
-			
+
 		case this.FIELDTYPE.CHECK_LIST:
 			var objField = new CheckListField(fieldId, this, strCascades);
 			break;
-			
+
 	}
-		
+
 	this.fields[fieldId] = objField;
 	this.toScreen(fieldId);
 }
@@ -241,7 +241,7 @@ ContentLanguage.prototype.buttonOver = function(strButtonType, objImage, fieldId
 
 	this.hover = true;
 	this.buttonType = strButtonType;
-	
+
 	switch (strButtonType) {
 		case "cascadeElement":
 			if (this.cascades[this.currentLanguage] !== true) {
@@ -252,7 +252,7 @@ ContentLanguage.prototype.buttonOver = function(strButtonType, objImage, fieldId
 				overlib("<?php echo $objLang->get("langElementUnlock", "tip") ?>");
 			}
 			break;
-			
+
 		case "cascadeField":
 			if (this.fields[fieldId].cascades[this.currentLanguage] !== true) {
 				$objImage.attr("src", "images/lang_locked.gif");
@@ -262,7 +262,7 @@ ContentLanguage.prototype.buttonOver = function(strButtonType, objImage, fieldId
 				overlib("<?php echo $objLang->get("langFieldUnlock", "tip") ?>");
 			}
 			break;
-			
+
 		case "activeElement":
 			if (this.actives[this.currentLanguage] != true) {
 				overlib("<?php echo $objLang->get("langEnable", "tip") ?>");
@@ -278,10 +278,10 @@ ContentLanguage.prototype.buttonOver = function(strButtonType, objImage, fieldId
 ContentLanguage.prototype.buttonOut = function(strButtonType, objImage, fieldId) {
 	var $objImage 	= (objImage instanceof jQuery) ? objImage : jQuery(objImage), // Make sure it's a jQuery object
 		$objButton	= $objImage.parent();
-	
+
 	this.hover = false;
 	this.buttonType = strButtonType;
-	
+
 	switch (strButtonType) {
 		case "cascadeElement":
 			if (this.cascades[this.currentLanguage] !== true) {
@@ -291,7 +291,7 @@ ContentLanguage.prototype.buttonOut = function(strButtonType, objImage, fieldId)
 			}
 			nd();
 			break;
-			
+
 		case "cascadeField":
 			if (this.fields[fieldId].cascades[this.currentLanguage] !== true) {
 				$objImage.attr("src", "images/lang_unlocked.gif");
@@ -300,7 +300,7 @@ ContentLanguage.prototype.buttonOut = function(strButtonType, objImage, fieldId)
 			}
 			nd();
 			break;
-			
+
 		case "activeElement":
 			if (this.actives[this.currentLanguage] != true) {
 				$objImage.attr("src", "images/lang_disabled.gif");
@@ -323,8 +323,8 @@ ContentLanguage.prototype.toggleCascadeElement = function() {
 	} else {
 		this.cascades[this.currentLanguage] = true;
 	}
-	
-	//*** Toggle button image.  
+
+	//*** Toggle button image.
 	if (this.cascades[this.currentLanguage] == true) {
 		if (this.hover) overlib("<?php echo $objLang->get("langElementUnlock", "tip") ?>");
 		jQuery("#language_cascade").attr("src", "images/lang_unlocked.gif");
@@ -351,7 +351,7 @@ ContentLanguage.prototype.toggleCascadeField = function(fieldId) {
 	} else {
 		this.fields[fieldId].cascades[this.currentLanguage] = true;
 	}
-	
+
 	//*** Reset global cascade state.
 	this.cascades[this.currentLanguage] = false;
 	jQuery("#language_cascade").attr("src", "images/lang_unlocked.gif");
@@ -367,45 +367,45 @@ ContentLanguage.prototype.toggleActiveElement = function() {
 	} else {
 		this.actives[this.currentLanguage] = true;
 	}
-	
+
 	//*** Reset cascades if default language is disabled.
 	if (this.currentLanguage == this.defaultLanguage && this.actives[this.currentLanguage] != true) {
 		//*** Reset element cascade.
 		this.cascades[this.currentLanguage] = false;
-		
+
 		//*** Reset field cascades.
 		for (var count in this.fields) {
 			this.fields[count].cascades = {};
 		}
 	}
-	
+
 	//*** Set buttons and other stuff.
 	this.toggleActivesState();
 	this.swap(this.currentLanguage);
 }
 
-ContentLanguage.prototype.toggleCascadeState = function(fieldId, state) {	
+ContentLanguage.prototype.toggleCascadeState = function(fieldId, state) {
 	//*** Toggle object property.
 	this.fields[fieldId].cascades[this.currentLanguage] = state;
-	
+
 	//*** Set the cascade input field.
 	var strValue = this.fields[fieldId].getCascades();
 	jQuery("#" + fieldId + "_cascades").val(strValue);
 }
 
-ContentLanguage.prototype.toggleActivesState = function() {		
+ContentLanguage.prototype.toggleActivesState = function() {
 	//*** Set the actives input field.
 	jQuery("#language_actives").val(this.getActives());
 }
 
 ContentLanguage.prototype.setActives = function(strActives) {
 	var arrActives = strActives.split(",");
-	
+
 	this.actives = {};
 	for (var count = 0; count < arrActives.length; count++) {
 		this.actives[arrActives[count]] = true;
 	}
-	
+
 	this.swap(this.currentLanguage);
 }
 
@@ -442,12 +442,12 @@ ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 							cmd: "StorageItems::getFileListHTML",
 							parentId: jQuery('#frm_storage_' + objTrigger.id).find('option:selected').val().split("_").pop()
 						};
-	
+
 	if ($objFiles.length > 0) $objFiles.find(":first").remove();
-	
+
 	jQuery(".storageLoader").remove(); // Clear all loaders before inserting a new one.
 	$objChooser.append($objLoader);
-	
+
 	var request = jQuery.get(strUrl, strPost, function(data) { objTrigger.parent.showStoragePage(data, objTrigger); }, "xml");
 }
 
@@ -455,45 +455,45 @@ ContentLanguage.prototype.showStoragePage = function(objResponse, objTrigger) {
 	var $objField 	= jQuery(objResponse).find("field"),
 		$objLoader 	= jQuery("#storageBrowser_" + objTrigger.id + " div.storageLoader"),
 		$objList 	= jQuery("#storageBrowser_" + objTrigger.id + " div.storageList");
-	
+
 	$objLoader.slideUp();
-	$objList.html($objField.text());
-	
+
+	var $objFileList = $($objField.text());
+	$objFileList.find("img").on("error", function () {
+		$(this)
+			.parent()
+			.addClass("error");
+
+		$(this)
+			.attr("src", "/images/ico_image_not_found.png")
+	});
+	$objList.html($objFileList);
+
 	//*** Attach events to the thumbs.
 	jQuery("#storageBrowser_" + objTrigger.id + " li").each(function(i){
 		var $objLink = jQuery(this).find("a:first");
-		
+
 		$objLink
-			.bind("mouseover mouseout click", function(event){
-				var $objLabel = jQuery(this).parent().find("span:first");
-				
-				switch(event.type){
-					case "mouseover":
-						return overlib($objLabel.html());
-					break;
-					case "mouseout":
-						return nd();
-					break;
-					case "click":
-						objTrigger.transferStorage(jQuery(this), $objLabel.html());
-						return false;
-					break;
-				}
+			.bind("click", function(event){
+				var strLabel = jQuery(this).parent().find("img:first").attr("alt");
+
+				objTrigger.transferStorage(jQuery(this), strLabel);
+				return false;
 			});
 	}); // End .each()
 }
 
-/*** 
+/***
  * ContentField object.
  */
 function ContentField(strId, objParent, strCascades) {
 	this.id 		= strId || 0;
 	this.parent		= objParent || null;
 	this.cascades 	= {};
-	
+
 	if (strCascades != undefined) this.setCascades(strCascades);
 }
-	
+
 ContentField.prototype.getCascades = function() {
 	var strReturn = "";
 	var arrTemp = new Array();
@@ -507,7 +507,7 @@ ContentField.prototype.getCascades = function() {
 	strReturn = arrTemp.join(",");
 	return strReturn;
 }
-	
+
 ContentField.prototype.setCascades = function(strCascades) {
 	var arrCascades = strCascades.split(",");
 
@@ -535,12 +535,12 @@ ContentField.prototype.setIconCascade = function() {
 			$objButton.bind("click", function(){ return false; }); // No need to be clickable
 		}
 		$objImage.attr("src", strImageSrc);
-	
+
 	} else {
 		$objButton.unbind("mouseover mouseout click"); // Clear all events before binding new ones
 		$objButton.bind("mouseover mouseout click", function(event){
 			var objReturn;
-			
+
 			switch(event.type){
 				case "mouseover":
 					objContentLanguage.buttonOver('cascadeField', this, strId);
@@ -552,7 +552,7 @@ ContentField.prototype.setIconCascade = function() {
 					objContentLanguage.toggleCascadeField(strId);
 				break;
 			}
-			
+
 			return false;
 		});
 
@@ -570,18 +570,18 @@ ContentField.prototype.setIconCascade = function() {
 ContentField.prototype.toScreen = function() {
 	this.setIconCascade();
 	jQuery("#" + this.id).val(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
-	
+
 	return true;
 }
 
 ContentField.prototype.toTemp = function() {
 	var strValue = jQuery("#" + this.id).val();
-	
+
 	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(strValue);
 	return true;
 }
 
-/*** 
+/***
  * TextField object.
  */
 function TextField(strId, objParent, strCascades) {
@@ -619,7 +619,7 @@ TextField.prototype.toTemp = function() {
 	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).val());
 }
 
-/*** 
+/***
  * TextAreaField object.
  */
 function TextAreaField(strId, objParent, strCascades) {
@@ -630,13 +630,13 @@ function TextAreaField(strId, objParent, strCascades) {
 TextAreaField.prototype = new ContentField();
 
 TextAreaField.prototype.toScreen = function() {
-	
+
 	//*** Attach mouse events to the cascade button.
 	this.setIconCascade();
-	
+
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
-		
+
 		//*** The element is not active.
 		jQuery("#" + this.id + "_alt").html("<?php echo $objLang->get("langDisabled", "label") ?>");
 		jQuery("#" + this.id + "___Frame").hide();
@@ -667,15 +667,15 @@ TextAreaField.prototype.toTemp = function() {
 	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(strValue);
 }
 
-/*** 
+/***
  * FileField object.
  */
 function FileField(strId, objParent, strCascades, objOptions) {
 	var __this 		= this;
-		
+
 	this.base = ContentField;
 	this.base(strId, objParent, strCascades);
-	
+
 	//*** Set local properties.
 	this.$objTrigger = jQuery("#" + strId);
 	this.subFiles = {};
@@ -687,7 +687,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 	this.selectType = [];
 	this.fileType = "*.*";
 	this.swfUpload = null;
-	
+
 	//*** Parse the options.
 	for (var intCount in objOptions) {
 		this[intCount] = objOptions[intCount];
@@ -703,7 +703,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		//*** This can only be applied to file input elements!
 		alert("Error: " + strId + " is not a file input element!");
 	}
-	
+
 	//*** Attach event to the library button.
 	jQuery("#browseStorage_" + strId).toggle(
 		function(){
@@ -717,13 +717,13 @@ function FileField(strId, objParent, strCascades, objOptions) {
 			return false;
 		}
 	);
-	
+
 	//*** Attach event to the library folder select.
 	jQuery("#frm_storage_" + strId).bind("change", function(){
 		__this.parent.loadStoragePage(__this);
 		return false;
 	});
-	
+
 	//*** Create containers.
 	var arrLang = [this.parent.currentLanguage, this.parent.defaultLanguage];
 	for (var intCount = 0; intCount < arrLang.length; intCount++) {
@@ -737,7 +737,7 @@ function FileField(strId, objParent, strCascades, objOptions) {
 			}
 		}
 	}
-	
+
 	//*** Initiate SWFUpload code.
 	var settings = {
 		jsParent : __this,
@@ -776,14 +776,14 @@ function FileField(strId, objParent, strCascades, objOptions) {
 		upload_success_handler : __this.uploadSuccess,
 		upload_complete_handler : __this.uploadComplete,
 		queue_complete_handler : __this.queueComplete,	// Queue plugin event
-		
+
 		// SWFObject settings
 		minimum_flash_version : "9.0.28",
 		swfupload_pre_load_handler : __this.swfUploadPreLoad,
 		swfupload_load_failed_handler : __this.swfUploadLoadFailed
 	};
 
-	this.swfUpload = new SWFUpload(settings);
+	//this.swfUpload = new SWFUpload(settings);
 };
 
 FileField.prototype = new ContentField();
@@ -791,7 +791,7 @@ FileField.prototype = new ContentField();
 FileField.prototype.toScreen = function() {
 	//*** Attach mouse events to the cascade button.
 	this.setIconCascade();
-		
+
 	//*** Insert value into the field.
 	if (this.parent.actives[this.parent.currentLanguage] != true) {
 		//*** The element is not active.
@@ -816,17 +816,17 @@ FileField.prototype.toScreen = function() {
 		jQuery("#" + this.id + "_alt").fadeIn();
 	} else {
 		//*** The field needs no special treatment.
-		jQuery("#" + this.id + "_widget").show();	
+		jQuery("#" + this.id + "_widget").show();
 		jQuery("#" + this.id + "_alt").hide();
-		
+
 		//*** Insert upload rows.
 		jQuery("#" + this.id + "_widget div.required").show();
 		jQuery("#filelist_new_" + this.id).hide();
-		
+
 		jQuery("#filelist_new_" + this.id + " div.multifile").each(function() {
 			jQuery(this).remove();
 		});
-		
+
 		//*** Init object if not exists.
 		if (!this.subFiles[this.parent.currentLanguage]) {
 			var intCurrent = (jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_current").val()) ? parseInt(jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_current").val()) : 0;
@@ -837,7 +837,7 @@ FileField.prototype.toScreen = function() {
 				this.fileCount++;
 			}
 		}
-		
+
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].toUpload.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].toUpload[intCount];
 			if (this.swfUpload.movieCount > 0) {
@@ -847,45 +847,45 @@ FileField.prototype.toScreen = function() {
 			}
 			jQuery("#filelist_new_" + this.id).show();
 		}
-		
+
 		//*** Insert current rows.
 		jQuery("#filelist_current_" + this.id).hide();
-		
+
 		jQuery("#filelist_current_" + this.id + " div.multifile").each(function() {
 			jQuery(this).remove();
 		});
-		
+
 		for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 			var filledElement = this.subFiles[this.parent.currentLanguage].uploaded[intCount],
 				blnStorage 	  = (filledElement.value.split(":").length > 2) ? true : false;
-				
+
 			this.addCurrentRow(filledElement, blnStorage);
 			jQuery("#filelist_current_" + this.id).show();
 		}
-		
+
 		//*** SWFUpload fields.
 		try {
 			this.swfUpload.setFileUploadLimit(this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles));
 			this.swfUpload.setFileQueueLimit(this.maxFiles - ((this.subFiles[this.parent.currentLanguage].toUpload.length) + this.subFiles[this.parent.currentLanguage].currentFiles));
-			
+
 			var objStats = this.swfUpload.getStats();
-			
+
 			objStats.successful_uploads = this.subFiles[this.parent.currentLanguage].toUpload.length;
 			this.swfUpload.setStats(objStats);
 		} catch (e) {
-			//*** Nothing.	
+			//*** Nothing.
 		}
-		
+
 		var strId = this.id;
-		
+
 		jQuery.debug({content: $("#" + this.id + "_widget h3").next()});
 		$("#" + this.id + "_widget h3").next().each(function(){
 			if($(this).children().length < 0){
 				jQuery.debug("Niet zichtbaar");
 			}
 		});
-		
-		
+
+
 		jQuery("#filelist_current_" + this.id).sortable({
 			dropOnEmpty: true,
 			connectWith: "#groups, #allgroups",
@@ -894,14 +894,13 @@ FileField.prototype.toScreen = function() {
 			},
 			axis: "y"
 		});
-		jQuery("#filelist_current_" + this.id).disableSelection();
 	}
 }
 
 FileField.prototype.openStorageBrowser = function() {
 	var __this 	   = this,
 		closeLabel = "<?php echo $objLang->get("pcmsCloseInlineStorage", "menu"); ?>";
-		
+
 	//*** Slide open.
 	jQuery("#storageBrowser_" + this.id).slideDown("fast", function(){
 		jQuery("#browseStorage_" + __this.id).text(closeLabel);
@@ -912,7 +911,7 @@ FileField.prototype.openStorageBrowser = function() {
 FileField.prototype.closeStorageBrowser = function() {
 	var __this = this,
 		defaultLabel = "<?php echo $objLang->get("pcmsInlineStorage", "menu"); ?>";
-	
+
 	jQuery("#storageBrowser_" + this.id).slideUp("fast", function(){
 		jQuery("#browseStorage_" + __this.id).text(defaultLabel);
 	});
@@ -924,13 +923,13 @@ FileField.prototype.transferField = function() {
 		strId 		   = this.id;
 
 	jQuery("#filelist_new_" + this.id).show();
-	
+
 	this.subFiles[this.parent.currentLanguage].toUpload.push($filledElement);
-	
+
 	$filledElement
 		.attr("id", strId + "_" + objParent.currentLanguage + "_" + this.fileCount++)
 		.attr("name", strId + "_" + objParent.currentLanguage + "_new[]");
-	
+
 	//*** Create empty replacement.
 	var $objElement = jQuery("<input />")
 	$objElement
@@ -946,7 +945,7 @@ FileField.prototype.transferField = function() {
 
 	//*** Add row to the upload list.
 	this.addUploadRow($filledElement);
-	
+
 	//*** Appease Safari: display:none doesn't seem to work correctly in Safari.
 	$filledElement.css({
 		"position" : "absolute",
@@ -965,12 +964,12 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 						}),
 		$objButton 	 = jQuery("<a />"),
 		$objRowValue = jQuery("<strong />");
-	
+
 	//$objRow
 	//	.attr("id", "file_" + $element.attr("id"))
 	//	.addClass("multifile")
 	//	.data("element", $element);
-	
+
 	$objButton
 		.attr("href", "")
 		.addClass("button")
@@ -981,7 +980,7 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 			return false;
 		});
 	$objRow.append($objButton);
-	
+
 	var arrValue = $element.val().split(":");
 	var strValue = this.shortName(arrValue[0], this.maxChar);
 	$objRowValue
@@ -990,7 +989,7 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 		.append($objRowValue);
 
 	jQuery("#filelist_new_" + strId).append($objRow);
-	
+
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
 		jQuery("#" + this.id + "_widget div.required").hide();
@@ -1014,9 +1013,9 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 		$objThumb		= jQuery("<a />"),
 		$objRowValue 	= jQuery("<p />"),
 		$objAltText 	= jQuery("<p />");
-	
+
 	$objRow
-		.attr("id", 'file_' + $element.attr("id")) 
+		.attr("id", 'file_' + $element.attr("id"))
 		.addClass((blnStorage) ? "multifile storage" : "multifile")
 		.css({"position":"relative"})
 		.data("element", $element);
@@ -1030,15 +1029,15 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 			objParent.removeCurrentField(strId, this);
 			return false;
 		});
-	
+
 	$objRow.append($objButton);
-	
+
 	var arrValue = $element.attr("value").split(":"),
 		labelValue = arrValue.shift(),
 		fileValue = arrValue.shift(),
 		libraryValue = arrValue.shift(),
 		alttextValue = arrValue.shift();
-	
+
 	//*** Image thumbnail.
 	if (this.thumbPath != "") {
 		var __this = this;
@@ -1075,14 +1074,14 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 					}
 				});
 		}
-		
+
 		$objRow.append($objThumb); // Add the thumb to the row
 	}
-	
+
 	//*** Label.
 	$objRowValue.html(labelValue);
 	$objRow.append($objRowValue);
-	
+
 	//*** Description.
 	//$objAltText
 	//	.addClass("alt-text")
@@ -1090,11 +1089,11 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 	//	.bind("click", function() {
 	//		__this.startAltEdit(jQuery(this));
 	//	});
-		
+
 	$objRow.append($objAltText);
 
 	jQuery("#filelist_current_" + strId).append($objRow);
-	
+
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
 		jQuery("#" + strId + "_widget div.required").hide();
@@ -1102,7 +1101,7 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 	}
 }
 
-FileField.prototype.addSwfUploadRow = function(element, file) {	
+FileField.prototype.addSwfUploadRow = function(element, file) {
 	var __this   			= this,
 		strId				= this.id,
 		$element 			= (element instanceof jQuery) ? element : jQuery(element), // Make it a jQuery object
@@ -1115,19 +1114,19 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		$objProgressWrapper = jQuery("<div/>"),
 		$objAltText 		= jQuery("<p/>");
 
-		
-	$objRow.attr("id", "file_" + $element.attr("id")); 
-	
+
+	$objRow.attr("id", "file_" + $element.attr("id"));
+
 	if (file !== undefined) {
 		$objRow.addClass("multifile storage " + file.id);
 	} else {
 		$objRow.addClass("multifile storage " + $element.data("file").id);
 	}
-	
+
 	$objRow
 		.css("position","relative")
 		.data("element", $element);
-	
+
 	if (file !== undefined) {
 		$objRow.bind("mouseenter mouseleave", function(event) {
 			if(event.type == "mouseover"){
@@ -1143,7 +1142,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 
 	//*** Delete button.
 	$objButton.addClass("button");
-	
+
 	if (file !== undefined) {
 		console.log("WTF!!", this, this.cancelLabel);
 		$objButton
@@ -1164,16 +1163,16 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 				return false;
 		});
 	}
-	
+
 	$objButton.attr("href","");
 	$objRow.append($objButton);
-	
+
 	var arrValue 		= $element.attr("value").split(":"),
 		labelValue 		= arrValue.shift(),
 		fileValue 		= arrValue.shift(),
 		libraryValue 	= arrValue.shift(),
 		alttextValue 	= arrValue.shift();
-		
+
 	//*** Image thumbnail.
 	$objThumb.attr("href","")
 	if (file !== undefined) {
@@ -1181,14 +1180,14 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 			.addClass("document")
 			.html("<img src=\"/images/ico_loading.gif\" alt=\"\" />")
 			.bind("mouseover mouseout", function(event) {
-				if(event.type == "mouseover"){ 
-					return overlib('This file is being uploaded.'); 
+				if(event.type == "mouseover"){
+					return overlib('This file is being uploaded.');
 				}
-				else { // It's a mouseout event 
-					return nd(); 
+				else { // It's a mouseout event
+					return nd();
 				}
 			});
-	} else {		
+	} else {
 		if (__this.thumbPath != "") {
 			if (__this.isImage(tempFile.name)) {
 				console.log("AWESOME");
@@ -1196,7 +1195,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 					.addClass("thumbnail")
 					.html("<img src=\"thumb.php?src=" + __this.uploadPath + tempFile.name + "\" alt=\"\" />")
 					.bind("mouseover mouseout", function(event) {
-						if(event.type == "mouseover") { 
+						if(event.type == "mouseover") {
 							return overlib("<img src=\"" + __this.uploadPath + tempFile.name + "\" alt=\"\" />", FULLHTML);
 						}
 						else {
@@ -1224,21 +1223,21 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 						}
 					});
 			}
-		}	
+		}
 	}
 	$objRow.append($objThumb);
-	
+
 	//*** Label.
 	$objRowValue.html(labelValue);
 	$objRow.append($objRowValue);
-	
+
 	if (file !== undefined) {
 		//*** Progress.
 		$objProgressBar.addClass("progressBar");
 		$objProgressWrapper
 			.addClass("progressWrapper")
 			.append($objProgressBar);
-			
+
 		$objRow.append($objProgressWrapper);
 	} else {
 		//*** Description.
@@ -1252,12 +1251,12 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	}
 
 	jQuery("#filelist_new_" + strId).append($objRow);
-	
+
 	//*** Check max files.
 	if ((this.subFiles[this.parent.currentLanguage].toUpload.length + 1) + this.subFiles[this.parent.currentLanguage].currentFiles > this.maxFiles) {
 		jQuery("#storageBrowser_" + strId).hide();
 	}
-	
+
 	jQuery("#filelist_new_" + strId).sortable({
 		items: "div",
 		update: function(){
@@ -1269,47 +1268,47 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 
 FileField.prototype.removeSwfUploadRow = function(inputId, file) {
 	var arrTemp = new Array();
-	
+
 	jQuery("#" + inputId).remove();
 	jQuery("#file_" + inputId).remove();
-	
+
 	//*** Remove remotely.
 	objData = {
 		"do": "remove",
 		"file": file.name,
 		"PHPSESSID": "<?php echo session_id(); ?>"
 	};
-	jQuery.post("upload.php", objData, 
+	jQuery.post("upload.php", objData,
 		function(data){
 			// TODO: Implement some feedback here
-		}, 
+		},
 	"xml");
-	
+
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].toUpload.length; intCount++) {
 		if (this.subFiles[this.parent.currentLanguage].toUpload[intCount].value != file.name) {
 			arrTemp.push(this.subFiles[this.parent.currentLanguage].toUpload[intCount]);
 		}
 	}
-	
+
 	this.subFiles[this.parent.currentLanguage].toUpload = arrTemp;
-	
+
 	jQuery("#" + this.id + "_widget div.required").show();
 	if (this.subFiles[this.parent.currentLanguage].toUpload.length == 0) {
 		jQuery("#filelist_new_" + this.id).hide();
 	}
-}	
+}
 
-FileField.prototype.removeUploadField = function(objTrigger) {	
+FileField.prototype.removeUploadField = function(objTrigger) {
 	var strId 			= this.id,
 		$objTrigger 	= (objTrigger instanceof jQuery) ? objTrigger : jQuery(objTrigger), // Make it a jQuery object
 		cacheValue 		= $objTrigger.parent().data("element").val();
-	
-	
+
+
 	$objTrigger.parent().data("element").remove();
 	$objTrigger.parent().remove();
 	// objTrigger.parentNode.element.parentNode.removeChild(objTrigger.parentNode.element);
 	// objTrigger.parentNode.parentNode.removeChild(objTrigger.parentNode);
-	
+
 	var arrTemp = new Array();
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].toUpload.length; intCount++) {
 		if (this.subFiles[this.parent.currentLanguage].toUpload[intCount].value != cacheValue) {
@@ -1317,21 +1316,21 @@ FileField.prototype.removeUploadField = function(objTrigger) {
 		}
 	}
 	this.subFiles[this.parent.currentLanguage].toUpload = arrTemp;
-	
+
 	jQuery("#" + strId + "_widget div.required").show();
 	if (this.subFiles[this.parent.currentLanguage].toUpload.length == 0) {
 		jQuery("#filelist_new_" + strId).hide();
 	}
 }
 
-FileField.prototype.removeCurrentField = function(objTrigger) {	
+FileField.prototype.removeCurrentField = function(objTrigger) {
 	var strId 			= this.id,
 		$objTrigger 	= (objTrigger instanceof jQuery) ? objTrigger : jQuery(objTrigger), // Make it a jQuery object
 		cacheValue 		= $objTrigger.parent().data("element").val(),
 		arrTemp 		= new Array();
-		
+
 	jQuery("#" + this.id + "_widget div.required").show();
-	
+
 	for (var intCount = 0; intCount < this.subFiles[this.parent.currentLanguage].uploaded.length; intCount++) {
 		if (this.subFiles[this.parent.currentLanguage].uploaded[intCount].value != cacheValue) {
 			arrTemp.push(this.subFiles[this.parent.currentLanguage].uploaded[intCount]);
@@ -1339,14 +1338,14 @@ FileField.prototype.removeCurrentField = function(objTrigger) {
 	}
 	this.subFiles[this.parent.currentLanguage].uploaded = arrTemp;
 	this.subFiles[this.parent.currentLanguage].currentFiles--;
-	
+
 	$objTrigger.parent().data("element").remove();
 	$objTrigger.parent().remove();
-	
+
 	if (this.subFiles[this.parent.currentLanguage].uploaded.length == 0) {
 		jQuery("#filelist_current_" + this.id).hide();
 	}
-	
+
 	this.toScreen();
 }
 
@@ -1363,7 +1362,7 @@ FileField.prototype.shortName = function(strInput, maxLength) {
 		var strPath = arrPath.join(pathDelimiter);
 		strInput = strPath.substr(0, reminingLength) + "..." + pathDelimiter + strFile;
 	}
-	
+
 	return strInput;
 }
 
@@ -1379,12 +1378,12 @@ FileField.prototype.transferStorage = function(objLink, strLabel) { // objLink i
 		name: this.id + "_" + this.parent.currentLanguage + "[]",
 		value: strLabel + ":" + objLink.find("img:first").attr("alt").split("/").pop() + ":" + objLink.attr("id").split("_").pop()
 	});
-	
+
 	jQuery("#filelist_new_" + this.id).append($objElement);
-	
+
 	this.subFiles[this.parent.currentLanguage].currentFiles++;
 	this.subFiles[this.parent.currentLanguage].uploaded.push($objElement.get(0));
-	
+
 	jQuery("#filelist_current_" + this.id).show();
 	this.addCurrentRow($objElement, true);
 }
@@ -1399,7 +1398,7 @@ FileField.prototype.isImage = function(fileName) {
 			break;
 		}
 	}
-	
+
 	return blnReturn;
 }
 
@@ -1408,11 +1407,11 @@ FileField.prototype.toTemp = function() {};
 FileField.prototype.sort = function() {
 	var arrFields 	= jQuery("#filelist_current_" + this.id).sortable("serialize").split("&"),
 		$objParent 	= jQuery("#" + this.id + "_widget");
-	
+
 	for (var intCount = 0; intCount < arrFields.length; intCount++) {
 		var strTemp = arrFields[intCount].replace("file_" + this.id + "_" + this.parent.currentLanguage + "[]=", ""),
 			$objTemp = jQuery("#" + this.id + "_" + this.parent.currentLanguage + "_" + strTemp);
-		
+
 		if ($objTemp) {
 			$objTemp.remove();
 			$objParent.append($objTemp);
@@ -1429,7 +1428,7 @@ FileField.prototype.swfUploadLoaded = function() {
 }
 
 FileField.prototype.swfUploadLoadFailed = function() {
-	//*** TODO: Modal jQueryUI feedback box? 
+	//*** TODO: Modal jQueryUI feedback box?
 	//alert("swfUploadLoadFailed");
 }
 
@@ -1477,7 +1476,7 @@ FileField.prototype.fileDialogComplete = function(numFilesSelected, numFilesQueu
 FileField.prototype.uploadStart = function(file) {
 	var $objElement = jQuery("<input />");
 	jQuery("#filelist_new_" + this.settings.jsParent.id).show();
-	
+
 	//*** Create input element.
 	$objElement
 		.attr("type", "hidden")
@@ -1485,10 +1484,10 @@ FileField.prototype.uploadStart = function(file) {
 		.attr("name", this.settings.jsParent.id + "_" + this.settings.jsParent.parent.currentLanguage + "[]")
 		.attr("value", file.name + ":::")
 		.data("file", file);
-		
-		
+
+
 	jQuery("#filelist_new_" + this.settings.jsParent.id).append($objElement);
-		
+
 	this.settings.jsParent.subFiles[this.settings.jsParent.parent.currentLanguage].toUpload.push($objElement);
 	this.settings.jsParent.addSwfUploadRow($objElement, file);
 }
@@ -1528,8 +1527,8 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 					return overlib("This file will open in a new window.");
 				});
 		}
-	}	
-	
+	}
+
 	//*** Description.
 	//var $objAltText = jQuery("<p/>", {
 	//	"class": "alt-text",
@@ -1538,7 +1537,7 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 	//		__this.startAltEdit(jQuery(this));
 	//	}
 	//});
-		
+
 	//jQuery("div." + file.id + ":first").append($objAltText);
 }
 
@@ -1554,7 +1553,7 @@ FileField.prototype.startAltEdit = function($objElement) {
 							value: strText,
 							"class": "alt-input"
 						});
-	
+
 	//$objElement
 	//	.unbind("click")
 	//	.html($objInput)
@@ -1569,20 +1568,20 @@ FileField.prototype.stopAltEdit = function($objElement) {
 		$objParent 		= $objElement.parent(), // Parent div
 		arrId			= $objParent.attr("id").split("_"),
 		strTempId		= arrId.shift();
-		
+
 	var	strId 			= arrId.join("_");
-	
+
 		arrValue		= jQuery("#" + strId).val().split(":"),
 		labelValue		= arrValue.shift(),
 		fileValue		= (typeof arrValue.shift() == "undefined") ? "" : arrValue.shift(),
 		libraryValue	= (arrValue.shift() == "" || arrValue.shift() == undefined) ? 0 : arrValue.shift(),
 		strText			= $objElement.val();
-		
-		
 
-	$objElement.unbind("focusout");		
+
+
+	$objElement.unbind("focusout");
 	jQuery("#" + strId).val(labelValue + ":" + fileValue + ":" + libraryValue + ":" + strText);
-	
+
 	$objParent
 		.find("p")
 		.bind("click", function(){
@@ -1630,7 +1629,7 @@ FileField.prototype.cancelCurrentSwfUpload = function(inputId, file) {
 	this.removeSwfUploadRow(inputId, file);
 }
 
-/*** 
+/***
  * DateField object.
  */
 function DateField(strId, objParent, strCascades) {
@@ -1655,16 +1654,16 @@ DateField.prototype.toScreen = function() {
 		//*** The field is cascading.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.defaultLanguage).val();
 		var objDate = Date.parseDate(strValue, "%d %B %Y %H:%M:%S");
-		
+
 		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : objDate.print(jQuery("#" + this.id + "_format").val());
 		jQuery("#" + this.id + "_canvas").hide();
 		jQuery("#calendarButton_" + this.id).hide();
-		jQuery("#" + this.id + "_alt").show();	
+		jQuery("#" + this.id + "_alt").show();
 	} else {
 		//*** The field needs no special treatment.
 		var strValue = jQuery("#" + this.id + "_" + this.parent.currentLanguage).val();
 		var objDate = Date.parseDate(strValue, "%d %B %Y %H:%M:%S");
-		
+
 		var strCanvasValue = (strValue == "") ? "&nbsp;" : objDate.print(jQuery("#" + this.id + "_format").val());
 		jQuery("#" + this.id + "_canvas").html(strCanvasValue);
 		jQuery("#" + this.id).val(strValue);
@@ -1678,7 +1677,7 @@ DateField.prototype.toTemp = function() {
 	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).val());
 }
 
-/*** 
+/***
  * CheckBox object.
  */
 function CheckBox(strId, objParent, strCascades) {
@@ -1724,7 +1723,7 @@ CheckBox.prototype.toTemp = function() {
 	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(jQuery("#" + this.id).get(0).checked);
 }
 
-/*** 
+/***
  * SelectListField object.
  */
 function SelectListField(strId, objParent, strCascades) {
@@ -1755,7 +1754,7 @@ SelectListField.prototype.toScreen = function() {
 		}
 		jQuery("#" + this.id + "_alt").get(0).innerHTML = (strValue == "") ? "&nbsp;" : strValue;
 		jQuery("#" + this.id).hide();
-		jQuery("#" + this.id + "_alt").show();	
+		jQuery("#" + this.id + "_alt").show();
 	} else {
 		//*** The field needs no special treatment.
 		jQuery("#" + this.id + "_alt").hide();
@@ -1780,7 +1779,7 @@ SelectListField.prototype.toTemp = function() {
 	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(arrValue.join(","));
 }
 
-/*** 
+/***
  * CheckListField object.
  */
 function CheckListField(strId, objParent, strCascades) {
@@ -1813,16 +1812,16 @@ CheckListField.prototype.toScreen = function() {
 				strValue += arrField.parent().get(0).lastChild.nodeValue + "<br />";
 			}
 		}
-		
+
 		var strAltValue = (strValue == "") ? "&nbsp;" : strValue;
 		jQuery("#" + this.id + "_alt").html(strAltValue);
 		jQuery("#" + this.id + "_widget").hide();
-		jQuery("#" + this.id + "_alt").show();	
+		jQuery("#" + this.id + "_alt").show();
 		//Fadein
 		jQuery("#" + this.id + "_alt").fadeIn();
 	} else {
 		//*** The field needs no special treatment.
-		
+
 		jQuery("#" + this.id + "_alt").hide();
 		jQuery("#" + this.id + "_widget").show();
 		var arrDefault = jQuery("#" + this.id + "_" + this.parent.currentLanguage).val().split(",");
@@ -1849,7 +1848,7 @@ CheckListField.prototype.toTemp = function() {
 	jQuery("#" + this.id + "_" + this.parent.currentLanguage).val(arrValue.join(","));
 }
 
-/*** 
+/***
  * Utility functions.
  */
 Array.prototype.inArray = function (value) {
