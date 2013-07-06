@@ -430,7 +430,7 @@ ContentLanguage.prototype.setFieldValue = function(fieldId, strValue) {
 ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 	var strUrl 			= "ajax.php",
 		$objFiles 		= jQuery("#storageBrowser_" + objTrigger.id + " ul"),
-		$objList 		= jQuery("#storageBrowser_" + objTrigger.id + " div.storageList"),
+		$objChooser		= jQuery("#storageBrowser_" + objTrigger.id + " div.storageChooser"),
 		$objLoader 		= jQuery("<div/>",{
 							"class":"storageLoader",
 							"html": "<?php echo $objLang->get("loadingFiles", "form") ?>",
@@ -446,7 +446,7 @@ ContentLanguage.prototype.loadStoragePage = function(objTrigger) {
 	if ($objFiles.length > 0) $objFiles.find(":first").remove();
 	
 	jQuery(".storageLoader").remove(); // Clear all loaders before inserting a new one.
-	$objList.append($objLoader);
+	$objChooser.append($objLoader);
 	
 	var request = jQuery.get(strUrl, strPost, function(data) { objTrigger.parent.showStoragePage(data, objTrigger); }, "xml");
 }
@@ -456,7 +456,7 @@ ContentLanguage.prototype.showStoragePage = function(objResponse, objTrigger) {
 		$objLoader 	= jQuery("#storageBrowser_" + objTrigger.id + " div.storageLoader"),
 		$objList 	= jQuery("#storageBrowser_" + objTrigger.id + " div.storageList");
 	
-	$objLoader.fadeOut();
+	$objLoader.slideUp();
 	$objList.html($objField.text());
 	
 	//*** Attach events to the thumbs.
@@ -964,7 +964,7 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 							data: {"element": $element}
 						}),
 		$objButton 	 = jQuery("<a />"),
-		$objRowValue = jQuery("<p />");
+		$objRowValue = jQuery("<strong />");
 	
 	//$objRow
 	//	.attr("id", "file_" + $element.attr("id"))
@@ -974,7 +974,8 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 	$objButton
 		.attr("href", "")
 		.addClass("button")
-		.html(this.removeLabel)
+		.html("&#735;")
+		.attr("title", this.removeLabel)
 		.bind("click", function(){
 			objParent.removeUploadField(strId, this);
 			return false;
@@ -1022,7 +1023,8 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 
 	$objButton
 		.addClass("button")
-		.html(this.removeLabel)
+		.html("&#735;")
+		.attr("title", this.removeLabel)
 		.attr("href", "")
 		.bind("click", function(){
 			objParent.removeCurrentField(strId, this);
@@ -1108,7 +1110,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		$objButton 			= jQuery("<a/>"),
 		$objThumb 			= jQuery("<a/>"),
 		$tempFile 			= jQuery($element.data("file")),
-		$objRowValue 		= jQuery("<p/>"),
+		$objRowValue 		= jQuery("<strong/>"),
 		$objProgressBar 	= jQuery("<div/>"),
 		$objProgressWrapper = jQuery("<div/>"),
 		$objAltText 		= jQuery("<p/>");
@@ -1127,7 +1129,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 		.data("element", $element);
 	
 	if (file !== undefined) {
-		$objRow.bind("mouseover mouseout", function(event) {
+		$objRow.bind("mouseenter mouseleave", function(event) {
 			if(event.type == "mouseover"){
 				jQuery(this).find("a img").attr("src", "/images/ico_loading_mo.gif")
 				//jQuery("#" + $objRow.attr("id")).find("a img").eq(0).attr("src", "/images/ico_loading_mo.gif");
@@ -1143,8 +1145,10 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	$objButton.addClass("button");
 	
 	if (file !== undefined) {
+		console.log("WTF!!", this, this.cancelLabel);
 		$objButton
-			.html(this.cancelLabel)
+			.html("&#735;")
+			.attr("title", this.cancelLabel)
 			.bind("click", function(event) {
 				__this.cancelCurrentSwfUpload($element.attr("id"), file);
 				event.stopPropagation();
@@ -1152,7 +1156,8 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 			});
 	} else {
 		$objButton
-			.html(this.removeLabel)
+			.html("&#735;")
+			.attr("title", this.removeLabel)
 			.bind("click", function(event) {
 				__this.cancelCurrentSwfUpload($element.attr("id"), $element.data("file"));
 				event.stopPropagation();
@@ -1186,6 +1191,7 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 	} else {		
 		if (__this.thumbPath != "") {
 			if (__this.isImage(tempFile.name)) {
+				console.log("AWESOME");
 				$objThumb
 					.addClass("thumbnail")
 					.html("<img src=\"thumb.php?src=" + __this.uploadPath + tempFile.name + "\" alt=\"\" />")
@@ -1496,7 +1502,7 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 	var __this = this.settings.jsParent;
 	jQuery("div." + file.id + " div.progressWrapper:first").remove();
 	jQuery("div." + file.id + ":first").unbind("mouseover").unbind("mouseout");
-	jQuery("div." + file.id + " a.button:first").html(__this.removeLabel);
+	jQuery("div." + file.id + " a.button:first").html("&#735;").attr("title", __this.removeLabel);
 
 	if (__this.thumbPath != "") {
 		if (__this.isImage(file.name)) {
