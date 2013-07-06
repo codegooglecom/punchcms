@@ -89,7 +89,7 @@ class Alias extends DBA_Alias
 		$objReturn = null;
 
 		if (!empty($strUrl)) {
-			$strSql = sprintf("SELECT * FROM " . parent::$table . " WHERE accountId = '%s' AND url = %s AND languageId = %s ORDER BY sort", $_CONF['app']['account']->getId(), parent::quote($strUrl), parent::quote($intLanguageId));
+			$strSql = sprintf("SELECT * FROM " . parent::$table . " WHERE accountId = '%s' AND url = '%s' AND languageId = '%s' ORDER BY sort", $_CONF['app']['account']->getId(), parent::quote($strUrl), parent::quote($intLanguageId));
 		}
 
 		$objReturn = parent::select($strSql);
@@ -106,7 +106,7 @@ class Alias extends DBA_Alias
 		$objReturn = null;
 
 		if (!empty($strAlias)) {
-			$strSql = sprintf("SELECT * FROM " . parent::$table . " WHERE accountId = '%s' AND alias = %s ORDER BY sort", $_CONF['app']['account']->getId(), parent::quote($strAlias));
+			$strSql = sprintf("SELECT * FROM " . parent::$table . " WHERE accountId = '%s' AND alias = '%s' ORDER BY sort", $_CONF['app']['account']->getId(), parent::quote($strAlias));
 			$objReturn = parent::select($strSql);
 		}
 
