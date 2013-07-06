@@ -184,8 +184,6 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	overflow: hidden;
 	width: 488px;
 	position: relative;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield h3 {
 		border: none !important;
@@ -196,12 +194,15 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 		background: #E0EEFF;
 		padding: 10px 11px 5px;
 		border-bottom: 1px #999 solid;
-		margin: 0 0 10px;
+		margin: 0;
 		overflow: auto;
 		-moz-border-radius-topleft: 4px;
 		-moz-border-radius-topright: 4px;
 		-webkit-border-top-left-radius: 4px;		
 		-webkit-border-top-right-radius: 4px;		
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .storageBrowser {
+		overflow: auto;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .ui-sortable {
 		margin: 3px 5px;
@@ -210,24 +211,26 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile,
 	form.ui-tabs div.ui-tabs-panel fieldset div .multifile {
 		background: #F1F5F8;
-		padding: 5px;
-		border: 1px #999 solid;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
 		cursor: move !important;
-		overflow: auto;
 		position: relative;
 		top: 0;
 		left: 0;
 		margin: 3px 0;
-		}
-		form.ui-tabs div.ui-tabs-panel fieldset div .multifile {
-			cursor: auto !important;
+		border: #eaeaea 1px solid;
+		border-radius: 0;
+		padding: 5px 5px 5px 40px;
+		overflow: hidden;
 		}
 		form.ui-tabs div.ui-tabs-panel fieldset div .filefield .ui-sortable-helper {
 			-moz-box-shadow: 1px 1px 1px #999;
 			-webkit-box-shadow: 1px 1px 1px #999;
 		}
+
+
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile:hover,
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile:hover {
+		background-color: #eaeaea !important;
+	}
 		
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail,
 	form.ui-tabs div.ui-tabs-panel fieldset div .multifile .thumbnail {
@@ -251,19 +254,32 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .button,
 	form.ui-tabs div.ui-tabs-panel fieldset div .multifile .button {
+		font-size: 30px;
+		line-height: 16px;
+		text-decoration: none;
+		color: #CE1000;
 		position: absolute;
-		right: 8px;
-		top: 3px;
+	    right: 8px;	
+		top: 9px !important;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .button:hover,
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile .button:hover {
+		background: none;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile p, 
 	form.ui-tabs div.ui-tabs-panel fieldset div .multifile p { 
-		margin-left: 25px;
+		margin-left: 0;
+		xfloat: left;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile p, 
+	form.ui-tabs div.ui-tabs-panel fieldset div .multifile p { 
+		margin-left: 0;
 		xfloat: left;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile div.progressWrapper,
 	form.ui-tabs div.ui-tabs-panel fieldset div .multifile div.progressWrapper {
 		border: 1px solid #666;
-		margin: 5px 80px 3px 20px;
+		margin: 5px 80px 3px 0;
 		padding: 0;
 		width: auto;
 	}
@@ -276,7 +292,15 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 		margin: 0;
 	}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser {
-		background: none repeat scroll 0 0 #EAEAEA;
+		overflow: auto !important;
+		border-bottom: 1px #999 solid;
+		padding-bottom: 4px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser {
+		background: none repeat scroll 0 0 #E0EEFF;
+		overflow: auto;
+		border: 1px #999 solid;
+		border-top: none;
 		margin: 0 auto 20px;
 		padding: 5px;
 		width: 335px;
@@ -303,85 +327,124 @@ form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
 			float: left;
 			width: 110px;
 			margin: 4px;
+			background-color: #F1F5F8;
+			border: 1px #F1F5F8 solid;
+			position: relative;
 			}
-			form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a {
+		form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li:hover {
+			border: 1px #eaeaea solid;
+			}
+			form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.error,
+			form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.error:hover,
+			form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.attachment,
+			form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.attachment:hover {
+				width: 110px !important;
+				height: 110px !important;
+				position: relative;
+			}
+			form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a,
+			form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a:hover {
 				display: block;
-				width: 104px;
-				height: 106px;
+				width: auto;
+				height: auto;
+				text-decoration: none;
+				background: none;
+				}
+				form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.error img {
+					width: 48px !important;
+					height: 38px !important;
+					margin: -30px 0 0 -24px !important;
+					top: 50%;
+					left: 50%;
+					position: absolute;
+				}
+				form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.attachment img {
+					width: 28px !important;
+					height: 52px !important;
+					margin: -36px 0 0 -14px !important;
+					top: 50%;
+					left: 50%;
+					position: absolute;	
 				}
 				form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a img {
-					border: 2px #2C457C solid;
+					border: none;
 					width: 100px;
 					height: 100px;
 					display: block;
 					overflow: hidden;
+					margin: 5px auto !important;
 					-moz-border-radius: 3px;
 					-webkit-border-radius: 3px;
 				}
 				form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a:hover img {
 					-moz-box-shadow: 0 0 5px #333;
 				}
+				form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li span {
+					position: absolute;
+					bottom: 0;
+					color: #FFF;
+					width: 100px;
+					padding: 3px 6px;
+					line-height: 15px;
+					height: 15px;
+					font-size: 10px;
+					background: #000;
+					background: rgba(0, 0, 0, 0.7);
+				}
 	form.ui-tabs div.ui-tabs-panel fieldset div .filefield .storageLoader {
 		background: url("/css/blue-green/images/ui-anim_basic_16x16.gif") no-repeat scroll 0 0 transparent;
 		height: 20px;
-		margin: 0 auto;
 		padding-left: 20px;
 		width: 180px;
+		margin: 10px auto 0;
 	}
 
-.filefield {
-	position: relative;
-}
-.filefield .header {
-	margin: 0 !important;
-}
-.filefield .storageBrowser {
-	overflow: auto !important;
-}
+.filefield .storageBrowser {}
 .filefield .storageChooser {
-	overflow: auto !important;
-	background-color: #E0EEFF !important;
-	border: 1px #999 solid;
-	border-top: none;
 }
 .filefield .storageLoader {
-	margin: 10px auto 0 !important;
+}
+.filefield .storageList li {
+}
+.filefield .storageList li:hover {
+}
+
+.filefield .storageList a.error,
+.filefield .storageList a.error:hover,
+.filefield .storageList a.attachment,
+.filefield .storageList a.attachment:hover {
+}
+.filefield .storageList a,
+.filefield .storageList a:hover {
+}
+.filefield .storageList a.error img {
+}
+.filefield .storageList a.attachment img {
+}
+.filefield .storageList img {
+}
+.filefield .storageList li {
+}
+.filefield .storageList span {
 }
 .filefield .multifile {
-	border: #eaeaea 1px solid !important;
-	border-radius: 0 !important;
-	padding: 5px 5px 5px 40px !important;
-	overflow: hidden !important;
 }
 .filefield .multifile p {
-	margin-left: 0 !important;
 }
 .filefield .multifile strong {
-	font-weight: bold;
-	color: #666;
 }
 .filefield .multifile:hover {
-	background-color: #eaeaea !important;
 }
 .filefield .multifile:hover strong {
 	color: #333;
 }
 
 .filefield .multifile .button {
-	font-size: 30px;
-	line-height: 16px;
-	text-decoration: none;
-	color: #CE1000;
-	position: absolute;
-    right: 8px;	
-	top: 9px !important;
 }
 .filefield .multifile .button:hover {
-	background: none;
 }
 
 .multifile div.progressWrapper {
-	margin-left: 0 !important;
 }
 
 .fieldWrap {
