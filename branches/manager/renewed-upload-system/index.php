@@ -19,7 +19,7 @@ if (empty($intCatId)
 		|| !$objLiveUser->checkRight($_CONF['app']['navRights'][$intCatId])) {
 
 	foreach ($_CONF['app']['navRights'] as $key => $value) {
-		if ($objLiveUser->checkRight($value) == TRUE) {
+		if ($objLiveUser->checkRight($value) == true) {
 			$intCatId = $key;
 			break;
 		}
@@ -29,7 +29,7 @@ if (empty($intCatId)
 //*** Check if the category is a top level product id.
 if ($productKey = array_search($intCatId, $_CONF['app']['msMypunch']['product'])) {
 	foreach($_CONF['app']['ms' . ucfirst($productKey)] as $key => $value) {
-		if ($objLiveUser->checkRight($_CONF['app']['navRights'][$value]) == TRUE) {
+		if ($objLiveUser->checkRight($_CONF['app']['navRights'][$value]) == true) {
 			$intCatId = $value;
 			break;
 		}
@@ -81,7 +81,7 @@ switch ($intCatId) {
 			$strOutput .= parseLogin($intElmntId, $strCommand);
 		}
 		break;
-		
+
 	case NAV_MYPUNCH_NOACCOUNT:
 		require_once('includes/inc.tplparse_noaccount.php');
 		$strOutput .= parsePage($intElmntId, $strCommand);
