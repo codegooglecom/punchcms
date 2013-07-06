@@ -1,6 +1,10 @@
 <?php
+
 define('DB_HOSTNAME','localhost');
-define('DB_USERNAME','punchcms');
-define('DB_PASSWORD','tircinfo$');
+define('DB_USERNAME','root');
+define('DB_PASSWORD','');
 define('DB_DATABASE','punchcms_admin');
+
+define('DB_CREATE_PREFIX', 'punchcms_');
+
 ?>
