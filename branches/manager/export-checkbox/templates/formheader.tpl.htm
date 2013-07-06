@@ -1,0 +1,256 @@
+<script type="text/javascript" src="/libraries/cookie.js"></script>
+<script type="text/javascript" src="/libraries/pintree.js"></script>
+<script type="text/javascript">
+// <![CDATA[
+
+function setLinkTrail(element)
+{
+    $.ajax({
+        url: 'ajax.php?cmd=Element::generateElementTrailXml&params='+ encodeURIComponent(element.value) ,
+        dataType: 'xml',
+        success:  function(data)
+        { 
+            var id = $(element).attr('id');
+            $('#'+ id + '_element').html($(data).find('field').text());
+        }
+    });
+}
+
+function DragDropLink(){
+
+	//*** Action occures on drag.
+	this._drag = function(sourceHtmlObject, dhtmlObject, targetHtmlObject) {
+		targetHtmlObject.style.backgroundColor = "";
+		targetHtmlObject.value = sourceHtmlObject.parentObject.id;
+        		
+        setLinkTrail(targetHtmlObject);        
+                
+		//*** Trigger the language module.
+		objContentLanguage.toTemp(targetHtmlObject.id);
+	}
+
+	//*** Action occures on drag moved in landing zone.
+	this._dragIn = function(htmlObject, shtmlObject) {
+		htmlObject.style.backgroundColor = "#fffacd";
+		return htmlObject;
+	}
+
+	//*** Action occures on drag moved out landing zone.
+	this._dragOut = function(htmlObject) {
+		htmlObject.style.backgroundColor = "";
+		return this;
+	}
+}
+
+//*** Resize tree container.
+function resizeTree() {
+	 var $objTree 		= jQuery("#treeContainer"),
+	 	 windowHeight 	= jQuery(window).height(),
+	 	 offsetY 		= $objTree.offset().left,
+	 	 headerHeight	= 180,
+	 	 treeHeight 	= windowHeight - offsetY - headerHeight;
+ 	 
+	 $objTree.css({ height: treeHeight + "px"});
+}
+
+function checkDynamicAlias() {
+	if ($("#frm_dynamic_alias_check:checked").length > 0) {
+		$("#frm_dynamic_alias").removeAttr("disabled");
+	} else {
+		$("#frm_dynamic_alias").attr("disabled", "disabled");
+	}
+}
+
+function generateSlug(str) {
+	var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+	var to   = "aaaaeeeeiiiioooouuuunc------";
+	
+	str = str.replace(/^\s+|\s+$/g, ''); // trim
+	str = str.toLowerCase();
+	  
+	// remove accents, swap ñ for n, etc
+	for (var i=0, l=from.length ; i<l ; i++) {
+		str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+	}
+	
+	str = str
+			.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+			.replace(/\s+/g, '-') // collapse whitespace and replace by -
+			.replace(/-+/g, '-'); // collapse dashes
+	
+	return str;
+}
+
+//*** Onload action.
+jQuery(function(){
+        
+    $('input.deeplink').on('change',function(){
+        setLinkTrail(this);
+    });    
+        
+	if(typeof $tabs == "undefined"){
+		$tabs = jQuery("#elementForm").tabs({
+			selected: {SELECTED_TAB},
+			show: function () {
+				var $alias 	= $("#frm_meta_alias"),
+					$fields	= $("#section-fields"),
+					$meta	= $("#section-meta")
+				
+				if (!$meta.hasClass("ui-tabs-hide") && $alias.val() == "") {
+					$alias.bind("focus", function () {
+						var $textField = $fields.find("input[type=text]:first")
+						
+						if ($textField.length > 0) {
+							$alias.val(generateSlug($textField.val()))
+						}
+					})
+				}
+				
+				$("#elementForm div:visible:first input[type='text']:first").focus()
+			}
+		});
+	}
+	
+	if (jQuery("#treeContainer").length > 0) {
+		//*** On resize, recalculate the size of the treeview module.
+		jQuery(window).bind("resize", function(){
+			resizeTree();
+		});
+		resizeTree();
+		
+		// Make tree pinnable. Works cross browser.
+		var objPinnableTree = new PinnableTree();
+	}
+	
+	// Focus on first form field.
+	// $("#elementForm div:visible:first input[type='text']:first").focus()
+	
+	// Listen for esc key event
+	var $cancelAnchor 	= $(".form-navigation a"),
+		$submitBtn		= $(".form-navigation input[type='submit']"),
+		$activateBtn	= $("#language_active"),
+		$cascadeBtn		= $("#language_cascade"),
+		
+		blnModifier 	= false,
+		blnShift		= false,
+		varReturn 		= true,
+		blnIsMac		= /Macintosh/i.test(navigator.userAgent),
+		blnEditView		= ($cancelAnchor.length > 0);
+
+	var strSubmitTitle = (blnIsMac) ? "\u2318 + S" : "CTRL + S";
+	$submitBtn.attr("title", strSubmitTitle);
+
+	var strCancelTitle = (blnIsMac) ? "\u238B (ESC)" : "ESC";
+	$cancelAnchor.attr("title", strCancelTitle);
+
+	$(document)
+		.bind("keydown", function(e) {
+			switch (e.keyCode) {
+				case 27:
+					// Esc key
+					if (blnEditView) {
+						window.location = $cancelAnchor.attr("href")
+						varReturn = false
+					}
+					break;
+				case 91:
+				case 17:
+				case 18:
+					// command (91), ctrl (17) or alt/option (18) is pressed
+					blnModifier = true
+					break;
+				case 16:
+					blnShift = true
+					break;
+				case 83:
+					// s is pressed
+					if (blnModifier && ($submitBtn.length > 0)) {
+						$submitBtn.trigger("click")
+						varReturn = false
+					}
+					break;
+				case 38:
+					if (blnModifier && (typeof _treeApi == "object")) {
+						_treeApi.selectItem(_treeApi.getParentId(_treeApi.getSelectedItemId()), true)
+					}
+					break;
+				case 68:
+					// d is pressed. Activate the language and cascade all fields.
+					if (blnModifier && $activateBtn.length > 0 && $cascadeBtn.length > 0) {
+						$activateBtn.trigger("mousedown")
+						$cascadeBtn.parent().trigger("click")
+						varReturn = false
+					}
+					break;
+				case 49:
+				case 50:
+				case 51:
+				case 52:
+				case 53:
+				case 54:
+					var intIndex = (48 + $(".action-menu a").length) - e.keyCode,
+						$element = $(".action-menu a:eq(" + intIndex + ")")
+
+					if (blnModifier && ($element.length > 0)) {
+						window.location = $element.attr("href")
+						varReturn = false
+					}
+					
+					if (blnModifier && (typeof $tabs !== "undefined")) {
+						var intIndex = Math.abs(46 + $tabs.tabs("length") - e.keyCode)
+						$tabs.tabs("select", intIndex)
+						varReturn = false
+					}
+					break;
+				case 8:
+					var $element = $("#btn-remove")
+					if (blnModifier && ($element.length > 0)) {
+						window.location = $element.attr("href")
+						varReturn = false
+					}
+					break;
+				case 9:
+					if (blnModifier && (typeof $tabs !== "undefined")) {
+						var intIndex = (blnShift) ? $tabs.tabs("option", "selected") - 1 : $tabs.tabs("option", "selected") + 1
+						
+						if (intIndex == $tabs.tabs("length")) {
+							intIndex = 0
+						} else if (intIndex < 0) {
+							intIndex = $tabs.tabs("length") - 1
+						}
+						
+						$tabs.tabs("select", intIndex);
+
+						varReturn = false
+					}
+					break;
+				case 191:
+					if (blnModifier) {
+						console.log("Show some information about hotkeys...");
+					}
+					break;
+			}
+			if (window._logKey == true) console.log(e.keyCode)
+			return varReturn
+		})
+		.bind("keyup", function (e) {
+			if (e.keyCode !== 9) {
+				blnModifier = false
+				blnShift 	= false
+				varReturn 	= true
+			}
+		})
+
+	jQuery(".input-button").button();
+
+	$("#frm_dynamic_alias_check").bind("click", function(){
+		checkDynamicAlias();
+	});	
+	checkDynamicAlias();
+});
+
+{SCRIPT}
+
+// ]]>
+</script>
+</head>
