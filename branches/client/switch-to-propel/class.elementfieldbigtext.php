@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ *
  * Handles ElementFieldBigText properties and methods.
  * @author felix
  * @version 0.1.0
@@ -10,13 +10,13 @@
 class ElementFieldBigText extends DBA_ElementFieldBigText {
 
 	public static function getByFieldId($intFieldId, $intLanguageId = 0) {
-		self::$__object = "ElementFieldBigText";
-		self::$__table = "pcms_element_field_bigtext";
+		self::$object = "ElementFieldBigText";
+		self::$table = "pcms_element_field_bigtext";
 
 		$objReturn = new ElementFieldBigText();
 
 		if ($intFieldId > 0) {
-			$strSql = sprintf("SELECT * FROM " . self::$__table . " WHERE fieldId = '%s' AND languageId = '%s'",
+			$strSql = sprintf("SELECT * FROM " . self::$table . " WHERE fieldId = '%s' AND languageId = '%s'",
 						quote_smart($intFieldId), quote_smart($intLanguageId));
 			$objElementValues = ElementFieldBigText::select($strSql);
 
@@ -29,8 +29,8 @@ class ElementFieldBigText extends DBA_ElementFieldBigText {
 	}
 
 	public function delete($blnRemovePhysical = FALSE) {
-		self::$__object = "ElementFieldBigText";
-		self::$__table = "pcms_element_field_bigtext";
+		self::$object = "ElementFieldBigText";
+		self::$table = "pcms_element_field_bigtext";
 
 		if ($blnRemovePhysical) {
 			//*** Get TemplateField.
@@ -62,7 +62,7 @@ class ElementFieldBigText extends DBA_ElementFieldBigText {
 										//*** Remove files.
 										$strFile = $strRemoteFolder . $arrFile[1];
 										$objFtp->delete($strFile);
-										
+
 										if ($objTemplateField->getTypeId() == FIELD_TYPE_IMAGE) {
 											//*** Remove template settings files.
 											$objImageField = new ImageField($objElementField->getTemplateFieldId());
@@ -75,7 +75,7 @@ class ElementFieldBigText extends DBA_ElementFieldBigText {
 												}
 											}
 										}
-									}										
+									}
 								}
 							}
 						}
