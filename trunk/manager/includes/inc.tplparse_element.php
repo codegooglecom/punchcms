@@ -155,6 +155,8 @@ function parsePages($intElmntId, $strCommand) {
 				}
 			}
 
+            
+            
 			//*** Render list action pulldown.
 			if (!is_object($objElement) || $objElement->getTypeId() != ELM_TYPE_LOCKED) {
 				$arrActions[$objLang->get("choose", "button")] = 0;
@@ -162,7 +164,7 @@ function parsePages($intElmntId, $strCommand) {
 				$arrActions[$objLang->get("duplicate", "button") . "&nbsp;&nbsp;"] = "duplicate";
 				$arrActions[$objLang->get("activate", "button") . "&nbsp;&nbsp;"] = "activate";
 				$arrActions[$objLang->get("deactivate", "button") . "&nbsp;&nbsp;"] = "deactivate";
-				$arrActions[$objLang->get("export", "button") . "&nbsp;&nbsp;"] = "export";
+				if(is_object($objElement)) $arrActions[$objLang->get("export", "button") . "&nbsp;&nbsp;"] = "export";
 				foreach ($arrActions as $key => $value) {
 					$objTpl->setCurrentBlock("multiview-listactionitem");
 					$objTpl->setVariable("LIST_ACTION_TEXT", $key);
