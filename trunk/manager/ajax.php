@@ -2,6 +2,9 @@
 
 require_once('includes/init.php');
 
+//*** Only logged in users are allowed to make AJAX requests
+require_once('includes/inc.login.php');
+
 $cmd 		= request('cmd');
 $strReturn 	= "";
 
