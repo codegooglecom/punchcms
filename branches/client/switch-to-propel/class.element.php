@@ -333,8 +333,11 @@ class Element extends DBA_Element {
 		$objReturn = NULL;
 
 		if ($this->id > 0) {
-			$strSql = sprintf("SELECT * FROM pcms_element_field WHERE elementId = '%s' AND templateFieldId = '%s'",
-						quote_smart($this->id), quote_smart($intFieldId));
+			$strSql = sprintf(
+				"SELECT * FROM pcms_element_field WHERE elementId = '%s' AND templateFieldId = '%s'",
+				self::quote($this->id),
+				self::quote($intFieldId)
+			);
 			$objElementFields = ElementField::select($strSql);
 
 			if (is_object($objElementFields) && $objElementFields->count() > 0) {

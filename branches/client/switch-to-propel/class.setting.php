@@ -33,7 +33,7 @@ class Setting extends DBA_Setting {
 
 		$objSetting = SettingTemplate::selectByName($strName);
 		if (is_object($objSetting)) {
-			$strSql = sprintf("SELECT * FROM pcms_setting WHERE accountId = '%s' AND settingId = '%s'", $intAccountId, quote_smart($objSetting->getId()));
+			$strSql = sprintf("SELECT * FROM pcms_setting WHERE accountId = '%s' AND settingId = '%s'", $intAccountId, self::quote($objSetting->getId()));
 			$objSettings = self::select($strSql);
 
 			if ($objSettings->count() > 0) {
@@ -86,7 +86,4 @@ class Setting extends DBA_Setting {
 
 		return $strReturn;
 	}
-
 }
-
-?>

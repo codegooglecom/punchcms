@@ -108,14 +108,14 @@ class TemplateField extends DBA_TemplateField {
 						WHERE pcms_template_field.typeId = '%s'
 						AND pcms_template_field.templateId = pcms_template.id
 						AND pcms_template.accountId = '%s'";
-			$strSql = sprintf($strSql, quote_smart($intTemplateTypeId), quote_smart($_CONF['app']['account']->getId()));
+			$strSql = sprintf($strSql, self::quote($intTemplateTypeId), self::quote($_CONF['app']['account']->getId()));
 		} else {
 			$strSql = "SELECT pcms_template_field.* FROM pcms_template_field, pcms_template
 						WHERE pcms_template_field.typeId = '%s'
 						AND pcms_template_field.templateId = pcms_template.id
 						AND pcms_template.id = '%s'
 						AND pcms_template.accountId = '%s'";
-			$strSql = sprintf($strSql, quote_smart($intTemplateTypeId), quote_smart($intTemplateId), quote_smart($_CONF['app']['account']->getId()));
+			$strSql = sprintf($strSql, self::quote($intTemplateTypeId), self::quote($intTemplateId), self::quote($_CONF['app']['account']->getId()));
 		}
 
 		return self::select($strSql);
@@ -131,5 +131,3 @@ class TemplateField extends DBA_TemplateField {
 		return parent::delete();
 	}
 }
-
-?>

@@ -16,7 +16,7 @@ class ElementPermission extends DBA_ElementPermission {
 					WHERE pcms_element_permission.elementId = '%s'
 					AND pcms_element.accountId = '%s'
 					AND pcms_element_permission.elementId = pcms_element.id";
-		$strSql = sprintf($strSql, quote_smart($intElementId), quote_smart($_CONF['app']['account']->getId()));
+		$strSql = sprintf($strSql, self::quote($intElementId), self::quote($_CONF['app']['account']->getId()));
 		$objPermissions = self::select($strSql);
 
 		$objReturn = new ElementPermission();
@@ -97,7 +97,7 @@ class ElementPermission extends DBA_ElementPermission {
 						WHERE pcms_element_permission.elementId = '%s'
 						AND pcms_element.accountId = '%s'
 						AND pcms_element_permission.elementId = pcms_element.id";
-			$strSql = sprintf($strSql, quote_smart($this->elementId), quote_smart($_CONF['app']['account']->getId()));
+			$strSql = sprintf($strSql, self::quote($this->elementId), self::quote($_CONF['app']['account']->getId()));
 			$objPermissions = self::select($strSql);
 
 			foreach ($objPermissions as $objPermission) {

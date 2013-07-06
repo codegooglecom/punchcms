@@ -16,8 +16,11 @@ class ElementFieldDate extends DBA_ElementFieldDate {
 		$objReturn = new ElementFieldDate();
 
 		if ($intFieldId > 0) {
-			$strSql = sprintf("SELECT * FROM " . self::$table . " WHERE fieldId = '%s' AND languageId = '%s'",
-						quote_smart($intFieldId), quote_smart($intLanguageId));
+			$strSql = sprintf(
+				"SELECT * FROM " . self::$table . " WHERE fieldId = '%s' AND languageId = '%s'",
+				self::quote($intFieldId),
+				self::quote($intLanguageId)
+			);
 			$objElementValues = ElementFieldDate::select($strSql);
 
 			if (is_object($objElementValues) && $objElementValues->count() > 0) {
@@ -27,7 +30,4 @@ class ElementFieldDate extends DBA_ElementFieldDate {
 
 		return $objReturn;
 	}
-
 }
-
-?>

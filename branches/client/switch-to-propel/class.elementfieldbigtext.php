@@ -16,8 +16,11 @@ class ElementFieldBigText extends DBA_ElementFieldBigText {
 		$objReturn = new ElementFieldBigText();
 
 		if ($intFieldId > 0) {
-			$strSql = sprintf("SELECT * FROM " . self::$table . " WHERE fieldId = '%s' AND languageId = '%s'",
-						quote_smart($intFieldId), quote_smart($intLanguageId));
+			$strSql = sprintf(
+				"SELECT * FROM " . self::$table . " WHERE fieldId = '%s' AND languageId = '%s'",
+				self::quote($intFieldId),
+				self::quote($intLanguageId)
+			);
 			$objElementValues = ElementFieldBigText::select($strSql);
 
 			if (is_object($objElementValues) && $objElementValues->count() > 0) {
