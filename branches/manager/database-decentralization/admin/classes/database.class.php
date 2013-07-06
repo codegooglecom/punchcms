@@ -14,11 +14,21 @@
 class Database
 {  
     private $_conn;
+    private $_connString;
     private static $_instance;
     
-	private function __construct()
+	public function __construct($connString=NULL)
 	{
-		$this->connect();
+            if($connString!== NULL)
+            {
+                $this->setConnString($connString);
+                
+            }
+            else
+            {
+                $this->setConnString('mysql:host='. DB_HOSTNAME .';dbname='. DB_DATABASE .'');
+            }
+            $this->connect();
 	}
     
     /**
@@ -27,11 +37,11 @@ class Database
      * 
      * @return Database
      */
-    public static function getInstance() 
+    public static function getInstance($connString=NULL) 
     {
         if(!self::$_instance) 
         {
-            self::$_instance = new Database();
+            self::$_instance = new Database($connString);
         }
 
         return self::$_instance;
@@ -39,8 +49,9 @@ class Database
 
 	private function connect()
 	{
-        try {
-            $this->_conn = new PDO('mysql:host='. DB_HOSTNAME .';dbname='. DB_DATABASE .'', DB_USERNAME, DB_PASSWORD);
+        try 
+        {
+            $this->_conn = new PDO($this->getConnString(), DB_USERNAME, DB_PASSWORD);
         }
         catch(PDOException $e) 
         {
@@ -62,10 +73,12 @@ class Database
             $stmt = $this->_conn->prepare($query);
             if($stmt)
             {
+               
                 if(!$stmt->execute($this->prepareColumns($columns)))
-                {
+                { 
                     // execution failed
                     $errorInfo = $stmt->errorInfo();
+                    echo 'Query execution failed: '. $errorInfo[0] .', '. $errorInfo[1] .', '. $errorInfo[2] .'<br />'. $query .'<br />'. print_r($columns,true) .'<br />';
                     Log::addDebug('Query execution failed: '. $errorInfo[0] .', '. $errorInfo[1] .', '. $errorInfo[2] .'<br />'. $query .'<br />'. print_r($columns,true) .'<br />'); 
                 }
                 
@@ -86,6 +99,16 @@ class Database
         }       
         return false;
     } 
+    
+    
+    public function create($dbname)
+    {
+        $query="create database ".DB_CREATE_PREFIX.addslashes($dbname);
+        return $this->prepare($query);
+    }
+    
+    
+    
     
     /**
      * 
@@ -266,6 +289,16 @@ class Database
     {
         return $this->_conn->lastInsertId();
     }
+    
+    public function getConnString() {
+        return $this->_connString;
+    }
+
+    public function setConnString($connString) {
+        $this->_connString = $connString;
+    }
+
+
       
 }
 

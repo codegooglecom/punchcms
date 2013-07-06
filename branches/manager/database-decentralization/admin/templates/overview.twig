@@ -9,10 +9,10 @@
 		
             {% for account in accounts %}
             <li><div class="listitem"><span class="menu">
-					<a href="{ITEM_EDIT}">Edit</a>
-					<a onclick="{ITEM_TYPE}.remove({ITEM_ID})" href="javascript:;"><img alt="Delete {ITEM_TYPE}" src="images/button_delete_out.gif" onmouseover="this.src='images/button_delete_over.gif'" onmouseout="this.src='images/button_delete_out.gif'" /></a>
+					<a href="?c=edit&aid={{ account.id }}">Edit</a>
+					<a href="?c=delete&aid={{ account.id }}"><img alt="Delete {ITEM_TYPE}" src="images/button_delete_out.gif" onmouseover="this.src='images/button_delete_over.gif'" onmouseout="this.src='images/button_delete_out.gif'" /></a>
 				</span>
-				<span title="{ITEM_TITLE}" class="{ITEM_CLASS}"><a href="{ITEM_LINK}" class="linkitem" rel="external">{{ account.account_name }}</a></span>
+				<span title="{ITEM_TITLE}" class="{ITEM_CLASS}"><a href="?c=edit&aid={{ account.id }}" class="linkitem" rel="external">{{ account.account_name }}</a></span>
 			</div>
 		</li>
             {% endfor %}

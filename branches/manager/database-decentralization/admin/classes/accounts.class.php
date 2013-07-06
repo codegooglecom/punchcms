@@ -29,6 +29,7 @@ class Accounts
             while($row = $result->fetch())
             {
                 $objReturn[]=Array(
+                    "id"=>$row['account_id'],
                     "account_name"=>$row['account_name'],
                 );
             }

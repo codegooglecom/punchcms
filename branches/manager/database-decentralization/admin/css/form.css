@@ -142,6 +142,7 @@ div.formWrapper div label.label-radio
 
 .input-textsmall,
 .input-textlarge,
+.input-punchid,
 .input-textbig,
 .input-texthigh,
 .input-file,
@@ -160,6 +161,9 @@ div.formWrapper div label.label-radio
 
 .input-textsmall {
 	width: 80px;
+}
+.input-punchid {
+	width: 225px;background:#c0c0c0;
 }
 
 .input-textbig {
@@ -193,7 +197,7 @@ div.formWrapper div label.label-radio
 	font: normal 11px Verdana;
 }
 
-.readonly {
+input[readonly] {
 	background-color: #e9e9e9;
 }
 

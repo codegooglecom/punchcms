@@ -15,8 +15,11 @@
 
 <div id="header">
 	<div id="topbar">{% if login_username %}Logged in as <span>{{ login_username }}</span> [ <a href="{{ logout_url }}">Log out</a> ]{% else %}&nbsp;{% endif %}</div>
-	<h1>PunchCMS Admin Area</h1>
-	<ul id="menu-main">
+	
+	
+        {% if submenuitems %}
+        <h1>PunchCMS Admin Area</h1>
+        <ul id="menu-main">
 		<li><a href="#" class="active">Accounts</a></li>
 	</ul>
 	<ul id="menu-sub">
@@ -24,6 +27,9 @@
 		<li><a href="{{ submenuitem.link }}" class="{SUB_CLASS}">{{ submenuitem.label }}</a></li>
                 {% endfor %}
 	</ul>
+        {% else %}
+        <h1 align="center">PunchCMS Admin Area</h1>
+        {% endif %}
 </div>
 {% block contents %}    
     

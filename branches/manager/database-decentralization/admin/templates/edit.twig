@@ -6,18 +6,22 @@
 	
 	<div class="formWrapper">
 		<form id="accountForm" method="post" action="">
-			
+		<input type="hidden" name="command" value="save">	
+			<div class="required">
+				<label for="account_name">PunchID</label>
+				<input type="text" class="input-punchid" readonly value="{{ account.punch_id }}" />
+			</div>
 			<div class="required">
 				<label for="account_name">Name</label>
-				<input type="text" name="account_name" id="account_name" class="input-textlarge" value="" />
+				<input type="text" name="account_name" id="account_name" class="input-textlarge" value="{{ account.account_name }}" />
 			</div>
 			<div class="required">
 				<label for="subdomain">Subdomain</label>
-				<input type="text" name="subdomain" id="subdomain" class="input-textsmall" value="" />
+				<input type="text" name="subdomain" id="subdomain" class="input-textsmall" readonly value="{{ account.subdomain }}" />
 			</div>
 			<div class="required">
 				<label for="admin_name">Admin Name</label>
-				<input type="text" name="admin_name" id="admin_name" class="input-textsmall" value="" />
+				<input type="text" name="admin_name" id="admin_name" class="input-textlarge" value="{{ account.admin.name }}" />
 			</div>
 			<div class="required">
 				<label for="admin_password">Admin Password</label>
@@ -25,7 +29,7 @@
 			</div>
 			<div class="required">
 				<label for="admin_email">Admin Email</label>
-				<input type="text" name="admin_email" id="admin_email" class="input-textlarge" value="" />
+				<input type="text" name="admin_email" id="admin_email" class="input-textlarge" value="{{ account.admin.email }}" />
 			</div>
 			
 			<div class="navigation">
