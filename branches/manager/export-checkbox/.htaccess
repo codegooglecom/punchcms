@@ -1,7 +1,0 @@
-php_value upload_max_filesize 128M
-php_value post_max_size 128M
-php_value memory_limit 256M
-php_value mbstring.internal_encoding UTF-8
-php_value display_errors On
-php_flag error_reporting 22527
-php_value date.timezone "America/La_Paz"
