@@ -28,8 +28,12 @@ class Search {
 		} else {
 			$objElements = Element::select();
 		}
+        
+        $now = date('Y-m-d H:i:s');
 
 		foreach ($objElements as $objElement) {
+            $searchIndexes = array();
+            
 			//*** Delete current index.
 			$this->deleteSearchIndex($objElement->getId());
 
@@ -42,7 +46,16 @@ class Search {
 			$objElementFields = ElementFieldText::select($strSql);
 
 			foreach ($objElementFields as $objElementField) {
-				$this->insertSearchWord($objElementField->getValue(), $objElement->getId());
+				foreach ($this->getWords($objElementField->getValue(), self::SEARCH_WEIGHT) as $strWord => $intWeight) {
+                    $searchIndexes[] = sprintf("('%s', '%s', '%s', '%s', '%s', '%s')", 
+                        quote_smart($objElement->getId()),
+                        quote_smart($strWord),
+                        quote_smart($intWeight),
+                        0,
+                        $now,
+                        $now
+                        );
+                }
 			}
 
 			//*** Get index words from the elements bigtext field.
@@ -54,8 +67,23 @@ class Search {
 			$objElementFields = ElementFieldBigText::select($strSql);
 
 			foreach ($objElementFields as $objElementField) {
-				$this->insertSearchWord($objElementField->getValue(), $objElement->getId());
+                foreach ($this->getWords($objElementField->getValue(), self::SEARCH_WEIGHT) as $strWord => $intWeight) {
+                    $searchIndexes[] = sprintf("('%s', '%s', '%s', '%s', '%s', '%s')", 
+                        quote_smart($objElement->getId()),
+                        quote_smart($strWord),
+                        quote_smart($intWeight),
+                        0,
+                        $now,
+                        $now
+                        );
+                }
 			}
+            
+            if(count($searchIndex) > 0)
+            {
+                $strSql = 'INSERT INTO pcms_search_index (elementId, word, count, sort, created, modified) VALUES '. implode(',',$searchIndexes);
+                SearchIndex::select($strSql);
+            }
 		}
 	}
 
@@ -143,12 +171,8 @@ class Search {
 	}
 
 	private function deleteSearchIndex($intId) {
-		$strSql = sprintf("SELECT * FROM pcms_search_index WHERE elementId = '%s'", quote_smart($intId));
-		$objSearchIndexes = SearchIndex::select($strSql);
-
-		foreach ($objSearchIndexes as $objSearchIndex) {
-			$objSearchIndex->delete();
-		}
+		$strSql = sprintf("DELETE FROM pcms_search_index WHERE elementId = '%s'", quote_smart($intId));
+		SearchIndex::select($strSql);
 	}
 
 	private function removeStopWordsFromArray($arrWords) {
