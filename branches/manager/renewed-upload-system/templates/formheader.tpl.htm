@@ -68,6 +68,14 @@ function generateSlug(str) {
 
 //*** Onload action.
 jQuery(function(){
+	// Always focus on the first input field
+    $(window)
+	    .bind("focus", function () {
+	    	$("#content input[type='text']:first").focus();
+	    })
+	    .triggerHandler("focus");
+
+    // Handle tabs
 	if(typeof $tabs == "undefined"){
 		$tabs = jQuery("#elementForm").tabs({
 			selected: {SELECTED_TAB},
