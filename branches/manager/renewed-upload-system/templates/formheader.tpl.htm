@@ -75,6 +75,50 @@ jQuery(function(){
 	    })
 	    .triggerHandler("focus");
 
+    /**
+     * Automagically set the field type based on the API name. Fully extendable with more regular expressions.
+     * Just add |yourvalue to an existing regex or create a new one.
+     **/
+    ;(function () {
+        $("#frm_field_type")
+            .after("<span id='autodetected'>Auto-detected</span>")
+            .next()
+            .css({"color": "green", "padding-left": "10px"})
+            .hide();
+
+        $("#frm_apiname").bind("keyup", function () {
+            var $this = $(this);
+
+            clearTimeout(window._timers["_apiNameKeyup"]);
+            window._timers["_apiNameKeyup"] = setTimeout(function () {
+                var arrRegex = {
+                    "date": 1, // Date field
+                    "title|label": 2, // Short text
+                    "body|paragraph|description": 3, // Large text
+                    "file": 4, // File field
+                    "image|thumb": 7, // Image
+                    "address|code|embed": 14 // Simple text
+                }
+
+                for (regex in arrRegex) {
+                    if($this.val().match(new RegExp("(" + regex + ")", "i"))) {
+                        var $option = $("#frm_field_type").find("option[value='" + arrRegex[regex] + "']");
+
+                        if (!$option.is(":selected")) {
+                            $option
+                                .attr("selected", "selected")
+                                .trigger("change")
+
+                            $("#autodetected").fadeIn("fast", function() {
+                                $(this).delay(2000).fadeOut("fast");
+                            })
+                        }
+                    }
+                }
+            }, 100)
+        })
+    })();
+
     // Handle tabs
 	if(typeof $tabs == "undefined"){
 		$tabs = jQuery("#elementForm").tabs({
