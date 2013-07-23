@@ -81,13 +81,74 @@ function generateSlug(str) {
 	return str;
 }
 
+window._timers = window._timers || {};
+
 //*** Onload action.
 jQuery(function(){
         
     $('input.deeplink').on('change',function(){
         setLinkTrail(this);
-    });    
-        
+    });
+
+	// Always focus on the first input field
+    $(window)
+	    .bind("focus", function () {
+	    	$("#content input[type='text']:first").focus();
+	    })
+	    .triggerHandler("focus");
+
+    /**
+     * Automagically set the field type based on the API name. Fully extendable with more regular expressions.
+     * Just add |yourvalue to an existing regex or create a new one.
+     **/
+    ;(function () {
+        $("#frm_field_type")
+            .after("<span id='autodetected'>Auto-detected</span>")
+            .next()
+            .css({"color": "green", "padding-left": "10px"})
+            .hide();
+
+        $("#frm_apiname").on("keyup", function () {
+            var $this = $(this),
+                // Create timers namespace
+                t = window._timers["_apiNameKeyup"];            
+
+            // Clear timers if set
+            if (t) {
+            	clearTimeout(t);
+            }
+            
+            t = setTimeout(function () {
+                var arrRegex = {
+                    "date": 1, // Date field
+                    "title|label": 2, // Short text
+                    "body|paragraph|description": 3, // Large text
+                    "file": 4, // File field
+                    "image|thumb": 7, // Image
+                    "link|href": 9, // Deep link
+                    "address|code|embed": 14 // Simple text
+                }
+
+                for (regex in arrRegex) {
+                    if($this.val().match(new RegExp("(" + regex + ")", "i"))) {
+                        var $option = $("#frm_field_type").find("option[value='" + arrRegex[regex] + "']");
+
+                        if (!$option.is(":selected")) {
+                            $option
+                                .attr("selected", "selected")
+                                .trigger("change")
+
+                            $("#autodetected").fadeIn("fast", function() {
+                                $(this).delay(2000).fadeOut("fast");
+                            })
+                        }
+                    }
+                }
+            }, 100)
+        })
+    })();
+
+    // Handle tabs
 	if(typeof $tabs == "undefined"){
 		$tabs = jQuery("#elementForm").tabs({
 			selected: {SELECTED_TAB},
