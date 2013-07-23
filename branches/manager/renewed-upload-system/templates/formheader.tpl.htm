@@ -66,6 +66,8 @@ function generateSlug(str) {
 	return str;
 }
 
+window._timers = window._timers || {};
+
 //*** Onload action.
 jQuery(function(){
 	// Always focus on the first input field
@@ -86,11 +88,17 @@ jQuery(function(){
             .css({"color": "green", "padding-left": "10px"})
             .hide();
 
-        $("#frm_apiname").bind("keyup", function () {
-            var $this = $(this);
+        $("#frm_apiname").on("keyup", function () {
+            var $this = $(this),
+                // Create timers namespace
+                t = window._timers["_apiNameKeyup"];            
 
-            clearTimeout(window._timers["_apiNameKeyup"]);
-            window._timers["_apiNameKeyup"] = setTimeout(function () {
+            // Clear timers if set
+            if (t) {
+            	clearTimeout(t);
+            }
+            
+            t = setTimeout(function () {
                 var arrRegex = {
                     "date": 1, // Date field
                     "title|label": 2, // Short text
