@@ -235,26 +235,17 @@ class Element extends DBA_Element {
 		}
 	}
 
-    public static function generateElementTrail($varDeepLink, $first = true, $arrTrail = array()) {
-        $strReturn = "";
-        $link = null;
-
+    public static function generateElementTrail($varDeepLink, $arrTrail = array()) {
         if (!empty($varDeepLink) && is_numeric($varDeepLink)) {
             // Deeplink contains an Element ID
             $objElement = self::selectByPk($varDeepLink);
 
             if (is_object($objElement)) {
-                $strReturn = $objElement->getName();
-
                 $arrTrail[$objElement->getName()] = $objElement->getId();
-
-                if ($first) {
-                    $link = '?cid='. NAV_PCMS_ELEMENTS .'&eid='. $objElement->getId() .'&cmd='. CMD_EDIT;
-                }
 
                 $intParentId = $objElement->getParentId();
                 if ($intParentId > 0) {
-                    $arrTrail = self::generateElementTrail($intParentId, false, $arrTrail);
+                    $arrTrail = self::generateElementTrail($intParentId, $arrTrail);
                 }
             }
         } else if (preg_match('/^(http:\/\/|https:\/\/|mailto:|www)+/', $varDeepLink)) {
@@ -278,17 +269,21 @@ class Element extends DBA_Element {
         $arrTrail = self::generateElementTrail($intElementId);
         $arrTrail = array_reverse($arrTrail);
 
-        foreach ($arrTrail as $strLabel => $intId) {
-            end($arrTrail);
-            $blnIsLast = ($strLabel === key($arrTrail));
-
+        foreach ($arrTrail as $strLabel => $varId) {
             if ($blnLink) {
-                $strReturn .= "<a href=\"" . sprintf($strLink, $intId) . "\">$strLabel</a>";
+                if (is_numeric($varId)) {
+                    $strHref = sprintf($strLink, $varId);
+                } else {
+                    $strHref = $varId;
+                }
+
+                $strReturn .= "<a href=\"" . $strHref . "\">$strLabel</a>";
             } else {
                 $strReturn .= $strLabel;
             }
 
-            if (!$blnIsLast) {
+            end($arrTrail);
+            if ($strLabel !== key($arrTrail)) {
                 $strReturn .= " &raquo; ";
             }
         }
