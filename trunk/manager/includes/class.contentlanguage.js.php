@@ -983,7 +983,8 @@ FileField.prototype.addUploadRow = function(element) { // element is a jQuery ob
 	$objButton
 		.attr("href", "")
 		.addClass("button")
-		.html(this.removeLabel)
+		.html("&#735;")
+		.attr("title", this.removeLabel)
 		.bind("click", function(){
 			objParent.removeUploadField(strId, this);
 			return false;
@@ -1031,8 +1032,9 @@ FileField.prototype.addCurrentRow = function(element, blnStorage) { // Element s
 
 	$objButton
 		.addClass("button")
-		.html(this.removeLabel)
-		.attr("href", "")
+		.html("&#735;")
+		.attr("title", this.removeLabel)
+		.attr("href", "#")
 		.bind("click", function(){
 			objParent.removeCurrentField(strId, this);
 			return false;
@@ -1153,7 +1155,8 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 
 	if (file !== undefined) {
 		$objButton
-			.html(this.cancelLabel)
+    		.html("&#735;")
+    		.attr("title", this.cancelLabel)
 			.bind("click", function(event) {
 				__this.cancelCurrentSwfUpload($element.attr("id"), file);
 				event.stopPropagation();
@@ -1161,7 +1164,8 @@ FileField.prototype.addSwfUploadRow = function(element, file) {
 			});
 	} else {
 		$objButton
-			.html(this.removeLabel)
+    		.html("&#735;")
+    		.attr("title", this.removeLabel)
 			.bind("click", function(event) {
 				__this.cancelCurrentSwfUpload($element.attr("id"), $element.data("file"));
 				event.stopPropagation();
@@ -1505,7 +1509,7 @@ FileField.prototype.uploadSuccess = function(file, serverData) {
 	var __this = this.settings.jsParent;
 	jQuery("div." + file.id + " div.progressWrapper:first").remove();
 	jQuery("div." + file.id + ":first").unbind("mouseover").unbind("mouseout");
-	jQuery("div." + file.id + " a.button:first").html(__this.removeLabel);
+	jQuery("div." + file.id + " a.button:first").html("&#735;").attr("title", __this.removeLabel);
 
 	if (__this.thumbPath != "") {
 		if (__this.isImage(file.name)) {
