@@ -155,8 +155,8 @@ function parsePages($intElmntId, $strCommand) {
 				}
 			}
 
-            
-            
+
+
 			//*** Render list action pulldown.
 			if (!is_object($objElement) || $objElement->getTypeId() != ELM_TYPE_LOCKED) {
 				$arrActions[$objLang->get("choose", "button")] = 0;
@@ -1559,8 +1559,8 @@ function parsePages($intElmntId, $strCommand) {
                                             $objFieldTpl->setVariable("FIELD_ELEMENT_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
                                             $objFieldTpl->setVariable("ELEMENT_FIELD_ID", "efv_{$objField->getId()}");
                                             $objFieldTpl->setVariable("FIELD_CLASS", "deeplink");
-                                            
-                                            $elementTrail = Element::generateElementTrail($strValue);
+
+                                            $elementTrail = Element::generateElementTrailString($strValue);
                                             $objFieldTpl->setVariable("FIELD_ELEMENT_VALUE", htmlentities($elementTrail));
 
                                             $objFieldTpl->parseCurrentBlock();
@@ -2152,9 +2152,9 @@ function parsePages($intElmntId, $strCommand) {
 
         case CMD_EXPORT_ELEMENT:
 			$objTpl->loadTemplatefile("export.tpl.htm");
-            
+
             $arrElementIds = NULL;
-            
+
             // export via selection of (multiple) elements
             if(isset($_GET['sel']))
             {
@@ -2167,7 +2167,7 @@ function parsePages($intElmntId, $strCommand) {
             {
                 $objElement = Element::selectByPK($intElmntId);
             }
-            
+
 			//*** Set section title.
 			$objTpl->setVariable("MAINTITLE", $objLang->get("export", "label"));
 
@@ -2181,7 +2181,7 @@ function parsePages($intElmntId, $strCommand) {
             //*** Handle request & create export
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
             {
-                
+
                 $arrElementFilters = array();
                 $arrTemplateFilters = array();
                 foreach($_POST['elem'] as $id => $val)
@@ -2192,7 +2192,7 @@ function parsePages($intElmntId, $strCommand) {
                         $arrTemplateFilters[] = $objTmpElement->getTemplateId();
                     }
                 }
-                
+
                 if($_POST['sel'] == 1)
                 {
                     $includeSelf = false;
@@ -2225,7 +2225,7 @@ function parsePages($intElmntId, $strCommand) {
 
             //*** Create element checkboxes
 			$objTpl->setVariable("SELECT_ITEMS", $objLang->get("selectElements", "label"));
-            
+
             $objTpl->setVariable("FORM_CHECKBOXES", createElementTree($objElement,(isset($_GET['sel'])), $arrElementIds));
 
             //*** Set form buttons

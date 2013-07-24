@@ -13,11 +13,11 @@
  */
 
 /**
- * 
+ *
  * Handles Element properties and methods.
  * @author felix
  * @version 0.1.2
- * 
+ *
  * CHANGELOG
  * version 0.1.2, 14 Jul 2009
  *   ADD: Added clearZeroCache method.
@@ -41,7 +41,7 @@ class Element extends DBA_Element {
 
 	public function setPermissions($objPermissions, $blnSave = FALSE) {
 		$this->objPermissions = $objPermissions;
-		
+
 		if ($blnSave) {
 			$this->clearPermissions();
 			$this->objPermissions->setElementId($this->id);
@@ -76,37 +76,37 @@ class Element extends DBA_Element {
 
 		//*** Delete fields.
 		$this->clearFields(TRUE);
-		
+
 		//*** Delete permissions.
 		$this->clearPermissions();
-		
+
 		//*** Delete aliases.
 		$this->clearAliases();
-		
+
 		//*** Delete schedules.
 		$this->clearSchedule();
-		
+
 		//*** Delete languages.
 		$this->clearLanguages();
-		
+
 		//*** Delete feed.
 		$this->clearFeed();
-							
+
 		//*** Remove locked elements.
 		$objParent = Element::selectByPK($this->getParentId());
 		if (is_object($objParent) && $objParent->getTypeId() != ELM_TYPE_DYNAMIC && $this->getTypeId() != ELM_TYPE_LOCKED) {
 			$objOldElements = $objParent->getElements(FALSE, ELM_TYPE_LOCKED, $_CONF['app']['account']->getId());
 			foreach ($objOldElements as $objOldElement) {
 				$objOldElement->delete();
-			}		
+			}
 		}
-		
+
 		//*** Delete child elements.
 		$objElements = $this->getElements();
 		foreach ($objElements as $objElement) {
 			$objElement->delete();
 		}
-		
+
 		if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_ELEMENT, $this->getId(), $this->getName(), "delete");
 
 		return parent::delete($_CONF['app']['account']->getId());
@@ -115,7 +115,7 @@ class Element extends DBA_Element {
 	public function save($blnSaveModifiedDate = TRUE, $blnCreateForced = TRUE) {
 		parent::$__object = "Element";
 		parent::$__table = "pcms_element";
-		
+
 		$intId = $this->getId();
 
 		$blnReturn = parent::save($blnSaveModifiedDate);
@@ -127,7 +127,7 @@ class Element extends DBA_Element {
 			$this->objPermissions->setElementId($this->id);
 			$this->objPermissions->save();
 		}
-		
+
 		//*** Create forced children.
 		if (empty($intId) && $blnCreateForced) $this->createForcedElements();
 
@@ -205,28 +205,28 @@ class Element extends DBA_Element {
 			ElementLanguage::deleteByElement($this->id);
 		}
 	}
-	
+
 	public function getAlias($intLanguageId = NULL) {
 		$strReturn = "";
-		
+
 		if ($this->id > 0) {
 			$objAliases = Alias::selectByUrl($this->getId(), $intLanguageId);
 			if ($objAliases->count() > 0) {
 				$strReturn = $objAliases->current()->getAlias();
 			} else if ($intLanguageId > 0) {
 				$objAliases = Alias::selectByUrl($this->getId(), 0);
-				if ($objAliases->count() > 0) {	
+				if ($objAliases->count() > 0) {
 					$strReturn = $objAliases->current()->getAlias();
 				}
 			}
 		}
-		
+
 		return $strReturn;
 	}
-	
+
 	public function setAlias($objAlias) {
 		global $_CONF;
-		
+
 		if ($this->id > 0) {
 			$objAlias->setAccountId($_CONF['app']['account']->getId());
 			$objAlias->setActive(1);
@@ -234,48 +234,77 @@ class Element extends DBA_Element {
 			$objAlias->save();
 		}
 	}
-    
-    public static function generateElementTrail($intElementId, $first = true) {
+
+    public static function generateElementTrail($varDeepLink, $first = true, $arrTrail = array()) {
         $strReturn = "";
-        $link = NULL;
-        if (!empty($intElementId)){
-            if (is_numeric($intElementId)) {
-                $objElement = Element::selectByPk($intElementId);
-                if (is_object($objElement)) {
-                    $strReturn = $objElement->getName();
-                    if ($first) {
-                        $link = '?cid='. NAV_PCMS_ELEMENTS .'&eid='. $objElement->getId() .'&cmd='. CMD_EDIT;
-                    }
-                    $strParentTrail = Element::generateElementTrail($objElement->getParentId(), false);
-                    if (!empty($strParentTrail)) {
-                        $strReturn = $strParentTrail .' &raquo; '. $strReturn;
-                    }
-                } else {
-                    $strReturn .= '[!] Broken link - element id does not exist';
+        $link = null;
+
+        if (!empty($varDeepLink) && is_numeric($varDeepLink)) {
+            // Deeplink contains an Element ID
+            $objElement = self::selectByPk($varDeepLink);
+
+            if (is_object($objElement)) {
+                $strReturn = $objElement->getName();
+
+                $arrTrail[$objElement->getName()] = $objElement->getId();
+
+                if ($first) {
+                    $link = '?cid='. NAV_PCMS_ELEMENTS .'&eid='. $objElement->getId() .'&cmd='. CMD_EDIT;
                 }
-            } else if (preg_match('/^(http:\/\/|https:\/\/|mailto:|www)+/',$intElementId)) {
-                $strReturn = 'External link';
-                $link = (!preg_match("~^(?:f|ht)tps?://~i", $intElementId)) ? 'http://'. $intElementId : $intElementId;
+
+                $intParentId = $objElement->getParentId();
+                if ($intParentId > 0) {
+                    $arrTrail = self::generateElementTrail($intParentId, false, $arrTrail);
+                }
+            }
+        } else if (preg_match('/^(http:\/\/|https:\/\/|mailto:|www)+/', $varDeepLink)) {
+            // Deeplink contains external link
+            if (!preg_match("~^(?:f|ht)tps?://~i", $varDeepLink)) {
+                $arrTrail["External link"] = 'http://'. $varDeepLink;
             } else {
-                $strReturn .= '[!] Broken link';
+                $arrTrail["External link"] = $varDeepLink;
+            }
+        } else {
+            $arrTrail["[!] Broken link"] = "#";
+        }
+
+        return $arrTrail;
+    }
+
+    public static function generateElementTrailString($intElementId, $blnLink = true) {
+        $strReturn = "";
+        $strLink = '?cid='. NAV_PCMS_ELEMENTS .'&eid=%s&cmd='. CMD_EDIT;
+
+        $arrTrail = self::generateElementTrail($intElementId);
+        $arrTrail = array_reverse($arrTrail);
+
+        foreach ($arrTrail as $strLabel => $intId) {
+            end($arrTrail);
+            $blnIsLast = ($strLabel === key($arrTrail));
+
+            if ($blnLink) {
+                $strReturn .= "<a href=\"" . sprintf($strLink, $intId) . "\">$strLabel</a>";
+            } else {
+                $strReturn .= $strLabel;
+            }
+
+            if (!$blnIsLast) {
+                $strReturn .= " &raquo; ";
             }
         }
-        else
-        {
-            $clickable = false;
-        }
-        return ($link) ? '<a href="'. $link .'">'. $strReturn .'</a>' : $strReturn;
+
+        return $strReturn;
     }
-    
+
     public static function generateElementTrailXml($intElementId) {
-        $strTrail = self::generateElementTrail($intElementId);
-        
+        $strTrail = self::generateElementTrailString($intElementId);
+
         if (empty($strTrail)) {
             $intElementId = 0;
         }
-        
+
         $strReturn = "<field id=\"{$intElementId}\"><![CDATA[{$strTrail}]]></field>";
-        
+
         return $strReturn;
     }
 
@@ -295,7 +324,7 @@ class Element extends DBA_Element {
 
 			//*** Duplicate the element.
 			$objReturn = parent::duplicate();
-			
+
 			if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_ELEMENT, $this->getId(), $strName, "duplicate", $objReturn->getId());
 			if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_ELEMENT, $objReturn->getId(), $objReturn->getName(), "create");
 
@@ -331,7 +360,7 @@ class Element extends DBA_Element {
 			foreach ($objTemps as $key => $value) {
 				$objReturn->setLanguageActive($value, TRUE);
 			}
-			
+
 			//*** Save schedule information.
 			$objTemp = $this->getSchedule();
 			$objTemp->id = 0;
@@ -356,7 +385,7 @@ class Element extends DBA_Element {
 
 	public function getValueByTemplateField($intFieldId, $intLanguageId = 0, $blnRaw = FALSE) {
 		$strReturn = NULL;
-		
+
 		if ($this->id > 0) {
 			if ($intLanguageId == 0) $intLanguageId = ContentLanguage::getDefault()->getId();
 
@@ -391,7 +420,7 @@ class Element extends DBA_Element {
 
 	public function getFeedValueByTemplateField($intFieldId, $intLanguageId = 0) {
 		$strReturn = NULL;
-		
+
 		if ($this->id > 0) {
 			if ($intLanguageId == 0) $intLanguageId = ContentLanguage::getDefault()->getId();
 
@@ -446,9 +475,9 @@ class Element extends DBA_Element {
 		} else {
 			$objTemplate = Template::selectByPK($this->templateId);
 
-			if ($objTemplate->getIsContainer()) {				
+			if ($objTemplate->getIsContainer()) {
 				$objReturn = $objTemplate->getSiblings(TRUE);
-				
+
 				//*** Add child templates.
 				$objChildTpls = $objTemplate->getTemplates();
 
@@ -539,23 +568,23 @@ class Element extends DBA_Element {
 
 		return $strReturn;
 	}
-	
+
 	public function isPage() {
 		$blnReturn = FALSE;
-		
+
 		$objTemplate = Template::selectByPK($this->getTemplateId());
 		if (is_object($objTemplate)) {
 			$blnReturn = $objTemplate->getIsPage();
 		} else {
 			$blnReturn = $this->getIsPage();
 		}
-		
-		return $blnReturn;	
+
+		return $blnReturn;
 	}
 
 	public function getPageId() {
 		$intReturn = 0;
-		
+
 		if ($this->isPage()) {
 			$intReturn = $this->getId();
 		} elseif ($this->getParentId() > 0) {
@@ -596,28 +625,28 @@ class Element extends DBA_Element {
 
 		return $arrReturn;
 	}
-	
+
 	public function getSchedule() {
-		$objReturn = ElementSchedule::selectByElement($this->id);		
-		
+		$objReturn = ElementSchedule::selectByElement($this->id);
+
 		if ($objReturn->count() == 0) {
 			$objReturn = new ElementSchedule();
 		} else if ($objReturn->count() >= 1) {
 			$objReturn = $objReturn->current();
 		}
-		
+
 		return $objReturn;
 	}
-	
+
 	public function setSchedule($objSchedule) {
 		if ($this->id > 0) {
 			$this->clearSchedule();
-			
+
 			$objSchedule->setElementId($this->id);
 			$objSchedule->save();
 		}
 	}
-		
+
 	public function clearSchedule() {
 		if ($this->id > 0) {
 			$objSchedules = ElementSchedule::selectByElement($this->id);
@@ -627,31 +656,31 @@ class Element extends DBA_Element {
 			}
 		}
 	}
-	
+
 	public function getFeed() {
-		$objReturn = ElementFeed::selectByElement($this->id);		
-		
+		$objReturn = ElementFeed::selectByElement($this->id);
+
 		if ($objReturn->count() == 0) {
 			$objReturn = new ElementFeed();
 		} else if ($objReturn->count() >= 1) {
 			$objReturn = $objReturn->current();
 		}
-		
+
 		return $objReturn;
 	}
-	
+
 	public function setFeed($objFeed) {
 		if ($this->id > 0) {
 			$this->clearFeed();
-			
+
 			$objFeed->setElementId($this->id);
 			$objFeed->save();
 		}
 	}
-		
+
 	public function clearFeed() {
 		global $_CONF;
-		
+
 		if ($this->id > 0) {
 			$objFeeds = ElementFeed::selectByElement($this->id);
 
@@ -660,7 +689,7 @@ class Element extends DBA_Element {
 			}
 		}
 	}
-		
+
 	public function clearAliases() {
 		if ($this->id > 0) {
 			//*** Also delete the aliases with language 0 (All languages).
@@ -680,10 +709,10 @@ class Element extends DBA_Element {
 						$objAlias->delete();
 					}
 				}
-			}			
+			}
 		}
 	}
-	
+
 	public function clearCache($objFtp = NULL) {
 		if (Setting::getValueByName('caching_enable')) {
 			if (!is_object($objFtp)) {
@@ -692,12 +721,12 @@ class Element extends DBA_Element {
 				$objFtp->pasv(TRUE);
 			}
 			$objFtp->delete(Setting::getValueByName('caching_ftp_folder') . "/*_{$this->id}_*");
-			
+
 			$objParent = Element::selectByPk($this->getParentId());
 			if (is_object($objParent)) $objParent->clearCache($objFtp);
 		}
 	}
-	
+
 	public function clearZeroCache($objFtp = NULL) {
 		if (Setting::getValueByName('caching_enable')) {
 			if (!is_object($objFtp)) {
@@ -708,26 +737,26 @@ class Element extends DBA_Element {
 			$objFtp->delete(Setting::getValueByName('caching_ftp_folder') . "/*_0_*");
 		}
 	}
-	
+
 	public function getMeta($intLanguageId = NULL) {
 		$objReturn = ElementMeta::selectByElement($this->getId(), $intLanguageId);
-		
+
 		return $objReturn;
 	}
-	
+
 	public function setMeta($objMeta) {
-		if ($this->id > 0) {			
+		if ($this->id > 0) {
 			$objMeta->setElementId($this->id);
 			$objMeta->save();
 		}
 	}
-		
+
 	public function clearMeta() {
 		if ($this->id > 0) {
 			ElementMeta::deleteByElement($this->id);
 		}
 	}
-	
+
 	private function createForcedElements() {
 		global $_CONF;
 
@@ -739,29 +768,29 @@ class Element extends DBA_Element {
 				$objPermissions = new ElementPermission();
 				$objPermissions->setUserId($this->getPermissions()->getUserId());
 				$objPermissions->setGroupId($this->getPermissions()->getGroupId());
-				
+
 				$objElement = new Element();
 				$objElement->setParentId($this->getId());
 				$objElement->setAccountId($_CONF['app']['account']->getId());
 				$objElement->setPermissions($objPermissions);
-				
+
 				$objElement->setActive($this->getActive());
 				$objElement->setIsPage(0);
 				$objElement->setName($objTemplate->getName());
 				$objElement->setUsername($this->getUsername());
-				
+
 				$objElement->setTypeId(ELM_TYPE_ELEMENT);
 				$objElement->setTemplateId($objTemplate->getId());
-				
+
 				$objElement->save();
-				
+
 				$objSchedule = new ElementSchedule();
 				$objSchedule->setStartActive(0);
 				$objSchedule->setStartDate(APP_DEFAULT_STARTDATE);
 				$objSchedule->setEndActive(0);
 				$objSchedule->setEndDate(APP_DEFAULT_ENDDATE);
 				$objElement->setSchedule($objSchedule);
-				
+
 				$objElement->setLanguageActive(ContentLanguage::getDefault()->getId(), TRUE);
 			}
 		}
