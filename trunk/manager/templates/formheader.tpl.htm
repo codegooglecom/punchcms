@@ -120,7 +120,7 @@ jQuery(function(){
             
             t = setTimeout(function () {
                 var arrRegex = {
-                    "date": 1, // Date field
+                    "date|day|month|year|minute|second|hour|week": 1, // Date field
                     "title|label": 2, // Short text
                     "body|paragraph|description": 3, // Large text
                     "file": 4, // File field
