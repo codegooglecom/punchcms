@@ -1,6 +1,8 @@
 <?php
 
-function parseSetting($intElmntId, $strCommand) {
+function parseSetting($intElmntId, $strCommand)
+{
+
 	global $_PATHS,
 			$objLang,
 			$_CLEAN_POST,
@@ -13,14 +15,14 @@ function parseSetting($intElmntId, $strCommand) {
 	//*** Post the profile form if submitted.
 	if (count($_CLEAN_POST) > 0 && !empty($_CLEAN_POST['dispatch']) && $_CLEAN_POST['dispatch'] == "editSettings") {
 		//*** The element form has been posted.
-		$blnError = FALSE;
+		$blnError = false;
 
 		//*** Check sanitized input.
 		if (is_null($_CLEAN_POST["dispatch"])) {
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
-		if ($blnError === TRUE) {
+		if ($blnError === true) {
 			//*** Display global error.
 			$objTpl->setVariable("ERROR_SETTINGS_MAIN", $objLang->get("main", "formerror"));
 		} else {
@@ -36,12 +38,12 @@ function parseSetting($intElmntId, $strCommand) {
 					//*** Is the Id really an Id?
 					if (is_numeric($intTemplateFieldId)) {
 						//*** Save the setting.
-						if (!empty($value)) {							
+						if (!empty($value)) {
 							$objField = new Setting();
 							$objField->setAccountId($_CONF['app']['account']->getId());
 							$objField->setSettingId($intTemplateFieldId);
 							$objField->setUsername($objLiveUser->getProperty('name'));
-							
+
 							$objSettingTemplate = SettingTemplate::selectByPk($intTemplateFieldId);
 							switch ($objSettingTemplate->getType()) {
 								case "text":
@@ -53,13 +55,13 @@ function parseSetting($intElmntId, $strCommand) {
 									$objField->setValue(1);
 									break;
 							}
-							
+
 							$objField->save();
 						}
 					}
 				}
 			}
-			
+
 			//*** Move imported files to the remote server.
 			ImpEx::moveImportedFiles($_CONF['app']['account']);
 
@@ -73,7 +75,9 @@ function parseSetting($intElmntId, $strCommand) {
 	$objSections = SettingTemplate::select("SELECT DISTINCT section FROM pcms_setting_tpl ORDER BY sort");
 	foreach ($objSections as $objSection) {
 		//*** Fields.
-		$strSql = sprintf("SELECT * FROM pcms_setting_tpl WHERE section = '%s' ORDER BY sort", $objSection->getSection());
+		$strSection = $objSection->getSection();
+
+		$strSql = sprintf("SELECT * FROM pcms_setting_tpl WHERE section = '%s' ORDER BY sort", $strSection);
 		$objSettings = SettingTemplate::select($strSql);
 		foreach ($objSettings as $objSetting) {
 			$strValue = Setting::getValueByName($objSetting->getName());
@@ -81,7 +85,7 @@ function parseSetting($intElmntId, $strCommand) {
 			$objTpl->setCurrentBlock("setting.{$objSetting->getType()}");
 			$objTpl->setVariable("FIELD_ID", "sfv_{$objSetting->getId()}");
 			$objTpl->setVariable("FIELD_LABEL", $objLang->get($objSetting->getName(), "settingsLabel"));
-			
+
 			switch ($objSetting->getType()) {
 				case "text":
 				case "password":
@@ -94,22 +98,30 @@ function parseSetting($intElmntId, $strCommand) {
 				case "checkbox":
 					$strValue = ($strValue) ? "checked=\"checked\"" : "";
 					$objTpl->setVariable("FIELD_VALUE", $strValue);
-					break;				
+					break;
 			}
-			
+
 			$objTpl->parseCurrentBlock();
 		}
-		
+
+		if ($strSection == "audit" && Setting::getValueByName("audit_enable")) {
+		    parseAuditLog($objTpl);
+		}
+
 		$objTpl->setCurrentBlock("section");
 		$objTpl->setVariable("SECTION", $objSetting->getSection());
-		if ($objSections->key() != 0) $objTpl->setVariable("CLASS", " class=\"anchor\"");
+		if ($objSections->key() != 0) {
+		    $objTpl->setVariable("CLASS", " class=\"anchor\"");
+		}
 		$objTpl->parseCurrentBlock();
-		
+
 		//*** Tabs.
 		$objTpl->setCurrentBlock("section.tab");
 		$objTpl->setVariable("SECTION", $objSection->getSection());
 		$objTpl->setVariable("LABEL", $objLang->get("section_{$objSection->getSection()}", "settingsLabel"));
-		if ($objSections->key() == 0) $objTpl->setVariable("CLASS", " class=\"on\"");
+		if ($objSections->key() == 0) {
+		    $objTpl->setVariable("CLASS", " class=\"on\"");
+		}
 		$objTpl->parseCurrentBlock();
 	}
 
@@ -122,6 +134,11 @@ function parseSetting($intElmntId, $strCommand) {
 	$strReturn = $objTpl->get();
 
 	return $strReturn;
+}
+
+function parseAuditLog(&$objTpl)
+{
+    $objTpl->touchBlock("setting.datatable");
 }
 
 ?>

@@ -10,6 +10,8 @@ $params     = request('params');
 $strReturn 	= "";
 
 header('Content-type: text/xml');
+header("HTTP/1.0 500 Internal Server Error"); // Use this to test error handling in Javascript
+
 $strReturn .= '<?xml version="1.0" encoding="utf-8" ?>';
 $strReturn .= '<ajax-response>';
 
@@ -28,5 +30,3 @@ if (!empty($cmd)) {
 $strReturn .= '</ajax-response>';
 
 echo $strReturn;
-
-?>
