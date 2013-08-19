@@ -10,7 +10,7 @@
 
 class AuditLog extends DBA_AuditLog
 {
-    protected static $arrStringToConstant = array(
+    private static $arrStringToConstant = array(
         "Element" => AUDIT_TYPE_ELEMENT,
         "Template" => AUDIT_TYPE_TEMPLATE,
         "TemplateField" => AUDIT_TYPE_TEMPLATEFIELD,
