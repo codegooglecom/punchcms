@@ -157,6 +157,9 @@ jQuery(function(){
 					$fields	= $("#section-fields"),
 					$meta	= $("#section-meta")
 				
+				// Auto-generate alias based on first input[type='text'] field's value. 
+				// Not fully working - doesn't allow for empty aliases.
+				/*
 				if (!$meta.hasClass("ui-tabs-hide") && $alias.val() == "") {
 					$alias.bind("focus", function () {
 						var $textField = $fields.find("input[type=text]:first")
@@ -166,6 +169,7 @@ jQuery(function(){
 						}
 					})
 				}
+				*/
 				
 				$("#elementForm div:visible:first input[type='text']:first").focus()
 			}
