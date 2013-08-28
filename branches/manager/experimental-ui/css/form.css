@@ -1,0 +1,534 @@
+/*
+ * PunchCMS Form Styling
+ * @version: 1.0
+ * @author: Felix iT B.V. - Robin van Baalen
+ */
+
+/*
+ * General Markup
+ */
+input,
+select,
+textarea {
+	outline: 0;
+}
+
+/*
+ * Normal form markup
+ */
+form.ui-tabs {
+	border: 1px #ddd solid;
+}
+form.ui-tabs div.anchor a {
+	color: #2C457C;
+	text-decoration: underline;
+}
+form.ui-tabs div.anchor a:hover {
+	text-decoration: none;
+	background: none;
+	color: #2C457C;
+}
+form.ui-tabs div.ui-tabs-panel {
+	overflow: auto;
+}
+form.ui-tabs div.ui-tabs-panel fieldset {
+	margin: 10px 0 0;
+	border: none;
+}
+form.ui-tabs div.ui-tabs-panel fieldset div.optional,
+form.ui-tabs div.ui-tabs-panel fieldset div.required {
+	margin: 10px 0;
+	overflow: auto;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div * {
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div div.clear {
+		clear: both !important;
+	}
+	
+form.ui-tabs div.ui-tabs-panel fieldset div.error input {
+	border: 1px solid #CD0A0A;
+	}
+form.ui-tabs div.ui-tabs-panel fieldset div label {
+	color: #333;
+	display: block;
+	float: left;
+	margin: 0 0 5px;
+	padding: 2px 7px 3px 3px;
+	width: 150px;
+	font-size: 12px;
+	}
+	label.check,
+	label.radio {
+		float: none !important;
+	}
+	label.ui-button {
+		float: left !important;
+	}
+	select.break {
+		display: block;
+		margin: 10px 0 6px 160px;
+	}
+	
+form.ui-tabs div.ui-tabs-panel fieldset div input {
+	width: 300px;
+	padding: 3px;
+	font-size: 13px;
+	border: 1px #999 solid;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div input.input-textsmall {
+		width: 108px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div textarea.input-feed {
+		width: 210px;
+		height: 28px;
+		margin: 8px 0 4px;
+		display: none;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div input.check {
+		display: inline;
+		width: 14px;
+		height: 14px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div div.input-textdate.disabled {
+		background-color: #eaeaea;
+		color: #999;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div div.input-textdate {
+		width: 200px !important;
+		float: left;
+		padding: 3px !important;
+		font-size: 13px;
+		border: 1px #999 solid;
+		margin: 0;
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		}
+		form.ui-tabs div.ui-tabs-panel fieldset div a.date-button {
+			float: left;
+			margin: 4px 4px;
+		}
+	form.ui-tabs div.ui-tabs-panel fieldset div input.inline {
+		width: 84px;
+	}
+		
+form.ui-tabs div.ui-tabs-panel fieldset div select {
+	padding: 3px;
+	width: 200px;
+	border: 1px #999 solid;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;	
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div input[type=radio],
+	form.ui-tabs div.ui-tabs-panel fieldset div input[type=checkbox] {
+		border: none; /* We do not want that on checkboxes and radio buttons */
+	}	
+	form.ui-tabs div.ui-tabs-panel fieldset div select.select-multiple {
+		min-height: 100px;
+		}
+		form.ui-tabs div.ui-tabs-panel fieldset div select.select-multiple option {
+			padding: 5px;
+		}
+	form.ui-tabs div.ui-tabs-panel fieldset div .time {
+		width: 50px;
+		}
+		form.ui-tabs div.ui-tabs-panel fieldset div .time option {
+			
+		}
+form.ui-tabs div.ui-tabs-panel fieldset div textarea {
+	padding: 3px;
+	width: 300px;
+	border: 1px #999 solid;
+	background: #fff;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;	
+}
+form.ui-tabs div.ui-tabs-panel fieldset div small {
+	clear: both;
+	display: block;
+	margin: 4px 0 6px 161px;
+	font-size: 10px;
+}
+form.ui-tabs div.ui-tabs-panel fieldset div div.disabled {
+	background: none repeat scroll 0 0 #EAEAEA;
+	float: left;
+	padding: 5px;
+	width: 478px;
+}
+form.ui-tabs div.ui-tabs-panel fieldset div div.widget {
+	margin: 0;
+	position: relative;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div.required,
+	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div.optional {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div .widget .row {
+		clear: both !important;
+		overflow: visible !important;
+	}
+	form.ui-tabs div.ui-tabs-panel fieldset div div.widget div input.file {
+		margin: 0 0 8px;
+	}
+/********************************************************************************************************************
+ * File field styling
+ ********************************************************************************************************************/
+form.ui-tabs div.ui-tabs-panel fieldset div .filefield {
+    border: 1px #999 solid;
+    padding-bottom: 10px;
+    float: left; /* Safari likes that */
+    overflow: hidden;
+    width: 488px;
+    position: relative;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield h3 {
+        border: none !important;
+        padding: 0 5px;
+        font-size: 12px !important;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .header {
+        background: #E0EEFF;
+        padding: 10px 11px 5px;
+        border-bottom: 1px #999 solid;
+        margin: 0;
+        overflow: auto;
+        -moz-border-radius-topleft: 4px;
+        -moz-border-radius-topright: 4px;
+        -webkit-border-top-left-radius: 4px;        
+        -webkit-border-top-right-radius: 4px;       
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .storageBrowser {
+        overflow: auto;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .ui-sortable {
+        margin: 3px 5px;
+        position: static !important;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile,
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile {
+        background: #F1F5F8;
+        cursor: move !important;
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: 3px 0;
+        border: #eaeaea 1px solid;
+        border-radius: 0;
+        padding: 5px 5px 5px 40px;
+        overflow: hidden;
+        }
+        form.ui-tabs div.ui-tabs-panel fieldset div .filefield .ui-sortable-helper {
+            -moz-box-shadow: 1px 1px 1px #999;
+            -webkit-box-shadow: 1px 1px 1px #999;
+        }
+
+
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile:hover,
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile:hover {
+        background-color: #eaeaea !important;
+    }
+        
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail,
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile .thumbnail {
+        position: absolute;
+        left: 7px;
+        top: 7px;
+        }
+        form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail img,
+        form.ui-tabs div.ui-tabs-panel fieldset div .multifile .thumbnail img {
+            border: 1px #999 solid;
+        }
+        form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .thumbnail:hover img,
+        form.ui-tabs div.ui-tabs-panel fieldset div .multifile .thumbnail:hover img {
+            border: 1px #333 solid;
+        }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .document,
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile .document {
+        position: absolute;
+        top: 5px;
+        left: 7px;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .button,
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile .button {
+        font-size: 30px;
+        line-height: 16px;
+        text-decoration: none;
+        color: #CE1000;
+        position: absolute;
+        right: 8px; 
+        top: 9px !important;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile .button:hover,
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile .button:hover {
+        background: none;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile p, 
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile p { 
+        margin-left: 0;
+        xfloat: left;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile p, 
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile p { 
+        margin-left: 0;
+        xfloat: left;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile div.progressWrapper,
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile div.progressWrapper {
+        border: 1px solid #666;
+        margin: 5px 80px 3px 0;
+        padding: 0;
+        width: auto;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .multifile div.progressBar,
+    form.ui-tabs div.ui-tabs-panel fieldset div .multifile div.progressBar {
+        height: 4px;
+        background-color: #999;
+        width: 0;
+        padding: 0;
+        margin: 0;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser {
+        overflow: auto !important;
+        border-bottom: 1px #999 solid;
+        padding-bottom: 4px;
+    }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser {
+        background: none repeat scroll 0 0 #E0EEFF;
+        overflow: auto;
+        border: 1px #999 solid;
+        border-top: none;
+        margin: 0 auto 20px;
+        padding: 5px;
+        width: 335px;
+        -moz-border-radius-bottomleft: 5px;
+        -moz-border-radius-bottomright: 5px;
+        -webkit-border-bottom-left-radius: 5px;
+        -webkit-border-bottom-right-radius: 5px;
+        }
+        form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser label {
+            float: left;
+            margin: 0 25px 0 14px;
+            padding: 4px 0;
+            width: auto;
+        }
+        form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageChooser select {
+            float: left;
+        }
+        
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul {
+        list-style: none;
+        padding: 4px;
+        }
+        form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li {
+            float: left;
+            width: 110px;
+            margin: 4px;
+            background-color: #F1F5F8;
+            border: 1px #F1F5F8 solid;
+            position: relative;
+            }
+        form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li:hover {
+            border: 1px #eaeaea solid;
+            }
+            form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.error,
+            form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.error:hover,
+            form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.attachment,
+            form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.attachment:hover {
+                width: 110px !important;
+                height: 110px !important;
+                position: relative;
+            }
+            form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a,
+            form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a:hover {
+                display: block;
+                width: auto;
+                height: auto;
+                text-decoration: none;
+                background: none;
+                }
+                form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.error img {
+                    width: 48px !important;
+                    height: 38px !important;
+                    margin: -30px 0 0 -24px !important;
+                    top: 50%;
+                    left: 50%;
+                    position: absolute;
+                }
+                form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a.attachment img {
+                    width: 28px !important;
+                    height: 52px !important;
+                    margin: -36px 0 0 -14px !important;
+                    top: 50%;
+                    left: 50%;
+                    position: absolute; 
+                }
+                form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a img {
+                    border: none;
+                    width: 100px;
+                    height: 100px;
+                    display: block;
+                    overflow: hidden;
+                    margin: 5px auto !important;
+                    -moz-border-radius: 3px;
+                    -webkit-border-radius: 3px;
+                }
+                form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li a:hover img {
+                    -moz-box-shadow: 0 0 5px #333;
+                }
+                form.ui-tabs div.ui-tabs-panel fieldset div .filefield div.storageList ul li span {
+                    position: absolute;
+                    bottom: 0;
+                    color: #FFF;
+                    width: 100px;
+                    padding: 3px 6px;
+                    line-height: 15px;
+                    height: 15px;
+                    font-size: 10px;
+                    background: #000;
+                    background: rgba(0, 0, 0, 0.7);
+                }
+    form.ui-tabs div.ui-tabs-panel fieldset div .filefield .storageLoader {
+        background: url("/css/blue-green/images/ui-anim_basic_16x16.gif") no-repeat scroll 0 0 transparent;
+        height: 20px;
+        padding-left: 20px;
+        width: 180px;
+        margin: 10px auto 0;
+    }
+
+.filefield .storageBrowser {}
+.filefield .storageChooser {
+}
+.filefield .storageLoader {
+}
+.filefield .storageList li {
+}
+.filefield .storageList li:hover {
+}
+
+.filefield .storageList a.error,
+.filefield .storageList a.error:hover,
+.filefield .storageList a.attachment,
+.filefield .storageList a.attachment:hover {
+}
+.filefield .storageList a,
+.filefield .storageList a:hover {
+}
+.filefield .storageList a.error img {
+}
+.filefield .storageList a.attachment img {
+}
+.filefield .storageList img {
+}
+.filefield .storageList li {
+}
+.filefield .storageList span {
+}
+.filefield .multifile {
+}
+.filefield .multifile p {
+}
+.filefield .multifile strong {
+}
+.filefield .multifile:hover {
+}
+.filefield .multifile:hover strong {
+    color: #333;
+}
+
+.filefield .multifile .button {
+}
+.filefield .multifile .button:hover {
+}
+
+.multifile div.progressWrapper {
+}
+
+.fieldWrap {
+    overflow: auto;
+}
+/********************************************************************************************************************
+ * END File field styling
+ ********************************************************************************************************************/
+		
+div.form-navigation {
+	float: right;
+	margin-top: 20px;
+	}
+	div.form-navigation a {
+		margin-right: 10px;
+	}
+
+/*
+ * Small (column) form markup
+ */
+
+#folder form.ui-tabs,
+div.column form.ui-tabs {
+	border: none;
+}
+div.column form.ui-tabs div.ui-tabs-panel h3 {
+	margin: 0;
+}
+div.column form.ui-tabs div.ui-tabs-panel fieldset div label {
+	width: 120px;
+	}
+div.column form.ui-tabs div.ui-tabs-panel fieldset div input[type=text] {
+	width: 150px !important;
+	}
+	div.column form.ui-tabs div.ui-tabs-panel fieldset div input.check {
+	}
+div.column form.ui-tabs div.ui-tabs-panel fieldset div select {
+	width: 158px !important;
+	}
+div.column form.ui-tabs div.ui-tabs-panel fieldset ul {
+	min-height: 50px;
+	margin: 5px 0;
+	}
+	div.column form.ui-tabs div.ui-tabs-panel fieldset ul li {
+		position: relative;
+		-moz-border-radius: 2px;
+		-webkit-border-radius: 2px;
+	}
+	
+#folder .menu {
+	width: 162px !important;
+	display: block;
+	clear: both;
+	overflow: auto;
+	margin: 5px auto 20px;
+	}
+	#folder .menu a {
+		float: left;
+	}
+#folder select {
+	width: 160px;
+	min-height: 200px;
+	}
+	#folder select option {
+		padding: 5px;
+		cursor: pointer;
+	}
+	
+.input-button {
+	width: auto !important;
+}
+	
+/*
+ * Hack
+ */
+a#new:hover span.ui-button-text {
+	color: #fff !important;
+}
+a#remove:hover span.ui-button-text {
+	color: #fff !important;
+}
+#folder form.ui-tabs div.ui-tabs-panel a {
+}
+
+/*CKEDITOR */
+.ckeditor_container {
+    margin-left: 160px;
+}
