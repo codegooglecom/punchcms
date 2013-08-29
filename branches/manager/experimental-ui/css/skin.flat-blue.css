@@ -1,0 +1,301 @@
+@CHARSET "UTF-8";
+
+@import url(http://fonts.googleapis.com/css?family=Muli);
+
+/* ADMIN */
+#menu-main {
+	padding: 0 15px;
+	background: #009BD5;
+	height: 36px;
+}
+#menu-main a.active:link, 
+#menu-main a.active:visited {
+	color: #777;
+	background: #fff;
+}
+
+#topbar {
+	padding: 6px 15px;
+	font: normal 10px Arial;
+	color: #777;
+	background: #FFF;
+	text-align: right;
+    float: right;
+}
+#topbar span {
+    color: #777;
+}
+#topbar a:link, 
+#topbar a:visited {
+	font-weight: normal;
+    color: #009BD5;
+}
+
+#content .list a.linkitem {
+	font-family: "Helvetica Neue", sans-serif;
+	font-size: 30px;
+	font-weight: lighter;
+	color: #777;
+}
+#content .list a.linkitem:hover {
+	
+}
+
+#content .list .menu a:link, 
+#content .list .menu a:visited {
+	font: bold 11px Arial;
+	color: #777;
+	margin-left: 10px;
+	display: block;
+}
+#content .list .menu a:link[onclick], 
+#content .list .menu a:visited[onclick] {
+	position: absolute;
+}
+
+#content .list .listitem {
+background: #fff;
+padding: 20px 30px;
+margin-bottom: 3px;
+}
+#content .list div.listitem:hover {
+	color: #FAFAFA;
+}
+
+/* MANAGER */
+body {
+	background-color: #F5F5F5;
+}
+
+#punchHeader {
+    background: #009BD5;
+}
+
+#punchHeader a:link, 
+#punchHeader a:visited {
+    color: #FFF;
+}
+
+#punchHeader a.active, 
+#punchHeader a.active:visited {
+	background: rgba(0, 0, 0, 0.3);
+	border-bottom: 3px solid #009BD5;
+}
+
+#header {
+    background: #FFF;
+}
+
+#header h1 {
+    font-size: 40px;
+    font-family: 'Muli', sans-serif;
+    font-weight: lighter;
+    color: #009BD5;
+}
+
+#header div.loggedin {
+    color: #777;
+}
+#header div.loggedin a {
+    color: #009BD5;
+	font-weight: normal;
+	text-decoration: none;
+	border-bottom: 1px #009BD5 solid;
+}
+#header div.loggedin a:hover {
+	border-bottom: none;
+	background-color: inherit;
+}
+
+#nav {
+    background: #FFF;
+	height: auto;
+}
+
+#nav li {
+	background: none;
+}
+
+#nav a, 
+#nav a:link, 
+#nav a:visited {
+    color: #777;
+    background: none;
+    border-top: 2px solid #fff;
+    border-bottom: 3px solid #fff;
+	padding: 10px;
+}
+
+#nav a.active, 
+#nav a.active:link, 
+#nav a.active:visited {
+	background: #F5F5F5;
+	color: #555;
+	border-top: 1px solid #F5F5F5;
+	padding: 11px 10px 13px;
+}
+
+#nav a:hover {
+    color: #009BD5;	
+}
+
+#newssend-wrap h2, 
+#left-wrap h2 {
+	background: #009BD5;
+	color: #FFF;
+	font-weight: normal;
+    font-family: 'Muli', sans-serif;
+	font-size: 22px;
+	padding: 4px 10px 2px 10px;
+}
+
+#left-wrap h2 span.name {
+	color: #FFF;
+	font-size: 17px;
+}
+
+#left-wrap {
+    background: #FFF;
+	padding: 8px;
+	width: 98%;
+}
+
+#left-wrap div.action-menu {
+	color: #333;
+	background-color: #fff;
+	border-radius: 2px;
+}
+
+#left-wrap div.page-nav {
+	background: #FFF;
+	border: none;
+	border-bottom: 1px #009BD5 solid;
+	border-radius: 0;
+}
+#left-wrap div.page-nav:last-child {
+	border: none;
+	border-top: 1px #009BD5 solid;
+}
+
+#left-wrap div.page-nav h4 {
+	margin: 0;
+	padding: 0;
+	margin-top: -13px;
+	font-size: 15px;
+	font-weight: normal;
+	color: #555;
+	padding-bottom: 1px;
+	border: none;
+	font-family: "Helvetica Neue", sans-serif;
+}
+
+#left-wrap .itembox {
+	cursor: move;
+	position: relative;
+	background: #FFF;
+	border: 1px solid #EAEAEA;
+	padding: 10px 6px;
+	margin: 3px 0;
+}
+#left-wrap .itembox:hover {
+	background: #fafafa;
+}
+#left-wrap div.itembox input {
+	margin: 10px 2px 7px 14px;
+}
+#left-wrap div.itembox > div {
+	background-position: 43px 4px !important;
+}
+
+#left-wrap div.itembox p.title, 
+#left-wrap div.newsbox p.title, 
+#newssend-wrap div.newsbox p.title {
+	color: #777;
+	padding-top: 2px;
+}
+
+#left-wrap div.itembox p.title a, 
+#left-wrap div.newsbox p.title a, 
+#newssend-wrap div.newsbox p.title a {
+	font-size: 12px;
+	font-weight: normal;
+	color: #009BD5;
+}
+
+#left-wrap div.itembox p.meta, 
+#left-wrap div.newsbox p.meta, 
+#newssend-wrap div.newsbox p.meta {
+	color: #666;
+	padding-top: 4px;
+	padding-bottom: 3px;
+}
+
+#left-wrap div.itembox div.menu, 
+#left-wrap div.newsbox div.menu, 
+#newssend-wrap div.newsbox div.menu {
+	position: absolute;
+	z-index: 1;
+	color: #777;
+	font-size: 10px;
+	right: 10px;
+	top: 7px;
+}
+
+#left-wrap div.itembox div.menu a, 
+#left-wrap div.newsbox div.menu a, 
+#newssend-wrap div.newsbox div.menu a {
+    font-size: 10px;
+    color: #777;
+    text-decoration: none;
+    border-bottom: 1px #777 solid;
+}
+#left-wrap div.itembox div.menu a:hover, 
+#left-wrap div.newsbox div.menu a:hover, 
+#newssend-wrap div.newsbox div.menu a:hover {
+    color: #009BD5;
+    text-decoration: none;
+    border-bottom: none;
+}
+
+#left-wrap div.itembox div.moveDrag {
+	position: absolute;
+	width: 7px;
+	background: #EAEAEA;
+	height: 35px;
+	cursor: move;
+}
+
+#left-wrap h3 {
+	color: #999;
+	border-bottom: 1px solid #EAEAEA;
+	font-family: "Helvetica Neue", sans-serif;
+	font-weight: lighter;
+	font-size: 28px;
+}
+
+#left-wrap h3 span.name {
+	text-align: left;
+	font-size: 22px;
+	color: #009BD5;
+}
+
+form a:hover, div a:hover {
+	background: none;
+	text-decoration: none;
+	color: inherit;
+}
+
+#content div.wrap {
+	background: #FFF;
+	border: 1px #DDD solid;
+	border-radius: 0;
+}
+
+.selectedTreeRow {
+	background-color: #009BD5;
+    color: #fff !important;	
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+    font-weight: normal;
+	user-select: none;
+}
