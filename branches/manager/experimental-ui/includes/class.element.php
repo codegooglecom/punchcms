@@ -248,7 +248,7 @@ class Element extends DBA_Element {
                     $arrTrail = self::generateElementTrail($intParentId, $arrTrail);
                 }
             }
-        } else if (preg_match('/^(http:\/\/|https:\/\/|mailto:|www)+/', $varDeepLink)) {
+        } elseif (preg_match('/^(http:\/\/|https:\/\/|mailto:|www)+/', $varDeepLink)) {
             // Deeplink contains external link
             if (!preg_match("~^(?:f|ht)tps?://~i", $varDeepLink)) {
                 $arrTrail["External link"] = 'http://'. $varDeepLink;
@@ -256,7 +256,11 @@ class Element extends DBA_Element {
                 $arrTrail["External link"] = $varDeepLink;
             }
         } else {
-            $arrTrail["[!] Broken link"] = "#";
+            if (is_string($varDeepLink)) {
+                $arrTrail["String value"] = "#";
+            } else {
+                $arrTrail["[!] Broken link"] = "#";
+            }
         }
 
         return $arrTrail;
