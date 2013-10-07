@@ -1,7 +1,7 @@
 ﻿/**
  * @license Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.html or http://ckeditor.com/license
- * 
+ *
  */
 CKEDITOR.dialog.add( 'link', function( editor ) {
 	var plugin = CKEDITOR.plugins.link;
@@ -144,7 +144,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 				// elementRegex matches empty strings, so need to check for href as well.
 				else if ( href && ( href.match( elementRegex ) ) ) {
 					urlMatch = href;
-                                        retval.type = 'element';
+                    retval.type = 'element';
 					retval.url = {};
 					retval.url.elementurl = urlMatch;
 				}
@@ -359,8 +359,8 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 					[ linkLang.toUrl, 'url' ],
 					[ linkLang.toAnchor, 'anchor' ],
 					[ linkLang.toEmail, 'email' ],
-                                        [ linkLang.elementFromCMS, 'element' ],
-                                        [ linkLang.mediaFromCMS, 'media' ]
+                    [ linkLang.elementFromCMS, 'element' ],
+                    [ linkLang.mediaFromCMS, 'media' ]
 					],
 				onChange: linkTypeChanged,
 				setup: function( data ) {
@@ -479,15 +479,16 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 				children: [
 					{
 					type: 'hbox',
-					widths: [ '100%' ],
+					widths: [ '70%', '30%' ],
 					children: [
 						{
 						type: 'text',
 						id: 'elementurl',
-						label: commonLang.url,
 						required: true,
+                        disabled: true,
 						onLoad: function() {
 							this.allowOnChange = true;
+                            this.getInputElement().setAttribute( 'readOnly', true );
 						},
 						onKeyUp: function() {
 							this.allowOnChange = false;
@@ -503,11 +504,29 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 							} else if ( urlOnChangeTestOther.test( url ) )
 								protocolCmb.setValue( '' );
 
+                            // get link trail
+                            var newElementId = this.getValue();
+                            newElementId = newElementId.replace('?eid=','');
+
+                            $.ajax({
+                                url: '/ajax.php?cmd=Element::generateElementTrailXml&params='+ encodeURIComponent(newElementId) +',false' ,
+                                dataType: 'xml',
+                                success:  function(data) {
+                                    var alias = $(data).find('field').text();
+                                    $('#element-alias').html(alias);
+                                }
+                            });
+
 							this.allowOnChange = true;
 						},
-						onChange: function() {
+						onChange: function(data) {
 							if ( this.allowOnChange ) // Dont't call on dialog load.
 							this.onKeyUp();
+						},
+						onClick: function(data) {
+							var dialog = this.getDialog();
+                            var browser = dialog.getContentElement('info', 'browse');
+                            browser.click();
 						},
 						validate: function() {
 							var dialog = this.getDialog();
@@ -527,10 +546,12 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 							return func.apply( this );
 						},
 						setup: function( data ) {
-                                                    
+
 							this.allowOnChange = false;
-							if ( data.url )
+							if ( data.url ) {
 								this.setValue( data.url.elementurl );
+                                this.onKeyUp();
+                            }
 							this.allowOnChange = true;
 
 						},
@@ -545,7 +566,18 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 							data.url.elementurl = this.getValue();
 							this.allowOnChange = false;
 						}
-					}
+					},
+                    {
+                        type: 'button',
+                        id: 'browse',
+                        hidden: 'false',
+                        filebrowser: {
+                            action: 'Browse',
+                            target: 'info:elementurl',
+                            url: '/libraries/ckeditor/inc.filebrowser.php?type=elements',
+                        },
+                        label: linkLang.browseCms
+                    }
 					],
 					setup: function( data ) {
 						if ( !this.getDialog().getContentElement( 'info', 'linkType' ) )
@@ -553,18 +585,132 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 					}
 				},
 					{
-					type: 'button',
-					id: 'browse',
-					hidden: 'false',
-					filebrowser: {
-                                            action: 'Browse',
-                                            target: 'info:elementurl',
-                                            url: '/inc.filebrowser.php?data=links'
-                                        },
-					label: commonLang.browseServer
+					type: 'html',
+					id: 'alias',
+					html: ' <span id="element-alias" style="font-size:10px"></span>',
 				}
 				]
 			},
+            {
+				type: 'vbox',
+				id: 'mediaOptions',
+				children: [
+					{
+					type: 'hbox',
+					widths: [ '70%', '30%' ],
+					children: [
+						{
+						type: 'text',
+						id: 'mediaurl',
+						required: true,
+                        disabled: true,
+						onLoad: function() {
+							this.allowOnChange = true;
+                            this.getInputElement().setAttribute( 'readOnly', true );
+						},
+						onKeyUp: function() {
+							this.allowOnChange = false;
+							var protocolCmb = this.getDialog().getContentElement( 'info', 'protocol' ),
+								url = this.getValue(),
+								urlOnChangeProtocol = /^(http|https|ftp|news):\/\/(?=.)/i,
+								urlOnChangeTestOther = /^((javascript:)|[#\/\.\?])/i;
+
+							var protocol = urlOnChangeProtocol.exec( url );
+							if ( protocol ) {
+								this.setValue( url.substr( protocol[ 0 ].length ) );
+								protocolCmb.setValue( protocol[ 0 ].toLowerCase() );
+							} else if ( urlOnChangeTestOther.test( url ) )
+								protocolCmb.setValue( '' );
+
+                            // get link trail
+
+                            var newElementId = this.getValue();
+                            newElementId = newElementId.replace('?mid=','');
+                            $.ajax({
+                                url: '/ajax.php?cmd=StorageItem::getFilenameXml&params='+ encodeURIComponent(newElementId) ,
+                                dataType: 'xml',
+                                success:  function(data) {
+                                    var name = $(data).find('field').text();
+                                    $('#media-name').html(name);
+                                }
+                            });
+
+
+							this.allowOnChange = true;
+						},
+						onChange: function(data) {
+							if ( this.allowOnChange ) // Dont't call on dialog load.
+							this.onKeyUp();
+						},
+						onClick: function(data) {
+							var dialog = this.getDialog();
+                            var browser = dialog.getContentElement('info', 'browse');
+                            browser.click();
+						},
+						validate: function() {
+							var dialog = this.getDialog();
+
+							if ( dialog.getContentElement( 'info', 'linkType' ) && dialog.getValueOf( 'info', 'linkType' ) != 'media' )
+								return true;
+
+							if ( (/javascript\:/).test( this.getValue() ) ) {
+								alert( commonLang.invalidValue );
+								return false;
+							}
+
+							if ( this.getDialog().fakeObj ) // Edit Anchor.
+							return true;
+
+							var func = CKEDITOR.dialog.validate.notEmpty( linkLang.noUrl );
+							return func.apply( this );
+						},
+						setup: function( data ) {
+
+							this.allowOnChange = false;
+							if ( data.url ) {
+								this.setValue( data.url.mediaurl );
+                                this.onKeyUp();
+                            }
+							this.allowOnChange = true;
+
+						},
+						commit: function( data ) {
+							// IE will not trigger the onChange event if the mouse has been used
+							// to carry all the operations #4724
+							this.onChange();
+
+							if ( !data.url )
+								data.url = {};
+
+							data.url.mediaurl = this.getValue();
+							this.allowOnChange = false;
+						}
+					},
+                    {
+                        type: 'button',
+                        id: 'browse',
+                        hidden: 'false',
+                        filebrowser: {
+                            action: 'Browse',
+                            target: 'info:mediaurl',
+                            url: '/libraries/ckeditor/inc.filebrowser.php?type=media',
+                        },
+                        label: linkLang.browseMedia
+                    }
+					],
+					setup: function( data ) {
+						if ( !this.getDialog().getContentElement( 'info', 'linkType' ) )
+							this.getElement().show();
+					}
+				},
+					{
+					type: 'html',
+					id: 'name',
+					html: ' <span id="media-name" style="font-size:10px"></span>',
+				}
+				]
+			},
+            /*
 				{
 				type: 'vbox',
 				id: 'mediaOptions',
@@ -656,6 +802,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 				}
 				]
 			},
+        */
 				{
 				type: 'vbox',
 				id: 'anchorOptions',
@@ -1257,7 +1404,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 			this.setupContent( parseLink.apply( this, [ editor, element ] ) );
 		},
 		onOk: function() {
-                    
+
 			var attributes = {},
 				removeAttributes = [],
 				data = {},
@@ -1265,7 +1412,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 				editor = this.getParentEditor();
 
 			this.commitContent( data );
-                        
+
                         // Compose the URL.
 			switch ( data.type || 'url' ) {
 				case 'url':
