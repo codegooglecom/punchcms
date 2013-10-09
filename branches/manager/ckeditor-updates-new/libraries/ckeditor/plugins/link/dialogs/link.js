@@ -509,7 +509,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
                             newElementId = newElementId.replace('?eid=','');
 
                             $.ajax({
-                                url: '/ajax.php?cmd=Element::generateElementTrailXml&params='+ encodeURIComponent(newElementId) +',false' ,
+                                url: '/ajax.php?cmd=Element::generateElementTrailXml&params='+ encodeURIComponent(newElementId) +',0' ,
                                 dataType: 'xml',
                                 success:  function(data) {
                                     var alias = $(data).find('field').text();
