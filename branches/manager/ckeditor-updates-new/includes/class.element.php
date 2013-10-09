@@ -298,7 +298,7 @@ class Element extends DBA_Element {
     }
 
     public static function generateElementTrailXml($intElementId, $blnLink = true) {
-        if($blnLink == 'false') {
+        if($blnLink === 'false') {
             $blnLink = false;
         }
         $strTrail = self::generateElementTrailString($intElementId, $blnLink);
