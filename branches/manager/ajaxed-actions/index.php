@@ -81,7 +81,7 @@ switch ($intCatId) {
 			$strOutput .= parseLogin($intElmntId, $strCommand);
 		}
 		break;
-		
+
 	case NAV_MYPUNCH_NOACCOUNT:
 		require_once('includes/inc.tplparse_noaccount.php');
 		$strOutput .= parsePage($intElmntId, $strCommand);

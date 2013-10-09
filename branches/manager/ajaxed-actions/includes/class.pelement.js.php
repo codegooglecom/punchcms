@@ -18,14 +18,24 @@ if (!is_object($objLang)) {
 
 ?>
 
+var itemListUpdateTimeout;
+
 function PElement() {
 	this.id = 0;
 	this.checked = false;
 }
 
 PElement.executeCommand = function (url) {
-    var $overlay = $("<div />").prop("id", "itemlist-overlay");
-    $("#itemlist").append($overlay);
+    itemListUpdateTimeout = setTimeout(function () {
+        var $overlay = $("<div />").prop("id", "itemlist-overlay");
+        $("#itemlist").append($overlay);
+
+        var $warning = $("<div />")
+           .addClass("itemlist-message itemlist-info")
+           .html("<?php echo $objLang->get("loading", "form") ?>");
+
+        $("#itemlist").append($warning);
+    }, 800);
 
     return $.get(url, PElement.updateItemList);
 }
@@ -43,6 +53,7 @@ PElement.duplicate = function(intId, strRedirect) {
 }
 
 PElement.updateItemList = function (data) {
+    clearTimeout(itemListUpdateTimeout);
 
     var itemlist = $(data).find("#itemlist");
     if (itemlist.length > 0) {
@@ -50,7 +61,7 @@ PElement.updateItemList = function (data) {
         $("#itemlist").html(itemlist.html());
     } else {
 	    var $warning = $("<div />")
-	       .addClass("itemlist-warning")
+	       .addClass("itemlist-message itemlist-warning")
 	       .html("<?php echo $objLang->get("refreshFailed", "alert") ?>");
 
 	    $("#itemlist").append($warning);
