@@ -398,6 +398,7 @@ $_LANG['alert']['feedsRemoveAlert'] = "Weet u zeker dat u deze bronnen wilt verw
 $_LANG['alert']['moveToFTP'] = "Uploaden naar de webserver is mislukt. Controleer de FTP instellingen en probeer het opnieuw.";
 $_LANG['alert']['elementBeforeLanguage'] = "U moet eerst een standaardtaal aanmaken voordat u een element kunt aanmaken!";
 $_LANG['alert']['newWindow'] = "Dit bestand zal in een nieuw venster openen.";
+$_LANG['alert']['refreshFailed'] = "Het verversen van de elementlijst is mislukt.<br />De pagina wordt ververst in 2 seconden.";
 
 $_LANG['help']['docHeader'] = "Documentatie";
 $_LANG['help']['docBody'] = "<p><a href=\"images/PunchCMS_handleiding.pdf\" rel=\"external\">Download</a> de documentatie van het CMS voor een inleiding en algemene uitleg van de functionaliteit.</p><p>Voor het bekijken van de documentatie heeft u de <a href=\"http://www.adobe.com/products/acrobat/readstep2.html\" rel=\"external\">Adobe Reader</a> nodig.</p>";

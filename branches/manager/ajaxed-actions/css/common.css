@@ -1269,3 +1269,28 @@ div.progresstext {
 .export-select .level input[type=checkbox] {margin-top:2px;float:left;width:15px;clear:left;}
 .export-select .level label {font-size:10px !important;cursor:pointer;padding:0 0 0 5px !important;}
 .export-select .level > .level {margin-left:5px;padding-left:15px;}
+
+.itemlist-warning {
+	width: 300px;
+	background-color: #F2DEDE;
+	color: #B94A48;
+	margin-left: -150px;
+	left: 50%;
+	top: 10px;
+	padding: 20px 30px;
+	position: absolute;
+	text-align: center;
+	z-index: 100;
+	border-radius: 2px;
+}
+
+#itemlist-overlay {
+	opacity: 0.7;
+	z-index: 99;
+	background-color: #FFF;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}

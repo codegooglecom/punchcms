@@ -398,6 +398,7 @@ $_LANG['alert']['feedRemoveAlert'] = "Are you sure you want to remove these feed
 $_LANG['alert']['moveToFTP'] = "Upload to the webserver failed. Check the FTP settings and try again.";
 $_LANG['alert']['elementBeforeLanguage'] = "You need to create a default language before you can create an element!";
 $_LANG['alert']['newWindow'] = "This file will open in a new window.";
+$_LANG['alert']['refreshFailed'] = "Failed to refresh the element list.<br />This page will refresh in 2 seconds.";
 
 
 $_LANG['help']['docHeader'] = "Documentation";

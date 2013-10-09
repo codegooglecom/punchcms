@@ -1,11 +1,16 @@
 <?php
+
 session_save_path($_SERVER["DOCUMENT_ROOT"] . "/sessions");
 session_start();
+
 require_once('./inc.constantes.php');
 require_once('../libraries/lib.language.php');
 
 $objLang = null;
-if (array_key_exists("objLang", $_SESSION)) $objLang = unserialize($_SESSION["objLang"]);
+if (array_key_exists("objLang", $_SESSION)) {
+    $objLang = unserialize($_SESSION["objLang"]);
+}
+
 if (!is_object($objLang)) {
 	require_once('../config.php');
 	$objLang = new Language($_CONF['app']['defaultLang'], $_CONF['app']['langPath']);
@@ -19,6 +24,9 @@ function PElement() {
 }
 
 PElement.executeCommand = function (url) {
+    var $overlay = $("<div />").prop("id", "itemlist-overlay");
+    $("#itemlist").append($overlay);
+
     return $.get(url, PElement.updateItemList);
 }
 
@@ -38,11 +46,19 @@ PElement.updateItemList = function (data) {
 
     var itemlist = $(data).find("#itemlist");
     if (itemlist.length > 0) {
+        $("#itemlist-overlay").remove();
         $("#itemlist").html(itemlist.html());
     } else {
-        if (console) {
-            console.error("Failed to update item list.");
-        }
+	    var $warning = $("<div />")
+	       .addClass("itemlist-warning")
+	       .html("<?php echo $objLang->get("refreshFailed", "alert") ?>");
+
+	    $("#itemlist").append($warning);
+
+        setTimeout(function () {
+            // Use 'true' to force a server refresh instead of reloading a cached page.
+            window.location.reload(true);
+        }, 2000);
     }
 
 }

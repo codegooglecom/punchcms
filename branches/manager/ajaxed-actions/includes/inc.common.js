@@ -174,6 +174,11 @@ function focusLogin() {
 
 function obtrudeItemBox() {
 	if (document.getElementsByTagName) {
+		//*** This is needed by the updated PElement library which dynamically reloads the #itemlist element.
+		$("#itemlist").on("click", ".itembox", function (event) {
+			return toggleItemBox(this, event);
+		});
+		
 		var objElmnts = $(".itembox").get();
 		for (var intCount = 0; intCount < objElmnts.length; intCount++) {
 			objElmnts[intCount].onclick = function(event){return toggleItemBox(this, event);};
