@@ -18,18 +18,33 @@ function PElement() {
 	this.checked = false;
 }
 
+PElement.executeCommand = function (url) {
+    return $.get(url, PElement.updateItemList);
+}
+
 PElement.remove = function(intId, strRedirect) {
 	var blnConfirm = confirm("<?php echo $objLang->get("elementRemoveAlert", "alert") ?>");
 
 	if (blnConfirm == true) {
-		strReturnTo = "";
-		document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + intId + "&cmd=<?php echo CMD_REMOVE ?>&returnTo=" + strReturnTo;
+    	PElement.executeCommand("/?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + intId + "&cmd=<?php echo CMD_REMOVE ?>");
 	}
 }
 
 PElement.duplicate = function(intId, strRedirect) {
-	strReturnTo = "";
-	document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + intId + "&cmd=<?php echo CMD_DUPLICATE ?>&returnTo=" + strReturnTo;
+	PElement.executeCommand("/?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + intId + "&cmd=<?php echo CMD_DUPLICATE ?>");
+}
+
+PElement.updateItemList = function (data) {
+
+    var itemlist = $(data).find("#itemlist");
+    if (itemlist.length > 0) {
+        $("#itemlist").html(itemlist.html());
+    } else {
+        if (console) {
+            console.error("Failed to update item list.");
+        }
+    }
+
 }
 
 PElement.multiDo = function(objField, strAction) {
@@ -60,7 +75,7 @@ PElement.multiDo = function(objField, strAction) {
 				}
 
 				if (blnConfirm == true) {
-					document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_REMOVE ?>";
+    				PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_REMOVE ?>");
 				} else {
 					//*** Reset pulldown.
 					objField.selectedIndex = 0;
@@ -68,19 +83,19 @@ PElement.multiDo = function(objField, strAction) {
 				break;
 
 			case "duplicate":
-				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DUPLICATE ?>";
+			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DUPLICATE ?>");
 				break;
 
 			case "activate":
-				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_ACTIVATE ?>";
+			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_ACTIVATE ?>");
 				break;
 
 			case "deactivate":
-				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DEACTIVATE ?>";
+			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DEACTIVATE ?>");
 				break;
 
 			case "export":
-				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_EXPORT_ELEMENT ?>&sel=1";
+			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_EXPORT_ELEMENT ?>&sel=1");
 				break;
 		}
 	} else {
