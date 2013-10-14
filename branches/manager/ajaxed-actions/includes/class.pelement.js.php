@@ -59,6 +59,16 @@ PElement.updateItemList = function (data) {
     if (itemlist.length > 0) {
         $("#itemlist-overlay").remove();
         $("#itemlist").html(itemlist.html());
+
+        // Update tree view
+        if (typeof initUpdateSort == "function") {
+            initUpdateSort();
+        }
+
+        // Update page navigation
+        $(".page-nav").first().html($(data).find(".page-nav").first().html());
+        $(".page-nav").last().html($(data).find(".page-nav").last().html());
+
     } else {
 	    var $warning = $("<div />")
 	       .addClass("itemlist-message itemlist-warning")
