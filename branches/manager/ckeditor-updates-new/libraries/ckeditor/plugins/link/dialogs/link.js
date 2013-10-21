@@ -525,7 +525,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 						},
 						onClick: function(data) {
 							var dialog = this.getDialog();
-                            var browser = dialog.getContentElement('info', 'browse');
+                            var browser = dialog.getContentElement('info', 'browseelements');
                             browser.click();
 						},
 						validate: function() {
@@ -569,7 +569,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 					},
                     {
                         type: 'button',
-                        id: 'browse',
+                        id: 'browseelements',
                         hidden: 'false',
                         filebrowser: {
                             action: 'Browse',
@@ -644,7 +644,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 						},
 						onClick: function(data) {
 							var dialog = this.getDialog();
-                            var browser = dialog.getContentElement('info', 'browse');
+                            var browser = dialog.getContentElement('info', 'browsemedia');
                             browser.click();
 						},
 						validate: function() {
@@ -688,7 +688,7 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 					},
                     {
                         type: 'button',
-                        id: 'browse',
+                        id: 'browsemedia',
                         hidden: 'false',
                         filebrowser: {
                             action: 'Browse',
