@@ -53,9 +53,9 @@ class StorageItem extends DBA_StorageItem {
 				$strRemoteFolder = Setting::getValueByName('ftp_remote_folder');
 
 				//*** Remove deleted files.
-				$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+				$objFtp = new FTP($strServer, NULL, NULL, true);
 				$objFtp->login($strUsername, $strPassword);
-				$objFtp->pasv(TRUE);
+				$objFtp->pasv(true);
 				$strFile = $strRemoteFolder . $strValue;
 				$objFtp->delete($strFile);
 			}
@@ -94,7 +94,7 @@ class StorageItem extends DBA_StorageItem {
 		return $this->data;
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		parent::$__object = "StorageItem";
 		parent::$__table = "pcms_storage_item";
 		

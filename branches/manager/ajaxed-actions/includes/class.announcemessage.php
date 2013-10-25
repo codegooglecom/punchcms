@@ -10,7 +10,7 @@
 
 class AnnounceMessage extends DBA_AnnounceMessage {
 
-	public static function getMessages($blnCheck = TRUE) {
+	public static function getMessages($blnCheck = true) {
 		global $objLiveUser;
 		self::$__object = "AnnounceMessage";
 

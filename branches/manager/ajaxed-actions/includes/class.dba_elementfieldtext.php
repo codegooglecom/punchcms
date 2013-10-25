@@ -41,7 +41,7 @@ class DBA_ElementFieldText extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "ElementFieldText";
 		self::$__table = "pcms_element_field_text";
 

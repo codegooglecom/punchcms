@@ -29,7 +29,7 @@
 class DBA__Object {
 	public static $__object = "";
 	public static $__table = "";
-	private static $__debug = FALSE;
+	private static $__debug = false;
 	protected $sort = 0;
 	protected $created = "0000-00-00 00:00:00";
 	protected $modified = NULL;
@@ -42,7 +42,7 @@ class DBA__Object {
 		if (property_exists($this, $property)) {
 			return $this->$property;
 		} else {
-			if (self::$__debug === TRUE) echo "Property Error in " . get_class($this) . "::get({$property}) on line " . __LINE__ . ".\n";
+			if (self::$__debug === true) echo "Property Error in " . get_class($this) . "::get({$property}) on line " . __LINE__ . ".\n";
 		}
 	}
 
@@ -57,7 +57,7 @@ class DBA__Object {
 			}
 			$this->$property = $value;
 		} else {
-			if (self::$__debug === TRUE) echo "Property Error in " . get_class($this) . "::set({$property}) on line " . __LINE__ . ".\n";
+			if (self::$__debug === true) echo "Property Error in " . get_class($this) . "::set({$property}) on line " . __LINE__ . ".\n";
 		}
 	}
 
@@ -75,10 +75,10 @@ class DBA__Object {
 			return;
 		}
 
-		if (self::$__debug === TRUE) echo "Method Error in " . get_class($this) . "::{$method} on line " . __LINE__ . ".\n";
+		if (self::$__debug === true) echo "Method Error in " . get_class($this) . "::{$method} on line " . __LINE__ . ".\n";
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		/* Save the current object to the database. */
 		global $DBAConn;
 
@@ -159,7 +159,7 @@ class DBA__Object {
 			$strSql .= ")";
 		}
 
-		if (self::$__debug === TRUE) echo self::$__object . ".save() : " . $strSql . "<br />";
+		if (self::$__debug === true) echo self::$__object . ".save() : " . $strSql . "<br />";
 
 		if (PEAR::isError($DBAConn)) {
 			die ("Connection Error in " . self::$__object . "::save on line " . __LINE__ . ". (" . $DBAConn->getMessage() . ")<br /><b>Error Details</b>: " . $DBAConn->toString());
@@ -198,7 +198,7 @@ class DBA__Object {
 				$strSql .= sprintf(" AND `accountId` = %s", self::quote($accountId));
 			}
 
-			if (self::$__debug === TRUE) echo self::$__object . ".delete() : " . $strSql . "<br />";
+			if (self::$__debug === true) echo self::$__object . ".delete() : " . $strSql . "<br />";
 
 			if (PEAR::isError($DBAConn)) {
 				die ("Connection Error in " . self::$__object . "::delete on line " . __LINE__ . ". (" . $DBAConn->getMessage() . ")<br /><b>Error Details</b>: " . $DBAConn->toString());
@@ -255,7 +255,7 @@ class DBA__Object {
 			$strSql = substr($strSql, 0, strlen($strSql) - 2);
 			$strSql .= ")";
 
-			if (self::$__debug === TRUE) echo self::$__object . ".duplicate() : " . $strSql . "<br />";
+			if (self::$__debug === true) echo self::$__object . ".duplicate() : " . $strSql . "<br />";
 
 			if (PEAR::isError($DBAConn)) {
 				die ("Connection Error in " . self::$__object . "::duplicate on line " . __LINE__ . ". (" . $DBAConn->getMessage() . ")<br /><b>Error Details</b>: " . $DBAConn->toString());
@@ -328,7 +328,7 @@ class DBA__Object {
 			unset($strSql);
 		}
 
-		if (self::$__debug === TRUE) echo self::$__object . ".selectByPk() : " . $strSql . "<br />";
+		if (self::$__debug === true) echo self::$__object . ".selectByPk() : " . $strSql . "<br />";
 
 		if (isset($strSql)) {
 			if (PEAR::isError($DBAConn)) {
@@ -401,7 +401,7 @@ class DBA__Object {
 			$strSql = "SELECT * FROM " . self::$__table . " ORDER BY sort";
 		}
 
-		if (self::$__debug === TRUE) echo self::$__object . ".select() : " . $strSql . "<br />";
+		if (self::$__debug === true) echo self::$__object . ".select() : " . $strSql . "<br />";
 
 		if (PEAR::isError($DBAConn)) {
 			die ("Connection Error in " . self::$__object . "::select on line " . __LINE__ . ". (" . $DBAConn->getMessage() . ")<br /><b>Error Details</b>: " . $DBAConn->toString());

@@ -17,26 +17,26 @@ function parseLanguage($intLangId, $strCommand) {
 			//*** Post the profile form if submitted.
 			if (count($_CLEAN_POST) > 0 && !empty($_CLEAN_POST['dispatch']) && $_CLEAN_POST['dispatch'] == "editLanguage") {
 				//*** The element form has been posted.
-				$blnError = FALSE;
+				$blnError = false;
 				
 				//*** Check sanitized input.
 				if (is_null($_CLEAN_POST["frm_active"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				
 				if (is_null($_CLEAN_POST["frm_name"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_apiname"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				
 				if (is_null($_CLEAN_POST["dispatch"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
-				if ($blnError === TRUE) {
+				if ($blnError === true) {
 					//*** Display global error.
 					$objTpl->setVariable("FORM_ACTIVE_VALUE", ($_POST["frm_active"] == "on") ? "checked=\"checked\"" : "");
 					$objTpl->setVariable("FORM_NAME_VALUE", $_POST["frm_name"]);
@@ -119,7 +119,7 @@ function parseLanguage($intLangId, $strCommand) {
 			break;
 
 		case CMD_REMOVE:
-			if (strpos($intLangId, ',') !== FALSE) {
+			if (strpos($intLangId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrLanguages = explode(',', $intLangId);
 				$objLanguages = ContentLanguage::selectByPK($arrLanguages);

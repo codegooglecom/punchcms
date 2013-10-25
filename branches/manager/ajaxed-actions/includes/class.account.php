@@ -248,12 +248,12 @@ class Account extends DBA_Account {
 		*  @type: public
 		*/
 
-		$blnReturn = FALSE;
+		$blnReturn = false;
 
 		$arrProducts = AccountProduct::getByAccountId($this->getId());
 		foreach ($arrProducts as $arrProduct) {
 			if ($arrProduct->getProductId() == $intProductId) {
-				$blnReturn = TRUE;
+				$blnReturn = true;
 				break;
 			}
 		}
@@ -304,7 +304,7 @@ class Account extends DBA_Account {
 	public function restoreBackup($strFile = NULL) {
 		global $_PATHS;
 		
-		$blnReturn = FALSE;
+		$blnReturn = false;
 		
 		if (is_null($strFile)) {
 			//*** Find the latest backup.
@@ -318,8 +318,8 @@ class Account extends DBA_Account {
 		}
 		
 		if (!empty($strFile) && is_file($strFile)) {
-			ImpEx::import($strFile, TRUE, TRUE);
-			$blnReturn = TRUE;
+			ImpEx::import($strFile, true, true);
+			$blnReturn = true;
 		}
 		
 		return $blnReturn;

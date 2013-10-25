@@ -34,7 +34,7 @@ class ImageField {
 				$objValue = $this->__templateField->getValueByName("tfv_image_quality_" . $intCount);
 				$arrReturn[$intCount]['quality'] = (is_object($objValue)) ? $objValue->getValue() : 75;
 				$objValue = $this->__templateField->getValueByName("tfv_image_grayscale_" . $intCount);
-				$arrReturn[$intCount]['grayscale'] = (is_object($objValue) && $objValue->getValue() == "on") ? TRUE : FALSE;
+				$arrReturn[$intCount]['grayscale'] = (is_object($objValue) && $objValue->getValue() == "on") ? true : false;
 				$objValue = $this->__templateField->getValueByName("tfv_image_setting_name_" . $intCount);
 				$arrReturn[$intCount]['api'] = (is_object($objValue)) ? $objValue->getValue() : "";
 				
@@ -75,10 +75,10 @@ class ImageField {
 			}
 			$objValue = $this->__templateField->getValueByName("tfv_image_grayscale");
 			if (is_object($objValue)) {
-				$arrReturn[$intCount]['grayscale'] = ($objValue->getValue() == "on") ? TRUE : FALSE;
+				$arrReturn[$intCount]['grayscale'] = ($objValue->getValue() == "on") ? true : false;
 			} else {
 				$objValue = $this->__templateField->getValueByName("tfv_image_grayscale_0");
-				$arrReturn[$intCount]['grayscale'] = (is_object($objValue) && $objValue->getValue() == "on") ? TRUE : FALSE;
+				$arrReturn[$intCount]['grayscale'] = (is_object($objValue) && $objValue->getValue() == "on") ? true : false;
 			}
 			$arrReturn[$intCount]['api'] = "";
 			$arrReturn[$intCount]['key'] = "";
@@ -89,7 +89,7 @@ class ImageField {
 	
 	public static function filename2LocalName($filename) {
 		$objUpload = new SingleUpload();
-		$objUpload->setRename(TRUE);
+		$objUpload->setRename(true);
 		$objUpload->setOriginalName($filename);
 		return $objUpload->getFileName($filename);
 	}

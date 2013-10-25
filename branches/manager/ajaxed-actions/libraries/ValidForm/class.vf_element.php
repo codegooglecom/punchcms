@@ -46,7 +46,7 @@ class VF_Element extends ClassDynamic {
 		if (is_null($errorHandlers)) $errorHandlers = array();
 		if (is_null($meta)) $meta = array();
 		
-		$this->__id = (strpos($name, "[]") !== FALSE) ? $this->getRandomId($name) : $name;
+		$this->__id = (strpos($name, "[]") !== false) ? $this->getRandomId($name) : $name;
 		$this->__name = $name;
 		$this->__label = $label;
 		$this->__type = $type;
@@ -58,7 +58,7 @@ class VF_Element extends ClassDynamic {
 		$this->__validator = new VF_FieldValidator($name, $type, $validationRules, $errorHandlers, $this->__hint);		
 	}
 	
-	public function toHtml($submitted = FALSE) {
+	public function toHtml($submitted = false) {
 		return "Field type not defined.";
 	}
 	
@@ -69,7 +69,7 @@ class VF_Element extends ClassDynamic {
 	public function getRandomId($name) {
 		$strReturn = $name;
 		
-		if (strpos($name, "[]") !== FALSE) {
+		if (strpos($name, "[]") !== false) {
 			$strReturn = str_replace("[]", "_" . rand(100000, 900000), $name);
 		} else {
 			$strReturn = $name . "_" . rand(100000, 900000);
@@ -87,10 +87,10 @@ class VF_Element extends ClassDynamic {
 	}
 	
 	public function hasFields() {
-		return FALSE;
+		return false;
 	}
 	
-	protected function __getValue($submitted = FALSE) {
+	protected function __getValue($submitted = false) {
 		$strReturn = NULL;
 		
 		if ($submitted) {

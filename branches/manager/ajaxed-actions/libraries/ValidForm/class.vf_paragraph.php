@@ -37,7 +37,7 @@ class VF_Paragraph extends ClassDynamic {
 		$this->__body = $body;
 	}
 	
-	public function toHtml($submitted = FALSE) {
+	public function toHtml($submitted = false) {
 		$strOutput = "<div>\n";
 		
 		if (!empty($this->__header)) $strOutput .= "<h3>{$this->__header}</h3>\n";
@@ -52,7 +52,7 @@ class VF_Paragraph extends ClassDynamic {
 	}
 	
 	public function isValid() {
-		return TRUE;
+		return true;
 	}
 	
 	public function getValue() {
@@ -60,7 +60,7 @@ class VF_Paragraph extends ClassDynamic {
 	}
 	
 	public function hasFields() {
-		return FALSE;
+		return false;
 	}
 	
 	public function getFields() {

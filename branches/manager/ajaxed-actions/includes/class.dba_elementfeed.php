@@ -43,7 +43,7 @@ class DBA_ElementFeed extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "ElementFeed";
 		self::$__table = "pcms_element_feed";
 

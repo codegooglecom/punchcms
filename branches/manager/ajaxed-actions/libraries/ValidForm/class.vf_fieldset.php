@@ -45,7 +45,7 @@ class VF_Fieldset extends ClassDynamic {
 		array_push($this->__fields, $field);
 	}
 	
-	public function toHtml($submitted = FALSE) {
+	public function toHtml($submitted = false) {
 		$strOutput = "<fieldset>\n";
 		if (!empty($this->__header)) $strOutput .= "<legend><span>{$this->__header}</span></legend>\n";
 		
@@ -79,11 +79,11 @@ class VF_Fieldset extends ClassDynamic {
 	}
 	
 	private function __validate() {
-		$blnReturn = TRUE;
+		$blnReturn = true;
 		
 		foreach ($this->__fields as $field) {
 			if (!$field->isValid()) {
-				$blnReturn = FALSE;
+				$blnReturn = false;
 				break;
 			}
 		}

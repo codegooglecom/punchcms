@@ -150,8 +150,8 @@
 <cffunction name="resize" access="public" output="true" returntype="void" hint="Resize an image to a specific width and height.">
 	<cfargument name="newWidth" required="yes" type="numeric">
 	<cfargument name="newHeight" required="yes" type="numeric">
-	<cfargument name="preserveAspect" required="no" type="boolean" default="FALSE">
-	<cfargument name="cropToExact" required="no" type="boolean" default="FALSE">
+	<cfargument name="preserveAspect" required="no" type="boolean" default="false">
+	<cfargument name="cropToExact" required="no" type="boolean" default="false">
 
 	<cfset var imageResults = imageCFC.resize(variables.img,"","",newWidth,newHeight,preserveAspect,cropToExact)>
 	<cfset variables.revertimg = variables.img>

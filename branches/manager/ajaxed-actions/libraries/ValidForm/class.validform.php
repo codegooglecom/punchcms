@@ -189,7 +189,7 @@ class ValidForm extends ClassDynamic {
 		return $objParagraph;
 	}
 	
-	public function addArea($label = NULL, $active = FALSE, $name = NULL, $checked = FALSE, $meta = array()) {
+	public function addArea($label = NULL, $active = false, $name = NULL, $checked = false, $meta = array()) {
 		$objArea = new VF_Area($label, $active, $name, $checked, $meta);
 		
 		//*** Fieldset already defined?
@@ -234,9 +234,9 @@ class ValidForm extends ClassDynamic {
 	
 	public function isSubmitted() {		
 		if (ValidForm::get("vf__dispatch") == $this->__name) {
-			return TRUE;
+			return true;
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 	
@@ -272,7 +272,7 @@ class ValidForm extends ClassDynamic {
 		return $this->__validate();
 	}
 	
-	public function valuesAsHtml($hideEmpty = FALSE) {
+	public function valuesAsHtml($hideEmpty = false) {
 		$strOutput = "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
 		
 		foreach ($this->__elements as $objFieldset) {			
@@ -369,11 +369,11 @@ class ValidForm extends ClassDynamic {
 	}
 	
 	private function __validate() {
-		$blnReturn = TRUE;
+		$blnReturn = true;
 		
 		foreach ($this->__elements as $element) {
 			if (!$element->isValid()) {
-				$blnReturn = FALSE;
+				$blnReturn = false;
 				break;
 			}
 		}

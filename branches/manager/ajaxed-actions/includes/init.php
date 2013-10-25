@@ -119,8 +119,8 @@ require_once('MultiUpload/singleupload.php');
 require_once('MultiUpload/multiupload.php');
 $objMultiUpload = new MultiUpload;
 $objMultiUpload->setUploadFolder($_PATHS['upload']);
-$objMultiUpload->setRename(TRUE);
-$objMultiUpload->setCheckFilename(TRUE);
+$objMultiUpload->setRename(true);
+$objMultiUpload->setCheckFilename(true);
 
 /******************************
 * Load Image libraries.

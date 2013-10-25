@@ -46,7 +46,7 @@ if (count($objTables) > 0) {
 		foreach ($objProperties as $objProperty) {
 			$strProperties .= "\tprotected $" . strtolower($objProperty->getAttribute('name')) . " = ";
 
-			if ($objProperty->getAttribute('primaryKey') == TRUE) {
+			if ($objProperty->getAttribute('primaryKey') == true) {
 				//*** Primary key column.
 				$strProperties .= "NULL;\n";
 			} else {

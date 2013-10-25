@@ -12,8 +12,8 @@ require_once('dzip/dUnzip2.inc.php');
 $strBaseFolder 		= $_CONF['app']['basePath'];
 $strZipFolder 		= $_CONF['app']['basePath'] . "cache/";
 $strZipName 		= $strZipFolder . "exportZip_" . rand() . ".zip";
-$objZip 			= new dZip($strZipName, TRUE);
-$blnDebug			= FALSE;
+$objZip 			= new dZip($strZipName, true);
+$blnDebug			= false;
 
 function copyr($source, $dest, $fileFilter = array()){
 	global $objZip;
@@ -125,7 +125,7 @@ function exportPage($objPageElement, $objLanguage) {
 
 	$objCms = PCMS_Client::getInstance();
 
-	$strDirname = (!$objLanguage->default) ? dirname($objPageElement->getLink(TRUE, "", $objLanguage->getAbbr())) : dirname($objPageElement->getLink());
+	$strDirname = (!$objLanguage->default) ? dirname($objPageElement->getLink(true, "", $objLanguage->getAbbr())) : dirname($objPageElement->getLink());
 	$strBasename = basename($objPageElement->getLink());
 
 	if ($strDirname == "/") $strDirname = "";

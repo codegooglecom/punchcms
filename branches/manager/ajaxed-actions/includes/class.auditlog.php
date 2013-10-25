@@ -28,7 +28,7 @@ class AuditLog extends DBA_AuditLog {
 		}
 	}
 
-	public static function cleanLog($blnClearAll = FALSE) {
+	public static function cleanLog($blnClearAll = false) {
 		global $_CONF;
 					
 		if (Setting::getValueByName("audit_enable")) {

@@ -10,7 +10,7 @@
 
 class Feed extends DBA_Feed {
 	
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		parent::$__object = "Feed";
 		parent::$__table = "pcms_feed";
 		
@@ -54,7 +54,7 @@ class Feed extends DBA_Feed {
 		return parent::select($strSql);
 	}
 
-	public static function selectActive($blnAllAccounts = FALSE) {
+	public static function selectActive($blnAllAccounts = false) {
 		global $_CONF;
 		parent::$__object = "Feed";
 		parent::$__table = "pcms_feed";
@@ -131,7 +131,7 @@ class Feed extends DBA_Feed {
 			$objParent = Element::selectByPK($objElement->getParentId());
 			if (is_object($objElement) && is_object($objParent) && $objParent->getTypeId() != ELM_TYPE_DYNAMIC) {
 				//*** Remove old elements.
-				$objOldElements = $objParent->getElements(FALSE, ELM_TYPE_LOCKED, $this->getAccountId());
+				$objOldElements = $objParent->getElements(false, ELM_TYPE_LOCKED, $this->getAccountId());
 				foreach ($objOldElements as $objOldElement) {
 					$objOldElement->delete();
 				}
@@ -172,7 +172,7 @@ class Feed extends DBA_Feed {
 				$objFeedFields = ElementFieldFeed::selectByElement($objElement->getId(), $objLang->getId());
 				foreach ($objFeedFields as $objFeedField) {
 					$strPath = $objFeedField->getXPath();
-					if (stripos($strPath, "user->") !== FALSE) {
+					if (stripos($strPath, "user->") !== false) {
 						$strValue = str_replace("user->", "", $strPath);
 						$objInsertElement->addField($objFeedField->getTemplateFieldId(), $strValue, $objLang->getId(), $objFeedField->getCascade());
 					} else {
@@ -181,7 +181,7 @@ class Feed extends DBA_Feed {
 							$objInsertElement->addField($objFeedField->getTemplateFieldId(), $strValue, $objLang->getId(), $objFeedField->getCascade());
 							
 							if (!is_numeric($strValue) && empty($strName)) {
-								$strName = getShortValue(strip_tags($strValue), 40, TRUE, "");
+								$strName = getShortValue(strip_tags($strValue), 40, true, "");
 							}
 						}
 					}
@@ -192,7 +192,7 @@ class Feed extends DBA_Feed {
 			
 			$objInsertElement->setName($strName);
 			$objInsertElement->setUsername("PunchCMS");
-			$objInsertElement->setActive(TRUE);
+			$objInsertElement->setActive(true);
 			$objInsertedElement = $objInsertElement->save();
 			
 			//*** Add the alias.
@@ -221,7 +221,7 @@ class Feed extends DBA_Feed {
 			}
 						
 			//*** Sub elements.
-			$objSubElements = $objElement->getElements(FALSE, ELM_TYPE_DYNAMIC, $this->getAccountId());
+			$objSubElements = $objElement->getElements(false, ELM_TYPE_DYNAMIC, $this->getAccountId());
 			foreach ($objSubElements as $objSubElement) {
 				$this->recursiveFeedInsert($objSubElement, $objInsertedElement, $objNode, $objLangs);
 			}

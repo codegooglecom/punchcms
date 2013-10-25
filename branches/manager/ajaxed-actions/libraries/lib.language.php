@@ -45,7 +45,7 @@ class Language {
 		/* Get a specific language or, if argument is empty, get the
 		 * language by checking session, cookie and default.
 		 */
-		$blnReturn = FALSE;
+		$blnReturn = false;
 
 		if (empty($strLang)) {
 			if (!empty($_SESSION['language']) && file_exists($this->langPath . "/" . $_SESSION['language'] . ".php")) {
@@ -76,7 +76,7 @@ class Language {
 			$arrTemp = explode("-", $this->activeLang);
 			$this->language = str_replace("_", " ", $arrTemp[0]);
 
-			$blnReturn = TRUE;
+			$blnReturn = true;
 		}
 
 		return $blnReturn;
@@ -84,7 +84,7 @@ class Language {
 
 	public function setLang($strLang) {
 		//*** Set a specific language and write it to the session and cockie.
-		$blnReturn = FALSE;
+		$blnReturn = false;
 
 		//*** Check if the language file exists and is different from the current language.
 		if (file_exists($this->langPath . "/" . $strLang . ".php") && $strLang !== $this->activeLang) {
@@ -96,7 +96,7 @@ class Language {
 
 			//*** Load new language file;
 			$this->getLang($strLang);
-			$blnReturn = TRUE;
+			$blnReturn = true;
 		}
 
 		return $blnReturn;

@@ -39,7 +39,7 @@ class Element extends DBA_Element {
 		return $this->objPermissions;
 	}
 
-	public function setPermissions($objPermissions, $blnSave = FALSE) {
+	public function setPermissions($objPermissions, $blnSave = false) {
 		$this->objPermissions = $objPermissions;
 
 		if ($blnSave) {
@@ -75,7 +75,7 @@ class Element extends DBA_Element {
 		parent::$__table = "pcms_element";
 
 		//*** Delete fields.
-		$this->clearFields(TRUE);
+		$this->clearFields(true);
 
 		//*** Delete permissions.
 		$this->clearPermissions();
@@ -95,7 +95,7 @@ class Element extends DBA_Element {
 		//*** Remove locked elements.
 		$objParent = Element::selectByPK($this->getParentId());
 		if (is_object($objParent) && $objParent->getTypeId() != ELM_TYPE_DYNAMIC && $this->getTypeId() != ELM_TYPE_LOCKED) {
-			$objOldElements = $objParent->getElements(FALSE, ELM_TYPE_LOCKED, $_CONF['app']['account']->getId());
+			$objOldElements = $objParent->getElements(false, ELM_TYPE_LOCKED, $_CONF['app']['account']->getId());
 			foreach ($objOldElements as $objOldElement) {
 				$objOldElement->delete();
 			}
@@ -112,7 +112,7 @@ class Element extends DBA_Element {
 		return parent::delete($_CONF['app']['account']->getId());
 	}
 
-	public function save($blnSaveModifiedDate = TRUE, $blnCreateForced = TRUE) {
+	public function save($blnSaveModifiedDate = true, $blnCreateForced = true) {
 		parent::$__object = "Element";
 		parent::$__table = "pcms_element";
 
@@ -134,7 +134,7 @@ class Element extends DBA_Element {
 		return $blnReturn;
 	}
 
-	public function getElements($blnRecursive = FALSE, $intElementType = ELM_TYPE_ALL, $intAccountId = 0) {
+	public function getElements($blnRecursive = false, $intElementType = ELM_TYPE_ALL, $intAccountId = 0) {
 		if ($this->id > 0) {
 			if (!is_object($this->objElementCollection)) {
 				$this->objElementCollection = Elements::getFromParent($this->id, $blnRecursive, $intElementType, $intAccountId);
@@ -146,14 +146,14 @@ class Element extends DBA_Element {
 		return $this->objElementCollection;
 	}
 
-	public function getFields($blnRecursive = FALSE) {
+	public function getFields($blnRecursive = false) {
 		$objReturn = new DBA__Collection();
 
 		if ($this->id > 0) {
 			$strSql = "SELECT * FROM pcms_element_field WHERE elementId = '" . $this->id . "'";
 			$objFields = ElementField::select($strSql);
 
-			if ($blnRecursive === TRUE) {
+			if ($blnRecursive === true) {
 				foreach ($objFields as $objField) {
 					$objTemplateField = TemplateField::selectByPK($objField->templateFieldId);
 					$objField->fieldtypeid = $objTemplateField->getTypeId();
@@ -173,7 +173,7 @@ class Element extends DBA_Element {
 		return $objReturn;
 	}
 
-	public function clearFields($blnRemovePhysical = FALSE) {
+	public function clearFields($blnRemovePhysical = false) {
 		if ($this->id > 0) {
 			$objFields = $this->getFields();
 
@@ -357,7 +357,7 @@ class Element extends DBA_Element {
 			//*** Save language properties.
 			$objTemps = $this->getLanguageActives();
 			foreach ($objTemps as $key => $value) {
-				$objReturn->setLanguageActive($value, TRUE);
+				$objReturn->setLanguageActive($value, true);
 			}
 
 			//*** Save schedule information.
@@ -382,7 +382,7 @@ class Element extends DBA_Element {
 		return $objDuplicate;
 	}
 
-	public function getValueByTemplateField($intFieldId, $intLanguageId = 0, $blnRaw = FALSE) {
+	public function getValueByTemplateField($intFieldId, $intLanguageId = 0, $blnRaw = false) {
 		$strReturn = NULL;
 
 		if ($this->id > 0) {
@@ -475,7 +475,7 @@ class Element extends DBA_Element {
 			$objTemplate = Template::selectByPK($this->templateId);
 
 			if ($objTemplate->getIsContainer()) {
-				$objReturn = $objTemplate->getSiblings(TRUE);
+				$objReturn = $objTemplate->getSiblings(true);
 
 				//*** Add child templates.
 				$objChildTpls = $objTemplate->getTemplates();
@@ -491,7 +491,7 @@ class Element extends DBA_Element {
 		return $objReturn;
 	}
 
-	public function getElementsByTemplateName($strName, $blnGetOne = FALSE) {
+	public function getElementsByTemplateName($strName, $blnGetOne = false) {
 		global $_CONF;
 
 		$strSql = "SELECT pcms_element.* FROM pcms_element, pcms_template
@@ -510,7 +510,7 @@ class Element extends DBA_Element {
 		return $objElements;
 	}
 
-	public static function getElementsByTemplateId($intId, $blnGetOne = FALSE) {
+	public static function getElementsByTemplateId($intId, $blnGetOne = false) {
 		global $_CONF;
 
 		$strSql = "SELECT pcms_element.* FROM pcms_element, pcms_template
@@ -569,7 +569,7 @@ class Element extends DBA_Element {
 	}
 
 	public function isPage() {
-		$blnReturn = FALSE;
+		$blnReturn = false;
 
 		$objTemplate = Template::selectByPK($this->getTemplateId());
 		if (is_object($objTemplate)) {
@@ -715,9 +715,9 @@ class Element extends DBA_Element {
 	public function clearCache($objFtp = NULL) {
 		if (Setting::getValueByName('caching_enable')) {
 			if (!is_object($objFtp)) {
-				$objFtp = new FTP(Setting::getValueByName('ftp_server'), NULL, NULL, TRUE);
+				$objFtp = new FTP(Setting::getValueByName('ftp_server'), NULL, NULL, true);
 				$objFtp->login(Setting::getValueByName('ftp_username'), Setting::getValueByName('ftp_password'));
-				$objFtp->pasv(TRUE);
+				$objFtp->pasv(true);
 			}
 			$objFtp->delete(Setting::getValueByName('caching_ftp_folder') . "/*_{$this->id}_*");
 
@@ -729,9 +729,9 @@ class Element extends DBA_Element {
 	public function clearZeroCache($objFtp = NULL) {
 		if (Setting::getValueByName('caching_enable')) {
 			if (!is_object($objFtp)) {
-				$objFtp = new FTP(Setting::getValueByName('ftp_server'), NULL, NULL, TRUE);
+				$objFtp = new FTP(Setting::getValueByName('ftp_server'), NULL, NULL, true);
 				$objFtp->login(Setting::getValueByName('ftp_username'), Setting::getValueByName('ftp_password'));
-				$objFtp->pasv(TRUE);
+				$objFtp->pasv(true);
 			}
 			$objFtp->delete(Setting::getValueByName('caching_ftp_folder') . "/*_0_*");
 		}
@@ -790,7 +790,7 @@ class Element extends DBA_Element {
 				$objSchedule->setEndDate(APP_DEFAULT_ENDDATE);
 				$objElement->setSchedule($objSchedule);
 
-				$objElement->setLanguageActive(ContentLanguage::getDefault()->getId(), TRUE);
+				$objElement->setLanguageActive(ContentLanguage::getDefault()->getId(), true);
 			}
 		}
 	}

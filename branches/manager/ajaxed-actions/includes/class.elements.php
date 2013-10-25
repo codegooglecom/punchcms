@@ -55,7 +55,7 @@ class Elements extends DBA__Collection {
 		return $strReturn;
 	}
 
-	public static function getFromParent($lngParentId, $blnRecursive = FALSE, $intElementType = ELM_TYPE_ALL, $intAccountId = 0) {
+	public static function getFromParent($lngParentId, $blnRecursive = false, $intElementType = ELM_TYPE_ALL, $intAccountId = 0) {
 		global $_CONF;
 		$objReturn = NULL;
 
@@ -73,9 +73,9 @@ class Elements extends DBA__Collection {
 			}
 		}
 
-		if ($blnRecursive === TRUE && is_object($objReturn)) {
+		if ($blnRecursive === true && is_object($objReturn)) {
 			foreach ($objReturn as $objElement) {
-				$objElement->getElements(TRUE, $intElementType, $intAccountId);
+				$objElement->getElements(true, $intElementType, $intAccountId);
 			}
 		}
 
@@ -100,14 +100,14 @@ class Elements extends DBA__Collection {
 				$lastSort++;
 				$objElement = Element::selectByPK($value);
 				$objElement->setSort($lastSort);
-				$objElement->save(FALSE);
+				$objElement->save(false);
 			}
 		}
 	}
 
     public static function getPagesArray($obj = NULL) {
     	if ($obj === NULL){
-			$obj = Elements::getFromParent(0, FALSE);
+			$obj = Elements::getFromParent(0, false);
         }
         $elements = $obj;
 
@@ -115,7 +115,7 @@ class Elements extends DBA__Collection {
         	$pageArray[] = array(
             	'name' => $element->getName(),
                 'id' => $element->getId(),
-                'children' => Elements::getPagesArray($element->getElements(FALSE))
+                'children' => Elements::getPagesArray($element->getElements(false))
             );
        	}
 

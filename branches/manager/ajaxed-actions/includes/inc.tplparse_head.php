@@ -82,7 +82,7 @@ function parseHeader($intCatId, $strCommand, $intElmntId) {
 			break;
 	}
 	
-	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
+	if (AnnounceMessage::getMessages(false)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
 		$objTpl->touchBlock("lightbox");
 	}
 	
@@ -353,7 +353,7 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 
 	//*** Announcement script.
 	$strScript .= "function loadAnnouncement() {";
-	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
+	if (AnnounceMessage::getMessages(false)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
 		$strScript .= "objLightbox = new lightbox('index.php?cid=24');";
 		$strScript .= "objLightbox.activate();";
 	}
@@ -389,8 +389,8 @@ function parseMenu($intCatId, $strCommand) {
 		if (is_array($value)) {
 			//*** Nested MyPunch menu items.
 			foreach ($value as $subKey => $subValue) {
-				if ($objLiveUser->checkRight($_CONF['app']['navRights'][$subValue]) == TRUE
-						&& $_CONF['app']['account']->hasProduct(constant('PRODUCT_' . strtoupper($subKey))) == TRUE) {
+				if ($objLiveUser->checkRight($_CONF['app']['navRights'][$subValue]) == true
+						&& $_CONF['app']['account']->hasProduct(constant('PRODUCT_' . strtoupper($subKey))) == true) {
 
 					$objTpl->setCurrentBlock("mypunch.{$key}");
 					$objTpl->setVariable("LABEL_MYPUNCH_" . strtoupper($key), $objLang->get($subKey, "menu"));
@@ -398,7 +398,7 @@ function parseMenu($intCatId, $strCommand) {
 					if ($intCatId == $subValue || in_array($intCatId, $_CONF['app']['ms' . ucfirst($subKey)])) {
 						//*** Render product sub menu.
 						foreach ($_CONF['app']['ms' . ucfirst($subKey)] as $productKey => $productValue) {
-							if ($objLiveUser->checkRight($_CONF['app']['navRights'][$productValue]) == TRUE) {
+							if ($objLiveUser->checkRight($_CONF['app']['navRights'][$productValue]) == true) {
 								$objTpl->setVariable("LABEL_" . strtoupper($subKey) . "_" . strtoupper($productKey), $objLang->get($subKey . ucfirst($productKey), "menu"));
 								$objTpl->setVariable("CID_" . strtoupper($subKey) . "_" . strtoupper($productKey), $productValue);
 
@@ -416,7 +416,7 @@ function parseMenu($intCatId, $strCommand) {
 				}
 			}
 		} else {
-			if ($objLiveUser->checkRight($_CONF['app']['navRights'][$value]) == TRUE) {
+			if ($objLiveUser->checkRight($_CONF['app']['navRights'][$value]) == true) {
 				//*** Plain MyPunch menu items.
 				$objTpl->setVariable("LABEL_MYPUNCH_" . strtoupper($key), $objLang->get("mypunch" . ucfirst($key), "menu"));
 				$objTpl->setVariable("CID_MYPUNCH_" . strtoupper($key), $value);

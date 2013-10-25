@@ -19,7 +19,7 @@
 //   If given, file listing will stop when find given filename. (Useful to open and unzip an exact file)
 // 06/11/2005 (2.21)
 // - Added support to PK00 file format (Packed to Removable Disk) (thanks to Lito [PHPfileNavigator])
-// - Method 'getExtraInfo': If requested file doesn't exist, return FALSE instead of Array()
+// - Method 'getExtraInfo': If requested file doesn't exist, return false instead of Array()
 // 31/10/2005 (2.2)
 // - Removed redundant 'file_name' on centralDirs declaration (thanks to Lito [PHPfileNavigator])
 // - Fixed redeclaration of file_put_contents when in PHP4 (not returning true)

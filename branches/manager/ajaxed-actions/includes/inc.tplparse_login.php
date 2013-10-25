@@ -19,7 +19,7 @@ function parseLogin($intElmntId, $strCommand) {
 		case CMD_PASSREMIND:
 			if (!empty($strUser)) {
 				//*** Mail a new password to the user.
-				if (User::remindPassword($strUser) === TRUE) {
+				if (User::remindPassword($strUser) === true) {
 					//*** Mail was send successfully.
 					$objTpl->setCurrentBlock("info");
 					$objTpl->setVariable("TEXT", $objLang->get("infoReminderSend", "login"));

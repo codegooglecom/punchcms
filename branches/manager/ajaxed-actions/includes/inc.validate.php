@@ -8,12 +8,12 @@ $arrWhitelist = array(
   'name'        => array(
                          'type' => 'string',
                          'maxlength' => 50,
-                         'required' => TRUE
+                         'required' => true
                    ),
   'postal_code' => array(
                          'type' => 'postal',
                          'maxlength' => 10,
-                         'required' => TRUE
+                         'required' => true
                    ),
   'phone'       => array(
                          'type' => 'phone',
@@ -22,7 +22,7 @@ $arrWhitelist = array(
   'email'       => array(
                          'type' => 'email',
                          'maxlength' => 255,
-                         'required' => TRUE
+                         'required' => true
                    ),
   'age'         => array(
                          'type' => 'int',
@@ -36,12 +36,12 @@ $arrWhitelist = array(
                                            'green',
                                            'yellow'
                                      ),
-                        'multiselect' => TRUE
+                        'multiselect' => true
                    ),
   'username'    => array(
                          'type' => 'username',
                          'maxlength' => 16,
-                         'required' => TRUE
+                         'required' => true
                    )
 );
 
@@ -87,7 +87,7 @@ function filterInput($input, $whitelist) {
     		//*** Check "required" option.
     		if (empty($value)) {
     			if (isset($whitelist[$key]['required'])) {
-    				if ($whitelist[$key]['required'] === TRUE) {
+    				if ($whitelist[$key]['required'] === true) {
     					$arrReturn[$key] = NULL;
     				} else {
     					$arrReturn[$key] = "";
@@ -168,7 +168,7 @@ function filterInput($input, $whitelist) {
     	} else {
     		//*** Check "required" option.
     		if (isset($whitelist[$key]['required'])
-    				&& $whitelist[$key]['required'] === TRUE) {
+    				&& $whitelist[$key]['required'] === true) {
     			$arrReturn[$key] = NULL;
     		} else {
     			$arrReturn[$key] = "";

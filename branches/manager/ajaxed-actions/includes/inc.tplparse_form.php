@@ -177,7 +177,7 @@ function parseForms($intElmntId, $strCommand) {
 			break;
 
 		case CMD_REMOVE_FIELD:
-			if (strpos($intElmntId, ',') !== FALSE) {
+			if (strpos($intElmntId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrFields = explode(',', $intElmntId);
 				$objFields = TemplateField::selectByPK($arrFields);
@@ -201,7 +201,7 @@ function parseForms($intElmntId, $strCommand) {
 			break;
 
 		case CMD_DUPLICATE_FIELD:
-			if (strpos($intElmntId, ',') !== FALSE) {
+			if (strpos($intElmntId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrFields = explode(',', $intElmntId);
 				$objFields = TemplateField::selectByPK($arrFields);
@@ -234,32 +234,32 @@ function parseForms($intElmntId, $strCommand) {
 			//*** Post the template form if submitted.
 			if (count($_CLEAN_POST) > 0 && !empty($_CLEAN_POST['dispatch']) && $_CLEAN_POST['dispatch'] == "addForm") {
 				//*** The template form has been posted.
-				$blnError = FALSE;
+				$blnError = false;
 
 				//*** Check sanitized input.
 				if (is_null($_CLEAN_POST["frm_name"])) {
 					$objTpl->setVariable("ERROR_NAME_ON", " error");
 					$objTpl->setVariable("ERROR_NAME", $objLang->get("formName", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_apiname"])) {
 					$objTpl->setVariable("ERROR_APINAME_ON", " error");
 					$objTpl->setVariable("ERROR_APINAME", $objLang->get("commonTypeWord", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_description"])) {
 					$objTpl->setVariable("ERROR_NOTES_ON", " error");
 					$objTpl->setVariable("ERROR_NOTES", $objLang->get("commonTypeText", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["dispatch"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
-				if ($blnError === TRUE) {
+				if ($blnError === true) {
 					//*** Display global error.
 					$objTpl->setVariable("FORM_NAME", "formForm");
 					$objTpl->setVariable("FORM_ISPAGE_VALUE", (isset($_POST["frm_ispage"]) && $_POST["frm_ispage"] == "on") ? "checked=\"checked\"" : "");
@@ -338,44 +338,44 @@ function parseForms($intElmntId, $strCommand) {
 			//*** Post the templateField form if submitted.
 			if (count($_CLEAN_POST) > 0 && !empty($_CLEAN_POST['dispatch']) && $_CLEAN_POST['dispatch'] == "addTemplateField") {
 				//*** The template form has been posted.
-				$blnError = FALSE;
+				$blnError = false;
 
 				//*** Check sanitized input.
 				if (is_null($_CLEAN_POST["frm_required"])) {
 					$objTpl->setVariable("ERROR_REQUIRED_ON", " error");
 					$objTpl->setVariable("ERROR_REQUIRED", $objLang->get("commonTypeText", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_name"])) {
 					$objTpl->setVariable("ERROR_NAME_ON", " error");
 					$objTpl->setVariable("ERROR_NAME", $objLang->get("fieldName", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_apiname"])) {
 					$objTpl->setVariable("ERROR_APINAME_ON", " error");
 					$objTpl->setVariable("ERROR_APINAME", $objLang->get("commonTypeWord", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_description"])) {
 					$objTpl->setVariable("ERROR_NOTES_ON", " error");
 					$objTpl->setVariable("ERROR_NOTES", $objLang->get("commonTypeText", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_field_type"])) {
 					$objTpl->setVariable("ERROR_FIELDTYPE_ON", " error");
 					$objTpl->setVariable("ERROR_FIELDTYPE", $objLang->get("fieldType", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["dispatch"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
-				if ($blnError === TRUE) {
+				if ($blnError === true) {
 					//*** Display global error.
 					$objTpl->setVariable("FORM_NAME", "templateFieldForm");
 					$objTpl->setVariable("FORM_REQUIRED_VALUE", (isset($_POST["frm_required"]) && $_POST["frm_required"] == "on") ? "checked=\"checked\"" : "");

@@ -41,7 +41,7 @@ class DBA_StructureDetails extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "StructureDetails";
 		self::$__table = "pcms_structure_meta";
 

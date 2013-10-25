@@ -50,11 +50,11 @@ class VF_Validator {
 	);
 	
 	public static function validate($checkType, $value) {
-		$blnReturn = FALSE;		
+		$blnReturn = false;		
 
 		if (array_key_exists($checkType, self::$checks)) {
 			if (empty(self::$checks[$checkType])) {
-				$blnReturn = TRUE;
+				$blnReturn = true;
 			} else {
 				switch ($checkType) {
 					case VFORM_CAPTCHA:

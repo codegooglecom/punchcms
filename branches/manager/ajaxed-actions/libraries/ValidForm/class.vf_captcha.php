@@ -39,7 +39,7 @@ class VF_Captcha extends VF_Element {
 		if (is_null($errorHandlers)) $errorHandlers = array();
 		if (is_null($meta)) $meta = array();
 		
-		$this->__id = (strpos($name, "[]") !== FALSE) ? $this->getRandomId($name) : $name;
+		$this->__id = (strpos($name, "[]") !== false) ? $this->getRandomId($name) : $name;
 		$this->__name = $name;
 		$this->__label = $label;
 		$this->__type = $type;
@@ -57,7 +57,7 @@ class VF_Captcha extends VF_Element {
 		$this->__validator = new VF_FieldValidator($name, $type, $validationRules, $errorHandlers, $this->__hint);
 	}
 
-	public function toHtml($submitted = FALSE) {		
+	public function toHtml($submitted = false) {		
 		$strClass = ($this->__validator->getRequired()) ? "vf__required" : "vf__optional";
 		$strOutput = "<div class=\"{$strClass}\">\n";
 								

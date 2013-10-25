@@ -177,7 +177,7 @@ function parseFiles($intElmntId, $strCommand) {
 			break;
 
 		case CMD_REMOVE:
-			if (strpos($intElmntId, ',') !== FALSE) {
+			if (strpos($intElmntId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrElements = explode(',', $intElmntId);
 				$objElements = StorageItem::selectByPK($arrElements);
@@ -208,7 +208,7 @@ function parseFiles($intElmntId, $strCommand) {
 			break;
 
 		case CMD_DUPLICATE:
-			if (strpos($intElmntId, ',') !== FALSE) {
+			if (strpos($intElmntId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrElements = explode(',', $intElmntId);
 				$objElements = StorageItem::selectByPK($arrElements);
@@ -245,17 +245,17 @@ function parseFiles($intElmntId, $strCommand) {
 		case CMD_ADD_FOLDER:
 
 			$objTpl->loadTemplatefile("storageitems.tpl.htm");
-			$blnError = FALSE;
-			$blnIsFolder = FALSE;
+			$blnError = false;
+			$blnIsFolder = false;
 
 			//*** Check the element type (element or folder)
 			if ($strCommand == CMD_EDIT) {
 				$objElement = StorageItem::selectByPK($intElmntId);
 				if (is_object($objElement) && $objElement->getTypeId() == STORAGE_TYPE_FOLDER) {
-					$blnIsFolder = TRUE;
+					$blnIsFolder = true;
 				}
 			} else if ($strCommand == CMD_ADD_FOLDER) {
-				$blnIsFolder = TRUE;
+				$blnIsFolder = true;
 			}
 
 			//*** Check if the rootfolder has been submitted.
@@ -290,26 +290,26 @@ function parseFiles($intElmntId, $strCommand) {
 				if (is_null($_CLEAN_POST["frm_name"]) && $strCommand != CMD_ADD) {
 					$objTpl->setVariable("ERROR_NAME_ON", " error");
 					$objTpl->setVariable("ERROR_NAME", $objLang->get("elementName", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				
 				if((!$blnIsFolder) && empty($_FILES['frm_file_new']['name'][0])){
 					if(empty($_CLEAN_POST['frm_file'])){
 						$objTpl->setVariable("ERROR_FILE_ON", " error");
 						$objTpl->setVariable("ERROR_FILE", $objLang->get("noFile", "formerror"));
-						$blnError = TRUE;
+						$blnError = true;
 					}
 				}
 
 				if (is_null($_CLEAN_POST["frm_description"])) {
 					$objTpl->setVariable("ERROR_NOTES_ON", " error");
 					$objTpl->setVariable("ERROR_NOTES", $objLang->get("commonTypeText", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				//*** TODO: Check element specific fields.
 
-				if ($blnError === TRUE) {
+				if ($blnError === true) {
 					//*** Display global error.
 					$objTpl->setVariable("FORM_NAME_VALUE", $_POST["frm_name"]);
 					$objTpl->setVariable("FORM_NOTES_VALUE", $_POST["frm_description"]);
@@ -368,7 +368,7 @@ function parseFiles($intElmntId, $strCommand) {
 								$localValues = $objMultiUpload->getLocalNames();
 								$arrCleanup = array();
 								foreach ($objMultiUpload->getOriginalNames() as $subkey => $subvalue) {
-									$blnSkipData = FALSE;
+									$blnSkipData = false;
 									
 									if (!is_null($subvalue)) {										
 										if ($strCommand == CMD_ADD) {
@@ -376,7 +376,7 @@ function parseFiles($intElmntId, $strCommand) {
 												//*** Zip file. Extract and add.
 												require_once('dzip/dUnzip2.inc.php');
 												
-												$blnSkipData = TRUE;
+												$blnSkipData = true;
 												
 												$strZip = $_PATHS['upload'] .  $localValues[$subkey];
 												$strTempDir = Account::generateId();
@@ -454,7 +454,7 @@ function parseFiles($intElmntId, $strCommand) {
 								
 								//*** Cleanup zip files.
 								foreach ($arrCleanup as $value) {
-									$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+									$objFtp = new FTP($strServer, NULL, NULL, true);
 									$objFtp->login($strUsername, $strPassword);
 									$strFile = $strRemoteFolder . $value;
 									$objFtp->delete($strFile);
@@ -467,7 +467,7 @@ function parseFiles($intElmntId, $strCommand) {
 												
 						//*** Remove deleted files.
 						if ($strCommand == CMD_EDIT && !empty($strOldFile)) {
-							$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+							$objFtp = new FTP($strServer, NULL, NULL, true);
 							$objFtp->login($strUsername, $strPassword);
 							$strFile = $strRemoteFolder . $strOldFile;
 							$objFtp->delete($strFile);
@@ -516,7 +516,7 @@ function parseFiles($intElmntId, $strCommand) {
 
 			//*** Insert values if action is edit.
 			if ($strCommand == CMD_EDIT) {
-				if ($blnError === FALSE) {
+				if ($blnError === false) {
 					$objTpl->setVariable("FORM_NAME_VALUE", $objElement->getName());
 					$objTpl->setVariable("FORM_NOTES_VALUE", $objElement->getDescription());
 					

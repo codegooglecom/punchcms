@@ -200,6 +200,7 @@ $_LANG['settingsLabel']['section_caching'] = "Caching";
 $_LANG['settingsLabel']['section_aliases'] = "URL Snelkoppelingen";
 $_LANG['settingsLabel']['section_audit'] = "Audit Log";
 $_LANG['settingsLabel']['section_elements'] = "Elementen";
+$_LANG['settingsLabel']['section_general'] = "Algemeen";
 $_LANG['settingsLabel']['ftp_server'] = "Serveradres";
 $_LANG['settingsLabel']['ftp_username'] = "Gebruikersnaam";
 $_LANG['settingsLabel']['ftp_password'] = "Wachtwoord";
@@ -218,6 +219,7 @@ $_LANG['settingsLabel']['audit_enable'] = "Audit log activeren";
 $_LANG['settingsLabel']['audit_rotation'] = "Verwijder logs ouder dan (dagen)";
 $_LANG['settingsLabel']['elmnt_active_state'] = "Nieuwe elementen zijn standaard geactiveerd";
 $_LANG['settingsLabel']['web_server'] = "Website URL";
+$_LANG['settingsLabel']['next_after_save'] = "Bewerk volgende element na opslaan";
 
 //*** Users and groups label definitions.
 $_LANG['usersLabel']['users'] = "Gebruikers";

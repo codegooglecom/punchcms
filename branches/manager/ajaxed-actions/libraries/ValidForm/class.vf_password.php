@@ -30,8 +30,8 @@ require_once('class.vf_element.php');
 
 class VF_Password extends VF_Element {
 
-	public function toHtml($submitted = FALSE) {
-		$blnError = ($submitted && !$this->__validator->validate()) ? TRUE : FALSE;
+	public function toHtml($submitted = false) {
+		$blnError = ($submitted && !$this->__validator->validate()) ? true : false;
 		
 		$strClass = ($this->__validator->getRequired()) ? "vf__required" : "vf__optional";
 		$strClass = ($blnError) ? $strClass . " vf__error" : $strClass;

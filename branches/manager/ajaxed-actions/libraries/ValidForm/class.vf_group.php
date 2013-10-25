@@ -31,8 +31,8 @@ require_once('class.vf_element.php');
 class VF_Group extends VF_Element {
 	protected $__fields = array();
 
-	public function toHtml($submitted = FALSE) {
-		$blnError = ($submitted && !$this->__validator->validate()) ? TRUE : FALSE;
+	public function toHtml($submitted = false) {
+		$blnError = ($submitted && !$this->__validator->validate()) ? true : false;
 		
 		$strClass = ($this->__validator->getRequired()) ? "vf__required" : "vf__optional";
 		$strClass = ($blnError) ? $strClass . " vf__error" : $strClass;		
@@ -69,14 +69,14 @@ class VF_Group extends VF_Element {
 				$name = $this->__name;
 				break;
 			case VFORM_CHECK_LIST:
-				$name = (strpos($this->__name, "[]") === FALSE) ? $this->__name . "[]" : $this->__name;
+				$name = (strpos($this->__name, "[]") === false) ? $this->__name . "[]" : $this->__name;
 				break;
 		}
 		
 		return "objForm.addElement('{$name}', '{$name}', {$strCheck}, {$strRequired}, {$intMaxLength}, {$intMinLength}, '{$this->__validator->getFieldHint()}', '{$this->__validator->getTypeError()}', '{$this->__validator->getRequiredError()}', '{$this->__validator->getHintError()}', '{$strMinLengthError}', '{$strMaxLengthError}');\n";
 	}
 	
-	public function addField($label, $value, $checked = FALSE, $meta = array()) {
+	public function addField($label, $value, $checked = false, $meta = array()) {
 		switch ($this->__type) {
 			case VFORM_RADIO_LIST:
 				$type = "radio";
@@ -84,7 +84,7 @@ class VF_Group extends VF_Element {
 				break;
 			case VFORM_CHECK_LIST:
 				$type = "checkbox";
-				$name = (strpos($this->__name, "[]") === FALSE) ? $this->__name . "[]" : $this->__name;
+				$name = (strpos($this->__name, "[]") === false) ? $this->__name . "[]" : $this->__name;
 				break;
 		}
 	

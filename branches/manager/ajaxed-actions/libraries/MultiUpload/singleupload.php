@@ -29,8 +29,8 @@ class SingleUpload {
 	protected $strOriginalName;
 	protected $strTempName;
 	protected $strUploadFolder;
-	protected $blnReplace = FALSE;
-	protected $blnRename = FALSE;
+	protected $blnReplace = false;
+	protected $blnRename = false;
 	protected $blnCheckFilename;
 	protected $intMaxNameLength = 100;
 	protected $arrExtensions = array();
@@ -38,7 +38,7 @@ class SingleUpload {
 	protected $intHttpError;
 	protected $strLocalName;
 	protected $arrMessages = array();
-	protected $blnCreateFolder = TRUE;
+	protected $blnCreateFolder = true;
 
 	//*** Constructor.
 	public function SingleUpload() {
@@ -153,7 +153,7 @@ class SingleUpload {
 		
 		if (!empty($strLocalName)) {
 			//*** Connect to the server.
-			$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+			$objFtp = new FTP($strServer, NULL, NULL, true);
 			$objRet = $objFtp->login($strUsername, $strPassword);
 			if (!$objRet) {
 				$this->arrMessages[] = "Login failed. Check credentials.";
@@ -161,7 +161,7 @@ class SingleUpload {
 			}
 			
 			//*** Passive mode.
-			$objFtp->pasv(TRUE);
+			$objFtp->pasv(true);
 
 			//*** Transfer file.
 			$objRet = $objFtp->nb_put($strRemoteFolder . $strLocalName, $strUploadFolder . $strLocalName, FTP_BINARY);
@@ -189,7 +189,7 @@ class SingleUpload {
 			$strTargetPath = $this->strUploadFolder . $strTargetFile;
 			if ($this->prepareFolder($this->strUploadFolder)) {
 				if (move_uploaded_file($strTempFile, $strTargetPath)) {
-					if ($this->blnReplace == TRUE) {
+					if ($this->blnReplace == true) {
 						//system("chmod 0777 $strTargetPath"); // maybe you need to use the system command in some cases...
 						chmod($strTargetPath , 0777);
 					} else {
@@ -216,7 +216,7 @@ class SingleUpload {
 	}
 
 	protected function fileExists($strFile) {
-		if ($this->blnReplace == TRUE) {
+		if ($this->blnReplace == true) {
 			return false;
 		} else {
 			if (file_exists($this->strUploadFolder . $strFile)) {
@@ -264,7 +264,7 @@ class SingleUpload {
 				$this->arrMessages[] = $this->getErrorMessage(13);
 				return false;
 			} else {
-				if ($this->blnCheckFilename == TRUE) {
+				if ($this->blnCheckFilename == true) {
 					if (preg_match("/^[a-z0-9_\.]*\.(.){1,5}$/i", strtolower($strName))) {
 						return true;
 					} else {
@@ -308,7 +308,7 @@ class SingleUpload {
 			$strFiltered = "";
 			for ($i = 0; $i < strlen($strReturn); $i++) {
 				$strCurrentChar = substr($strReturn, $i, 1);
-				if (ctype_alnum($strCurrentChar) == TRUE || $strCurrentChar == "_" || $strCurrentChar == ".") {
+				if (ctype_alnum($strCurrentChar) == true || $strCurrentChar == "_" || $strCurrentChar == ".") {
 					$strFiltered .= $strCurrentChar;
 				}
 			}

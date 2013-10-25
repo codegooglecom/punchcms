@@ -10,7 +10,7 @@
 class TemplateField extends DBA_TemplateField {
 	private $objValueCollection;
 	
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "TemplateField";
 		self::$__table = "pcms_template_field";
 		

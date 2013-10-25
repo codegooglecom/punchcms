@@ -31,8 +31,8 @@ require_once('class.vf_element.php');
 class VF_Select extends VF_Element {
 	protected $__options = array();
 
-	public function toHtml($submitted = FALSE) {
-		$blnError = ($submitted && !$this->__validator->validate()) ? TRUE : FALSE;
+	public function toHtml($submitted = false) {
+		$blnError = ($submitted && !$this->__validator->validate()) ? true : false;
 		
 		$strClass = ($this->__validator->getRequired()) ? "vf__required" : "vf__optional";
 		$strClass = ($blnError) ? $strClass . " vf__error" : $strClass;		
@@ -67,7 +67,7 @@ class VF_Select extends VF_Element {
 		return "objForm.addElement('{$this->__id}', '{$this->__name}', {$strCheck}, {$strRequired}, {$intMaxLength}, {$intMinLength}, '{$this->__validator->getFieldHint()}', '{$this->__validator->getTypeError()}', '{$this->__validator->getRequiredError()}', '{$this->__validator->getHintError()}', '{$strMinLengthError}', '{$strMaxLengthError}');\n";
 	}
 	
-	public function addField($value, $label, $selected = FALSE) {
+	public function addField($value, $label, $selected = false) {
 		$objOption = new VF_SelectOption($value, $label, $selected);
 		array_push($this->__options, $objOption);
 		

@@ -42,11 +42,11 @@ class ElementPermission extends DBA_ElementPermission {
 		return $objReturn;
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "ElementPermission";
 		self::$__table = "pcms_element_permission";
 		
-		$blnReturn = TRUE;
+		$blnReturn = true;
 		
 		//*** Save the user permissions.
 		if (is_array($this->getUserId()) && count($this->getUserId()) > 0) {

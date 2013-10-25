@@ -36,7 +36,7 @@ class VF_FieldValidator extends ClassDynamic {
 	protected $__validvalue;
 	protected $__minlength;
 	protected $__maxlength;
-	protected $__required = FALSE;
+	protected $__required = false;
 	protected $__maxfiles = 1;
 	protected $__maxsize = 3000;
 	protected $__filetypes;
@@ -82,10 +82,10 @@ class VF_FieldValidator extends ClassDynamic {
 		
 		//*** Check "required" option.
 		if (is_array($value)) {
-			$blnEmpty = TRUE;
+			$blnEmpty = true;
 			foreach ($value as $valueItem) {
 				if (!empty($valueItem)) {
-					$blnEmpty = FALSE;
+					$blnEmpty = false;
 					break;
 				}
 			}
@@ -96,7 +96,7 @@ class VF_FieldValidator extends ClassDynamic {
 					$this->__error = $this->__requirederror;
 				} else {
 					$this->__validvalue = "";
-					return TRUE;
+					return true;
 				}
 			}
 		} else {
@@ -106,7 +106,7 @@ class VF_FieldValidator extends ClassDynamic {
 					$this->__error = $this->__requirederror;
 				} else {
 					$this->__validvalue = "";
-					return TRUE;
+					return true;
 				}
 			}
 		}
@@ -168,7 +168,7 @@ class VF_FieldValidator extends ClassDynamic {
 			}
 		}
 		
-		return (is_null($this->__validvalue)) ? FALSE : TRUE;
+		return (is_null($this->__validvalue)) ? false : true;
 	}
 	
 	public function getCheck() {

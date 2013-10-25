@@ -40,7 +40,7 @@ class DBA_ElementPermission extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "ElementPermission";
 		self::$__table = "pcms_element_permission";
 

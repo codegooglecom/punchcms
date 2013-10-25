@@ -103,7 +103,7 @@ oParser.ParseEMailParams = function(sParams)
 	return oEMailParams ;
 }
 
-// This method returns either an object containing the email info, or FALSE
+// This method returns either an object containing the email info, or false
 // if the parameter is not an email link.
 oParser.ParseEMailUri = function( sUrl )
 {

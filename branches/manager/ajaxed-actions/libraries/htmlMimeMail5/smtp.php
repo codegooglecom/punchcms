@@ -16,7 +16,7 @@
 * along with htmlMimeMail5; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 * 
-* © Copyright 2005 Richard Heyes
+* ï¿½ Copyright 2005 Richard Heyes
 */
 
 define('SMTP_STATUS_NOT_CONNECTED', 1, true);
@@ -49,7 +49,7 @@ class smtp
     *   helo    - What to send as the HELO command		Default: localhost
     *             (typically the hostname of the
     *             machine this script runs on)
-    *   auth    - Whether to use basic authentication	Default: FALSE
+    *   auth    - Whether to use basic authentication	Default: false
     *   user    - Username for authentication			Default: <blank>
     *   pass    - Password for authentication			Default: <blank>
     *   timeout - The timeout in seconds for the call	Default: 5
@@ -59,15 +59,15 @@ class smtp
     {
 
         if(!defined('CRLF'))
-            define('CRLF', "\r\n", TRUE);
+            define('CRLF', "\r\n", true);
 
-        $this->authenticated = FALSE;
+        $this->authenticated = false;
         $this->timeout       = 5;
         $this->status        = SMTP_STATUS_NOT_CONNECTED;
         $this->host          = 'localhost';
         $this->port          = 25;
         $this->helo          = 'localhost';
-        $this->auth          = FALSE;
+        $this->auth          = false;
         $this->user          = '';
         $this->pass          = '';
         $this->errors        = array();
@@ -106,7 +106,7 @@ class smtp
                 return $this->auth ? $this->ehlo() : $this->helo();
             } else {
                 $this->errors[] = 'Failed to connect to server: '.$errstr;
-                return FALSE;
+                return false;
             }
         }
     }
@@ -167,7 +167,7 @@ class smtp
             return $result;
         } else {
             $this->errors[] = 'Not connected!';
-            return FALSE;
+            return false;
         }
     }
     
@@ -345,7 +345,7 @@ class smtp
         $loops  = 0;
 
         if(is_resource($this->connection)){
-            while((strpos($return, CRLF) === FALSE OR substr($line,3,1) !== ' ') AND $loops < 100){
+            while((strpos($return, CRLF) === false OR substr($line,3,1) !== ' ') AND $loops < 100){
                 $line    = fgets($this->connection, 512);
                 $return .= $line;
                 $loops++;

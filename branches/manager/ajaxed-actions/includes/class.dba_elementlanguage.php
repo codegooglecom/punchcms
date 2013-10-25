@@ -41,7 +41,7 @@ class DBA_ElementLanguage extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "ElementLanguage";
 		self::$__table = "pcms_element_language";
 

@@ -6,7 +6,7 @@ class InsertFeedElement {
 	private $__permissions = NULL;
 	private $__defaultLanguage = NULL;
 	private $__fields = array();
-	private $active = FALSE;
+	private $active = false;
 	private $name = "";
 	private $username = "";
 	private $alias = "";
@@ -33,7 +33,7 @@ class InsertFeedElement {
 		$this->__template = Template::selectByName($strApiName);
 	}
 
-	public function addField($intTemplateFieldId, $varValue, $intLanguageId = NULL, $blnCascade = FALSE) {
+	public function addField($intTemplateFieldId, $varValue, $intLanguageId = NULL, $blnCascade = false) {
 		if (is_null($intLanguageId)) $intLanguageId = $this->__defaultLanguage;
 
 		$arrField = (array_key_exists($intTemplateFieldId, $this->__fields)) ? $this->__fields[$intTemplateFieldId] : array();
@@ -50,7 +50,7 @@ class InsertFeedElement {
 
 			if ($blnCascade) {
 				//*** Set the default language.
-				$arrValue = array('value' => $varValue, 'cascade' => FALSE);
+				$arrValue = array('value' => $varValue, 'cascade' => false);
 				$arrField[$this->__defaultLanguage] = $arrValue;
 			}
 		} else {
@@ -81,7 +81,7 @@ class InsertFeedElement {
 			$objElement->setSort($this->sort);
 			$objElement->setTypeId(ELM_TYPE_LOCKED);
 			$objElement->setTemplateId($this->__template->getId());
-			$objElement->save(TRUE, FALSE);
+			$objElement->save(true, false);
 			
 			//*** Activate default schedule.
 			$objSchedule = new ElementSchedule();
@@ -113,15 +113,15 @@ class InsertFeedElement {
 						case FIELD_TYPE_IMAGE:
 							//*** Upload file.
 							$arrPath = parse_url($arrValue['value']);
-							if ($arrPath !== FALSE) {
+							if ($arrPath !== false) {
 								$strFile = @file_get_contents(str_replace(" ", "%20", $arrValue['value']));
-								if ($strFile !== FALSE) {
+								if ($strFile !== false) {
 									$strOriginalName = array_pop(explode("/", $arrPath['path']));
 									$strLocalValue = ImageField::filename2LocalName($strOriginalName);
 									$objImageField = new ImageField($intTemplateFieldId);
 									$arrSettings = $objImageField->getSettings();
 
-									if (file_put_contents($_PATHS['upload'] . $strOriginalName, $strFile) !== FALSE) {
+									if (file_put_contents($_PATHS['upload'] . $strOriginalName, $strFile) !== false) {
 										if (count($arrSettings) > 1) {
 											foreach ($arrSettings as $key => $arrSetting) {																	
 												$strFileName = FileIO::add2Base($strLocalValue, $arrSetting['key']);
@@ -138,9 +138,9 @@ class InsertFeedElement {
 															$arrSetting['height'],
 															$arrSetting['scale'],
 															$intQuality,
-															TRUE,
+															true,
 															NULL,
-															FALSE,
+															false,
 															$arrSetting['grayscale']);		
 													}
 												
@@ -178,9 +178,9 @@ class InsertFeedElement {
 														$arrSettings[0]['height'],
 														$arrSettings[0]['scale'],
 														$intQuality,
-														TRUE,
+														true,
 														NULL,
-														FALSE,
+														false,
 														$arrSettings[0]['grayscale']);				
 											
 													//*** Move file to remote server.
@@ -219,7 +219,7 @@ class InsertFeedElement {
 					$objField->setValueObject($objValue);
 					
 					//*** Activate the language.
-					$objElement->setLanguageActive($intLanguage, TRUE);
+					$objElement->setLanguageActive($intLanguage, true);
 				}
 			}
 

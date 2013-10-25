@@ -37,7 +37,7 @@ class VF_Area extends ClassDynamic {
 	protected $__requiredstyle;
 	protected $__fields = array();
 	
-	public function __construct($label, $active = FALSE, $name = NULL, $checked = FALSE, $meta = array()) {
+	public function __construct($label, $active = false, $name = NULL, $checked = false, $meta = array()) {
 		$this->__label = $label;
 		$this->__active = $active;
 		$this->__name = $name;
@@ -115,7 +115,7 @@ class VF_Area extends ClassDynamic {
 		return $objField;
 	}
 	
-	public function toHtml($submitted = FALSE) {
+	public function toHtml($submitted = false) {
 		$value = ValidForm::get($this->__name);
 		$strChecked = ($this->__active && $this->__checked && is_null($value) && !$submitted) ? " checked=\"checked\"" : "";
 		$strChecked = ($this->__active && !empty($value)) ? " checked=\"checked\"" : $strChecked;
@@ -132,7 +132,7 @@ class VF_Area extends ClassDynamic {
 		if (!empty($this->__label)) $strOutput .= "<legend>{$label}</legend>\n";
 				
 		foreach ($this->__fields as $field) {
-			$submitted = ($this->__active && empty($value)) ? FALSE : $submitted;
+			$submitted = ($this->__active && empty($value)) ? false : $submitted;
 			$strOutput .= $field->toHtml($submitted);
 		}
 		
@@ -161,23 +161,23 @@ class VF_Area extends ClassDynamic {
 	
 	public function getValue() {
 		$value = ValidForm::get($this->__name);
-		return (($this->__active && !empty($value)) || !$this->__active) ? TRUE : FALSE;
+		return (($this->__active && !empty($value)) || !$this->__active) ? true : false;
 	}
 	
 	public function hasFields() {
-		return (count($this->__fields) > 0) ? TRUE : FALSE;
+		return (count($this->__fields) > 0) ? true : false;
 	}
 	
 	private function __validate() {
 		$value = ValidForm::get($this->__name);
-		$blnReturn = TRUE;
+		$blnReturn = true;
 		
 		if ($this->__active && empty($value)) {
 			//*** Not active;
 		} else {
 			foreach ($this->fields as $field) {
 				if (!$field->isValid()) {
-					$blnReturn = FALSE;
+					$blnReturn = false;
 					break;
 				}
 			}

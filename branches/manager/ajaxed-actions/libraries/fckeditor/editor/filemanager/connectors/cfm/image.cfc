@@ -246,8 +246,8 @@
 	<cfargument name="outputFile" required="yes" type="string">
 	<cfargument name="newWidth" required="yes" type="numeric">
 	<cfargument name="newHeight" required="yes" type="numeric">
-	<cfargument name="preserveAspect" required="no" type="boolean" default="FALSE">
-	<cfargument name="cropToExact" required="no" type="boolean" default="FALSE">
+	<cfargument name="preserveAspect" required="no" type="boolean" default="false">
+	<cfargument name="cropToExact" required="no" type="boolean" default="false">
 	<cfargument name="jpegCompression" required="no" type="numeric" default="#variables.defaultJpegCompression#">
 
 	<cfset var retVal = StructNew()>
@@ -1093,7 +1093,7 @@
 		if (fontDetails.fontFile neq "")
 		{
 			font_stream.init(arguments.fontDetails.fontFile);
-			font = font.createFont(font.TRUETYPE_FONT, font_stream);
+			font = font.createFont(font.trueTYPE_FONT, font_stream);
 			font = font.deriveFont(javacast("float",arguments.fontDetails.size));
 		} else {
 			font.init(fontDetails.fontName, evaluate(fontDetails.style), fontDetails.size);

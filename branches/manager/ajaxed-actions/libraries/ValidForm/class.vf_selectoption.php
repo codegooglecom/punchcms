@@ -33,7 +33,7 @@ class VF_SelectOption extends ClassDynamic {
 	protected $__value;
 	protected $__selected;
 	
-	public function __construct($label, $value, $selected = FALSE) {
+	public function __construct($label, $value, $selected = false) {
 		$this->__label = $label;
 		$this->__value = $value;
 		$this->__selected = $selected;

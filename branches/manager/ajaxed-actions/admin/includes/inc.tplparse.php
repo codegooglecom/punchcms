@@ -300,8 +300,8 @@ function parseAccount($eId, $cmd) {
 			break;		
 		case CMD_IMPORT:
 			$strDispatch		= Request::get('dispatch');
-			$blnOverwrite		= (Request::get('frm_import_overwrite') == "true") ? TRUE : FALSE;
-			$blnKeepSettings	= (Request::get('frm_import_keep_settings') == "true") ? TRUE : FALSE;
+			$blnOverwrite		= (Request::get('frm_import_overwrite') == "true") ? true : false;
+			$blnKeepSettings	= (Request::get('frm_import_keep_settings') == "true") ? true : false;
 						
 			if ($strDispatch == "importAccount") {
 				if (empty($_FILES['frm_file']['name'])) {
@@ -514,7 +514,7 @@ function parseFooter($cId, $eId) {
 		$_CONF;
 
 	$objTpl = new HTML_Template_IT($_PATHS['templates']);
-	$objTpl->loadTemplatefile("footer.tpl.htm", FALSE, FALSE);
+	$objTpl->loadTemplatefile("footer.tpl.htm", false, false);
 
 	//*** Return the output.
 	return $objTpl->get();

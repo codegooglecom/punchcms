@@ -28,7 +28,7 @@ class ElementFieldBigText extends DBA_ElementFieldBigText {
 		return $objReturn;
 	}
 
-	public function delete($blnRemovePhysical = FALSE) {
+	public function delete($blnRemovePhysical = false) {
 		self::$__object = "ElementFieldBigText";
 		self::$__table = "pcms_element_field_bigtext";
 
@@ -48,9 +48,9 @@ class ElementFieldBigText extends DBA_ElementFieldBigText {
 						$strRemoteFolder = Setting::getValueByName('ftp_remote_folder');
 
 						//*** Remove deleted files.
-						$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+						$objFtp = new FTP($strServer, NULL, NULL, true);
 						$objFtp->login($strUsername, $strPassword);
-						$objFtp->pasv(TRUE);
+						$objFtp->pasv(true);
 						$arrValues = explode("\n", $this->value);
 						foreach ($arrValues as $value) {
 							if (!empty($value)) {

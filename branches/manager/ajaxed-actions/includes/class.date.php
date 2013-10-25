@@ -32,7 +32,7 @@ class Date {
 		if ($strDateTime != "0000-00-00 00:00:00" && !empty($strDateTime)) {
 			$strTStamp = strtotime($strDateTime);
 
-			if ($strTStamp !== -1 || $strTStamp !== FALSE) {
+			if ($strTStamp !== -1 || $strTStamp !== false) {
 				$strReturn = strftime($strFormat, $strTStamp);
 			}
 		} else {
@@ -54,7 +54,7 @@ class Date {
 			$strTStamp = strtotime($strDateTime);
 		}
 
-		if ($strTStamp !== -1 || $strTStamp !== FALSE) {
+		if ($strTStamp !== -1 || $strTStamp !== false) {
 			$strReturn = strftime($strFormat, $strTStamp);
 		}
 

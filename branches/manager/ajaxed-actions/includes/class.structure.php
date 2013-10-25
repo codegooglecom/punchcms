@@ -10,7 +10,7 @@ class Structure extends DBA_Structure {
 	}
 	
 	public static function hasSelect($intId) {
-		$blnReturn = FALSE;
+		$blnReturn = false;
 		$objDoc = Structure::getXmlDoc($intId);
 		
 		foreach ($objDoc->childNodes as $rootNode) {
@@ -19,7 +19,7 @@ class Structure extends DBA_Structure {
 				foreach ($rootNode->childNodes as $selectsNode) {
 					if ($selectsNode->nodeName == "selects") {
 						foreach ($selectsNode->childNodes as $selectNode) {
-							$blnReturn = TRUE;
+							$blnReturn = true;
 							break 3;
 						}
 					}
@@ -201,8 +201,8 @@ class Structure extends DBA_Structure {
 		
 		//*** Init DOM object.
 		$objDoc = new DOMDocument("1.0", "UTF-8");
-		$objDoc->formatOutput = FALSE;
-		$objDoc->preserveWhiteSpace = TRUE;
+		$objDoc->formatOutput = false;
+		$objDoc->preserveWhiteSpace = true;
 		if (is_file($strXml)) {
 			$objDoc->load($strXml);
 		} else {

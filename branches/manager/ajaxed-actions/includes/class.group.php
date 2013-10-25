@@ -130,7 +130,7 @@ class Group {
 
 			//*** Filter the subgroups into a flat array.
 			if (isset($objSubGroups[$intGroupId]['subgroups'])) {
-				$objDirectSubGroups = self::filterSubGroups($objSubGroups[$intGroupId]['subgroups'], FALSE);
+				$objDirectSubGroups = self::filterSubGroups($objSubGroups[$intGroupId]['subgroups'], false);
 			}
 
 			//*** Render contained subgroups in the first level.
@@ -338,12 +338,12 @@ class Group {
 		return $arrReturn;
 	}
 
-	private static function filterSubGroups($arrGroups, $blnRecursive = TRUE) {
+	private static function filterSubGroups($arrGroups, $blnRecursive = true) {
 		$arrReturn = array();
 
 		foreach ($arrGroups as $key => $value) {
 			if (is_numeric($key)) {
-				if (isset($value['subgroups']) && $blnRecursive == TRUE) {
+				if (isset($value['subgroups']) && $blnRecursive == true) {
 					$arrReturn = self::filterSubGroups($value['subgroups'], $blnRecursive);
 				}
 
@@ -357,11 +357,11 @@ class Group {
 	}
 
 	private static function hasSubGroup($arrGroups, $intGroupId) {
-		$blnReturn = FALSE;
+		$blnReturn = false;
 
 		foreach ($arrGroups as $key => $value) {
 			if (isset($value['group_id']) && $value['group_id'] == $intGroupId) {
-				$blnReturn = TRUE;
+				$blnReturn = true;
 			}
 		}
 
@@ -369,16 +369,16 @@ class Group {
 	}
 
 	private static function deep_in_array($arrHay, $needleValue, $needleKey = "") {
-		$blnReturn = FALSE;
+		$blnReturn = false;
 
 		foreach($arrHay as $key => $value) {
 			if (is_array($value)) {
 				$blnReturn = self::deep_in_array($value, $needleValue, $needleKey);
 			} else {
 				if (!empty($needleKey)) {
-					if ($needleKey == $key && $needleValue == $value) $blnReturn = TRUE;
+					if ($needleKey == $key && $needleValue == $value) $blnReturn = true;
 				} else {
-					if ($needleValue == $value) $blnReturn = TRUE;
+					if ($needleValue == $value) $blnReturn = true;
 				}
 			}
 		}

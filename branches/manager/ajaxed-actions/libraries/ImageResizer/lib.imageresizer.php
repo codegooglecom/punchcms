@@ -51,7 +51,7 @@ set_time_limit(60*60);
 class ImageResizer {
 
 	//*** Public Methods.
-	public static function resize($strFileName = "", $intWidth = 100, $intHeight = 75, $intTemplate = RESIZE_EXACT, $intQuality = 75, $blnOverwrite = FALSE, $strName = "", $blnToScreen = FALSE, $blnGrayscale = FALSE) {
+	public static function resize($strFileName = "", $intWidth = 100, $intHeight = 75, $intTemplate = RESIZE_EXACT, $intQuality = 75, $blnOverwrite = false, $strName = "", $blnToScreen = false, $blnGrayscale = false) {
 		$strReturn = $strName;
 		if (empty($strReturn)) {
 			if (!$blnOverwrite) {

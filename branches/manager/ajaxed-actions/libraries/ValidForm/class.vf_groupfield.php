@@ -37,7 +37,7 @@ class VF_GroupField extends VF_Element {
 	protected $__checked;
 	protected $__meta;
 	
-	public function __construct($id, $name, $type, $label, $value, $checked = FALSE, $meta = array()) {
+	public function __construct($id, $name, $type, $label, $value, $checked = false, $meta = array()) {
 		$this->__id = $id;
 		$this->__name = $name;
 		$this->__type = $type;
@@ -47,7 +47,7 @@ class VF_GroupField extends VF_Element {
 		$this->__meta = $meta;
 	}
 	
-	public function toHtml($value = NULL, $submitted = FALSE) {
+	public function toHtml($value = NULL, $submitted = false) {
 		if (is_array($value)) {
 			foreach ($value as $valueItem) {
 				if ($valueItem == $this->__value) {

@@ -10,7 +10,7 @@
 
 class Templates extends DBA__Collection {
 
-	public static function getFromParent($lngParentId, $blnRecursive = FALSE, $intAccountId = 0) {
+	public static function getFromParent($lngParentId, $blnRecursive = false, $intAccountId = 0) {
 		global $_CONF;
 		$objReturn = NULL;
 
@@ -28,9 +28,9 @@ class Templates extends DBA__Collection {
 			}
 		}
 
-		if ($blnRecursive === TRUE && is_object($objReturn)) {
+		if ($blnRecursive === true && is_object($objReturn)) {
 			foreach ($objReturn as $objTemplate) {
-				$objTemplate->getTemplates(TRUE);
+				$objTemplate->getTemplates(true);
 			}
 		}
 
@@ -57,7 +57,7 @@ class Templates extends DBA__Collection {
 				$lastSort++;
 				$objField = TemplateField::selectByPK($value);
 				$objField->setSort($lastSort);
-				$objField->save(FALSE);
+				$objField->save(false);
 			}
 		}
 	}

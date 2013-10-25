@@ -32,9 +32,9 @@ function parsePages($intElmntId, $strCommand) {
 
 			if (is_object($objElement) || empty($intElmntId)) {
 				if (empty($intElmntId)) {
-					$objElements = Elements::getFromParent(0, FALSE);
+					$objElements = Elements::getFromParent(0, false);
 				} else {
-					$objElements = $objElement->getElements(FALSE);
+					$objElements = $objElement->getElements(false);
 				}
 
 				if (is_object($objElements)) {
@@ -248,7 +248,7 @@ function parsePages($intElmntId, $strCommand) {
 			break;
 
 		case CMD_REMOVE:
-			if (strpos($intElmntId, ',') !== FALSE) {
+			if (strpos($intElmntId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrElements = explode(',', $intElmntId);
 				$objElements = Element::selectByPK($arrElements);
@@ -279,7 +279,7 @@ function parsePages($intElmntId, $strCommand) {
 			break;
 
 		case CMD_DUPLICATE:
-			if (strpos($intElmntId, ',') !== FALSE) {
+			if (strpos($intElmntId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrElements = explode(',', $intElmntId);
 				$objElements = Element::selectByPK($arrElements);
@@ -321,7 +321,7 @@ function parsePages($intElmntId, $strCommand) {
 
 		case CMD_ACTIVATE:
 		case CMD_DEACTIVATE:
-			if (strpos($intElmntId, ',') !== FALSE) {
+			if (strpos($intElmntId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrElements = explode(',', $intElmntId);
 				$objElements = Element::selectByPK($arrElements);
@@ -367,22 +367,22 @@ function parsePages($intElmntId, $strCommand) {
 		case CMD_ADD_DYNAMIC:
 
 			$objTpl->loadTemplatefile("elementfields.tpl.htm");
-			$blnError = FALSE;
-			$blnIsFolder = FALSE;
-			$blnIsDynamic = FALSE;
+			$blnError = false;
+			$blnIsFolder = false;
+			$blnIsDynamic = false;
 
 			//*** Check the element type (element or folder)
 			if ($strCommand == CMD_EDIT) {
 				$objElement = Element::selectByPK($intElmntId);
 				if (is_object($objElement) && $objElement->getTypeId() == ELM_TYPE_FOLDER) {
-					$blnIsFolder = TRUE;
+					$blnIsFolder = true;
 				} else if (is_object($objElement) && $objElement->getTypeId() == ELM_TYPE_DYNAMIC) {
-					$blnIsDynamic = TRUE;
+					$blnIsDynamic = true;
 				}
 			} else if ($strCommand == CMD_ADD_FOLDER) {
-				$blnIsFolder = TRUE;
+				$blnIsFolder = true;
 			} else if ($strCommand == CMD_ADD_DYNAMIC) {
-				$blnIsDynamic = TRUE;
+				$blnIsDynamic = true;
 			}
 
 			//*** Check if the rootfolder has been submitted.
@@ -431,14 +431,14 @@ function parsePages($intElmntId, $strCommand) {
 				if (is_null($_CLEAN_POST["frm_active"])) {
 					$objTpl->setVariable("ERROR_ACTIVE_ON", " error");
 					$objTpl->setVariable("ERROR_ACTIVE", $objLang->get("active", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if ($strCommand == CMD_ADD_FOLDER || $blnIsFolder) {
 					if (is_null($_CLEAN_POST["frm_ispage"])) {
 						$objTpl->setVariable("ERROR_ISPAGE_ON", " error");
 						$objTpl->setVariable("ERROR_ISPAGE", $objLang->get("isPage", "formerror"));
-						$blnError = TRUE;
+						$blnError = true;
 					}
 				}
 
@@ -446,62 +446,62 @@ function parsePages($intElmntId, $strCommand) {
 					if (is_null($_CLEAN_POST["frm_feed"])) {
 						$objTpl->setVariable("ERROR_FEED_ON", " error");
 						$objTpl->setVariable("ERROR_FEED", $objLang->get("feed", "formerror"));
-						$blnError = TRUE;
+						$blnError = true;
 					}
 
 					if (is_null($_CLEAN_POST["frm_feedpath"])) {
 						$objTpl->setVariable("ERROR_FEEDPATH_ON", " error");
 						$objTpl->setVariable("ERROR_FEEDPATH", $objLang->get("feedPath", "formerror"));
-						$blnError = TRUE;
+						$blnError = true;
 					}
 
 					if (is_null($_CLEAN_POST["frm_maxitems"])) {
 						$objTpl->setVariable("ERROR_MAXITEMS_ON", " error");
 						$objTpl->setVariable("ERROR_MAXITEMS", $objLang->get("maxItems", "formerror"));
-						$blnError = TRUE;
+						$blnError = true;
 					}
 				}
 
 				if (is_null($_CLEAN_POST["frm_name"])) {
 					$objTpl->setVariable("ERROR_NAME_ON", " error");
 					$objTpl->setVariable("ERROR_NAME", $objLang->get("templateName", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_apiname"])) {
 					$objTpl->setVariable("ERROR_APINAME_ON", " error");
 					$objTpl->setVariable("ERROR_APINAME", $objLang->get("commonTypeWord", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				/*
 				if (is_null($_CLEAN_POST["frm_alias"])) {
 					$objTpl->setVariable("ERROR_ALIAS_ON", " error");
 					$objTpl->setVariable("ERROR_ALIAS", $objLang->get("commonTypeWord", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				*/
 
 				if (is_null($_CLEAN_POST["frm_template"]) && !$blnIsFolder) {
 					$objTpl->setVariable("ERROR_TEMPLATE_ON", " error");
 					$objTpl->setVariable("ERROR_TEMPLATE", $objLang->get("commonTypeText", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_description"])) {
 					$objTpl->setVariable("ERROR_NOTES_ON", " error");
 					$objTpl->setVariable("ERROR_NOTES", $objLang->get("commonTypeText", "formerror"));
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["dispatch"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				//*** Check element specific fields.
 				//*** TODO!!
 
-				if ($blnError === TRUE) {
+				if ($blnError === true) {
 					//*** Display global error.
 					if ($blnIsFolder) {
 						$objTpl->setVariable("FORM_ISPAGE_VALUE", (isset($_POST["frm_ispage"]) && $_POST["frm_ispage"] == "on") ? "checked=\"checked\"" : "");
@@ -649,7 +649,7 @@ function parsePages($intElmntId, $strCommand) {
 					//*** Handle element values.
 					if (!$blnIsFolder) {
 						//*** Cache and clear values.
-						$objCachedFields = $objElement->getFields(TRUE);
+						$objCachedFields = $objElement->getFields(true);
 						$objElement->clearFields();
 						$objElement->clearLanguages();
 
@@ -657,9 +657,9 @@ function parsePages($intElmntId, $strCommand) {
 						$arrActives = explode(",", request("language_actives"));
 						$objContentLangs = ContentLanguage::select();
 						foreach ($objContentLangs as $objContentLanguage) {
-							$blnActive = (in_array($objContentLanguage->getId(), $arrActives)) ? TRUE : FALSE;
+							$blnActive = (in_array($objContentLanguage->getId(), $arrActives)) ? true : false;
 							$objElement->setLanguageActive($objContentLanguage->getId(), $blnActive);
-                            if ($strCommand == CMD_ADD) $objElement->setLanguageActive($objContentLanguage->getId(), TRUE);
+                            if ($strCommand == CMD_ADD) $objElement->setLanguageActive($objContentLanguage->getId(), true);
 						}
 						//*** Cache to handsome array.
 						$arrFieldCache = array();
@@ -692,7 +692,7 @@ function parsePages($intElmntId, $strCommand) {
 									$objContentLangs = ContentLanguage::select();
 									foreach ($objContentLangs as $objContentLanguage) {
 										//*** Insert the value by language.
-										(in_array($objContentLanguage->getId(), $arrCascades)) ? $blnCascade = TRUE : $blnCascade = FALSE;
+										(in_array($objContentLanguage->getId(), $arrCascades)) ? $blnCascade = true : $blnCascade = false;
 										$strValue = request("efv_{$intTemplateFieldId}_{$objContentLanguage->getId()}");
 
 										//*** Check for certain type requirements.
@@ -736,7 +736,7 @@ function parsePages($intElmntId, $strCommand) {
 																			//*** Check if the image has the right size.
 																			$blnResize = true;
 																			$arrSize = getimagesize($_PATHS['upload'] . $strFileName);
-																			if ($arrSize !== FALSE) {
+																			if ($arrSize !== false) {
 																				if ($arrSize[0] == $arrSetting['width'] && $arrSize[1] == $arrSetting['height']) {
 																					//*** Skip image resize.
 																					$blnResize = false;
@@ -752,9 +752,9 @@ function parsePages($intElmntId, $strCommand) {
 																					$arrSetting['height'],
 																					$arrSetting['scale'],
 																					$intQuality,
-																					TRUE,
+																					true,
 																					NULL,
-																					FALSE,
+																					false,
 																					$arrSetting['grayscale']);
 																			}
 																		}
@@ -789,7 +789,7 @@ function parsePages($intElmntId, $strCommand) {
 																		//*** Check if the image has the right size.
 																		$blnResize = true;
 																		$arrSize = getimagesize($_PATHS['upload'] . $strFileName);
-																		if ($arrSize !== FALSE) {
+																		if ($arrSize !== false) {
 																			if ($arrSize[0] == $arrSettings[0]['width'] && $arrSize[1] == $arrSettings[0]['height']) {
 																				//*** Skip image resize.
 																				$blnResize = false;
@@ -804,9 +804,9 @@ function parsePages($intElmntId, $strCommand) {
 																				$arrSettings[0]['height'],
 																				$arrSettings[0]['scale'],
 																				$intQuality,
-																				TRUE,
+																				true,
 																				NULL,
-																				FALSE,
+																				false,
 																				$arrSettings[0]['grayscale']);
 																		}
 
@@ -863,7 +863,7 @@ function parsePages($intElmntId, $strCommand) {
 														$localValues = $objMultiUpload->getLocalNames();
 
 														//*** Any image manipulation?
-														$blnResize = FALSE;
+														$blnResize = false;
 														$objImageField = new ImageField($intTemplateFieldId);
 														$arrSettings = $objImageField->getSettings();
 
@@ -871,7 +871,7 @@ function parsePages($intElmntId, $strCommand) {
 																!empty($arrSettings[0]['width']) ||
 																!empty($arrSettings[0]['height']))) {
 
-															$blnResize = TRUE;
+															$blnResize = true;
 														}
 
 														foreach ($objMultiUpload->getOriginalNames() as $subkey => $subvalue) {
@@ -881,7 +881,7 @@ function parsePages($intElmntId, $strCommand) {
 																//*** Check if the image has the right size.
 																if ($blnResize) {
 																	$arrSize = getimagesize($_PATHS['upload'] . $localValues[$subkey]);
-																	if ($arrSize !== FALSE) {
+																	if ($arrSize !== false) {
 																		if ($arrSize[0] == $arrSettings[0]['width'] && $arrSize[1] == $arrSettings[0]['height']) {
 																			//*** Skip image resize.
 																			$blnResize = false;
@@ -898,9 +898,9 @@ function parsePages($intElmntId, $strCommand) {
 																			$arrSettings[0]['height'],
 																			$arrSettings[0]['scale'],
 																			$intQuality,
-																			TRUE,
+																			true,
 																			NULL,
-																			FALSE,
+																			false,
 																			$arrSettings[0]['grayscale']);
 																}
 															}
@@ -949,7 +949,7 @@ function parsePages($intElmntId, $strCommand) {
 									$objContentLangs = ContentLanguage::select();
 									foreach ($objContentLangs as $objContentLanguage) {
 										//*** Insert the value by language.
-										(in_array($objContentLanguage->getId(), $arrCascades)) ? $blnCascade = TRUE : $blnCascade = FALSE;
+										(in_array($objContentLanguage->getId(), $arrCascades)) ? $blnCascade = true : $blnCascade = false;
 										$strValue = request("tpf_{$intTemplateFieldId}_{$objContentLanguage->getId()}");
 
 										$objFeedField = new ElementFieldFeed();
@@ -966,9 +966,9 @@ function parsePages($intElmntId, $strCommand) {
 						}
 
 						//*** Remove deleted files.
-						$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+						$objFtp = new FTP($strServer, NULL, NULL, true);
 						$objFtp->login($strUsername, $strPassword);
-						$objFtp->pasv(TRUE);
+						$objFtp->pasv(true);
 						foreach ($arrFieldCache as $intTemplateFieldId => $arrLanguage) {
 							foreach ($arrLanguage as $strValue) {
 								$arrValues = explode("\n", $strValue);
@@ -1011,13 +1011,37 @@ function parsePages($intElmntId, $strCommand) {
 						//*** Activate all languages for the folder type.
 						$objContentLangs = ContentLanguage::select();
 						foreach ($objContentLangs as $objContentLanguage) {
-							$objElement->setLanguageActive($objContentLanguage->getId(), TRUE);
+							$objElement->setLanguageActive($objContentLanguage->getId(), true);
 						}
 					}
 
 					//*** Redirect the page.
 					if (empty($strMessage)) {
-						header("Location: " . Request::getUri() . "/?cid=" . $_POST["cid"] . "&cmd=" . CMD_LIST . "&eid=" . $objElement->getParentId());
+					    $intForward = $objElement->getParentId();
+					    $varCmd = CMD_LIST;
+
+					    if (Setting::getValueByName('next_after_save')) {
+    					    $objParent = Element::selectByPK($objElement->getParentId());
+    					    $objChildren = $objParent->getElements();
+    					    $blnBreak = false;
+    					    foreach ($objChildren as $objChild) {
+    					        if ($blnBreak) {
+    					            $intForwardToElement = $objChild->getId();
+    					            $varCmd = CMD_EDIT;
+    					            break;
+    					        }
+
+    					        if ($objElement->getId() == $objChild->getId()) {
+                                    $blnBreak = true;
+    					        }
+    					    }
+					    }
+
+					    if (!empty($intForwardToElement) && $intForwardToElement !== 0) {
+					        $intForward = $intForwardToElement;
+					    }
+
+						header("Location: " . Request::getUri() . "/?cid=" . $_POST["cid"] . "&cmd=" . $varCmd . "&eid=" . $intForward);
 						exit();
 					} else {
 						$_SESSION['uiError'] = $strMessage;
@@ -1127,7 +1151,7 @@ function parsePages($intElmntId, $strCommand) {
 										$objFieldTpl->setVariable("FIELD_LANGUAGE_ID", "efv_{$objField->getId()}_{$objContentLanguage->getId()}");
 
 										if (is_object($objElement)) {
-											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId(), TRUE);
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId(), true);
 											$strValue = Date::fromMysql($_CONF['app']['universalDate'], $strValue);
 										} else {
 											$strValue = "";
@@ -1408,7 +1432,7 @@ function parsePages($intElmntId, $strCommand) {
 
 									foreach ($objContentLangs as $objContentLanguage) {
 										if (is_object($objElement)) {
-											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId(), TRUE);
+											$strValue = $objElement->getValueByTemplateField($objField->getId(), $objContentLanguage->getId(), true);
 										} else {
 											$strValue = "";
 										}
@@ -1982,7 +2006,7 @@ function parsePages($intElmntId, $strCommand) {
 			if ($blnIsFolder) {
 				$objTpl->setVariable("LABEL_ELEMENTNAME", $objLang->get("folderName", "form"));
 				$objTpl->setVariable("LABEL_ISPAGE", $objLang->get("pageContainer", "form"));
-				if ($blnError === FALSE && is_object($objElement)) {
+				if ($blnError === false && is_object($objElement)) {
 					$objTpl->setVariable("FORM_ISPAGE_VALUE", ($objElement->getIsPage()) ? "checked=\"checked\"" : "");
 				}
 			} else {
@@ -2007,7 +2031,7 @@ function parsePages($intElmntId, $strCommand) {
 
 			//*** Insert values if action is edit.
 			if ($strCommand == CMD_EDIT) {
-				if ($blnError === FALSE) {
+				if ($blnError === false) {
 					$objTpl->setVariable("FORM_ACTIVE_VALUE", ($objElement->getActive()) ? "checked=\"checked\"" : "");
 					$objTpl->setVariable("FORM_NAME_VALUE", str_replace("\"", "&quot;", $objElement->getName()));
 					$objTpl->setVariable("FORM_APINAME_VALUE", $objElement->getApiname());
@@ -2057,7 +2081,7 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setVariable("END_DATE_DISPLAY", "&nbsp;");
 				}
 			} else {
-				if ($blnError === FALSE) {
+				if ($blnError === false) {
 					if (Setting::getValueByName('elmnt_active_state') == 1) {
 						$objTpl->setVariable("FORM_ACTIVE_VALUE", "checked=\"checked\"");
 					}

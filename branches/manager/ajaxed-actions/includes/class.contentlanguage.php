@@ -9,7 +9,7 @@
  */
 class ContentLanguage extends DBA_ContentLanguage {
 	
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		parent::$__object = "ContentLanguage";
 		parent::$__table = "pcms_language";
 		
@@ -143,13 +143,13 @@ class ContentLanguage extends DBA_ContentLanguage {
 				foreach ($objLanguages as $objLanguage) {
 					$objValue = $objField->getValueObject($objLanguage->getId());
 					if (is_object($objValue)) {
-						$objValue->delete(FALSE);
+						$objValue->delete(false);
 					}
 					
 					$objValue = $objField->getNewValueObject();
 					$objValue->setValue($strDefaultValue);
 					$objValue->setLanguageId($objLanguage->getId());
-					$objValue->setCascade(FALSE);
+					$objValue->setCascade(false);
 					$objField->setValueObject($objValue);
 				}
 			}
@@ -217,7 +217,7 @@ class ContentLanguage extends DBA_ContentLanguage {
 				$lastSort++;
 				$objLanguage = ContentLanguage::selectByPK($value);
 				$objLanguage->setSort($lastSort);
-				$objLanguage->save(FALSE);
+				$objLanguage->save(false);
 			}
 		}
 	}

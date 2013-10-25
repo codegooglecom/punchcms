@@ -117,7 +117,7 @@ function CreateFolder( $resourceType, $currentFolder )
 		$sNewFolderName = $_GET['NewFolderName'] ;
 		$sNewFolderName = SanitizeFolderName( $sNewFolderName ) ;
 
-		if ( strpos( $sNewFolderName, '..' ) !== FALSE )
+		if ( strpos( $sNewFolderName, '..' ) !== false )
 			$sErrorNumber = '102' ;		// Invalid folder name.
 		else
 		{
