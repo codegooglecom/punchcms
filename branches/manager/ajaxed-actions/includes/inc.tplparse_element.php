@@ -1020,20 +1020,23 @@ function parsePages($intElmntId, $strCommand) {
 					    $intForward = $objElement->getParentId();
 					    $varCmd = CMD_LIST;
 
-					    if (Setting::getValueByName('next_after_save')) {
+					    if (Setting::getValueByName('next_after_save') && $intForward > 0) {
     					    $objParent = Element::selectByPK($objElement->getParentId());
     					    $objChildren = $objParent->getElements();
     					    $blnBreak = false;
-    					    foreach ($objChildren as $objChild) {
-    					        if ($blnBreak) {
-    					            $intForwardToElement = $objChild->getId();
-    					            $varCmd = CMD_EDIT;
-    					            break;
-    					        }
 
-    					        if ($objElement->getId() == $objChild->getId()) {
-                                    $blnBreak = true;
-    					        }
+    					    if (is_object($objChildren)) {
+        					    foreach ($objChildren as $objChild) {
+        					        if ($blnBreak) {
+        					            $intForwardToElement = $objChild->getId();
+        					            $varCmd = CMD_EDIT;
+        					            break;
+        					        }
+
+        					        if ($objElement->getId() == $objChild->getId()) {
+                                        $blnBreak = true;
+        					        }
+        					    }
     					    }
 					    }
 
