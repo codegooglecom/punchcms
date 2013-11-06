@@ -328,7 +328,18 @@ jQuery(function(){
 		checkDynamicAlias();
 	});	
 	checkDynamicAlias();
+
+	<!-- BEGIN update26 -->
+	$promise = $.get("/install/update-2.6");
+	$promise.done(function (data) {
+		alert(data);
+	});
+	$promise.fail(function (a) {
+		alert(a.responseText);
+	});
+	<!-- END update26 -->
 });
+
 
 {SCRIPT}
 
