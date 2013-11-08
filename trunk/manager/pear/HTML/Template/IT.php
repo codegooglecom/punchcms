@@ -353,7 +353,7 @@ class HTML_Template_IT
      */
     var $_options = array(
         'preserve_data' => false,
-        'use_preg'      => true
+        'use_preg'      => false
     );
 
     /**
@@ -921,7 +921,7 @@ class HTML_Template_IT
                     );
             return "";
 		}
-		
+
 		if (strlen($content) < 1) {
             return "";
 		}
@@ -946,7 +946,7 @@ class HTML_Template_IT
         $content = fread($fh, $fsize);
         fclose($fh);
         */
-                
+
         return preg_replace(
             "#<!-- INCLUDE (.*) -->#ime", "\$this->getFile('\\1')", $content
         );
