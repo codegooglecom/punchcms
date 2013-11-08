@@ -1848,10 +1848,12 @@ function parsePages($intElmntId, $strCommand) {
 						}
 
 						//*** Meta language cascades.
-						$objTpl->setVariable("META_ALIAS_CASCADES", implode(",", Alias::getCascades($objElement->getId())));
-						$objTpl->setVariable("META_TITLE_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "title")));
-						$objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "keywords")));
-						$objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "description")));
+                        if($strCommand != CMD_ADD) {
+                            $objTpl->setVariable("META_ALIAS_CASCADES", implode(",", Alias::getCascades($objElement->getId())));
+                            $objTpl->setVariable("META_TITLE_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "title")));
+                            $objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "keywords")));
+                            $objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "description")));
+                        }
 					}
 				}
 
