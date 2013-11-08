@@ -1019,13 +1019,28 @@ function parsePages($intElmntId, $strCommand) {
 					if (empty($strMessage)) {
 					    $intForward = $objElement->getParentId();
 					    $varCmd = CMD_LIST;
+					    $intForwardToElement = null;
 
 					    if (Setting::getValueByName('next_after_save') && $intForward > 0) {
+    					    //*** Try to get first child element
+    					    if (Setting::getValueByName("next_is_child")) {
+    					        $objChildren = $objElement->getElements();
+                                if (is_object($objChildren) && $objChildren->count() > 0) {
+                                    $objChild = $objChildren->current();
+                                    $intForwardToElement = $objChild->getId();
+
+                                    if ($intForwardToElement > 0) {
+                                        $varCmd = CMD_EDIT;
+                                    }
+                                }
+    					    }
+
+					        //*** Get next sibling
     					    $objParent = Element::selectByPK($objElement->getParentId());
     					    $objChildren = $objParent->getElements();
     					    $blnBreak = false;
 
-    					    if (is_object($objChildren)) {
+    					    if (is_object($objChildren) && is_null($intForwardToElement)) {
         					    foreach ($objChildren as $objChild) {
         					        if ($blnBreak) {
         					            $intForwardToElement = $objChild->getId();

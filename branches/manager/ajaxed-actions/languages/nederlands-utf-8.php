@@ -220,6 +220,7 @@ $_LANG['settingsLabel']['audit_rotation'] = "Verwijder logs ouder dan (dagen)";
 $_LANG['settingsLabel']['elmnt_active_state'] = "Nieuwe elementen zijn standaard geactiveerd";
 $_LANG['settingsLabel']['web_server'] = "Website URL";
 $_LANG['settingsLabel']['next_after_save'] = "Bewerk volgende element na opslaan";
+$_LANG['settingsLabel']['next_is_child'] = "Volgende element is eerste sub element";
 
 //*** Users and groups label definitions.
 $_LANG['usersLabel']['users'] = "Gebruikers";
