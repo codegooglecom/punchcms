@@ -1,11 +1,11 @@
 <?php
 
 /**
- * 
+ *
  * Searches for strings in the elements.
  * @author felix
  * @version 0.2.1
- * 
+ *
  * CHANGELOG
  * version 0.2.1, 30 May 2008
  *   CHG: Refined the wildcard seach.
@@ -28,12 +28,12 @@ class Search {
 		} else {
 			$objElements = Element::select();
 		}
-        
+
         $now = date('Y-m-d H:i:s');
 
 		foreach ($objElements as $objElement) {
             $searchIndexes = array();
-            
+
 			//*** Delete current index.
 			$this->deleteSearchIndex($objElement->getId());
 
@@ -47,7 +47,7 @@ class Search {
 
 			foreach ($objElementFields as $objElementField) {
 				foreach ($this->getWords($objElementField->getValue(), self::SEARCH_WEIGHT) as $strWord => $intWeight) {
-                    $searchIndexes[] = sprintf("('%s', '%s', '%s', '%s', '%s', '%s')", 
+                    $searchIndexes[] = sprintf("('%s', '%s', '%s', '%s', '%s', '%s')",
                         quote_smart($objElement->getId()),
                         quote_smart($strWord),
                         quote_smart($intWeight),
@@ -68,7 +68,7 @@ class Search {
 
 			foreach ($objElementFields as $objElementField) {
                 foreach ($this->getWords($objElementField->getValue(), self::SEARCH_WEIGHT) as $strWord => $intWeight) {
-                    $searchIndexes[] = sprintf("('%s', '%s', '%s', '%s', '%s', '%s')", 
+                    $searchIndexes[] = sprintf("('%s', '%s', '%s', '%s', '%s', '%s')",
                         quote_smart($objElement->getId()),
                         quote_smart($strWord),
                         quote_smart($intWeight),
@@ -78,8 +78,8 @@ class Search {
                         );
                 }
 			}
-            
-            if(count($searchIndex) > 0)
+
+            if(count($searchIndexes) > 0)
             {
                 $strSql = 'INSERT INTO pcms_search_index (elementId, word, count, sort, created, modified) VALUES '. implode(',',$searchIndexes);
                 SearchIndex::select($strSql);
@@ -207,7 +207,7 @@ class Search {
 				if (mb_strlen($strWord) <= 2) {
 					continue;
 				}
-		  	
+
 				//*** Don't stem wildcards.
 				if (stripos($strWord, "%") !== FALSE) {
 					$arrStemmedWords[] = $strWord;
