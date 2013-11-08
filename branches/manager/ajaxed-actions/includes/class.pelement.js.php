@@ -37,7 +37,7 @@ PElement.executeCommand = function (url) {
         $("#itemlist").append($warning);
     }, 800);
 
-    return $.get(url, PElement.updateItemList);
+    return $.post(url, PElement.updateItemList);
 }
 
 PElement.remove = function(intId, strRedirect) {
@@ -66,8 +66,19 @@ PElement.updateItemList = function (data) {
         }
 
         // Update page navigation
-        $(".page-nav").first().html($(data).find(".page-nav").first().html());
-        $(".page-nav").last().html($(data).find(".page-nav").last().html());
+        var firstPageNav = $(data).find(".page-nav").first().html();
+        if (firstPageNav && firstPageNav.length > 0) {
+            $(".page-nav").first().html(firstPageNav);
+        } else {
+            $(".page-nav").first().remove();
+        }
+
+        var secondPageNav = $(data).find(".page-nav").last().html();
+        if (secondPageNav && secondPageNav.length > 0) {
+            $(".page-nav").last().html(secondPageNav);
+        } else {
+            $(".page-nav").last().remove();
+        }
 
     } else {
 	    var $warning = $("<div />")
@@ -113,9 +124,6 @@ PElement.multiDo = function(objField, strAction) {
 
 				if (blnConfirm == true) {
     				PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_REMOVE ?>");
-				} else {
-					//*** Reset pulldown.
-					objField.selectedIndex = 0;
 				}
 				break;
 
@@ -135,6 +143,10 @@ PElement.multiDo = function(objField, strAction) {
 			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_EXPORT_ELEMENT ?>&sel=1");
 				break;
 		}
+
+    	//*** Reset pulldown.
+    	objField.selectedIndex = 0;
+
 	} else {
 		//*** Alert and reset pulldown.
 		alert("<?php echo $objLang->get("multiItemEmpty", "alert") ?>");
