@@ -3,50 +3,31 @@ var intSortedId;
 var strSortElement;
 
 jQuery(function(){
-	init(); 
+	init();
 	jQuery(".ui-state-highlight, .ui-state-error")
 		.css("cursor", "pointer")
 		.live("click", function(){
 			jQuery(this).fadeOut("slow");
 		});
-    
-    $('.input-ckeditor').each(function(){
-        CKEDITOR.replace($(this).attr('id'), {
-            toolbar: [
-                ['Source'],
-                ['Cut','Copy','Paste','PasteText','-','Table'],
-                ['Undo','Redo','-','Find','Replace','-','Link','Unlink','Anchor','-','SpecialChar'],
-                ['Bold','Italic','-','Subscript','Superscript','-','NumberedList','BulletedList','-', 'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','TextColor','FontSize','Maximize']
-            ],
-            width: 500,
-            language: 'en',
-            filebrowserWindowWidth: '335',
-            filebrowserWindowHeight: '480'
 
-        });
-        
+    $('.input-ckeditor').each(function(){
+        CKEDITOR.replace($(this).attr('id'));
+
         var ckeditorinst = CKEDITOR.instances[$(this).attr('id')];
-        
+
         ckeditorinst.on('blur', function(){
             ckeditorinst.updateElement();
         });
-    });
-    
-    $('a.select').live("click", function(e){
-        e.preventDefault();
-        
-        window.opener.CKEDITOR.tools.callFunction(funcnum, $(this).attr('href'))
-        window.close();
     });
 });
 
 function init() {
 	//*** Initiate page.
 //	externalLinks();
-	
+
 	//*** Hide the progress animation.
 	if (jQuery('#userProgress').length > 0) jQuery('#userProgress').hide();
-	
+
 	try {
 		obtrudeItemBox();
 	} catch(e) {
@@ -66,17 +47,17 @@ function init() {
 	}
 
 	try {
-		loadTree();
+        loadTree();
 	} catch(e) {
 		//alert(e.message);
 	}
-	
+
 	try {
 		loadAnnouncement();
 	} catch(e) {
 		//alert(e.message);
 	}
-	
+
 	//*** Show page load duration.
 	//var intNow = new Date();
 	//alert((intNow - intTime) / 1000);
@@ -92,20 +73,20 @@ function externalLinks() {
 			//*** Check for internal links and correct them
 			if (objAnchors[iCounter].getAttribute("href")) {
 				var strHref = objAnchors[iCounter].getAttribute("href");
-				
+
 				//*** fix anchors
 				if (strHref.indexOf("#") > -1 && strHref.length > 1) {
 					//*** add the "rel" attribute if not already available
 					if (!objAnchors[iCounter].getAttribute("rel")) {
 						objAnchors[iCounter].setAttribute("rel", "internal");
 					}
-				
+
 					var strPageUri = document.location.href.split("#")[0];
 					var arrHref = strHref.split("/");
 					strHref = arrHref[arrHref.length - 1];
 					objAnchors[iCounter].setAttribute("href", strPageUri + strHref);
 				}
-				
+
 				//*** fix hrefs who point to local files
 				if (strHref.indexOf("://") > -1 && strHref.length > 1) {
 					//*** add the "rel" attribute if not already available
@@ -114,7 +95,7 @@ function externalLinks() {
 					}
 				}
 			}
-			
+
 			//*** Create external links
 			if (objAnchors[iCounter].getAttribute("href") && objAnchors[iCounter].getAttribute("rel") != "internal") {
 				objAnchors[iCounter].onclick = function(event){return launchWindow(this, event);}
@@ -145,7 +126,7 @@ function launchWindow(objAnchor, objEvent) {
 		} else if (objEvent.which) {
 			iKeyCode = objEvent.which;
 		}
-		
+
 		if (iKeyCode != 13 && iKeyCode != 32) {
 			return true;
 		}

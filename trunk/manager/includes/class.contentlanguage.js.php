@@ -664,7 +664,7 @@ TextAreaField.prototype.toScreen = function() {
 			if (typeof objArea == "object"){
                             objArea.setData(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
 			}else{
-                            $("#" + this.id).html(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
+                            $("#" + this.id).val(jQuery("#" + this.id + "_" + this.parent.currentLanguage).val());
                         }
                 }
         }
