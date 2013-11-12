@@ -1862,13 +1862,13 @@ function parsePages($intElmntId, $strCommand) {
 
 						//*** Meta language values.
 						foreach ($objContentLangs as $objContentLanguage) {
-							$strValue = $objElement->getAlias($objContentLanguage->getId());
+							$strValue = ($strCommand != CMD_ADD) ? $objElement->getAlias($objContentLanguage->getId()) : '';
 							$objTpl->setCurrentBlock("field.meta_alias.value");
 							$objTpl->setVariable("FIELD_ALIAS_ID", "frm_meta_alias_{$objContentLanguage->getId()}");
 							$objTpl->setVariable("FIELD_ALIAS_VALUE", $strValue);
 							$objTpl->parseCurrentBlock();
 
-							$objMeta = (is_object($objElement)) ? $objElement->getMeta($objContentLanguage->getId()) : NULL;
+							$objMeta = (is_object($objElement) && $strCommand != CMD_ADD) ? $objElement->getMeta($objContentLanguage->getId()) : NULL;
 
 							$strValue = (is_object($objMeta)) ? $objMeta->getValueByValue("name", "title") : "";
 							$objTpl->setCurrentBlock("field.meta_title.value");
@@ -1890,10 +1890,12 @@ function parsePages($intElmntId, $strCommand) {
 						}
 
 						//*** Meta language cascades.
-						$objTpl->setVariable("META_ALIAS_CASCADES", implode(",", Alias::getCascades($objElement->getId())));
-						$objTpl->setVariable("META_TITLE_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "title")));
-						$objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "keywords")));
-						$objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "description")));
+                        if($strCommand != CMD_ADD) {
+                            $objTpl->setVariable("META_ALIAS_CASCADES", implode(",", Alias::getCascades($objElement->getId())));
+                            $objTpl->setVariable("META_TITLE_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "title")));
+                            $objTpl->setVariable("META_KEYWORDS_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "keywords")));
+                            $objTpl->setVariable("META_DESCRIPTION_CASCADES", implode(",", ElementMeta::getCascades($objElement->getId(), "description")));
+                        }
 					}
 				}
 

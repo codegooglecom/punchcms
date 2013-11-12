@@ -8,9 +8,9 @@ require_once('inc.constantes.php');
 /******************************
 * Load configuration.
 ***/
-if (!@include_once('config.php')) {
+if (!@include_once($_SERVER["DOCUMENT_ROOT"] .'/config.php')) {
 	//*** Configuration not yet written.
-	if (is_file('install/index.php')) {
+	if (is_file($_SERVER["DOCUMENT_ROOT"]  .'/install/index.php')) {
 		//*** Redirect to installer.
 		header("Location: install/index.php");
 		exit();
@@ -90,7 +90,7 @@ $objLang = null;
 //if (array_key_exists("objLang", $_SESSION)) $objLang = unserialize($_SESSION["objLang"]);
 if (!is_object($objLang)) {
 	$objLang = new Language($_CONF['app']['defaultLang'], $_CONF['app']['langPath']);
-	
+
 	//*** PHP 5.2.1 bugfix. Save to a temp var before serializing.
 	$objTemp = $objLang;
 	$_SESSION["objLang"] = serialize($objLang);
@@ -294,6 +294,6 @@ require_once('inc.menurights.php');
 /******************************
 * Load the TextEditor.
 ***/
-require_once("fckeditor/fckeditor.php");
+//require_once("fckeditor/fckeditor.php");
 
 ?>

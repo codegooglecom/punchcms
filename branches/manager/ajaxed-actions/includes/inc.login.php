@@ -2,6 +2,7 @@
 
 $strUsername 	= request('handle');
 $strPassword 	= request('passwd');
+$strCmd         = request('cmd');
 $blnRemember 	= request('remember_me');
 ($blnRemember === "on") ? $blnRemember = true : $blnRemember = false;
 
@@ -13,7 +14,7 @@ if ($objLiveUser->isLoggedIn() && $strCommand == CMD_LOGOUT) {
 	exit();
 } else if (!$objLiveUser->isLoggedIn() || (!empty($strUsername) && $objLiveUser->getProperty('handle') != $strUsername)) {
 	//*** Log in using LiveUser.
-	if (empty($strUsername)) {
+	if (empty($strUsername) || $strCmd === 'User::add') {
 		$objLiveUser->login(null, null, true, false, $_CONF['app']['account']->getId());
 	} else {
 		if (!$objLiveUser->login($strUsername, $strPassword, $blnRemember, false, $_CONF['app']['account']->getId())) {
@@ -27,13 +28,12 @@ if ($objLiveUser->isLoggedIn() && $strCommand == CMD_LOGOUT) {
 		} else {
 			//*** Clear old audit logs.
 			AuditLog::cleanLog();
-		
+
 			header("Location: " . Request::getURI("http"));
 			exit();
 		}
 	}
 }
-
 if (!$objLiveUser->isLoggedIn() && $intCatId != NAV_MYPUNCH_LOGIN && $intCatId != NAV_MYPUNCH_NOACCOUNT) {
 	//*** Redirect to the login screen.
 	if ($_CONF['app']['secureLogin']) {

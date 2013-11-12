@@ -256,7 +256,9 @@ class Element extends DBA_Element {
                 $arrTrail["External link"] = $varDeepLink;
             }
         } else {
-            if (is_string($varDeepLink)) {
+            if (empty($varDeepLink)) {
+                $arrTrail[""] = "#";
+            } else if (is_string($varDeepLink)) {
                 $arrTrail["String value"] = "#";
             } else {
                 $arrTrail["[!] Broken link"] = "#";
@@ -295,8 +297,8 @@ class Element extends DBA_Element {
         return $strReturn;
     }
 
-    public static function generateElementTrailXml($intElementId) {
-        $strTrail = self::generateElementTrailString($intElementId);
+    public static function generateElementTrailXml($intElementId, $blnLink = true) {
+        $strTrail = self::generateElementTrailString($intElementId, $blnLink);
 
         if (empty($strTrail)) {
             $intElementId = 0;

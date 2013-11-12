@@ -6,9 +6,7 @@
                                     <div class="ckeditor_container">
                                         <div id="{FIELD_ID}_alt" class="input-textbig disabled" style="display:none"></div>
                                         <textarea id="{FIELD_ID}" name="{FIELD_ID}" class="input-textbig input-ckeditor" onblur="objContentLanguage.toTemp(this.id);" rows="8" cols="40" style="height:{FIELD_HEIGHT}"></textarea>
-                                        <!-- BEGIN field.simpletext.descr -->
-                                                <small>{FIELD_DESCRIPTION}</small>
-                                        <!-- END field.simpletext.descr -->
+
                                         <!-- BEGIN field.simpletext.value -->
                                         <input type="hidden" id="{FIELD_LANGUAGE_ID}" name="{FIELD_LANGUAGE_ID}" value="{FIELD_LANGUAGE_VALUE}" />
                                         <!-- END field.simpletext.value -->
@@ -19,5 +17,8 @@
                                         // ]]>
                                         </script>
                                     </div>
+                                    <!-- BEGIN field.simpletext.descr -->
+                                    <small>{FIELD_DESCRIPTION}</small>
+                                    <!-- END field.simpletext.descr -->
                                     <div class="clear"></div>
                                 </div>
