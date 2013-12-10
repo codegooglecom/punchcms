@@ -3,12 +3,12 @@
 
 $accountId		= Request::get("eid", 0);
 $exportFiles	= Request::get("files", true);
-$blnError 		= FALSE;
+$blnError 		= false;
 
 $objAccount = Account::selectByPk($accountId);
 $strZipFile = ImpEx::export($accountId, $exportFiles);
 
-if (is_object($objAccount) && $strZipFile !== FALSE) {
+if (is_object($objAccount) && $strZipFile !== false) {
 	header("HTTP/1.1 200 OK");
 	header("Pragma: public");
 	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
