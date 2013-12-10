@@ -7,10 +7,12 @@
  * @version 0.1.0
  *
  */
-class StorageItem extends DBA_StorageItem {
+class StorageItem extends DBA_StorageItem
+{
 	private $data;
 
-	public static function selectByPK($varValue, $arrFields = array()) {
+	public static function selectByPK($varValue, $arrFields = array())
+	{
 		global $_CONF;
 		parent::$__object = "StorageItem";
 		parent::$__table = "pcms_storage_item";
@@ -18,7 +20,8 @@ class StorageItem extends DBA_StorageItem {
 		return parent::selectByPK($varValue, $arrFields, $_CONF['app']['account']->getId());
 	}
 
-	public static function select($strSql = "") {
+	public static function select($strSql = "")
+	{
 		global $_CONF;
 		parent::$__object = "StorageItem";
 		parent::$__table = "pcms_storage_item";
@@ -30,12 +33,15 @@ class StorageItem extends DBA_StorageItem {
 		return parent::select($strSql);
 	}
 
-	public function delete() {
+	public function delete()
+	{
 		global $_CONF;
 		parent::$__object = "StorageItem";
 		parent::$__table = "pcms_storage_item";
 
-		if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_STORAGE, $this->getId(), $this->getName(), "delete");
+		if (class_exists("AuditLog")) {
+		    AuditLog::addLog(AUDIT_TYPE_STORAGE, $this->getId(), $this->getName(), "delete");
+		}
 
 		//*** Remove child items.
 		$objElements = $this->getItems();
@@ -53,9 +59,9 @@ class StorageItem extends DBA_StorageItem {
 				$strRemoteFolder = Setting::getValueByName('ftp_remote_folder');
 
 				//*** Remove deleted files.
-				$objFtp = new FTP($strServer, NULL, NULL, TRUE);
+				$objFtp = new FTP($strServer, null, null, true);
 				$objFtp->login($strUsername, $strPassword);
-				$objFtp->pasv(TRUE);
+				$objFtp->pasv(true);
 				$strFile = $strRemoteFolder . $strValue;
 				$objFtp->delete($strFile);
 			}
@@ -81,7 +87,8 @@ class StorageItem extends DBA_StorageItem {
 		return parent::delete($_CONF['app']['account']->getId());
 	}
 
-	public function getData() {
+	public function getData()
+	{
 		if (!is_object($this->data)) {
 			$objElements = StorageData::selectByItemId($this->getId());
 			if ($objElements->count() > 0) {
@@ -93,24 +100,29 @@ class StorageItem extends DBA_StorageItem {
 		return $this->data;
 	}
 
-	public static function getFilenameXml($intElementId) {
+	public static function getFilenameXml($intElementId)
+	{
 		$objStorageItem = self::selectByPK($intElementId);
         return "<field id=\"filename\"><![CDATA[{$objStorageItem->getName()}]]></field>";
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true)
+	{
 		parent::$__object = "StorageItem";
 		parent::$__table = "pcms_storage_item";
 
 		$intId = $this->getId();
 
 		$blnReturn = parent::save($blnSaveModifiedDate);
-		if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_STORAGE, $this->getId(), $this->getName(), (empty($intId)) ? "create" : "edit");
+		if (class_exists("AuditLog")) {
+		    AuditLog::addLog(AUDIT_TYPE_STORAGE, $this->getId(), $this->getName(), (empty($intId)) ? "create" : "edit");
+		}
 
 		return $blnReturn;
 	}
 
-	public function duplicate($strNewName = "") {
+	public function duplicate($strNewName = "")
+	{
 		global $objLang,
 				$_CONF;
 
@@ -126,8 +138,10 @@ class StorageItem extends DBA_StorageItem {
 			//*** Duplicate the element.
 			$objReturn = parent::duplicate();
 
-			if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_STORAGE, $this->getId(), $strName, "duplicate", $objReturn->getId());
-			if (class_exists("AuditLog")) AuditLog::addLog(AUDIT_TYPE_STORAGE, $objReturn->getId(), $objReturn->getName(), "create");
+			if (class_exists("AuditLog")) {
+			    AuditLog::addLog(AUDIT_TYPE_STORAGE, $this->getId(), $strName, "duplicate", $objReturn->getId());
+			    AuditLog::addLog(AUDIT_TYPE_STORAGE, $objReturn->getId(), $objReturn->getName(), "create");
+			}
 
 			//*** Reset the name of the current element.
 			$this->name = $strName;
@@ -143,10 +157,11 @@ class StorageItem extends DBA_StorageItem {
 			return $objReturn;
 		}
 
-		return NULL;
+		return null;
 	}
 
-	public function copy($intParentId) {
+	public function copy($intParentId)
+	{
 		global $objLiveUser;
 
 		$objDuplicate = $this->duplicate();
@@ -157,7 +172,8 @@ class StorageItem extends DBA_StorageItem {
 		return $objDuplicate;
 	}
 
-	public function fixLinkedElements() {
+	public function fixLinkedElements()
+	{
 		$objData = $this->getData();
 		$objElements = $this->getLinkedElementFields();
 		foreach ($objElements as $objElement) {
@@ -177,10 +193,12 @@ class StorageItem extends DBA_StorageItem {
 		}
 	}
 
-	public function getLinkedElementFields() {
+	public function getLinkedElementFields()
+	{
 		global $_CONF;
 
-		$strSql = sprintf("SELECT pcms_element_field_bigtext.*
+		$strSql = sprintf(
+		    "SELECT pcms_element_field_bigtext.*
 			FROM pcms_element_field_bigtext,
 				pcms_element_field,
 				pcms_element,
@@ -190,12 +208,17 @@ class StorageItem extends DBA_StorageItem {
 				AND pcms_element_field.elementId = pcms_element.id
 				AND pcms_element.accountId = '%s'
 				AND pcms_template_field.id = pcms_element_field.templateFieldId
-				AND pcms_template_field.typeId IN (%s)", "%:{$this->id}\n%", $_CONF['app']['account']->getId(), "'" . FIELD_TYPE_IMAGE . "','" . FIELD_TYPE_FILE . "'");
+				AND pcms_template_field.typeId IN (%s)",
+		    "%:{$this->id}\n%",
+		    $_CONF['app']['account']->getId(),
+		    "'" . FIELD_TYPE_IMAGE . "','" . FIELD_TYPE_FILE . "'"
+		);
 
 		return ElementFieldBigText::select($strSql);
 	}
 
-	public static function setParent() {
+	public static function setParent()
+	{
 		$intElementId = request('eid', 0);
 		$intParentId = request('parentId', -1);
 
@@ -221,7 +244,8 @@ class StorageItem extends DBA_StorageItem {
 		return $strReturn;
 	}
 
-	public function getItems($intTypeId = STORAGE_TYPE_ALL) {
+	public function getItems($intTypeId = STORAGE_TYPE_ALL)
+	{
 		global $_CONF;
 		parent::$__object = "StorageItem";
 		parent::$__table = "pcms_storage_item";
@@ -231,17 +255,18 @@ class StorageItem extends DBA_StorageItem {
 		return parent::select($strSql);
 	}
 
-	public function getFolders() {
+	public function getFolders()
+	{
 		return $this->getItems(STORAGE_TYPE_FOLDER);
 	}
 
-	public function getFiles() {
+	public function getFiles()
+	{
 		return $this->getItems(STORAGE_TYPE_FILE);
 	}
 
-	public function getLink() {
+	public function getLink()
+	{
 
 	}
 }
-
-?>

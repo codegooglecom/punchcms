@@ -49,7 +49,7 @@ class Template extends DBA_Template {
 		return parent::delete($_CONF['app']['account']->getId());
 	}
 	
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		parent::$__object = "Template";
 		parent::$__table = "pcms_template";
 		
@@ -118,7 +118,7 @@ class Template extends DBA_Template {
 		return $objDuplicate;
 	}
 
-	public function getTemplates($blnRecursive = FALSE) {
+	public function getTemplates($blnRecursive = false) {
 		if ($this->id > 0) {
 			if (!is_object($this->objTemplateCollection)) {
 				$this->objTemplateCollection = Templates::getFromParent($this->id, $blnRecursive);
@@ -130,7 +130,7 @@ class Template extends DBA_Template {
 		return $this->objTemplateCollection;
 	}
 	
-	public function getSiblings($blnRecursive = FALSE) {
+	public function getSiblings($blnRecursive = false) {
 		global $_CONF;
 	
 		$objReturn = NULL;

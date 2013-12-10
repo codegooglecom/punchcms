@@ -97,7 +97,7 @@ class Search {
 		$arrSql = explode('?', $strSql);
 		$strTempSql = "";
 		for ($i = 0; $i < $intWordCount; $i++) {
-			$equal = (stripos($arrWords[$i], "%") !== FALSE) ? "LIKE" : "=";
+			$equal = (stripos($arrWords[$i], "%") !== false) ? "LIKE" : "=";
 			$strTempSql .= $arrSql[$i] . "word {$equal} '" . $arrWords[$i] . "'";
 		}
 		$strTempSql .= $arrSql[$i];
@@ -185,7 +185,7 @@ class Search {
 				}
 		  	
 				//*** Don't stem wildcards.
-				if (stripos($strWord, "%") !== FALSE) {
+				if (stripos($strWord, "%") !== false) {
 					$arrStemmedWords[] = $strWord;
 					continue;
 				}

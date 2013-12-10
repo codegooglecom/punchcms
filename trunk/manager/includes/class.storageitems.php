@@ -41,7 +41,7 @@ class StorageItems extends DBA__Collection {
 				$lastSort++;
 				$objFile = StorageItem::selectByPK($value);
 				$objFile->setSort($lastSort);
-				$objFile->save(FALSE);
+				$objFile->save(false);
 			}
 		}
 	}
