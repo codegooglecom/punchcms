@@ -175,16 +175,9 @@ class DBA__Object {
 
 		//*** Get the PK from the Database if we just inserted a new record.
 		if (!$this->id > 0) {
-			$strSql = "SELECT MAX(id) FROM " . self::$__table;
-			$objResult = $DBAConn->query($strSql);
-
-			if (PEAR::isError($objResult)) {
-				die ("Database Error in " . self::$__object . "::save on line " . __LINE__ . ". (" . $objResult->getMessage() . ")<br /><b>Error Details</b>: " . $objResult->toString() . "<br />Trying to execute: " . $strSql);
-			}
-
-			$this->id = $objResult->fetchOne();
+			$this->id = $DBAConn->lastInsertID(self::$__table, 'id');
 		}
-		
+
 		return $intReturn;
 	}
 
@@ -211,7 +204,7 @@ class DBA__Object {
 			}
 
 			$intReturn = $objResult;
-		
+
 			return $intReturn;
 		}
 	}
@@ -269,14 +262,7 @@ class DBA__Object {
 
 			//*** Get the PK from the Database if we just inserted a new record.
 			if (!$this->id > 0) {
-				$strSql = "SELECT MAX(id) FROM " . self::$__table;
-				$objResult = $DBAConn->query($strSql);
-
-				if (PEAR::isError($objResult)) {
-					die ("Database Error in " . self::$__object . "::duplicate on line " . __LINE__ . ". (" . $objResult->getMessage() . ")<br /><b>Error Details</b>: " . $objResult->toString() . "<br />Trying to execute: " . $strSql);
-				}
-
-				$this->id = $objResult->fetchOne();
+                $this->id = $DBAConn->lastInsertID(self::$__table, 'id');
 			}
 
 			//*** Get an instance of the duplicate object;
@@ -471,25 +457,25 @@ class DBA__Object {
 			//*** Input value is an object.
 			$intReturn = $varValue->delete();
 		}
-		
+
 		return $intReturn;
 	}
-	
+
 	public static function quote($strValue) {
-		/* 
+		/*
 		 * Quote a value according to the database rules.
-		 */	
+		 */
 		global $DBAConn;
 
 		//*** Stripslashes.
 		if (get_magic_quotes_gpc()) {
 		   $strValue = (is_string($strValue)) ? stripslashes($strValue) : $strValue;
 		}
-		
+
 		//*** Quote if not integer.
 		$strValue = (empty($strValue) && !is_numeric($strValue)) ? "''" : $DBAConn->quote($strValue);
 		//$strValue = (empty($strValue) && !is_numeric($strValue)) ? "''" : "'" . $strValue . "'";
-		
+
 		return $strValue;
 	}
 }
