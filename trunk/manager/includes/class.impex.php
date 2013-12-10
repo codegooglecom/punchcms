@@ -64,12 +64,12 @@ class ImpEx {
 
 		//*** Init DOM object.
 		$objDoc = new DOMDocument("1.0", "UTF-8");
-		$objDoc->formatOutput = FALSE;
-		$objDoc->preserveWhiteSpace = TRUE;
+		$objDoc->formatOutput = false;
+		$objDoc->preserveWhiteSpace = true;
 
 		//*** Init Zip archive.
 		$strZipName = $_PATHS['upload'] . "exportZip_" . rand() . ".zip";
-		$objZip = new dZip($strZipName, TRUE);
+		$objZip = new dZip($strZipName, true);
 
 		//*** ACL. Users, groups and rights.
 		$objAcl = self::exportAcl($objDoc, $intAccountId);
@@ -215,12 +215,12 @@ class ImpEx {
 
 		//*** Init DOM object.
 		$objDoc = new DOMDocument("1.0", "UTF-8");
-		$objDoc->formatOutput = FALSE;
-		$objDoc->preserveWhiteSpace = TRUE;
+		$objDoc->formatOutput = false;
+		$objDoc->preserveWhiteSpace = true;
 
 		//*** Init Zip archive.
 		$strZipName = $_PATHS['upload'] . "exportZip_" . rand() . ".zip";
-		$objZip = new dZip($strZipName, TRUE);
+		$objZip = new dZip($strZipName, true);
 
         $objStructure = $objDoc->createElement('structure');
         $objStructure->setAttribute("version", "1.0");
@@ -316,26 +316,26 @@ class ImpEx {
 		return $strZipName;
     }
 
-	public static function import($strXml, $blnOverwrite = FALSE, $blnKeepSettings = FALSE) {
+	public static function import($strXml, $blnOverwrite = false, $blnKeepSettings = false) {
 		global $objLiveAdmin,
 				$intDefaultLanguage,
 				$_CONF;
 
 		$objReturn = NULL;
 		$objSettings = NULL;
-		$blnZip = FALSE;
+		$blnZip = false;
 
 		//*** Init DOM object.
 		$objDoc = new DOMDocument("1.0", "UTF-8");
-		$objDoc->formatOutput = FALSE;
-		$objDoc->preserveWhiteSpace = TRUE;
+		$objDoc->formatOutput = false;
+		$objDoc->preserveWhiteSpace = true;
 		if (is_file($strXml)) {
 			$objZip = new dUnzip2($strXml);
 			if (is_object($objZip)) {
 				//*** Zip file.
 				$strXml = $objZip->unzip('data.xml');
 
-				if ($strXml !== FALSE) {
+				if ($strXml !== false) {
 					//*** Fix a unicode bug. Replace forbidden characters (The first 8).
 					for ($intCount = 1; $intCount < 9; $intCount++) {
 						$strHex = str_pad(dechex($intCount), 4, "0", STR_PAD_LEFT);
@@ -344,7 +344,7 @@ class ImpEx {
 					$strXml = preg_replace('/\x{001f}/u', "", $strXml);
 
 					$objDoc->loadXML($strXml);
-					$blnZip = TRUE;
+					$blnZip = true;
 				}
 			} else {
 				//*** XML file.
@@ -565,21 +565,21 @@ class ImpEx {
 
 		$objReturn = NULL;
 		$objSettings = NULL;
-		$blnZip = FALSE;
+		$blnZip = false;
 
         $validTemplateStructure = false;
 
 		//*** Init DOM object.
 		$objDoc = new DOMDocument("1.0", "UTF-8");
-		$objDoc->formatOutput = FALSE;
-		$objDoc->preserveWhiteSpace = TRUE;
+		$objDoc->formatOutput = false;
+		$objDoc->preserveWhiteSpace = true;
 		if (is_file($strXml)) {
 			$objZip = new dUnzip2($strXml);
 			if (is_object($objZip)) {
 				//*** Zip file.
 				$strXml = $objZip->unzip('data.xml');
 
-				if ($strXml !== FALSE) {
+				if ($strXml !== false) {
 					//*** Fix a unicode bug. Replace forbidden characters (The first 8).
 					for ($intCount = 1; $intCount < 9; $intCount++) {
 						$strHex = str_pad(dechex($intCount), 4, "0", STR_PAD_LEFT);
@@ -588,7 +588,7 @@ class ImpEx {
 					$strXml = preg_replace('/\x{001f}/u', "", $strXml);
 
 					$objDoc->loadXML($strXml);
-					$blnZip = TRUE;
+					$blnZip = true;
 				}
 			} else {
 				//*** XML file.
@@ -785,16 +785,16 @@ class ImpEx {
 						$objValue = $objField->getValueObject($intLanguageId);
 						$strOldValue = $objValue->getValue();
 						if (!empty($strOldValue)) {
-							$blnFound = FALSE;
+							$blnFound = false;
 
 							if (preg_match($strElmntPattern, $strOldValue) > 0) {
 								$strOldValue = preg_replace($strElmntPattern, "'$1'.\$arrElementIds['$2']", $strOldValue);
-								$blnFound = TRUE;
+								$blnFound = true;
 							}
 
 							if (preg_match($strStoragePattern, $strOldValue) > 0) {
 								$strOldValue = preg_replace($strStoragePattern, "'$1'.\$arrStorageIds['$2']", $strOldValue);
-								$blnFound = TRUE;
+								$blnFound = true;
 							}
 
 							if ($blnFound) {
@@ -944,7 +944,7 @@ class ImpEx {
 				$objElement->setTypeId($elementNode->getAttribute("typeId"));
 				$objElement->setTemplateId($arrTemplateIds[$elementNode->getAttribute("templateId")]);
 				$objElement->setSort($elementNode->getAttribute("sort"));
-				$objElement->save(FALSE, FALSE);
+				$objElement->save(false, false);
 
 				if ($elementNode->getAttribute("typeId") == 1) {
 					$objElement->setLanguageActive($intDefaultLanguage, 1);
@@ -1071,7 +1071,7 @@ class ImpEx {
 							$objPermissions->setUserId($objUsers);
 							$objPermissions->setGroupId($objGroups);
 
-							$objElement->setPermissions($objPermissions, TRUE);
+							$objElement->setPermissions($objPermissions, true);
 							break;
 
 						case "elements":
@@ -1098,7 +1098,7 @@ class ImpEx {
 			$objElement->setTypeId($elementNode->getAttribute("typeId"));
 			$objElement->setUsername($elementNode->getAttribute("username"));
 			$objElement->setSort($elementNode->getAttribute("sort"));
-			$objElement->save(FALSE, FALSE);
+			$objElement->save(false, false);
 
 			if ($elementNode->getAttribute("typeId") == 2) {
 				$objData = $objElement->getData();
@@ -1217,7 +1217,7 @@ class ImpEx {
 							'account_id' => $intAccountId,
 							'perm_type' => $userNode->getAttribute("permType")
 						);
-						$intPermUserId = $objLiveAdmin->addUser($data, FALSE);
+						$intPermUserId = $objLiveAdmin->addUser($data, false);
 						$arrUserIds[$userNode->getAttribute("perm_id")] = $intPermUserId;
 
 						//*** Add groups to the user.
@@ -1258,7 +1258,7 @@ class ImpEx {
         }
         else
         {
-            $objDbTemplates = Templates::getFromParent($intId, FALSE, $intAccountId);
+            $objDbTemplates = Templates::getFromParent($intId, false, $intAccountId);
         }
         
 		if ($objDbTemplates->count() > 0) {
@@ -1328,8 +1328,8 @@ class ImpEx {
         }
         else
         {
-            //$objDbTemplates = Templates::getFromParent($intId, FALSE, $intAccountId);
-            $objDbElements = Elements::getFromParent($intId, FALSE, "'1', '2', '3', '4', '5'", $intAccountId);
+            //$objDbTemplates = Templates::getFromParent($intId, false, $intAccountId);
+            $objDbElements = Elements::getFromParent($intId, false, "'1', '2', '3', '4', '5'", $intAccountId);
         }
 		if ($objDbElements->count() > 0) {
 			foreach ($objDbElements as $objDbElement) {
@@ -1752,7 +1752,7 @@ class ImpEx {
 
 		foreach ($arrFiles as $value) {
       		$strContents = @file_get_contents($strLocation . $value);
-       		if ($strContents !== FALSE) {
+       		if ($strContents !== false) {
         		$objZip->addFile(NULL, "files/" . $value, "", $strContents);
        		}
 		}
@@ -1770,7 +1770,7 @@ class ImpEx {
 				//*** Create a subfolder in the upload dir.
 				$targetDir = $_PATHS['upload'] . $objAccount->getId();
 				if (!is_dir($targetDir)) {
-					mkdir($targetDir, 0777, TRUE);
+					mkdir($targetDir, 0777, true);
 					chmod($targetDir, 0777);
 				}
 
@@ -1798,13 +1798,13 @@ class ImpEx {
 			$strRemoteFolder = Setting::getValueByName('ftp_remote_folder', $objAccount->getId());
 
 			//*** Try to move the files.
-			$objFtp = new FTP($strServer, NULL, NULL, TRUE);
-			if ($objFtp->login($strUsername, $strPassword) === TRUE) {
+			$objFtp = new FTP($strServer, NULL, NULL, true);
+			if ($objFtp->login($strUsername, $strPassword) === true) {
 				//*** Passive mode.
-				$objFtp->pasv(TRUE);
+				$objFtp->pasv(true);
 
 				if ($objHandle = opendir($sourceDir)) {
-					while (FALSE !== ($strFile = readdir($objHandle))) {
+					while (false !== ($strFile = readdir($objHandle))) {
 						if ($strFile != "." && $strFile != "..") {
 							//*** Transfer file.
 							$objRet = $objFtp->nb_put($strRemoteFolder . $strFile, $sourceDir . $strFile, FTP_BINARY);

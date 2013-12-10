@@ -7,7 +7,7 @@ class FTP {
 	private $intTimeout;
 
    	/* public Void __construct(): Constructor */
-   	public function __construct($host, $port = 21, $timeout = 90, $blnSecure = FALSE) {
+   	public function __construct($host, $port = 21, $timeout = 90, $blnSecure = false) {
    		if (is_null($port)) $port = 21;
    		if (is_null($timeout)) $timeout = 90;
    		
@@ -31,7 +31,7 @@ class FTP {
 
    	/* public Mixed __call(): Re-route all function calls to the PHP-functions */
 	public function __call($function, $arguments) {
-		$varReturn = FALSE;
+		$varReturn = false;
 		
        	//*** Prepend the ftp resource to the arguments array
        	array_unshift($arguments, $this->objFTP);
@@ -39,7 +39,7 @@ class FTP {
        	//*** Call the PHP function
        	try {
        		$varReturn = @call_user_func_array('ftp_' . $function, $arguments);
-       		if ($varReturn === FALSE && $function == "login") {
+       		if ($varReturn === false && $function == "login") {
        			//*** Retry connect unsecured if login fails.
        			ftp_close($this->objFTP);
        			$this->objFTP = ftp_connect($this->strHost, $this->intPort, $this->intTimeout);
@@ -57,7 +57,7 @@ class FTP {
    	}
    	
    	public function delete($strPath) {
-   		if (stristr($strPath, "*") === FALSE) {
+   		if (stristr($strPath, "*") === false) {
    			//*** Regular FTP delete.
 			try {
 				@ftp_delete($this->objFTP, $strPath);
@@ -71,7 +71,7 @@ class FTP {
    			
    			//*** Get files in remote folder.
    			$arrFiles = $this->nlist($strBasePath);
-   			if ($arrFiles !== FALSE) {
+   			if ($arrFiles !== false) {
    				foreach ($arrFiles as $strFile) {
    					$strBaseFile = basename($strFile);
    					if (!$this->is_dir($strFile) && $this->hasWildcard($strFileName, $strBaseFile)) {
@@ -94,28 +94,28 @@ class FTP {
 	}
    	
 	private function hasWildcard($strWildcard, $strName) {
-		$blnReturn = FALSE;
+		$blnReturn = false;
 		
-		if (stristr($strWildcard, "*") !== FALSE) {
+		if (stristr($strWildcard, "*") !== false) {
 			if (strpos($strWildcard, "*") === 0) {
 				if (strrpos($strWildcard, "*") === (strlen($strWildcard) - 1)) {
 					//*** Wildcard at start and end.
 					$strNoWildcard = substr(substr($strWildcard, 0, (strlen($strWildcard) - 1)), 1);
-					if (strpos($strName, $strNoWildcard) !== FALSE) {
-						$blnReturn = TRUE;
+					if (strpos($strName, $strNoWildcard) !== false) {
+						$blnReturn = true;
 					}
 				} else {
 					//*** Wildcard at start.
 					$strNoWildcard = substr($strWildcard, 1);
 					if (strpos($strName, $strNoWildcard) === strlen($strName) - strlen($strNoWildcard)) {
-						$blnReturn = TRUE;
+						$blnReturn = true;
 					}
 				}
 			} else if (strpos($strWildcard, "*") === (strlen($strWildcard) - 1)) {
 				//*** Wildcard at end.
 				$strNoWildcard = substr($strWildcard, 0, (strlen($strWildcard) - 1));
 				if (strpos($strName, $strNoWildcard) === 0) {
-					$blnReturn = TRUE;
+					$blnReturn = true;
 				}
 			}
 		}

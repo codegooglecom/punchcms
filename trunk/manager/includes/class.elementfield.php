@@ -93,9 +93,9 @@ class ElementField extends DBA_ElementField {
 				case FIELD_TYPE_BOOLEAN:
 					//*** Make it a true boolean.
 					if ($objValue->getValue() == "true") {
-						$strReturn = TRUE;
+						$strReturn = true;
 					} else {
-						$strReturn = FALSE;
+						$strReturn = false;
 					}
 					break;
 
@@ -120,7 +120,7 @@ class ElementField extends DBA_ElementField {
 		return $this->rawValue;
 	}
 
-	public function setValue($varValue, $intLanguageId = 0, $blnCascade = FALSE) {
+	public function setValue($varValue, $intLanguageId = 0, $blnCascade = false) {
 		if ($this->id > 0) {
 			$objValue = $this->getNewValueObject();
 			$objValue->setValue($varValue);
@@ -209,7 +209,7 @@ class ElementField extends DBA_ElementField {
 			foreach ($objContentLangs as $objContentLanguage) {
 				$objValue = $objElementField->getValueObject($objContentLanguage->getId());
 				if (is_object($objValue)) {
-					$objValue->delete(TRUE);
+					$objValue->delete(true);
 				}
 			}
 			$objElementField->delete();
@@ -219,7 +219,7 @@ class ElementField extends DBA_ElementField {
 	public static function fileHasDuplicates($strFileValue, $intOffset = 0) {
 		global $_CONF;
 		
-		$blnReturn = FALSE;
+		$blnReturn = false;
 		
 		$strSql = "SELECT pcms_element_field_bigtext.id FROM pcms_element_field_bigtext, pcms_element_field, pcms_element 
 			WHERE pcms_element_field_bigtext.value LIKE '%%%s\\n%%' 
@@ -230,7 +230,7 @@ class ElementField extends DBA_ElementField {
 		
 		$objElementFields = ElementField::select($strSql);
 		
-		if ($objElementFields->count() > $intOffset) $blnReturn = TRUE;
+		if ($objElementFields->count() > $intOffset) $blnReturn = true;
 		
 		return $blnReturn;
 	}	

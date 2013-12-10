@@ -36,15 +36,15 @@ class PCMS_Installer {
 		$objForm->addField("single_instance", "Single website", VFORM_BOOLEAN);
 
 		$objForm->addFieldset("Administrator settings", NULL, "This is the account for the admin area. Later you can create an admin per website.");
-		$objForm->addField("username", "Username", VFORM_STRING, array("maxLength" => 255, "required" => TRUE), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter only letters and spaces."));
-		$objForm->addField("passwd", "Password", VFORM_PASSWORD, array("maxLength" => 255, "required" => TRUE), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter only letters and numbers."));
-		$objForm->addField("email", "Email address", VFORM_EMAIL, array("maxLength" => 32, "required" => TRUE), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Use the format name@domain.extension."), array("tip" => "This address will be used as the sender address for password reminders."));
+		$objForm->addField("username", "Username", VFORM_STRING, array("maxLength" => 255, "required" => true), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter only letters and spaces."));
+		$objForm->addField("passwd", "Password", VFORM_PASSWORD, array("maxLength" => 255, "required" => true), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter only letters and numbers."));
+		$objForm->addField("email", "Email address", VFORM_EMAIL, array("maxLength" => 32, "required" => true), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Use the format name@domain.extension."), array("tip" => "This address will be used as the sender address for password reminders."));
 
 		$objForm->addFieldset("MySQL settings", NULL, "The database and user must already exist, otherwise the installation will fail.");
-		$objForm->addField("db_server", "Server address", VFORM_STRING, array("maxLength" => 255, "required" => TRUE), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter the address of the MySQL server."), array("default" => "localhost"));
-		$objForm->addField("db_name", "Database name", VFORM_STRING, array("maxLength" => 255, "required" => TRUE), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter the name of the designated database."), array("default" => "punchcms"));
-		$objForm->addField("db_username", "Username", VFORM_STRING, array("maxLength" => 255, "required" => TRUE), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter the username for the database."));
-		$objForm->addField("db_passwd", "Password", VFORM_PASSWORD, array("maxLength" => 32, "required" => FALSE), array("maxLength" => $strMaxLength, "type" => "Enter the password for the database."));
+		$objForm->addField("db_server", "Server address", VFORM_STRING, array("maxLength" => 255, "required" => true), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter the address of the MySQL server."), array("default" => "localhost"));
+		$objForm->addField("db_name", "Database name", VFORM_STRING, array("maxLength" => 255, "required" => true), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter the name of the designated database."), array("default" => "punchcms"));
+		$objForm->addField("db_username", "Username", VFORM_STRING, array("maxLength" => 255, "required" => true), array("maxLength" => $strMaxLength, "required" => $strRequired, "type" => "Enter the username for the database."));
+		$objForm->addField("db_passwd", "Password", VFORM_PASSWORD, array("maxLength" => 32, "required" => false), array("maxLength" => $strMaxLength, "type" => "Enter the password for the database."));
 
 		$objForm->setSubmitLabel("Submit");
 		
@@ -77,10 +77,10 @@ class PCMS_Installer {
 			$strConfig = str_replace("!!DB_USERNAME!!", $this->__db_username, $strConfig);
 			$strConfig = str_replace("!!DB_PASSWORD!!", $this->__db_passwd, $strConfig);
 			$strConfig = str_replace("!!MAIL_ADMIN!!", $email, $strConfig);
-			$strConfig = str_replace("!!CMS_TYPE!!", ($single) ? "TRUE" : "FALSE", $strConfig);
+			$strConfig = str_replace("!!CMS_TYPE!!", ($single) ? "true" : "false", $strConfig);
 			
 			//*** Write config file.
-			if (@file_put_contents("config.php", $strConfig) === FALSE) {
+			if (@file_put_contents("config.php", $strConfig) === false) {
 				$strReturn = "Error while writing to the config file.";
 			} else {
 				//*** Create super admin.
@@ -288,7 +288,7 @@ class PCMS_Installer {
 	}
 	
 	private function __hasWrite($folder) {
-		$blnReturn = FALSE;
+		$blnReturn = false;
 		
 		$blnReturn = is_writable($folder);
 		
