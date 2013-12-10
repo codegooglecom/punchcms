@@ -200,6 +200,7 @@ $_LANG['settingsLabel']['section_caching'] = "Caching";
 $_LANG['settingsLabel']['section_aliases'] = "URL Snelkoppelingen";
 $_LANG['settingsLabel']['section_audit'] = "Audit Log";
 $_LANG['settingsLabel']['section_elements'] = "Elementen";
+$_LANG['settingsLabel']['section_general'] = "Algemeen";
 $_LANG['settingsLabel']['ftp_server'] = "Serveradres";
 $_LANG['settingsLabel']['ftp_username'] = "Gebruikersnaam";
 $_LANG['settingsLabel']['ftp_password'] = "Wachtwoord";
@@ -218,6 +219,8 @@ $_LANG['settingsLabel']['audit_enable'] = "Audit log activeren";
 $_LANG['settingsLabel']['audit_rotation'] = "Verwijder logs ouder dan (dagen)";
 $_LANG['settingsLabel']['elmnt_active_state'] = "Nieuwe elementen zijn standaard geactiveerd";
 $_LANG['settingsLabel']['web_server'] = "Website URL";
+$_LANG['settingsLabel']['next_after_save'] = "Bewerk volgende element na opslaan";
+$_LANG['settingsLabel']['next_is_child'] = "Volgende element is eerste sub element";
 
 //*** Users and groups label definitions.
 $_LANG['usersLabel']['users'] = "Gebruikers";
@@ -398,6 +401,7 @@ $_LANG['alert']['feedsRemoveAlert'] = "Weet u zeker dat u deze bronnen wilt verw
 $_LANG['alert']['moveToFTP'] = "Uploaden naar de webserver is mislukt. Controleer de FTP instellingen en probeer het opnieuw.";
 $_LANG['alert']['elementBeforeLanguage'] = "U moet eerst een standaardtaal aanmaken voordat u een element kunt aanmaken!";
 $_LANG['alert']['newWindow'] = "Dit bestand zal in een nieuw venster openen.";
+$_LANG['alert']['refreshFailed'] = "Het verversen van de elementlijst is mislukt.<br />De pagina wordt ververst in 2 seconden.";
 
 $_LANG['help']['docHeader'] = "Documentatie";
 $_LANG['help']['docBody'] = "<p><a href=\"images/PunchCMS_handleiding.pdf\" rel=\"external\">Download</a> de documentatie van het CMS voor een inleiding en algemene uitleg van de functionaliteit.</p><p>Voor het bekijken van de documentatie heeft u de <a href=\"http://www.adobe.com/products/acrobat/readstep2.html\" rel=\"external\">Adobe Reader</a> nodig.</p>";

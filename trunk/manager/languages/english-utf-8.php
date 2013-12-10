@@ -200,6 +200,7 @@ $_LANG['settingsLabel']['section_caching'] = "Caching";
 $_LANG['settingsLabel']['section_aliases'] = "URL Aliases";
 $_LANG['settingsLabel']['section_audit'] = "Audit Log";
 $_LANG['settingsLabel']['section_elements'] = "Elements";
+$_LANG['settingsLabel']['section_general'] = "General";
 $_LANG['settingsLabel']['ftp_server'] = "Server address";
 $_LANG['settingsLabel']['ftp_username'] = "Username";
 $_LANG['settingsLabel']['ftp_password'] = "Password";
@@ -218,6 +219,8 @@ $_LANG['settingsLabel']['audit_enable'] = "Enable audit log";
 $_LANG['settingsLabel']['audit_rotation'] = "Remove logs older than (days)";
 $_LANG['settingsLabel']['elmnt_active_state'] = "Activate new elements by default";
 $_LANG['settingsLabel']['web_server'] = "Website URL";
+$_LANG['settingsLabel']['next_after_save'] = "Edit next element after saving";
+$_LANG['settingsLabel']['next_is_child'] = "Next element is child element instead of sibling";
 
 //*** Users and groups label definitions.
 $_LANG['usersLabel']['users'] = "Users";
@@ -398,6 +401,7 @@ $_LANG['alert']['feedRemoveAlert'] = "Are you sure you want to remove these feed
 $_LANG['alert']['moveToFTP'] = "Upload to the webserver failed. Check the FTP settings and try again.";
 $_LANG['alert']['elementBeforeLanguage'] = "You need to create a default language before you can create an element!";
 $_LANG['alert']['newWindow'] = "This file will open in a new window.";
+$_LANG['alert']['refreshFailed'] = "Failed to refresh the element list.<br />This page will refresh in 2 seconds.";
 
 
 $_LANG['help']['docHeader'] = "Documentation";
