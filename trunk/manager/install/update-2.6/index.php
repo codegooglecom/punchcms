@@ -46,16 +46,7 @@ $resource = $objDb->exec(
         '500',
         '2013-11-05 13:37:00',
         NOW()
-    );
-    INSERT INTO  `" . $GLOBALS["_CONF"]["db"]["dbName"] . "`.`pcms_setting_tpl` (
-    	`name` ,
-    	`value` ,
-    	`section` ,
-    	`type` ,
-    	`sort` ,
-    	`created` ,
-    	`modified`
-    ) VALUES (
+    ), (
         'next_is_child',
         '0',
         'general',
