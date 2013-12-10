@@ -9,7 +9,7 @@
  */
 class Alias extends DBA_Alias {
 	
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		parent::$__object = "Alias";
 		parent::$__table = "pcms_alias";
 		

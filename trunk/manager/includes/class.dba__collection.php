@@ -14,7 +14,7 @@
 
 class DBA__Collection implements Iterator {
 	protected $collection = array();
-	private $isSeek = FALSE;
+	private $isSeek = false;
 	private $__pageItems = 0;
 	private $__currentPage = 1;
 
@@ -35,7 +35,7 @@ class DBA__Collection implements Iterator {
 	 * @param object The object
 	 * @param boolean Add object to beginning of array or not
 	 */
-	public function addObject($value, $blnAddToBeginning = FALSE) {
+	public function addObject($value, $blnAddToBeginning = false) {
 		if ($blnAddToBeginning) {
 			array_unshift($this->collection, $value);
 		} else {
@@ -56,7 +56,7 @@ class DBA__Collection implements Iterator {
 			}
         }
 
-		$this->isSeek = TRUE;
+		$this->isSeek = true;
 	}
 
 	/**
@@ -186,12 +186,12 @@ class DBA__Collection implements Iterator {
     public function valid() {
     	if ($this->__pageItems > 0) {
     		if ($this->key() + 1 > $this->pageEnd()) {
-    			return FALSE;
+    			return false;
     		} else {
-    			return $this->current() !== FALSE;
+    			return $this->current() !== false;
     		}
     	} else {
-    		return $this->current() !== FALSE;
+    		return $this->current() !== false;
     	}
     }
 	
@@ -222,11 +222,11 @@ class DBA__Collection implements Iterator {
     public function inCollection($varValue) {
     	foreach ($this->collection as $object) {
     		if ($object == $varValue) {
-    			return TRUE;
+    			return true;
     		}
     	}
     	
-    	return FALSE;
+    	return false;
     }
     	
     /**
