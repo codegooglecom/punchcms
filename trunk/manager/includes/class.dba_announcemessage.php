@@ -39,7 +39,7 @@ class DBA_AnnounceMessage extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "AnnounceMessage";
 		self::$__table = "pcms_announce_message";
 

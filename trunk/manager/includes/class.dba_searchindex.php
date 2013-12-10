@@ -40,7 +40,7 @@ class DBA_SearchIndex extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "SearchIndex";
 		self::$__table = "pcms_search_index";
 

@@ -38,7 +38,7 @@ class DBA_ElementType extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "ElementType";
 		self::$__table = "pcms_element_type";
 

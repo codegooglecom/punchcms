@@ -40,7 +40,7 @@ class DBA_Product extends DBA__Object {
 		return parent::doDelete($varValue);
 	}
 
-	public function save($blnSaveModifiedDate = TRUE) {
+	public function save($blnSaveModifiedDate = true) {
 		self::$__object = "Product";
 		self::$__table = "punch_product";
 
