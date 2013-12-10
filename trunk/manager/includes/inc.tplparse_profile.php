@@ -9,7 +9,7 @@ function parseProfile($intElmntId, $strCommand) {
 			$objLiveUser;
 
 	//*** Retrieve the latest user info from the DB.
-	$objLiveUser->updateProperty(TRUE, FALSE, $_CONF['app']['account']->getId());
+	$objLiveUser->updateProperty(true, false, $_CONF['app']['account']->getId());
 
 	$objTpl = new HTML_Template_IT($_PATHS['templates']);
 	$objTpl->loadTemplatefile("profile.tpl.htm");
@@ -46,38 +46,38 @@ function parseProfile($intElmntId, $strCommand) {
 	//*** Post the profile form if submitted.
 	if (count($_CLEAN_POST) > 0 && !empty($_CLEAN_POST['dispatch']) && $_CLEAN_POST['dispatch'] == "editProfile") {
 		//*** The element form has been posted.
-		$blnError = FALSE;
+		$blnError = false;
 
 		//*** Check sanitized input.
 		if (is_null($_CLEAN_POST["frm_name"])) {
 			$objTpl->setVariable("ERROR_NAME_ON", " error");
 			$objTpl->setVariable("ERROR_NAME", $objLang->get("profileName", "formerror"));
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
 		if (is_null($_CLEAN_POST["frm_email"])) {
 			$objTpl->setVariable("ERROR_EMAIL_ON", " error");
 			$objTpl->setVariable("ERROR_EMAIL", $objLang->get("commonTypeText", "formerror"));
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
 		if (is_null($_CLEAN_POST["frm_language"])) {
 			$objTpl->setVariable("ERROR_LANGUAGE_ON", " error");
 			$objTpl->setVariable("ERROR_LANGUAGE", $objLang->get("commonTypeText", "formerror"));
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
 		if (is_null($_CLEAN_POST["frm_timezone"])) {
 			$objTpl->setVariable("ERROR_TIMEZONE_ON", " error");
 			$objTpl->setVariable("ERROR_TIMEZONE", $objLang->get("commonTypeText", "formerror"));
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
 		if (is_null($_CLEAN_POST["dispatch"])) {
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
-		if ($blnError === TRUE) {
+		if ($blnError === true) {
 			//*** Display global error.
 			$objTpl->setVariable("FORM_NAME_VALUE", $_POST["frm_name"]);
 			$objTpl->setVariable("FORM_EMAIL_VALUE", $_POST["frm_email"]);
@@ -121,54 +121,54 @@ function parseProfile($intElmntId, $strCommand) {
 	//*** Post the password form if submitted.
 	if (count($_CLEAN_POST) > 0 && !empty($_CLEAN_POST['dispatch']) && $_CLEAN_POST['dispatch'] == "editPass") {
 		//*** The element form has been posted.
-		$blnError = FALSE;
+		$blnError = false;
 
 		//*** Check sanitized input.
 		if (is_null($_CLEAN_POST["frm_currentpass"])) {
 			$objTpl->setVariable("ERROR_CURRENTPASS_ON", " error");
 			$objTpl->setVariable("ERROR_CURRENTPASS", $objLang->get("commonTypePassword", "formerror"));
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
 		if (!is_null($_CLEAN_POST["frm_currentpass"])) {
 			if (sha1($_CLEAN_POST["frm_currentpass"]) !== $objLiveUser->getProperty('passwd')) {
 				$objTpl->setVariable("ERROR_CURRENTPASS_ON", " error");
 				$objTpl->setVariable("ERROR_CURRENTPASS", $objLang->get("wrongPassword", "formerror"));
-				$blnError = TRUE;
+				$blnError = true;
 			}
 		}
 
 		if (is_null($_CLEAN_POST["frm_newpass"])) {
 			$objTpl->setVariable("ERROR_NEWPASS_ON", " error");
 			$objTpl->setVariable("ERROR_NEWPASS", $objLang->get("commonTypePassword", "formerror"));
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
 		if (!is_null($_CLEAN_POST["frm_newpass"]) && strlen($_CLEAN_POST["frm_newpass"]) < $_CONF['app']['minPassLength']) {
 			$objTpl->setVariable("ERROR_NEWPASS_ON", " error");
 			$objTpl->setVariable("ERROR_NEWPASS", $objLang->get("shortPassword", "formerror"));
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
 		if (is_null($_CLEAN_POST["frm_verifypass"])) {
 			$objTpl->setVariable("ERROR_VERIFYPASS_ON", " error");
 			$objTpl->setVariable("ERROR_VERIFYPASS", $objLang->get("commonTypePassword", "formerror"));
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
 		if (!is_null($_CLEAN_POST["frm_newpass"]) && !is_null($_CLEAN_POST["frm_verifypass"])) {
 			if ($_CLEAN_POST["frm_newpass"] !== $_CLEAN_POST["frm_verifypass"]) {
 				$objTpl->setVariable("ERROR_VERIFYPASS_ON", " error");
 				$objTpl->setVariable("ERROR_VERIFYPASS", $objLang->get("passwordNotMatch", "formerror"));
-				$blnError = TRUE;
+				$blnError = true;
 			}
 		}
 
 		if (is_null($_CLEAN_POST["dispatch"])) {
-			$blnError = TRUE;
+			$blnError = true;
 		}
 
-		if ($blnError === TRUE) {
+		if ($blnError === true) {
 			//*** Display global error.
 			$objTpl->setVariable("ERROR_PASSWORD_MAIN", $objLang->get("main", "formerror"));
 		} else {

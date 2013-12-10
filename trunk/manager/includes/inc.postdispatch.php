@@ -21,7 +21,7 @@ switch ($strDispatch) {
 		  	'frm_name' 			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_apiname'		=> array(
 				'type' => 'word',
@@ -34,7 +34,7 @@ switch ($strDispatch) {
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -53,7 +53,7 @@ switch ($strDispatch) {
 		  	'frm_name' 			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_apiname'		=> array(
 				'type' => 'word',
@@ -66,12 +66,12 @@ switch ($strDispatch) {
 		  	'frm_field_type'	=> array(
 				'type' => 'int',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -94,7 +94,7 @@ switch ($strDispatch) {
 		  	'frm_name' 			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_apiname'		=> array(
 				'type' => 'word',
@@ -106,29 +106,29 @@ switch ($strDispatch) {
 			),
 		  	'frm_template'	=> array(
 				'type' => 'string',
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_feed'	=> array(
 				'type' => 'string',
-				'required' => FALSE,
+				'required' => false,
 			),
 		  	'frm_dynamic_alias_check'	=> array(
 				'type' => 'string',
 				'maxlength' => 2,
-				'required' => FALSE,
+				'required' => false,
 			),
 		  	'frm_dynamic_alias'	=> array(
 				'type' => 'string',
 				'maxlength' => 250,
-				'required' => FALSE,
+				'required' => false,
 			),
 		  	'frm_feedpath'	=> array(
 				'type' => 'string',
-				'required' => FALSE,
+				'required' => false,
 			),
 		  	'frm_maxitems'	=> array(
 				'type' => 'int',
-				'required' => FALSE,
+				'required' => false,
 			),
 		  	'frm_description'	=> array(
 				'type' => 'text',
@@ -169,7 +169,7 @@ switch ($strDispatch) {
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -184,7 +184,7 @@ switch ($strDispatch) {
 		  	'frm_name' 			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_description'	=> array(
 				'type' => 'text',
@@ -197,7 +197,7 @@ switch ($strDispatch) {
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -212,7 +212,7 @@ switch ($strDispatch) {
 		  	'frm_name' 			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_apiname'		=> array(
 				'type' => 'word',
@@ -225,7 +225,7 @@ switch ($strDispatch) {
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -240,27 +240,27 @@ switch ($strDispatch) {
 		  	'frm_name' 			=> array(
 				'type' => 'string',
 				'maxlength' => 250,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_email'		=> array(
 				'type' => 'email',
 				'maxlength' => 250,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_language'	=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_timezone'	=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -275,22 +275,22 @@ switch ($strDispatch) {
 		  	'frm_currentpass' 	=> array(
 				'type' => 'password',
 				'maxlength' => 30,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_newpass'		=> array(
 				'type' => 'password',
 				'maxlength' => 30,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_verifypass'	=> array(
 				'type' => 'password',
 				'maxlength' => 30,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -305,7 +305,7 @@ switch ($strDispatch) {
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -324,7 +324,7 @@ switch ($strDispatch) {
 		  	'frm_name' 			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_apiname'		=> array(
 				'type' => 'word',
@@ -333,7 +333,7 @@ switch ($strDispatch) {
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -352,7 +352,7 @@ switch ($strDispatch) {
 		  	'frm_alias' 		=> array(
 				'type' => 'word',
 				'maxlength' => 250,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_language' 		=> array(
 				'type' => 'int',
@@ -365,7 +365,7 @@ switch ($strDispatch) {
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -384,27 +384,27 @@ switch ($strDispatch) {
 		  	'frm_name' 			=> array(
 				'type' => 'string',
 				'maxlength' => 250,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_feed'		=> array(
 				'type' => 'string',
 				'maxlength' => 250,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'frm_basepath'	=> array(
 				'type' => 'text',
 				'maxlength' => 250,
-				'required' => FALSE,
+				'required' => false,
 			),
 		  	'frm_refresh'	=> array(
 				'type' => 'int',
 				'maxlength' => 16,
-				'required' => TRUE,
+				'required' => true,
 			),
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 
@@ -422,7 +422,7 @@ switch ($strDispatch) {
 		  	'dispatch'			=> array(
 				'type' => 'string',
 				'maxlength' => 100,
-				'required' => TRUE,
+				'required' => true,
 			),
 		);
 

@@ -10,7 +10,7 @@ function parseAlias($intAliasId, $strCommand) {
 	$objTpl = new HTML_Template_IT($_PATHS['templates']);
 	$objTpl->loadTemplatefile("alias.tpl.htm");
 	
-	$blnError = FALSE;
+	$blnError = false;
 
 	switch ($strCommand) {
 		case CMD_LIST:			
@@ -22,26 +22,26 @@ function parseAlias($intAliasId, $strCommand) {
 				
 				//*** Check sanitized input.
 				if (is_null($_CLEAN_POST["frm_active"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				
 				if (is_null($_CLEAN_POST["frm_alias"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				
 				if (is_null($_CLEAN_POST["frm_language"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_element"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				
 				if (is_null($_CLEAN_POST["dispatch"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
-				if ($blnError === TRUE) {
+				if ($blnError === true) {
 					//*** Display global error.
 					$objTpl->setVariable("FORM_ACTIVE_VALUE", ($_POST["frm_active"] == "on") ? "checked=\"checked\"" : "");
 					$objTpl->setVariable("FORM_ALIAS_VALUE", $_POST["frm_alias"]);
@@ -260,7 +260,7 @@ function parseAlias($intAliasId, $strCommand) {
 			break;
 
 		case CMD_REMOVE:
-			if (strpos($intAliasId, ',') !== FALSE) {
+			if (strpos($intAliasId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrAliases = explode(',', $intAliasId);
 				$objAliases = Alias::selectByPK($arrAliases);

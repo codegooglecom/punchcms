@@ -4,7 +4,7 @@ $strUsername 	= request('handle');
 $strPassword 	= request('passwd');
 $strCmd         = request('cmd');
 $blnRemember 	= request('remember_me');
-($blnRemember === "on") ? $blnRemember = TRUE : $blnRemember = FALSE;
+($blnRemember === "on") ? $blnRemember = true : $blnRemember = false;
 
 //*** Check if we need to logout.
 if ($objLiveUser->isLoggedIn() && $strCommand == CMD_LOGOUT) {

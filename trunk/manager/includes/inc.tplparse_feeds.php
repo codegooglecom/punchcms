@@ -10,7 +10,7 @@ function parseFeeds($intFeedId, $strCommand) {
 	$objTpl = new HTML_Template_IT($_PATHS['templates']);
 	$objTpl->loadTemplatefile("feed.tpl.htm");
 	
-	$blnError = FALSE;
+	$blnError = false;
 
 	switch ($strCommand) {
 		case CMD_LIST:			
@@ -22,30 +22,30 @@ function parseFeeds($intFeedId, $strCommand) {
 				
 				//*** Check sanitized input.
 				if (is_null($_CLEAN_POST["frm_active"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				
 				if (is_null($_CLEAN_POST["frm_name"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_feed"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_basepath"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
 				if (is_null($_CLEAN_POST["frm_refresh"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 				
 				if (is_null($_CLEAN_POST["dispatch"])) {
-					$blnError = TRUE;
+					$blnError = true;
 				}
 
-				if ($blnError === TRUE) {
+				if ($blnError === true) {
 					//*** Display global error.
 					$objTpl->setVariable("FORM_ACTIVE_VALUE", ($_POST["frm_active"] == "on") ? "checked=\"checked\"" : "");
 					$objTpl->setVariable("FORM_NAME_VALUE", $_POST["frm_name"]);
@@ -224,7 +224,7 @@ function parseFeeds($intFeedId, $strCommand) {
 			break;
 
 		case CMD_REMOVE:
-			if (strpos($intFeedId, ',') !== FALSE) {
+			if (strpos($intFeedId, ',') !== false) {
 				//*** Multiple elements submitted.
 				$arrFeeds = explode(',', $intFeedId);
 				$objFeeds = Feed::selectByPK($arrFeeds);

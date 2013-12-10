@@ -22,14 +22,14 @@ function parseHeader($intCatId, $strCommand, $intElmntId) {
 	$objTpl->setVariable("TITLE", htmlentities($_CONF['app']['pageTitle']));
 	$objTpl->setVariable("GENERATOR", htmlentities(APP_NAME));
 	$objTpl->setVariable("REVISION", htmlentities(APP_VERSION));
-	
+
 	switch ($intCatId) {
 		case NAV_PCMS_ELEMENTS:
 			$objTpl->touchBlock("tree");
 			$objTpl->touchBlock("animation");
 			$objTpl->touchBlock("tooltip");
 			$objTpl->touchBlock("cms.elements");
-			
+
 			switch ($strCommand) {
 				case CMD_ADD:
 				case CMD_ADD_DYNAMIC:
@@ -40,7 +40,7 @@ function parseHeader($intCatId, $strCommand, $intElmntId) {
 					break;
 			}
 			break;
-			
+
 		case NAV_PCMS_TEMPLATES:
 			$objTpl->touchBlock("tree");
 			$objTpl->touchBlock("animation");
@@ -52,40 +52,40 @@ function parseHeader($intCatId, $strCommand, $intElmntId) {
 					$objTpl->touchBlock("cms.aliases");
 			}
 			break;
-			
+
 		case NAV_PCMS_STORAGE:
 			$objTpl->touchBlock("tree");
 			$objTpl->touchBlock("animation");
 			$objTpl->touchBlock("tooltip");
 			$objTpl->touchBlock("cms.storage");
 			break;
-			
+
 		case NAV_PCMS_ALIASES:
 			$objTpl->touchBlock("animation");
 			$objTpl->touchBlock("cms.aliases");
 			break;
-			
+
 		case NAV_PCMS_FEEDS:
 			$objTpl->touchBlock("animation");
 			$objTpl->touchBlock("cms.feeds");
 			break;
-			
+
 		case NAV_PCMS_LANGUAGES:
 			$objTpl->touchBlock("animation");
 			$objTpl->touchBlock("cms.languages");
 			break;
-			
+
 		case NAV_MYPUNCH_USERS:
 			$objTpl->touchBlock("tree");
 			$objTpl->touchBlock("animation");
 			$objTpl->touchBlock("cms.users");
 			break;
 	}
-	
-	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
+
+	if (AnnounceMessage::getMessages(false)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
 		$objTpl->touchBlock("lightbox");
 	}
-	
+
 	$objLang = (isset($_SESSION["objLang"])) ? unserialize($_SESSION["objLang"]) : NULL;
 	$strLang = (!is_null($objLang)) ? strtolower($objLang->get("abbr")) : "en";
 	$objTpl->setVariable("DATEPICKER_LANG", $strLang);
@@ -353,15 +353,23 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 
 	//*** Announcement script.
 	$strScript .= "function loadAnnouncement() {";
-	if (AnnounceMessage::getMessages(FALSE)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
+	if (AnnounceMessage::getMessages(false)->count() > 0 && $objLiveUser->checkRight(MYPUNCH_ANNOUNCEMENTS_VIEW)) {
 		$strScript .= "objLightbox = new lightbox('index.php?cid=24');";
 		$strScript .= "objLightbox.activate();";
 	}
 	$strScript .= "}";
-    
+
+	//*** Check if 2.6 update is done yet.
+    $strSetting = Setting::getValueByName("next_after_save");
+    if (strlen($strSetting) <= 0) {
+        $objTpl->touchBlock("update26");
+    }
+
+	$objTpl->setCurrentBlock("__global__");
 	$objTpl->setVariable("SELECTED_TAB", $intSelectedTab);
 	$objTpl->setVariable("SCRIPT", $strScript);
-	
+	$objTpl->parseCurrentBlock();
+
 	return $objTpl->get();
 }
 
@@ -389,8 +397,8 @@ function parseMenu($intCatId, $strCommand) {
 		if (is_array($value)) {
 			//*** Nested MyPunch menu items.
 			foreach ($value as $subKey => $subValue) {
-				if ($objLiveUser->checkRight($_CONF['app']['navRights'][$subValue]) == TRUE
-						&& $_CONF['app']['account']->hasProduct(constant('PRODUCT_' . strtoupper($subKey))) == TRUE) {
+				if ($objLiveUser->checkRight($_CONF['app']['navRights'][$subValue]) == true
+						&& $_CONF['app']['account']->hasProduct(constant('PRODUCT_' . strtoupper($subKey))) == true) {
 
 					$objTpl->setCurrentBlock("mypunch.{$key}");
 					$objTpl->setVariable("LABEL_MYPUNCH_" . strtoupper($key), $objLang->get($subKey, "menu"));
@@ -398,7 +406,7 @@ function parseMenu($intCatId, $strCommand) {
 					if ($intCatId == $subValue || in_array($intCatId, $_CONF['app']['ms' . ucfirst($subKey)])) {
 						//*** Render product sub menu.
 						foreach ($_CONF['app']['ms' . ucfirst($subKey)] as $productKey => $productValue) {
-							if ($objLiveUser->checkRight($_CONF['app']['navRights'][$productValue]) == TRUE) {
+							if ($objLiveUser->checkRight($_CONF['app']['navRights'][$productValue]) == true) {
 								$objTpl->setVariable("LABEL_" . strtoupper($subKey) . "_" . strtoupper($productKey), $objLang->get($subKey . ucfirst($productKey), "menu"));
 								$objTpl->setVariable("CID_" . strtoupper($subKey) . "_" . strtoupper($productKey), $productValue);
 
@@ -416,7 +424,7 @@ function parseMenu($intCatId, $strCommand) {
 				}
 			}
 		} else {
-			if ($objLiveUser->checkRight($_CONF['app']['navRights'][$value]) == TRUE) {
+			if ($objLiveUser->checkRight($_CONF['app']['navRights'][$value]) == true) {
 				//*** Plain MyPunch menu items.
 				$objTpl->setVariable("LABEL_MYPUNCH_" . strtoupper($key), $objLang->get("mypunch" . ucfirst($key), "menu"));
 				$objTpl->setVariable("CID_MYPUNCH_" . strtoupper($key), $value);

@@ -84,13 +84,13 @@ function xhtmlsave($strInput) {
 	return str_replace("&", "&amp;", $strInput);
 }
 
-function getShortValue($strInput, $intCharLength = 200, $blnPreserveWord = TRUE, $strAppend = " ...") {
+function getShortValue($strInput, $intCharLength = 200, $blnPreserveWord = true, $strAppend = " ...") {
 	//*** Get a short version of the value.
 	$strReturn = $strInput; // Set the default return value.
 
 	$strReturn = substr($strInput, 0, $intCharLength);
 
-	if ($blnPreserveWord == TRUE && strlen($strReturn) < strlen($strInput)) {
+	if ($blnPreserveWord == true && strlen($strReturn) < strlen($strInput)) {
 		$intLastSpace = strrpos($strReturn, " ");
 		$strReturn = substr($strReturn, 0, $intLastSpace);
 	}
