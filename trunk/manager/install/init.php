@@ -26,5 +26,3 @@ ini_set("include_path", $_PATHS['includes'] .
 * Load common methods.
 ***/
 require_once('inc.common.php');
-
-?>

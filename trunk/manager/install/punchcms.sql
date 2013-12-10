@@ -509,7 +509,9 @@ INSERT INTO `pcms_setting_tpl` (`id`, `name`, `value`, `section`, `type`, `sort`
 (14, 'file_download', '/download.php?eid=', 'files', 'text', 203, '2007-11-16 11:20:06', '2007-11-16 11:20:06'),
 (15, 'caching_ftp_folder', 'cache', 'caching', 'text', 202, '2007-11-28 16:33:51', '2007-11-28 16:33:51'),
 (16, 'elmnt_active_state', '0', 'elements', 'checkbox', 51, '2008-06-09 08:55:08', '2008-06-09 08:55:08'),
-(17, 'web_server', '', 'files', 'text', 99, '2009-04-13 21:43:00', '2009-04-13 21:43:00');
+(17, 'web_server', '', 'files', 'text', 99, '2009-04-13 21:43:00', '2009-04-13 21:43:00'),
+(18, 'next_after_save', '', 'general', 'checkbox', 500, '2014-01-01 01:33:70', '2014-01-01 01:33:70'),
+(19, 'next_is_child', '', 'general', 'checkbox', 501, '2014-01-01 01:33:70', '2014-01-01 01:33:70');
 
 -- --------------------------------------------------------
 
