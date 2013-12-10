@@ -1,11 +1,16 @@
 <?php
+
 session_save_path($_SERVER["DOCUMENT_ROOT"] . "/sessions");
 session_start();
+
 require_once('./inc.constantes.php');
 require_once('../libraries/lib.language.php');
 
 $objLang = null;
-if (array_key_exists("objLang", $_SESSION)) $objLang = unserialize($_SESSION["objLang"]);
+if (array_key_exists("objLang", $_SESSION)) {
+    $objLang = unserialize($_SESSION["objLang"]);
+}
+
 if (!is_object($objLang)) {
 	require_once('../config.php');
 	$objLang = new Language($_CONF['app']['defaultLang'], $_CONF['app']['langPath']);
@@ -13,23 +18,81 @@ if (!is_object($objLang)) {
 
 ?>
 
+var itemListUpdateTimeout;
+
 function PElement() {
 	this.id = 0;
 	this.checked = false;
+}
+
+PElement.executeCommand = function (url) {
+    itemListUpdateTimeout = setTimeout(function () {
+        var $overlay = $("<div />").prop("id", "itemlist-overlay");
+        $("#itemlist").append($overlay);
+
+        var $warning = $("<div />")
+           .addClass("itemlist-message itemlist-info")
+           .html("<?php echo $objLang->get("loading", "form") ?>");
+
+        $("#itemlist").append($warning);
+    }, 800);
+
+    return $.post(url, PElement.updateItemList);
 }
 
 PElement.remove = function(intId, strRedirect) {
 	var blnConfirm = confirm("<?php echo $objLang->get("elementRemoveAlert", "alert") ?>");
 
 	if (blnConfirm == true) {
-		strReturnTo = "";
-		document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + intId + "&cmd=<?php echo CMD_REMOVE ?>&returnTo=" + strReturnTo;
+    	PElement.executeCommand("/?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + intId + "&cmd=<?php echo CMD_REMOVE ?>");
 	}
 }
 
 PElement.duplicate = function(intId, strRedirect) {
-	strReturnTo = "";
-	document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + intId + "&cmd=<?php echo CMD_DUPLICATE ?>&returnTo=" + strReturnTo;
+	PElement.executeCommand("/?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + intId + "&cmd=<?php echo CMD_DUPLICATE ?>");
+}
+
+PElement.updateItemList = function (data) {
+    clearTimeout(itemListUpdateTimeout);
+
+    var itemlist = $(data).find("#itemlist");
+    if (itemlist.length > 0) {
+        $("#itemlist-overlay").remove();
+        $("#itemlist").html(itemlist.html());
+
+        // Update tree view
+        if (typeof initUpdateSort == "function") {
+            initUpdateSort();
+        }
+
+        // Update page navigation
+        var firstPageNav = $(data).find(".page-nav").first().html();
+        if (firstPageNav && firstPageNav.length > 0) {
+            $(".page-nav").first().html(firstPageNav);
+        } else {
+            $(".page-nav").first().remove();
+        }
+
+        var secondPageNav = $(data).find(".page-nav").last().html();
+        if (secondPageNav && secondPageNav.length > 0) {
+            $(".page-nav").last().html(secondPageNav);
+        } else {
+            $(".page-nav").last().remove();
+        }
+
+    } else {
+	    var $warning = $("<div />")
+	       .addClass("itemlist-message itemlist-warning")
+	       .html("<?php echo $objLang->get("refreshFailed", "alert") ?>");
+
+	    $("#itemlist").append($warning);
+
+        setTimeout(function () {
+            // Use 'true' to force a server refresh instead of reloading a cached page.
+            window.location.reload(true);
+        }, 2000);
+    }
+
 }
 
 PElement.multiDo = function(objField, strAction) {
@@ -60,29 +123,30 @@ PElement.multiDo = function(objField, strAction) {
 				}
 
 				if (blnConfirm == true) {
-					document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_REMOVE ?>";
-				} else {
-					//*** Reset pulldown.
-					objField.selectedIndex = 0;
+    				PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_REMOVE ?>");
 				}
 				break;
 
 			case "duplicate":
-				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DUPLICATE ?>";
+			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DUPLICATE ?>");
 				break;
 
 			case "activate":
-				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_ACTIVATE ?>";
+			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_ACTIVATE ?>");
 				break;
 
 			case "deactivate":
-				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DEACTIVATE ?>";
+			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_DEACTIVATE ?>");
 				break;
 
 			case "export":
-				document.location.href = "?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_EXPORT_ELEMENT ?>&sel=1";
+			    PElement.executeCommand("?cid=<?php echo NAV_PCMS_ELEMENTS ?>&eid=" + strIds + "&cmd=<?php echo CMD_EXPORT_ELEMENT ?>&sel=1");
 				break;
 		}
+
+    	//*** Reset pulldown.
+    	objField.selectedIndex = 0;
+
 	} else {
 		//*** Alert and reset pulldown.
 		alert("<?php echo $objLang->get("multiItemEmpty", "alert") ?>");

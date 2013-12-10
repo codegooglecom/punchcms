@@ -154,14 +154,13 @@ function focusLogin() {
 }
 
 function obtrudeItemBox() {
-	if (document.getElementsByTagName) {
-		var objElmnts = $(".itembox").get();
-		for (var intCount = 0; intCount < objElmnts.length; intCount++) {
-			objElmnts[intCount].onclick = function(event){return toggleItemBox(this, event);};
-			objElmnts[intCount].onmousedown = pauseUpdateSort;
-			objElmnts[intCount].onmouseup = restartUpdateSort;
-		}
-	}
+	//*** This is needed by the updated PElement library which dynamically reloads the #itemlist element.
+	$("#itemlist")
+		.on("click", ".itembox", function (event) {
+			return toggleItemBox(this, event);
+		})
+		.on("mousedown", ".itembox", pauseUpdateSort)
+		.on("mouseup", ".itembox", restartUpdateSort);
 }
 
 function obtrudeForm() {
