@@ -63,6 +63,9 @@ switch ($strCommand) {
 		break;
 }
 
+//*** Verify software version
+require_once('includes/inc.verify_version.php');
+
 //*** Load the Template Parse methods.
 require_once('includes/inc.tplparse_head.php');
 require_once('includes/inc.tplparse_foot.php');

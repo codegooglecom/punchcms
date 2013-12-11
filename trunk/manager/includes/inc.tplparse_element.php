@@ -659,7 +659,9 @@ function parsePages($intElmntId, $strCommand) {
 						foreach ($objContentLangs as $objContentLanguage) {
 							$blnActive = (in_array($objContentLanguage->getId(), $arrActives)) ? true : false;
 							$objElement->setLanguageActive($objContentLanguage->getId(), $blnActive);
-                            if ($strCommand == CMD_ADD) $objElement->setLanguageActive($objContentLanguage->getId(), true);
+                            if ($strCommand == CMD_ADD) {
+                                $objElement->setLanguageActive($objContentLanguage->getId(), true);
+                            }
 						}
 						//*** Cache to handsome array.
 						$arrFieldCache = array();
@@ -893,15 +895,16 @@ function parsePages($intElmntId, $strCommand) {
 																if ($blnResize) {
 																	$intQuality = (empty($arrSettings[0]['quality'])) ? 75 : $arrSettings[0]['quality'];
 																	ImageResizer::resize(
-																			$_PATHS['upload'] . $localValues[$subkey],
-																			$arrSettings[0]['width'],
-																			$arrSettings[0]['height'],
-																			$arrSettings[0]['scale'],
-																			$intQuality,
-																			true,
-																			NULL,
-																			false,
-																			$arrSettings[0]['grayscale']);
+																		$_PATHS['upload'] . $localValues[$subkey],
+																		$arrSettings[0]['width'],
+																		$arrSettings[0]['height'],
+																		$arrSettings[0]['scale'],
+																		$intQuality,
+																		true,
+																		NULL,
+																		false,
+																		$arrSettings[0]['grayscale']
+											                        );
 																}
 															}
 														}
@@ -1021,39 +1024,46 @@ function parsePages($intElmntId, $strCommand) {
 					    $varCmd = CMD_LIST;
 					    $intForwardToElement = null;
 
-					    if (Setting::getValueByName('next_after_save') && $intForward > 0) {
-    					    //*** Try to get first child element
-    					    if (Setting::getValueByName("next_is_child")) {
-    					        $objChildren = $objElement->getElements();
-                                if (is_object($objChildren) && $objChildren->count() > 0) {
-                                    $objChild = $objChildren->current();
-                                    $intForwardToElement = $objChild->getId();
+					    $varValue = Setting::getValueByName("edit_after_save");
+					    if ($varValue && $strCommand == CMD_ADD) {
+					        $intForwardToElement = $objElement->getId();
+					        $varCmd = CMD_EDIT;
+					    } else {
+    					    if (Setting::getValueByName('next_after_save') && $intForward > 0) {
+        					    //*** Try to get first child element
+        					    if (Setting::getValueByName("next_is_child")) {
+        					        $objChildren = $objElement->getElements();
+                                    if (is_object($objChildren) && $objChildren->count() > 0) {
+                                        $objChild = $objChildren->current();
+                                        $intForwardToElement = $objChild->getId();
 
-                                    if ($intForwardToElement > 0) {
-                                        $varCmd = CMD_EDIT;
+                                        if ($intForwardToElement > 0) {
+                                            $varCmd = CMD_EDIT;
+                                        }
                                     }
-                                }
-    					    }
+        					    }
 
-					        //*** Get next sibling
-    					    $objParent = Element::selectByPK($objElement->getParentId());
-    					    $objChildren = $objParent->getElements();
-    					    $blnBreak = false;
+    					        //*** Get next sibling
+        					    $objParent = Element::selectByPK($objElement->getParentId());
+        					    $objChildren = $objParent->getElements();
+        					    $blnBreak = false;
 
-    					    if (is_object($objChildren) && is_null($intForwardToElement)) {
-        					    foreach ($objChildren as $objChild) {
-        					        if ($blnBreak) {
-        					            $intForwardToElement = $objChild->getId();
-        					            $varCmd = CMD_EDIT;
-        					            break;
-        					        }
+        					    if (is_object($objChildren) && is_null($intForwardToElement)) {
+            					    foreach ($objChildren as $objChild) {
+            					        if ($blnBreak) {
+            					            $intForwardToElement = $objChild->getId();
+            					            $varCmd = CMD_EDIT;
+            					            break;
+            					        }
 
-        					        if ($objElement->getId() == $objChild->getId()) {
-                                        $blnBreak = true;
-        					        }
+            					        if ($objElement->getId() == $objChild->getId()) {
+                                            $blnBreak = true;
+            					        }
+            					    }
         					    }
     					    }
 					    }
+
 
 					    if (!empty($intForwardToElement) && $intForwardToElement !== 0) {
 					        $intForward = $intForwardToElement;

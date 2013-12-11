@@ -221,6 +221,7 @@ $_LANG['settingsLabel']['elmnt_active_state'] = "Nieuwe elementen zijn standaard
 $_LANG['settingsLabel']['web_server'] = "Website URL";
 $_LANG['settingsLabel']['next_after_save'] = "Bewerk volgende element na opslaan";
 $_LANG['settingsLabel']['next_is_child'] = "Volgende element is eerste sub element";
+$_LANG['settingsLabel']['edit_after_save'] = "Element direct bewerken na aanmaken";
 
 //*** Users and groups label definitions.
 $_LANG['usersLabel']['users'] = "Gebruikers";

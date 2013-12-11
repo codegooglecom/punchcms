@@ -221,6 +221,7 @@ $_LANG['settingsLabel']['elmnt_active_state'] = "Activate new elements by defaul
 $_LANG['settingsLabel']['web_server'] = "Website URL";
 $_LANG['settingsLabel']['next_after_save'] = "Edit next element after saving";
 $_LANG['settingsLabel']['next_is_child'] = "Next element is child element instead of sibling";
+$_LANG['settingsLabel']['edit_after_save'] = "Edit newly created element after saving";
 
 //*** Users and groups label definitions.
 $_LANG['usersLabel']['users'] = "Users";

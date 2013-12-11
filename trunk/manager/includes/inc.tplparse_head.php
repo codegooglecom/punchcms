@@ -359,11 +359,7 @@ function parseScriptHeader($intCatId, $strCommand, $intElmntId) {
 	}
 	$strScript .= "}";
 
-	//*** Check if 2.6 update is done yet.
-    $strSetting = Setting::getValueByName("next_after_save");
-    if (strlen($strSetting) <= 0) {
-        $objTpl->touchBlock("update26");
-    }
+	executeUpdateScript($objTpl);
 
 	$objTpl->setCurrentBlock("__global__");
 	$objTpl->setVariable("SELECTED_TAB", $intSelectedTab);
