@@ -2134,16 +2134,16 @@ function parsePages($intElmntId, $strCommand) {
 					$objTpl->setCurrentBlock("description-fields");
 					$objTpl->setVariable("LABEL", $objLang->get("requiredFields", "form"));
 					$objTpl->parseCurrentBlock();
-                                        
-                                        //*** Set all language as active by default for a new element
-                                        if($strCommand == CMD_ADD) {
-                                            $objContentLangs = ContentLanguage::select();
-                                            $aActiveLanguages = array();
-                                            foreach($objContentLangs as $objContentLang) {
-                                                $aActiveLanguages[] = $objContentLang->getId();
-                                            }
-                                            $objTpl->setVariable("ACTIVES_LANGUAGE", implode(",", $aActiveLanguages));
-                                        }
+
+                    //*** Set all language as active by default for a new element
+                    if($strCommand == CMD_ADD) {
+                        $objContentLangs = ContentLanguage::select();
+                        $aActiveLanguages = array();
+                        foreach($objContentLangs as $objContentLang) {
+                            $aActiveLanguages[] = $objContentLang->getId();
+                        }
+                        $objTpl->setVariable("ACTIVES_LANGUAGE", implode(",", $aActiveLanguages));
+                    }
 				}
 
 				//*** Permissions tab.
