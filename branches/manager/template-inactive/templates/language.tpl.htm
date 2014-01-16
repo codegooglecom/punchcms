@@ -1,0 +1,85 @@
+
+		<div id="left-wrap" class="center-wrap">
+			<!-- BEGIN settings -->
+			<h2>
+				<span class="menu"><a href="javascript:{BUTTON_ADD_HREF};" rel="internal">{BUTTON_ADD}</a></span>
+				{LANGUAGES}
+			</h2>
+			<div class="wrap">
+				<form id="languageForm" method="post" action="?"{FRM_STYLE} class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+					<ul class="tabs ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+						<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#">{FRM_HEADER}</a></li>
+					</ul>
+					<!-- BEGIN error-main -->
+					<div class="ui-widget">
+						<div class="ui-state-error ui-corner-all">
+							<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>{FRM_ERROR_MAIN}</p>
+						</div>
+					</div>
+					<!-- END error-main -->
+					<div class="anchor ui-tabs-panel ui-widget-content ui-corner-bottom">
+						<fieldset>
+							<div class="required">
+								<label for="frm_active">{FRM_LABEL_ACTIVE}</label>
+								<input type="checkbox" id="frm_active" name="frm_active" class="check" {FORM_ACTIVE_VALUE} />							
+							</div>
+							<div class="required">
+								<label for="frm_name">* {FRM_LABEL_NAME}</label>
+								<input type="text" id="frm_name" name="frm_name" class="input-textlarge" value="{FORM_NAME_VALUE}" />
+							</div>						
+							<div class="required">
+								<label for="frm_apiname">* {FRM_LABEL_ABBR}</label>
+								<input type="text" id="frm_apiname" name="frm_apiname" class="input-textsmall" value="{FORM_APINAME_VALUE}" />
+								<small>{FRM_DESCR_ABBR}</small>
+							</div>
+							<input type="hidden" name="dispatch" value="editLanguage" />
+						</fieldset>
+						<div class="form-navigation">
+							<input type="hidden" name="cid" value="{CID}" />
+							<input type="hidden" name="cmd" value="{CMD}" />
+							<input type="hidden" name="eid" value="{EID}" />
+							<input type="submit" class="input-button" value="{FRM_LABEL_SAVE}" />
+						</div>
+					</div>
+				</form>
+				<div id="itemlist" style="margin:18px 10px;">
+					<!-- BEGIN multiview-item -->
+					<div class="itembox" id="box_{MULTIITEM_VALUE}">
+						<div class="menu">
+							<a href="{BUTTON_REMOVE_HREF}" rel="internal">{BUTTON_REMOVE}</a>
+						</div>
+						<div class="language">
+							<p class="title"><a href="{MULTIITEM_HREF}"{MULTIITEM_ACTIVE} rel="internal">{MULTIITEM_NAME}</a>, {MULTIITEM_ABBR}</p>
+							<p class="meta">{MULTIITEM_META}</p>
+						</div>
+					</div>
+					<!-- END multiview-item -->
+				</div>
+			</div>			 
+			<script type="text/javascript">
+			 // <![CDATA[
+					var objContentLanguage = new ContentLanguage();
+
+					jQuery(function(){
+						jQuery("div.off").live("mouseover mouseout", function(event){
+							if(event.type == "mouseover"){
+								jQuery(this).addClass("offhover");
+							}
+							else {
+								jQuery(this).removeClass("offhover");
+							}
+						});
+					});
+					jQuery("#itemlist").sortable({
+						update: initUpdateSort,
+						axis: "y",
+						forceHelperSize: true,
+						containment: "#left-wrap"
+					});
+			 // ]]>
+			 </script>
+			<!-- END settings -->
+		</div>
+
+	</div>
+</div>
