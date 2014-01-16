@@ -85,7 +85,7 @@ Alias.multiSelect = function() {
 
 	//*** Loop through the fields to check or uncheck.
 	for (i = 0; i < arrCheckbox.length; i++) {
-		arrCheckbox.attr("checked", this.checked); 
+		arrCheckbox.attr("checked", this.checked);
 	}
 }
 
@@ -95,46 +95,46 @@ Alias.loadElements = function(blnInit, strTargetField, strTargetForm) {
 	if (strTargetField != undefined) Alias.targetField = strTargetField;
 	if (strTargetForm != undefined) Alias.targetForm = strTargetForm;
 
-	
+
 	if (blnInit != undefined && blnInit) {
 		intId = jQuery("#" + Alias.targetField).val();
 		var strPost = "cmd=Elements::getParentHTML&eid=" + intId;
 	} else {
-		var strPost = "cmd=Elements::getChildrenHTML&parentId=" + intId;
+		var strPost = "cmd=Elements::getChildrenHTML&params=" + intId;
 	}
-	
+
 	var $objTraverse = jQuery("#" + Alias.targetForm).find("div.traverse");
 	var $objFieldset = $objTraverse.parent();
 
 	if ($objTraverse.length > 0) $objTraverse.remove();
 	$objFieldset.append(Alias.elementsLoader());
-		
+
 	var request = jQuery.get(strUrl, strPost, Alias.showElements, "xml");
 }
 
 Alias.setElement = function(objSelect) {
-	var $objSelect 		= (objSelect instanceof jQuery) ? objSelect : jQuery(objSelect), // Make sure it's a jQuery object	
+	var $objSelect 		= (objSelect instanceof jQuery) ? objSelect : jQuery(objSelect), // Make sure it's a jQuery object
 		intParentId 	= $objSelect.find("option:selected").val(),
 		$objParentRow 	= $objSelect.parent(),
 		$objRows 		= $objParentRow.nextAll("div"),
 		$objSelects 	= jQuery("#" + Alias.targetForm + " select"),
 		$objFieldset 	= jQuery("#" + Alias.targetForm + " fieldset.traverse"),
 		$objTraverse 	= $objFieldset.find("div.traverse");
-		
+
 	$objSelects.each(function(){
 		var __this = this,
 			$objRow = jQuery(__this).parent();
-			
+
 		$objRows.each(function(){
 			if(jQuery(this).get(0) == $objRow.get(0)){ // Use .get(0) to compare DOM objects instead of jQuery objects
 				$objRow.remove();
 			}
 		});
 	});
-	
+
 	if ($objTraverse.length > 0) $objTraverse.remove();
 	$objFieldset.append(Alias.elementsTraverse());
-	
+
 	intId = intParentId;
 	jQuery("#" + Alias.targetField).val(intParentId);
 }
@@ -144,19 +144,19 @@ Alias.showElements = function(objXHR) {
 		$objFields 		= $objResponse.find("field"),
 		$objFieldset 	= jQuery("#" + Alias.targetForm).find("fieldset.traverse"),
 		$objLoading 	= $objFieldset.find("div.loading");
-		
+
 	if ($objLoading.length > 0) $objLoading.remove();
 
 	//*** Can't be a jQuery each() loop.
 	for (var i = 0; i < $objFields.length; i++) {
 		var strValue = $objFields.get(i).firstChild.nodeValue;
-		
+
 		if (strValue) {
 			var intParentId = $objFields.get(i).attributes[0].value;
 			$objFieldset.append(Alias.elementsRow(strValue, intParentId));
 		}
 	}
-	
+
 	if(typeof intParentId != "undefined"){
 		var $objSelect = jQuery("#" + Alias.targetField + "_" + intParentId);
 		Alias.setElement($objSelect);
@@ -165,13 +165,13 @@ Alias.showElements = function(objXHR) {
 
 Alias.elementsLoader = function() {
 	var strReturn = "<div class=\"required loading\"><label for=\"" + Alias.targetField + "\">&nbsp;</label><?php echo $objLang->get("loading", "form") ?></div>";
-	
+
 	return strReturn;
 }
 
 Alias.elementsTraverse = function() {
 	var strReturn = "<div class=\"required traverse\"><label for=\"" + Alias.targetField + "\">&nbsp;</label><a href=\"javascript:;\" onclick=\"Alias.loadElements()\" rel=\"internal\"><?php echo $objLang->get("oneLevelDeeper", "form") ?></a></div>";
-	
+
 	return strReturn;
 }
 
@@ -183,6 +183,6 @@ Alias.elementsRow = function(strValue, intParentId) {
 	var strReturn = "<div class=\"required\"><label for=\"" + Alias.targetField + "\">" + strLabel + "</label><select id=\"" + Alias.targetField + "_" + intParentId + "\" class=\"select-one\" onchange=\"Alias.setElement(this)\">";
 	strReturn += strValue;
 	strReturn += "</select></div>";
-	
+
 	return strReturn;
 }
