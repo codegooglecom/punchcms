@@ -119,8 +119,9 @@ var PinnableTree = function (options) {
 	
 	this.setWidth = function (intWidth, blnOnLoad) {
 		if (blnOnLoad) {
-			opts.tree.width(intWidth)
-			opts.tree.next().css("margin-left", intWidth + 25)
+			opts.tree.width(intWidth);
+			opts.tree.next().css("margin-left", intWidth + 25);
+			opts.tree.prev().css("margin-left", intWidth + 25);
 		} else {
 			opts.tree
 				.animate({
@@ -130,6 +131,13 @@ var PinnableTree = function (options) {
 					queue: false
 				})
 				.next()
+				.animate({
+					marginLeft: intWidth + 25
+				},{
+					duration: 200,
+					queue: false
+				})
+				.prev().prev()
 				.animate({
 					marginLeft: intWidth + 25
 				},{
