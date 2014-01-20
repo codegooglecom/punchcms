@@ -126,7 +126,7 @@ a:hover {
 }
 
 #nav li {
-	background: #23719F;
+	background: none;
 	margin-top: 2px;
 }
 
@@ -202,10 +202,10 @@ div.tabwrapper ul.anchors a.on:visited
 }
 
 div.tabwrapper div.wrap,
-#content div.wrap 
-{
+#content div.wrap {
 	padding-top: 0;
 	border-radius: 0;
+	border: none;
 }
 
 #content div.action-menu {
@@ -486,3 +486,36 @@ div.progressbar {
 /*
  * END TOOLTIP MARKUP
  */
+
+/*
+ * BEGIN CUSTOM JQUERY UI
+ */
+.ui-corner-top,
+.ui-corner-all {
+	border-radius: 2px;
+}
+.ui-widget-header {
+	background: #23719F;
+}
+.ui-tabs {
+	padding-left: 0;
+	padding-right: 0;
+}
+form.ui-tabs {
+	padding: 0;
+	border: none;
+}
+.tabs .ui-state-default {
+	background: #23719F !important;
+	border: 1px #23719F solid !important;
+}
+.tabs .ui-state-default a {
+	text-shadow: 1px 1px 0 #333;
+}
+.tabs .ui-state-hover a {
+	color: #fff !important;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
+	text-shadow: none;
+	color: #333 !important;
+}
