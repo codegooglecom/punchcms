@@ -1,0 +1,488 @@
+@CHARSET "UTF-8";
+/*
+ * GENERAL MARKUP
+ */
+
+body {
+}
+
+a:link, 
+a:visited 
+{
+}
+
+a:hover {
+}
+
+/*
+ * LOGIN PAGE MARKUP
+ */
+
+#login {
+}
+
+#login #canvas {
+}
+
+#login #canvas-top {
+}
+
+#login #canvas-bottom {
+}
+
+#login #canvas div.client {
+}
+
+#login #canvas span.systemlink {
+}
+
+#login #canvas span.systemlink a {
+}
+
+#login #canvas h1 {
+}
+
+#login #canvas img {
+}
+
+#login #canvas a.logolink:hover {
+}
+
+#login #canvas p.event-info {
+}
+
+#login #canvas p.event-error {
+}
+
+#login #canvas dt {
+}
+
+#login #canvas dd {
+}
+
+#login #canvas .input-textmedium,
+#login #canvas .input-textsmall,
+#login #canvas .input-button,
+#login #canvas .select-one 
+{
+}
+
+#login #canvas a:link,
+#login #canvas a:visited 
+{
+}
+
+#login #canvas a:hover {
+}
+
+#login #canvas p {
+}
+
+/*
+ * END LOGIN MARKUP
+ */
+
+/*
+ * BEGIN COMMON MARKUP
+ */
+
+#punchHeader {
+	background: #23719F;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.0980392) 0px, rgba(0, 0, 0, 0.14902) 100%);
+}
+
+#punchHeader a:link, 
+#punchHeader a:visited 
+{
+}
+
+#punchHeader a:hover {
+}
+
+#punchHeader a.active,
+#punchHeader a.active:visited 
+{
+}
+
+#header {
+	background: #23719F;
+}
+
+#header h1 {
+	color: #fff;
+	font-family: "Helvetica Neue", "Helvetica", sans-serif;
+	font-weight: 100;
+	font-size: 38px;
+}
+
+#header div.loggedin {
+}
+
+#header div.loggedin a {
+}
+
+#nav {
+	background: #23719F;
+}
+
+#nav li {
+	background: #23719F;
+	margin-top: 2px;
+}
+
+#nav a,
+#nav a:link, 
+#nav a:visited 
+{
+	background: rgba(0, 0, 0, 0.298039);
+	border: none;
+}
+
+#nav a:hover {
+	color: #fff;
+    border: none;
+}
+
+#nav a.active,
+#nav a.active:link, 
+#nav a.active:visited 
+{
+}
+
+#newssend-wrap {
+}
+
+#left-wrap {
+	width: inherit;
+	margin: 0;
+}
+
+#newssend-wrap h2,
+#left-wrap h2 {
+	background: #23719F;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.0980392) 0px, rgba(0, 0, 0, 0.14902) 100%);
+	font-weight: normal;
+}
+
+#left-wrap h2 span.name {
+}
+
+#treeContainer {
+	margin-top: -30px;
+	border-bottom: none;
+	min-height: 184px;
+}
+
+#sidebar h3 {
+}
+
+#sidebar h4 {
+}
+
+#sidebar p {
+}
+
+div.tabwrapper ul.anchors a,
+div.tabwrapper ul.anchors a:link,
+div.tabwrapper ul.anchors a:visited
+{
+}
+
+div.tabwrapper ul.anchors a:hover {
+}
+
+div.tabwrapper ul.anchors a.on,
+div.tabwrapper ul.anchors a.on:link,
+div.tabwrapper ul.anchors a.on:visited
+{
+}
+
+#content {
+	padding: 0;
+}
+
+div.tabwrapper div.wrap,
+#content div.wrap 
+{
+	padding-top: 0;
+	border-radius: 0;
+}
+
+#content div.action-menu {
+	background: #fff;
+	margin-bottom: 0;
+    padding-bottom: 0;
+}
+#left-wrap div.action-menu a {
+	background: #23719F;
+	border: none;
+	color: #FFF;
+	border-radius: 0;
+	display: block;
+	padding: 5px 7px;
+	text-decoration: none;
+	font-size: 11px;
+	border-radius: 2px;
+	border-bottom: 1px #333 solid;
+	border-right: 1px #333 solid;
+}
+#left-wrap div.action-menu a:active {
+    border-bottom: none;
+    border-right: none;
+    margin-top: 1px;	
+    margin-left: 1px;	
+}
+#left-wrap div.action-menu a > i.fa {
+	padding-right: 5px;
+	font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 1px 1px 0 #333;
+}
+#left-wrap div.action-menu a:hover > i.fa {
+    text-shadow: none;	
+}
+
+#left-wrap div.action-menu a span.ui-button-text {
+	background: rgba(0, 0, 0, 0.298039);
+}
+.ui-state-default .ui-icon {
+	background: none;
+}
+
+#content div.divider {
+}
+
+#content div.selectList {
+}
+
+#content div.selectList a,
+#content div.selectList a:link,
+#content div.selectList a:visited
+{
+}
+
+#content div.selectList a.on,
+#content div.selectList a.on:link,
+#content div.selectList a.on:visited
+{
+}
+
+#content div.selectList a.user {
+}
+
+#content div.selectList a.group {
+}
+
+#left-wrap h3 {
+}
+
+#left-wrap h3 span.name {
+}
+
+#left-wrap span.menu {
+}
+
+#left-wrap h2 span.menu, 
+#left-wrap h3 span.menu
+{
+}
+
+#left-wrap #userProgress {
+}
+
+#left-wrap h4 {
+}
+
+#left-wrap h5 {
+}
+
+#left-wrap h5.secondary {
+}
+
+#left-wrap div.itemheader div.itemcount {
+}
+
+#left-wrap div.itemheader span {
+}
+
+#left-wrap div.itemheader select {
+}
+
+#left-wrap div.itembox {
+	background: #23719F;
+	background-image: linear-gradient(#FFF 0px, rgba(255, 255, 255, 0.95) 100%);
+}
+#left-wrap div.itembox div.on, 
+#left-wrap div.itembox div.off, 
+#left-wrap div.newsbox div.off, 
+#newssend-wrap div.newsbox div.off
+{
+}
+
+#left-wrap div.itembox div.on, 
+#left-wrap div.itembox div.offhover 
+{
+}
+
+#left-wrap div.itembox div.menu, 
+#left-wrap div.newsbox div.menu, 
+#newssend-wrap div.newsbox div.menu
+{
+}
+
+#left-wrap div.itembox div.moveDrag {
+	padding: 5px 2px;
+	font-size: 20px;
+	width: auto;
+	height: auto;
+	color: rgba(255, 255, 255, 0.5);
+	background: rgba(35, 113, 159, 0.1);
+}
+
+#left-wrap div.itembox div.element {
+}
+
+#left-wrap div.itembox div.language {
+}
+
+#left-wrap div.itembox div.folder {
+}
+
+#left-wrap div.itembox div.widget {
+}
+
+#left-wrap div.itembox div.template {
+}
+
+#left-wrap div.itembox div.widget_template {
+}
+
+#left-wrap div.itembox div.field {
+}
+
+#left-wrap div.itembox div.alias {
+}
+
+#left-wrap div.itembox p {
+}
+
+#left-wrap div.itembox p.title, 
+#left-wrap div.newsbox p.title, 
+#newssend-wrap div.newsbox p.title
+{
+}
+
+#left-wrap div.itembox p.meta, 
+#left-wrap div.newsbox p.meta, 
+#newssend-wrap div.newsbox p.meta
+{
+}
+
+#left-wrap div.page-nav {
+	background: #23719F;
+	background-image: linear-gradient(rgba(255, 255, 255, 0.998039) 0px, rgba(255, 255, 255, 0.94902) 100%);
+	border: none;
+	border-radius: 0;
+}
+
+#left-wrap div.page-nav h4 {
+}
+
+#left-wrap div.page-nav span {
+}
+
+#left-wrap div.page-nav p a:link, 
+#left-wrap div.page-nav p a:visited, 
+#left-wrap div.page-nav p a:active 
+{
+}
+
+#left-wrap div.page-nav p a:hover {
+}
+
+div.column h3 {
+}
+
+ul.sortable {
+}
+
+ul.strong {
+}
+
+ul.sorthover {
+}
+
+ul.sortable li {
+}
+
+ul.sortable li.hover {
+}
+
+ul.strong li {
+}
+
+div.searchdescription {
+}
+
+div.searchresult h4 a:link, 
+div.searchresult h4 a:visited
+{
+}
+
+div.searchresult h4 a:hover {
+}
+
+
+#left-wrap div.paragraphs h3 {
+}
+
+
+div.progressbg {
+}
+
+div.progressbar {
+}
+
+/*
+ * END COMMON MARKUP
+ */
+
+/*
+ * BEGIN ANNOUNCEMENT MARKUP
+ */
+
+#announcement h1 {
+}
+
+#announcement h2 {
+}
+
+#announcement div.announcementBody {
+}
+
+/*
+ * END ANNOUNCEMENT MARKUP
+ */
+
+/*
+ * BEGIN TOOLTIP MARKUP
+ */
+
+#overDiv {
+}
+
+.fontClass {
+}
+
+.capfontClass {
+}
+
+.capfontClass a {
+}
+
+.fgClass {
+}
+
+/*
+ * END TOOLTIP MARKUP
+ */
