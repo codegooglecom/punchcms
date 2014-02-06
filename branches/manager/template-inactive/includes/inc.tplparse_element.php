@@ -1116,11 +1116,15 @@ function parsePages($intElmntId, $strCommand) {
 			}
 
 			if (is_object($objTemplates)) {
-				foreach ($objTemplates as $objTemplate) {
-					$objTpl->setCurrentBlock("list_template");
-					$objTpl->setVariable("TEMPLATELIST_VALUE", $objTemplate->getId());
-					$objTpl->setVariable("TEMPLATELIST_TEXT", $objTemplate->getName());
-					$objTpl->parseCurrentBlock();
+				foreach ($objTemplates as $key => $objTemplate) {
+                    // only show active templates in template list for an ADD action
+                    // show template name in list for an EDIT action to prevent an error on element save
+                    if($objTemplate->getActive() == 1 || $strCommand == CMD_EDIT) {
+                        $objTpl->setCurrentBlock("list_template");
+                        $objTpl->setVariable("TEMPLATELIST_VALUE", $objTemplate->getId());
+                        $objTpl->setVariable("TEMPLATELIST_TEXT", $objTemplate->getName());
+                        $objTpl->parseCurrentBlock();
+                    }
 				}
 
 				//*** Render fields if there is only one template.
@@ -2125,7 +2129,7 @@ function parsePages($intElmntId, $strCommand) {
 			}
 
 			//*** Render tabs.
-			if (is_object($objTemplates) && ($objTemplates->count() == 1 || $strCommand == CMD_EDIT)) {
+			if (is_object($objTemplates) && (($objTemplates->count() == 1 && $objTemplates->current()->getActive() == 1) || $strCommand == CMD_EDIT)) {
 				if (!$blnIsFolder) {
 					//*** Fields tab.
 					$objTpl->setCurrentBlock("field-title");

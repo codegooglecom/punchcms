@@ -10,6 +10,10 @@ switch ($strDispatch) {
 				'type' => 'string',
 				'maxlength' => 2,
 			),
+			'frm_activetemplate' => array(
+				'type' => 'string',
+				'maxlength' => 2,
+			),
 			'frm_iscontainer'	=> array(
 				'type' => 'string',
 				'maxlength' => 2,

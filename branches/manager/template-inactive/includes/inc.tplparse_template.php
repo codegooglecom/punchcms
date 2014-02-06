@@ -255,7 +255,7 @@ function parseTemplates($intElmntId, $strCommand) {
 		case CMD_ADD:
 		case CMD_EDIT:
 			$objTpl->loadTemplatefile("template.tpl.htm");
-
+            
 			//*** Check if the rootfolder has been submitted.
 			if ($strCommand == CMD_EDIT && $intElmntId == 0) {
 				//*** Redirect to list mode.
@@ -272,6 +272,12 @@ function parseTemplates($intElmntId, $strCommand) {
 				if (is_null($_CLEAN_POST["frm_ispage"])) {
 					$objTpl->setVariable("ERROR_ISPAGE_ON", " error");
 					$objTpl->setVariable("ERROR_ISPAGE", $objLang->get("isPage", "formerror"));
+					$blnError = true;
+				}
+
+				if (is_null($_CLEAN_POST["frm_activetemplate"])) {
+					$objTpl->setVariable("ERROR_ACTIVETEMPLATE_ON", " error");
+					$objTpl->setVariable("ERROR_ACTIVETEMPLATE", $objLang->get("activeTemplate", "formerror"));
 					$blnError = true;
 				}
 
@@ -313,6 +319,7 @@ function parseTemplates($intElmntId, $strCommand) {
 					//*** Display global error.
 					$objTpl->setVariable("FORM_NAME", "templateForm");
 					$objTpl->setVariable("FORM_ISPAGE_VALUE", (isset($_POST["frm_ispage"]) && $_POST["frm_ispage"] == "on") ? "checked=\"checked\"" : "");
+					$objTpl->setVariable("FORM_ACTIVETEMPLATE_VALUE", (isset($_POST["frm_activetemplate"]) && $_POST["frm_activetemplate"] == "on") ? "checked=\"checked\"" : "");
 					$objTpl->setVariable("FORM_NAME_VALUE", $_POST["frm_name"]);
 					$objTpl->setVariable("FORM_APINAME_VALUE", $_POST["frm_apiname"]);
 					$objTpl->setVariable("FORM_NOTES_VALUE", $_POST["frm_description"]);
@@ -321,12 +328,14 @@ function parseTemplates($intElmntId, $strCommand) {
 					//*** Input is valid. Save the template.
 					if ($strCommand == CMD_EDIT) {
 						$objTemplate = Template::selectByPK($intElmntId);
+                                              
 					} else {
 						$objTemplate = new Template();
 						$objTemplate->setParentId($_POST["eid"]);
 						$objTemplate->setAccountId($_CONF['app']['account']->getId());
 					}
 
+                    $objTemplate->setActive((empty($_CLEAN_POST["frm_activetemplate"])) ? 0 : 1);
 					$objTemplate->setIsPage((empty($_CLEAN_POST["frm_ispage"])) ? 0 : 1);
 					$objTemplate->setIsContainer((empty($_CLEAN_POST["frm_iscontainer"])) ? 0 : 1);
 					$objTemplate->setForceCreation((empty($_CLEAN_POST["frm_forcecreation"])) ? 0 : 1);
@@ -334,6 +343,15 @@ function parseTemplates($intElmntId, $strCommand) {
 					$objTemplate->setApiName($_CLEAN_POST["frm_apiname"]);
 					$objTemplate->setDescription($_CLEAN_POST["frm_description"]);
 					$objTemplate->save();
+                    
+                    if($strCommand == CMD_EDIT) {
+                        //*** (de)activate elements with this template id
+                        $objElements = Element::getElementsByTemplateId($objTemplate->getId());
+                        foreach ($objElements as $objElement) {
+                            $objElement->setActive($objTemplate->getActive());
+                            $objElement->save();
+                        }  
+                    }
 
 					header("Location: " . Request::getURI() . "/?cid=" . $_POST["cid"] . "&cmd=" . CMD_LIST . "&eid=" . $objTemplate->getId());
 					exit();
@@ -363,7 +381,8 @@ function parseTemplates($intElmntId, $strCommand) {
 			//*** Insert values if action is edit.
 			if ($strCommand == CMD_EDIT) {
 				$objTpl->setVariable("FORM_ISPAGE_VALUE", ($objTemplate->getIsPage()) ? "checked=\"checked\"" : "");
-				$objTpl->setVariable("FORM_ISCONTAINER_VALUE", ($objTemplate->getIsContainer()) ? "checked=\"checked\"" : "");
+				$objTpl->setVariable("FORM_ACTIVETEMPLATE_VALUE", ($objTemplate->getActive() == 1) ? "checked=\"checked\"" : "");
+                $objTpl->setVariable("FORM_ISCONTAINER_VALUE", ($objTemplate->getIsContainer()) ? "checked=\"checked\"" : "");
 				$objTpl->setVariable("FORM_FORCECREATION_VALUE", ($objTemplate->getForceCreation()) ? "checked=\"checked\"" : "");
 				$objTpl->setVariable("FORM_NAME_VALUE", $objTemplate->getName());
 				$objTpl->setVariable("FORM_APINAME_VALUE", $objTemplate->getApiname());
@@ -371,6 +390,7 @@ function parseTemplates($intElmntId, $strCommand) {
 				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objTemplate->getParentId()}&amp;cmd=" . CMD_LIST);
 				$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$objTemplate->getParentId()}&amp;cmd=" . CMD_LIST);
 			} else {
+				$objTpl->setVariable("FORM_ACTIVETEMPLATE_VALUE", "checked=\"checked\"");
 				$objTpl->setVariable("BUTTON_CANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
 				$objTpl->setVariable("BUTTON_FORMCANCEL_HREF", "?cid=" . NAV_PCMS_TEMPLATES . "&amp;eid={$intElmntId}&amp;cmd=" . CMD_LIST);
 			}
@@ -378,6 +398,7 @@ function parseTemplates($intElmntId, $strCommand) {
 			$objTpl->setVariable("LABEL_REQUIRED", $objLang->get("requiredFields", "form"));
 			$objTpl->setVariable("LABEL_PAGECONTAINER", $objLang->get("pageContainer", "form"));
 			$objTpl->setVariable("LABEL_ISCONTAINER", $objLang->get("container", "form"));
+			$objTpl->setVariable("LABEL_ACTIVETEMPLATE", $objLang->get("activeTemplate", "form"));
 			$objTpl->setVariable("ISCONTAINER_NOTE", $objLang->get("containerNote", "tip"));
 			$objTpl->setVariable("LABEL_FORCECREATION", $objLang->get("forceCreation", "form"));
 			$objTpl->setVariable("FORCECREATION_NOTE", $objLang->get("forceCreationNote", "tip"));

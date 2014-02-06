@@ -295,6 +295,7 @@ $_LANG['form']['description'] = "Omschrijving";
 $_LANG['form']['name'] = "Naam";
 $_LANG['form']['shortName'] = "Korte Naam";
 $_LANG['form']['pageContainer'] = "Complete Pagina";
+$_LANG['form']['activeTemplate'] = "Actief";
 $_LANG['form']['container'] = "Overnemen";
 $_LANG['form']['forceCreation'] = "Automatisch aanmaken";
 $_LANG['form']['active'] = "Actief";

@@ -295,6 +295,7 @@ $_LANG['form']['description'] = "Description";
 $_LANG['form']['name'] = "Name";
 $_LANG['form']['shortName'] = "Short Name";
 $_LANG['form']['pageContainer'] = "Full Page";
+$_LANG['form']['activeTemplate'] = "Active";
 $_LANG['form']['container'] = "Can also contain parent templates";
 $_LANG['form']['forceCreation'] = "Force creation by parent";
 $_LANG['form']['active'] = "Active";

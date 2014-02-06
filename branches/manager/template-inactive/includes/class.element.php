@@ -172,6 +172,16 @@ class Element extends DBA_Element {
 
 		return $objReturn;
 	}
+        
+    public function getActive() {
+        if(parent::getActive() == 0) {
+            return 0;
+        }
+        else {
+            $objTemplate = Template::selectByPK($this->getTemplateId());
+            return ($objTemplate->getActive());
+        }
+    }
 
 	public function clearFields($blnRemovePhysical = false) {
 		if ($this->id > 0) {

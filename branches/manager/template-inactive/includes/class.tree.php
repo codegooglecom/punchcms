@@ -246,16 +246,26 @@ class Tree {
 					$objChildren = $objTemplate->getTemplates();
 
 					if (is_object($objChildren) && $objChildren->count() > 0) {
-						$strReturn .= "<item text=\"" . self::escapeForXml($objTemplate->getName()) . "\" id=\"{$objTemplate->getId()}\" im0=\"templateClosed.gif\" im1=\"templateOpen.gif\" im2=\"templateClosed.gif\" child=\"1\">";
-
+                        if(!$objTemplate->getActive()) {
+                            $strReturn .= "<item text=\"" . self::escapeForXml($objTemplate->getName()) . "\" style=\"color:#999\" id=\"{$objTemplate->getId()}\" im0=\"templateClosedInactive.gif\" im1=\"templateOpenInactive.gif\" im2=\"templateClosedInactive.gif\" child=\"1\">";
+                        }
+                        else {
+                            $strReturn .= "<item text=\"" . self::escapeForXml($objTemplate->getName()) . "\" id=\"{$objTemplate->getId()}\" im0=\"templateClosed.gif\" im1=\"templateOpen.gif\" im2=\"templateClosed.gif\" child=\"1\">";
+                        }
+                        
 						if ($childId == $objTemplate->getId()) {
 							$strReturn .= $strChildren;
 						}
 
 						$strReturn .= "</item>";
 					} else {
-						$strReturn .= "<item text=\"" . self::escapeForXml($objTemplate->getName()) . "\" id=\"{$objTemplate->getId()}\" im0=\"template.gif\" im1=\"template.gif\" im2=\"template.gif\" child=\"0\" />";
-					}
+                        if(!$objTemplate->getActive()) {
+                            $strReturn .= "<item text=\"" . self::escapeForXml($objTemplate->getName()) . "\" style=\"color:#999\" id=\"{$objTemplate->getId()}\" im0=\"templateInactive.gif\" im1=\"templateInactive.gif\" im2=\"templateInactive.gif\" child=\"0\" />";
+                        }
+                        else {
+                            $strReturn .= "<item text=\"" . self::escapeForXml($objTemplate->getName()) . "\" id=\"{$objTemplate->getId()}\" im0=\"template.gif\" im1=\"template.gif\" im2=\"template.gif\" child=\"0\" />";
+                        }  
+                    }
 				}
 
 				if ($strAction == "init") {
