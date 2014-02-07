@@ -1,7 +1,5 @@
 <?php
 
-use Bili\Request;
-
 //*** Global constantes.
 define("ELM_TYPE_FOLDER", 1);
 define("ELM_TYPE_ELEMENT", 2);
@@ -67,9 +65,9 @@ class PCMS_Client {
 		/* Private constructor to insure singleton behaviour */
 
 		if (!empty($strDSN)) {
-			$this::$__dsn = $strDSN;
-			$this::$__dbUser = $strUsername;
-			$this::$__dbPassword = $strPassword;
+			self::$__dsn = $strDSN;
+			self::$__dbUser = $strUsername;
+			self::$__dbPassword = $strPassword;
 		}
 
 		$this->setDbConnection();
@@ -680,7 +678,7 @@ class PCMS_Client {
 	}
 
 	public function getLanguage() {
-		return $this::$__language;
+		return self::$__language;
 	}
 
 	public function getDefaultLanguage() {
@@ -692,23 +690,23 @@ class PCMS_Client {
 	}
 
 	public function setLanguage($objValue) {
-		$this::$__language = $objValue;
+		self::$__language = $objValue;
 	}
 
 	public function getCacheConfig() {
-		return $this::$__cacheConfig;
+		return self::$__cacheConfig;
 	}
 
 	public function setCacheConfig($arrValue) {
-		$this::$__cacheConfig = $arrValue;
+		self::$__cacheConfig = $arrValue;
 	}
 
 	public function setBasePath($strValue) {
-		$this::$__basePath = $strValue;
+		self::$__basePath = $strValue;
 	}
 
 	public function getBasePath() {
-		return $this::$__basePath;
+		return self::$__basePath;
 	}
 
 	public function getDownloadPath() {
@@ -751,7 +749,7 @@ class PCMS_Client {
 			$objCms->setDbConnection(TRUE);
 		}
 
-		return $objCms::$__connId;
+		return PCMS_Client::$__connId;
 	}
 
 	/**
@@ -837,45 +835,59 @@ class PCMS_Client {
 	}
 
 	public function getSetting($strValue) {
-		return Setting::getValueByName($strValue, $this::$__account->getId());
+		return Setting::getValueByName($strValue, self::$__account->getId());
 	}
 
 	public static function getAccount() {
-		$objCms = PCMS_Client::getInstance();
-		return $objCms::$__account;
+		return PCMS_Client::$__account;
 	}
 
 	public function setDbConnection($blnReInit = FALSE) {
 		try {
-			$objConnID = new PDO($this::$__dsn, $this::$__dbUser, $this::$__dbPassword, array(
+			$objConnID = new PDO(self::$__dsn, self::$__dbUser, self::$__dbPassword, array(
 			    PDO::ATTR_PERSISTENT => true
 			));
 		} catch (PDOException $e) {
 			throw new Exception('Database connection failed: ' . $e->getMessage(), SQL_CONN_ERROR);
 		}
 
-		$this::$__connId = $objConnID;
+		self::$__connId = $objConnID;
 	}
 
-	public function renderAnalytics($analyticsKey = NULL) {
+	public function renderAnalytics($analyticsKey = NULL, $strDomainName = null) {
 		$strOutput = "";
 
 		if (is_null($analyticsKey)) {
 			$objCms = PCMS_Client::getInstance();
 			$objSettings = $objCms->getElementByTemplate("GlobalFields");
-			if (is_object($objSettings)) $analyticsKey = $objSettings->getField("AnalyticsKey")->getValue();
+			if (is_object($objSettings)) {
+				$analyticsKey = $objSettings->getField("AnalyticsKey")->getValue();
+
+				if (is_null($strDomainName)) {
+					$objElement = $objSettings->getField("AnalyticsDomain");
+					if (is_object($objElement)) {
+						$strDomainName = $objElement->getValue();
+					}
+				}
+			}
 		}
 
 		if (!empty($analyticsKey)) {
-			$strOutput .= "<script type=\"text/javascript\">\n";
-			$strOutput .= "var _gaq = _gaq || [];\n";
-			$strOutput .= "_gaq.push(['_setAccount', '{$analyticsKey}']);\n";
-			$strOutput .= "_gaq.push(['_trackPageview', location.pathname + location.search + location.hash]);\n";
-			$strOutput .= "(function() {\n";
-			$strOutput .= "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;\n";
-			$strOutput .= "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';\n";
-			$strOutput .= "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);\n";
-			$strOutput .= "})();\n";
+			if (empty($strDomainName)) {
+				$arrHostname = explode(".", parse_url(Request::getRootURI(), PHP_URL_HOST));
+				$intCount = count($arrHostname);
+				if ($intCount > 1) {
+					$strDomainName = $arrHostname[$intCount - 2] . "." . $arrHostname[$intCount - 1];
+				} 
+			}
+			
+			$strOutput .= "<script>\n";
+			$strOutput .= "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n";
+			$strOutput .= "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n";
+			$strOutput .= "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n";
+			$strOutput .= "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n";
+			$strOutput .= "ga('create', '{$analyticsKey}', '" . $strDomainName . "');\n";
+			$strOutput .= "ga('send', 'pageview');\n";
 			$strOutput .= "</script>\n";
 		}
 
@@ -887,7 +899,7 @@ class PCMS_Client {
 
 		$objAccount = Account::getByPunchId($strAccountId);
 
-		$this::$__account 			= $objAccount;
+		self::$__account 			= $objAccount;
 		$_CONF['app']['account'] 	= $objAccount;
 	}
 
