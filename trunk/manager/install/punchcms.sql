@@ -510,9 +510,9 @@ INSERT INTO `pcms_setting_tpl` (`id`, `name`, `value`, `section`, `type`, `sort`
 (15, 'caching_ftp_folder', 'cache', 'caching', 'text', 202, '2007-11-28 16:33:51', '2007-11-28 16:33:51'),
 (16, 'elmnt_active_state', '0', 'elements', 'checkbox', 51, '2008-06-09 08:55:08', '2008-06-09 08:55:08'),
 (17, 'web_server', '', 'files', 'text', 99, '2009-04-13 21:43:00', '2009-04-13 21:43:00'),
-(18, 'next_after_save', '', 'general', 'checkbox', 500, '2014-01-01 01:33:70', '2014-01-01 01:33:70'),
-(19, 'next_is_child', '', 'general', 'checkbox', 501, '2014-01-01 01:33:70', '2014-01-01 01:33:70'),
-(20, 'edit_after_save', '', 'general', 'checkbox', 502, '2014-01-01 01:33:70', '2014-01-01 01:33:70');
+(18, 'next_after_save', '', 'general', 'checkbox', 500, '2014-01-01 01:33:50', '2014-01-01 01:33:50'),
+(19, 'next_is_child', '', 'general', 'checkbox', 501, '2014-01-01 01:33:50', '2014-01-01 01:33:50'),
+(20, 'edit_after_save', '', 'general', 'checkbox', 502, '2014-01-01 01:33:50', '2014-01-01 01:33:50');
 
 -- --------------------------------------------------------
 
