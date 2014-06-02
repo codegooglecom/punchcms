@@ -9,7 +9,7 @@ function setLinkTrail(element)
         url: 'ajax.php?cmd=Element::generateElementTrailXml&params='+ encodeURIComponent(element.value) ,
         dataType: 'xml',
         success:  function(data)
-        { 
+        {
             var id = $(element).attr('id');
             $('#'+ id + '_element').html($(data).find('field').text());
         }
@@ -22,9 +22,9 @@ function DragDropLink(){
 	this._drag = function(sourceHtmlObject, dhtmlObject, targetHtmlObject) {
 		targetHtmlObject.style.backgroundColor = "";
 		targetHtmlObject.value = sourceHtmlObject.parentObject.id;
-        		
-        setLinkTrail(targetHtmlObject);        
-                
+
+        setLinkTrail(targetHtmlObject);
+
 		//*** Trigger the language module.
 		objContentLanguage.toTemp(targetHtmlObject.id);
 	}
@@ -49,7 +49,7 @@ function resizeTree() {
 	 	 offsetY 		= $objTree.offset().left,
 	 	 headerHeight	= 180,
 	 	 treeHeight 	= windowHeight - offsetY - headerHeight;
- 	 
+
 	 $objTree.css({ height: treeHeight + "px"});
 }
 
@@ -64,20 +64,20 @@ function checkDynamicAlias() {
 function generateSlug(str) {
 	var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
 	var to   = "aaaaeeeeiiiioooouuuunc------";
-	
+
 	str = str.replace(/^\s+|\s+$/g, ''); // trim
 	str = str.toLowerCase();
-	  
+
 	// remove accents, swap ñ for n, etc
 	for (var i=0, l=from.length ; i<l ; i++) {
 		str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
 	}
-	
+
 	str = str
 			.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
 			.replace(/\s+/g, '-') // collapse whitespace and replace by -
 			.replace(/-+/g, '-'); // collapse dashes
-	
+
 	return str;
 }
 
@@ -85,7 +85,7 @@ window._timers = window._timers || {};
 
 //*** Onload action.
 jQuery(function(){
-        
+
     $('input.deeplink').on('change',function(){
         setLinkTrail(this);
     });
@@ -111,13 +111,13 @@ jQuery(function(){
         $("#frm_apiname").on("keyup", function () {
             var $this = $(this),
                 // Create timers namespace
-                t = window._timers["_apiNameKeyup"];            
+                t = window._timers["_apiNameKeyup"];
 
             // Clear timers if set
             if (t) {
             	clearTimeout(t);
             }
-            
+
             t = setTimeout(function () {
                 var arrRegex = {
                     "date|day|month|year|minute|second|hour|week": 1, // Date field
@@ -156,46 +156,46 @@ jQuery(function(){
 				var $alias 	= $("#frm_meta_alias"),
 					$fields	= $("#section-fields"),
 					$meta	= $("#section-meta")
-				
-				// Auto-generate alias based on first input[type='text'] field's value. 
+
+				// Auto-generate alias based on first input[type='text'] field's value.
 				// Not fully working - doesn't allow for empty aliases.
 				/*
 				if (!$meta.hasClass("ui-tabs-hide") && $alias.val() == "") {
 					$alias.bind("focus", function () {
 						var $textField = $fields.find("input[type=text]:first")
-						
+
 						if ($textField.length > 0) {
 							$alias.val(generateSlug($textField.val()))
 						}
 					})
 				}
 				*/
-				
+
 				$("#elementForm div:visible:first input[type='text']:first").focus()
 			}
 		});
 	}
-	
+
 	if (jQuery("#treeContainer").length > 0) {
 		//*** On resize, recalculate the size of the treeview module.
 		jQuery(window).bind("resize", function(){
 			resizeTree();
 		});
 		resizeTree();
-		
+
 		// Make tree pinnable. Works cross browser.
 		var objPinnableTree = new PinnableTree();
 	}
-	
+
 	// Focus on first form field.
 	// $("#elementForm div:visible:first input[type='text']:first").focus()
-	
+
 	// Listen for esc key event
 	var $cancelAnchor 	= $(".form-navigation a"),
 		$submitBtn		= $(".form-navigation input[type='submit']"),
 		$activateBtn	= $("#language_active"),
 		$cascadeBtn		= $("#language_cascade"),
-		
+
 		blnModifier 	= false,
 		blnShift		= false,
 		varReturn 		= true,
@@ -253,6 +253,10 @@ jQuery(function(){
 				case 52:
 				case 53:
 				case 54:
+					/**
+					 * When CTRL or CMD is pressed + 1,2,3,4,5 or 6
+					 * The button in the action bar with the corresponding index will be clicked
+					 */
 					var intIndex = (48 + $(".action-menu a").length) - e.keyCode,
 						$element = $(".action-menu a:eq(" + intIndex + ")")
 
@@ -260,7 +264,7 @@ jQuery(function(){
 						window.location = $element.attr("href")
 						varReturn = false
 					}
-					
+
 					if (blnModifier && (typeof $tabs !== "undefined")) {
 						var intIndex = Math.abs(46 + $tabs.tabs("length") - e.keyCode)
 						$tabs.tabs("select", intIndex)
@@ -268,6 +272,10 @@ jQuery(function(){
 					}
 					break;
 				case 8:
+					/**
+					 * When CMD or CTRL + 8 is pressed, the eight button will be clicked.
+					 * In this case the 'remove' button.
+					 */
 					var $element = $("#btn-remove")
 					if (blnModifier && ($element.length > 0)) {
 						window.location = $element.attr("href")
@@ -276,14 +284,20 @@ jQuery(function(){
 					break;
 				case 9:
 					if (blnModifier && (typeof $tabs !== "undefined")) {
-						var intIndex = (blnShift) ? $tabs.tabs("option", "selected") - 1 : $tabs.tabs("option", "selected") + 1
-						
+						/**
+						 * If SHIFT key is pressed, traverse to the next tab. If not, go to the previous tab
+						 * This may seem counter intuitive, using SHIFT to go to the next tab, but the next tab is
+						 * rarely used (Publication). The previous tab however (Details) is mostly used and thus
+						 * selected as the default go-to using this behavior.
+						 */
+						var intIndex = (blnShift) ? $tabs.tabs("option", "selected") + 1 : $tabs.tabs("option", "selected") - 1
+
 						if (intIndex == $tabs.tabs("length")) {
 							intIndex = 0
 						} else if (intIndex < 0) {
 							intIndex = $tabs.tabs("length") - 1
 						}
-						
+
 						$tabs.tabs("select", intIndex);
 
 						varReturn = false
@@ -295,20 +309,28 @@ jQuery(function(){
                     }
                     break;
                 case 192:
+                	/**
+                	 * Switch language when CMD or CTRL + ` is pressed.
+                	 * Highly annoying on Mac OSX systems where CMD + ` is used for window switching.
+                	 * Therefore, this feature is disabled until a better key combination is defined.
+                	 */
+
+                	/*
                 	var $switcher = $("#frm_language");
                     if (blnModifier && $switcher.length > 0) {
                     	var $next = $switcher.find(":selected").next();
                     	if ($next.length <= 0) {
                     		$next = $switcher.find("option:first");
                     	}
-                    	
+
                     	$switcher.find("option").removeAttr("selected");
                     	$next.prop("selected", true);
-                    	
+
                     	$switcher.trigger("change");
-                    	
+
                         varReturn = false
                     }
+                    */
                     break;
 			}
 			if (window._logKey == true) console.log(e.keyCode)
@@ -326,9 +348,9 @@ jQuery(function(){
 
 	$("#frm_dynamic_alias_check").bind("click", function(){
 		checkDynamicAlias();
-	});	
+	});
 	checkDynamicAlias();
-	
+
     <!-- BEGIN update -->
     $promise = $.get("/install/update-{VERSION}");
     $promise.done(function (data) {
