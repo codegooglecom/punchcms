@@ -439,7 +439,7 @@ class PCMS_FormBuilder
 		    $arrFieldMeta["fieldreadonly"] = "readonly";
 		}
 
-		$arrCustomTypes = array(VFORM_CUSTOM, VFORM_CUSTOM_TEXT);
+		$arrCustomTypes = array(ValidForm::VFORM_CUSTOM, ValidForm::VFORM_CUSTOM_TEXT);
 		$intType = $objElement->getField("Type")->getValue();
 		if (!empty($intType)) {
 			if (in_array(constant("\\ValidFormBuilder\\ValidForm::" . $intType), $arrCustomTypes)) {
@@ -531,8 +531,8 @@ class PCMS_FormBuilder
 		);
 
 		switch (constant("\\ValidFormBuilder\\ValidForm::" . $objElement->getField("Type")->getValue())) {
-			case VFORM_CHECK_LIST:
-			case VFORM_RADIO_LIST:
+			case ValidForm::VFORM_CHECK_LIST:
+			case ValidForm::VFORM_RADIO_LIST:
 			    // In list fields, we want to add the class directly to the
 			    // generated element instead of the parent element
 			    $arrMeta["fieldclass"] = $objElement->getField("Class")->getHtmlValue();
