@@ -1,11 +1,14 @@
 <?php
+
+use ValidFormBuilder\ValidWizard;
+
 /**
  * Holds the PunchCMS Valid Form classes.
- * Depends on ValidForm Builder library including the ValidWizard extension and htmlMimeMail5.
+ *
+ * Depends on ValidForm Builder library including the ValidWizard 3 extension and htmlMimeMail5.
  *
  * @author Robin van Baalen <robin@neverwoods.com>
- * @version 1.0
- *
+ * @version 2.0
  */
 class PCMS_WizardBuilder extends PCMS_FormBuilder {
 
@@ -53,7 +56,7 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 		//*** Form starts here.
 		$objPages = $this->__formElement->getElementsByTemplate(array("Page", "Paragraph"));
 		foreach ($objPages as $objPage) {
-			if (get_class($objPage) == "VF_Hidden") continue;
+			if (get_class($objPage) == "Hidden") continue;
 
 			$objParent = $this->renderPage($this->__validForm, $objPage);
 
@@ -93,7 +96,7 @@ class PCMS_WizardBuilder extends PCMS_FormBuilder {
 
 		//*** Add conditions
 		foreach ($objPages as $objPage) {
-			if (get_class($objPage) == "VF_Hidden") continue;
+			if (get_class($objPage) == "Hidden") continue;
 
 			$objFieldsets = $objPage->getElementsByTemplate(array("Fieldset", "Paragraph"));
 			foreach ($objFieldsets as $objFieldset) {

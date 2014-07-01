@@ -1,12 +1,16 @@
 <?php
 
+use ValidFormBuilder\ValidForm;
+
 /**
- *
  * Holds the PunchCMS Valid Form classes.
- * Depends on ValidForm Builder and htmlMimeMail5.
- * @author Felix Langfeldt <felix@neverwoods.com>, Robin van Baalen <robin@neverwoods.com>
- * @version 1.0.1
  *
+ * Depends on ValidForm Builder 3 and htmlMimeMail5.
+ *
+ * @author Felix Langfeldt <felix@neverwoods.com>
+ * @author Robin van Baalen <robin@neverwoods.com>
+ *
+ * @version 2.0
  */
 class PCMS_FormBuilder
 {
@@ -217,7 +221,7 @@ class PCMS_FormBuilder
 
 				$strConstValue = $objCondition->getField("Type")->getHtmlValue();
 				if (defined($strConstValue)) {
-				    $constType = constant($strConstValue);
+				    $constType = constant("\\ValidFormBuilder\\ValidForm::" . $strConstValue);
 				} else {
 				    throw new Exception(
 				        "Tried to get undefined constant '{$strConstValue}'. From element {$objCondition->getId()}",
@@ -235,7 +239,7 @@ class PCMS_FormBuilder
 				    if (is_object($objComparisonSubject)) {
     					$objComparisonSubjectElement = $this
                             ->getFormElementById(
-                               $objComparisonSubject
+                                $objComparisonSubject
                                    ->getId()
                             );
 
@@ -249,9 +253,10 @@ class PCMS_FormBuilder
 
     					array_push(
     					    $arrComparisons,
-    					    new VF_Comparison(
+    					    new \ValidFormBuilder\Comparison(
     					        $objComparisonSubjectElement,
     					        constant(
+        					        "\\ValidFormBuilder\\ValidForm::" .
     					            $objCmsComparison
     					                ->getField("Comparison")
     					                ->getHtmlValue()
@@ -437,18 +442,18 @@ class PCMS_FormBuilder
 		$arrCustomTypes = array(VFORM_CUSTOM, VFORM_CUSTOM_TEXT);
 		$intType = $objElement->getField("Type")->getValue();
 		if (!empty($intType)) {
-			if (in_array(constant($intType), $arrCustomTypes)) {
+			if (in_array(constant("\\ValidFormBuilder\\ValidForm::" . $intType), $arrCustomTypes)) {
 				$validationRules["validation"] = $objElement->getField("Validation")->getValue();
 			}
 		} else {
 			throw new Exception("Field type is empty in element " . $objElement->getId(), E_ERROR);
 		}
 
-		if (get_class($objParent) == "VF_MultiField") {
+		if (get_class($objParent) == "MultiField") {
 			// Add field without the label.
 			$objReturn = $objParent->addField(
 				$this->generateId($objElement),
-				constant($objElement->getField("Type")->getValue()),
+				constant("\\ValidFormBuilder\\ValidForm::" . $objElement->getField("Type")->getValue()),
 				$validationRules,
 				array(
 					"maxLength" => $this->__maxLengthAlert,
@@ -474,7 +479,7 @@ class PCMS_FormBuilder
 			$objReturn = $objParent->addField(
 				$this->generateId($objElement),
 				$objElement->getField("Label")->getHtmlValue(),
-				constant($objElement->getField("Type")->getValue()),
+				constant("\\ValidFormBuilder\\ValidForm::" . $objElement->getField("Type")->getValue()),
 				$validationRules,
 				array(
 					"maxLength" => $this->__maxLengthAlert,
@@ -525,7 +530,7 @@ class PCMS_FormBuilder
 			"dynamicLabel" => $objElement->getField("DynamicLabel")->getHtmlValue()
 		);
 
-		switch (constant($objElement->getField("Type")->getValue())) {
+		switch (constant("\\ValidFormBuilder\\ValidForm::" . $objElement->getField("Type")->getValue())) {
 			case VFORM_CHECK_LIST:
 			case VFORM_RADIO_LIST:
 			    // In list fields, we want to add the class directly to the
@@ -547,11 +552,11 @@ class PCMS_FormBuilder
 			$arrMeta["end"] = $intEnd;
 		}
 
-		if (get_class($objParent) == "VF_MultiField") {
+		if (get_class($objParent) == "MultiField") {
 			// Add field without the label.
 			$objReturn = $objParent->addField(
 				$this->generateId($objElement),
-				constant($objElement->getField("Type")->getValue()),
+				constant("\\ValidFormBuilder\\ValidForm::" . $objElement->getField("Type")->getValue()),
 				array(
 					"maxLength" => $objElement->getField("MaxLength")->getValue(),
 					"minLength" => $objElement->getField("MinLength")->getValue(),
@@ -577,7 +582,7 @@ class PCMS_FormBuilder
 			}
 
 			if (defined($objElement->getField("Type")->getValue())) {
-    			$varConst = constant($objElement->getField("Type")->getValue());
+    			$varConst = constant("\\ValidFormBuilder\\ValidForm::" . $objElement->getField("Type")->getValue());
 			} else {
 			    throw new Exception("Element with EID {$objElement->getId()} has no Field Type set.", E_ERROR);
 			}
